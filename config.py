@@ -11,7 +11,7 @@ SEEDS = [42, 43, 44]  # 3 seeds -> 4 scales * 2 variants * 3 seeds = 24 runs
 # Common Hyperparameters (Full Run vs. Smoke Test)
 if SMOKE_TEST:
     BATCH_SIZE = 2
-    MAX_STEPS = 2        # Exactly 2 training steps in smoke test per model
+    MAX_STEPS = 4        # Set to 4 steps in smoke test to check periodic eval logic
     VAL_STEPS = 2
     CONTEXT_LENGTH = 64
     DATASET_SUBSET_SIZE = 100
@@ -19,16 +19,20 @@ if SMOKE_TEST:
     BENCHMARK_WARMUP = 2
     BENCHMARK_REPEATS = 5
     NEEDLE_LENGTH = 64
+    EVAL_INTERVAL = 2    # Run validation checks every 2 steps in smoke test
+    PATIENCE = 2         # Early stopping patience
 else:
     BATCH_SIZE = 32
-    MAX_STEPS = 100000
-    VAL_STEPS = 500
+    MAX_STEPS = 15000    # Optimal steps for convergence on TinyStories
+    VAL_STEPS = 200
     CONTEXT_LENGTH = 512
     DATASET_SUBSET_SIZE = None  # Use full dataset
-    NUM_EPOCHS = 3
+    NUM_EPOCHS = 1
     BENCHMARK_WARMUP = 10
     BENCHMARK_REPEATS = 50
     NEEDLE_LENGTH = 512
+    EVAL_INTERVAL = 1000 # Run validation checks every 1000 steps
+    PATIENCE = 3         # Stop if validation perplexity does not improve for 3 checks
 
 # Model architecture scaling mappings
 # Vocab size is 50257 (GPT-2 tokenizer size). Embeddings are tied.

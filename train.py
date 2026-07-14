@@ -68,6 +68,25 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
         betas=(config.BETA1, config.BETA2)
     )
     
+    # Cosine learning rate scheduler with warmup
+    scheduler = optim.lr_scheduler.OneCycleLR(
+        optimizer,
+        max_lr=config.LEARNING_RATE,
+        total_steps=config.MAX_STEPS,
+        pct_start=0.05,
+        anneal_strategy='cos',
+        div_factor=10.0,
+        final_div_factor=10.0
+    )
+    
+    # AMP GradScaler
+    scaler = torch.cuda.amp.GradScaler(enabled=(device.type == "cuda"))
+    
+    # Checkpointing and Early Stopping parameters
+    best_val_loss = float('inf')
+    patience_counter = 0
+    checkpoint_file = os.path.join(run_dir, f"model_checkpoint_seed{seed}.pt")
+    
     model.train()
     train_losses = []
     iter_train = iter(dataloader_train)
@@ -83,22 +102,55 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
         x, y = x.to(device), y.to(device)
         
         optimizer.zero_grad()
-        _, loss = model(x, y)
-        loss.backward()
-        
+        with torch.cuda.amp.autocast(enabled=(device.type == "cuda")):
+            _, loss = model(x, y)
+            
+        scaler.scale(loss).backward()
+        scaler.unscale_(optimizer)
         torch.nn.utils.clip_grad_norm_(model.parameters(), config.GRAD_CLIP)
-        optimizer.step()
+        scaler.step(optimizer)
+        scaler.update()
+        scheduler.step()
         
         loss_val = loss.item()
         train_losses.append(loss_val)
         
+        # Periodic output log
         if step % max(1, config.MAX_STEPS // 5) == 0 or step == config.MAX_STEPS:
             print(f"Step {step}/{config.MAX_STEPS} - Loss: {loss_val:.4f}")
             
-    # Final validation run
-    print("Running validation evaluation...")
+        # Periodic Validation check
+        if step % config.EVAL_INTERVAL == 0:
+            val_loss, val_perplexity = evaluate_model(model, dataloader_val, device, config.VAL_STEPS)
+            print(f"Step {step}/{config.MAX_STEPS} - Val Loss: {val_loss:.4f}, Val Perplexity: {val_perplexity:.4f}")
+            
+            # Check for best validation score
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                patience_counter = 0
+                os.makedirs(run_dir, exist_ok=True)
+                torch.save(model.state_dict(), checkpoint_file)
+                print(f"  [New Best Model] Saved checkpoint with Val Loss: {val_loss:.4f}")
+            else:
+                patience_counter += 1
+                print(f"  [No Improvement] Patience counter: {patience_counter}/{config.PATIENCE}")
+                if patience_counter >= config.PATIENCE:
+                    print(f"  [Early Stopping] Triggered at step {step}")
+                    break
+                    
+    # Reload best model before final evaluation
+    if os.path.exists(checkpoint_file):
+        print(f"Reloading best checkpoint from {checkpoint_file}...")
+        model.load_state_dict(torch.load(checkpoint_file, map_location=device))
+    else:
+        # Save current state as fallback if training loop ended before any eval check
+        os.makedirs(run_dir, exist_ok=True)
+        torch.save(model.state_dict(), checkpoint_file)
+        
+    # Final evaluation run on best model
+    print("Running final validation evaluation...")
     val_loss, val_perplexity = evaluate_model(model, dataloader_val, device, config.VAL_STEPS)
-    print(f"Validation Loss: {val_loss:.4f}, Perplexity: {val_perplexity:.4f}")
+    print(f"Final Validation Loss: {val_loss:.4f}, Perplexity: {val_perplexity:.4f}")
     
     # Measure memory usage (GPU VRAM or CPU RAM fallback)
     if torch.cuda.is_available():
@@ -123,7 +175,6 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
         "peak_memory_mb": peak_memory_mb
     }
     
-    os.makedirs(run_dir, exist_ok=True)
     metrics_file = os.path.join(run_dir, f"seed{seed}_metrics.json")
     with open(metrics_file, "w") as f:
         json.dump(metrics, f, indent=4)
@@ -143,9 +194,6 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
     with open(config_file, "w") as f:
         json.dump(run_config, f, indent=4)
         
-    # Save checkpoint state dict
-    checkpoint_file = os.path.join(run_dir, f"model_checkpoint_seed{seed}.pt")
-    torch.save(model.state_dict(), checkpoint_file)
     print(f"Run completed. Outputs saved to {metrics_file}")
     
     return model, metrics

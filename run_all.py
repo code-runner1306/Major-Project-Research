@@ -1,6 +1,7 @@
 import os
 import json
 import uuid
+import gc
 import torch
 import pandas as pd
 import numpy as np
@@ -11,6 +12,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 import config
+from model import GatedDeltaNetLM
 from dataset import get_dataloader
 from train import train_model
 from eval import benchmark_inference, needle_in_a_haystack_test, mqar_test
@@ -144,49 +146,92 @@ def main():
             for seed in config.SEEDS:
                 print(f"\n>>> Running configuration {run_counter}/{total_runs} (Scale={scale}, Variant={variant}, Seed={seed}) <<<")
                 
-                # 1. Train model
-                model, train_metrics = train_model(
-                    scale=scale,
-                    variant=variant,
-                    seed=seed,
-                    dataloader_train=dataloader_train,
-                    dataloader_val=dataloader_val,
-                    run_dir=config_dir
-                )
-                
-                # 2. Benchmarking
-                print("Running inference benchmark...")
-                ms_per_token, tokens_per_sec = benchmark_inference(model, device)
-                print(f"Throughput: {tokens_per_sec:.2f} tokens/sec, Latency: {ms_per_token:.2f} ms/token")
-                
-                # 3. Needle-in-a-Haystack Retrieval
-                print("Running needle-in-a-haystack retrieval probe...")
-                retrieval_acc = needle_in_a_haystack_test(model, device, num_trials=5 if config.SMOKE_TEST else 20)
-                print(f"Retrieval Accuracy: {retrieval_acc * 100:.1f}%")
+                try:
+                    # 1. Train model
+                    model, train_metrics = train_model(
+                        scale=scale,
+                        variant=variant,
+                        seed=seed,
+                        dataloader_train=dataloader_train,
+                        dataloader_val=dataloader_val,
+                        run_dir=config_dir
+                    )
+                    
+                    # 2. Benchmarking
+                    print("Running inference benchmark...")
+                    ms_per_token, tokens_per_sec = benchmark_inference(model, device)
+                    print(f"Throughput: {tokens_per_sec:.2f} tokens/sec, Latency: {ms_per_token:.2f} ms/token")
+                    
+                    # 3. Needle-in-a-Haystack Retrieval
+                    print("Running needle-in-a-haystack retrieval probe...")
+                    retrieval_acc = needle_in_a_haystack_test(model, device, num_trials=5 if config.SMOKE_TEST else 20)
+                    print(f"Retrieval Accuracy: {retrieval_acc * 100:.1f}%")
 
-                # 4. Multi-Query Associative Recall (MQAR) Test
-                print("Running multi-query associative recall (MQAR) test...")
-                mqar_acc = mqar_test(model, device, num_pairs=3 if config.SMOKE_TEST else 5, num_trials=5 if config.SMOKE_TEST else 20)
-                print(f"MQAR Accuracy: {mqar_acc * 100:.1f}%")
-                
-                # Record result trace
-                seed_res = {
-                    "run_id": run_counter,
-                    "scale": scale,
-                    "variant": variant,
-                    "seed": seed,
-                    "parameter_count": train_metrics["parameter_count"],
-                    "val_loss": train_metrics["val_loss"],
-                    "val_perplexity": train_metrics["val_perplexity"],
-                    "latency_ms_per_token": ms_per_token,
-                    "throughput_tokens_per_sec": tokens_per_sec,
-                    "retrieval_accuracy": retrieval_acc,
-                    "peak_memory_mb": train_metrics["peak_memory_mb"],
-                    "mqar_accuracy": mqar_acc
-                }
-                results.append(seed_res)
-                config_seed_metrics.append(seed_res)
-                
+                    # 4. Multi-Query Associative Recall (MQAR) Test
+                    print("Running multi-query associative recall (MQAR) test...")
+                    mqar_acc = mqar_test(model, device, num_pairs=3 if config.SMOKE_TEST else 5, num_trials=5 if config.SMOKE_TEST else 20)
+                    print(f"MQAR Accuracy: {mqar_acc * 100:.1f}%")
+                    
+                    # Record result trace
+                    seed_res = {
+                        "run_id": run_counter,
+                        "scale": scale,
+                        "variant": variant,
+                        "seed": seed,
+                        "parameter_count": train_metrics["parameter_count"],
+                        "val_loss": train_metrics["val_loss"],
+                        "val_perplexity": train_metrics["val_perplexity"],
+                        "latency_ms_per_token": ms_per_token,
+                        "throughput_tokens_per_sec": tokens_per_sec,
+                        "retrieval_accuracy": retrieval_acc,
+                        "peak_memory_mb": train_metrics["peak_memory_mb"],
+                        "mqar_accuracy": mqar_acc
+                    }
+                    results.append(seed_res)
+                    config_seed_metrics.append(seed_res)
+                    
+                except RuntimeError as e:
+                    if "out of memory" in str(e).lower():
+                        print(f"\n[WARNING] Configuration failed due to CUDA Out of Memory (OOM): Scale={scale}, Variant={variant}, Seed={seed}")
+                        if torch.cuda.is_available():
+                            torch.cuda.empty_cache()
+                        gc.collect()
+                        
+                        # Estimate parameters if model instantiation failed
+                        param_count_est = 0
+                        try:
+                            temp_model = GatedDeltaNetLM(config.SCALE_CONFIGS[scale], variant=variant)
+                            param_count_est = sum(p.numel() for p in temp_model.parameters())
+                            del temp_model
+                        except:
+                            pass
+                            
+                        seed_res = {
+                            "run_id": run_counter,
+                            "scale": scale,
+                            "variant": variant,
+                            "seed": seed,
+                            "parameter_count": param_count_est,
+                            "val_loss": float('nan'),
+                            "val_perplexity": float('nan'),
+                            "latency_ms_per_token": float('nan'),
+                            "throughput_tokens_per_sec": float('nan'),
+                            "retrieval_accuracy": float('nan'),
+                            "peak_memory_mb": float('nan'),
+                            "mqar_accuracy": float('nan')
+                        }
+                        results.append(seed_res)
+                        config_seed_metrics.append(seed_res)
+                    else:
+                        raise e
+                finally:
+                    # Garbage collect and clear CUDA cache to release memory
+                    if 'model' in locals():
+                        del model
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                    gc.collect()
+
                 # Save global tracker progressively to base folder
                 global_tracker_path = os.path.join(run_base_dir, "global_tracker.json")
                 with open(global_tracker_path, "w") as f:
@@ -203,23 +248,31 @@ def main():
             mqars = [r["mqar_accuracy"] for r in config_seed_metrics]
             param_count = config_seed_metrics[0]["parameter_count"]
             
+            def get_nan_mean(lst):
+                val = np.nanmean(lst)
+                return float(val) if not np.isnan(val) else 0.0
+                
+            def get_nan_std(lst):
+                val = np.nanstd(lst)
+                return float(val) if not np.isnan(val) else 0.0
+            
             agg_metrics = {
                 "scale": scale,
                 "variant": variant,
                 "parameter_count": param_count,
                 "seeds_evaluated": config.SEEDS,
-                "mean_val_loss": float(np.mean(val_losses)),
-                "std_val_loss": float(np.std(val_losses)),
-                "mean_val_perplexity": float(np.mean(val_perplexities)),
-                "std_val_perplexity": float(np.std(val_perplexities)),
-                "mean_throughput_tokens_per_sec": float(np.mean(throughputs)),
-                "std_throughput_tokens_per_sec": float(np.std(throughputs)),
-                "mean_retrieval_accuracy": float(np.mean(accuracies)),
-                "std_retrieval_accuracy": float(np.std(accuracies)),
-                "mean_peak_memory_mb": float(np.mean(memories)),
-                "std_peak_memory_mb": float(np.std(memories)),
-                "mean_mqar_accuracy": float(np.mean(mqars)),
-                "std_mqar_accuracy": float(np.std(mqars))
+                "mean_val_loss": get_nan_mean(val_losses),
+                "std_val_loss": get_nan_std(val_losses),
+                "mean_val_perplexity": get_nan_mean(val_perplexities),
+                "std_val_perplexity": get_nan_std(val_perplexities),
+                "mean_throughput_tokens_per_sec": get_nan_mean(throughputs),
+                "std_throughput_tokens_per_sec": get_nan_std(throughputs),
+                "mean_retrieval_accuracy": get_nan_mean(accuracies),
+                "std_retrieval_accuracy": get_nan_std(accuracies),
+                "mean_peak_memory_mb": get_nan_mean(memories),
+                "std_peak_memory_mb": get_nan_std(memories),
+                "mean_mqar_accuracy": get_nan_mean(mqars),
+                "std_mqar_accuracy": get_nan_std(mqars)
             }
             
             agg_metrics_path = os.path.join(config_dir, "aggregate_metrics.json")
@@ -237,6 +290,17 @@ def main():
     # Create matplotlib scaling plots
     generate_plots(df, run_base_dir)
     
+    # Format value helper for table
+    def fmt_val(mean, std, scale_factor=1.0, is_pct=False):
+        if pd.isna(mean):
+            return "N/A"
+        mean_val = mean * scale_factor
+        std_val = std * scale_factor if not pd.isna(std) else None
+        suffix = "%" if is_pct else ""
+        if std_val is not None:
+            return f"{mean_val:.2f}{suffix} ± {std_val:.2f}{suffix}" if not is_pct else f"{mean_val:.1f}{suffix} ± {std_val:.1f}{suffix}"
+        return f"{mean_val:.2f}{suffix}" if not is_pct else f"{mean_val:.1f}{suffix}"
+        
     # Group results for markdown output table
     summary_data = []
     grouped = df.groupby(["scale", "variant"])
@@ -256,12 +320,12 @@ def main():
         summary_data.append({
             "Scale": scale,
             "Variant": variant,
-            "Parameters": f"{p_count:,}",
-            "Val Perplexity": f"{mean_ppl:.2f} ± {std_ppl:.2f}" if not pd.isna(std_ppl) else f"{mean_ppl:.2f}",
-            "Throughput (tok/s)": f"{mean_tps:.2f} ± {std_tps:.2f}" if not pd.isna(std_tps) else f"{mean_tps:.2f}",
-            "Retrieval Acc (%)": f"{mean_acc * 100:.1f}% ± {std_acc * 100:.1f}%" if not pd.isna(std_acc) else f"{mean_acc * 100:.1f}%",
-            "Peak Memory (MB)": f"{mean_mem:.1f} ± {std_mem:.1f}" if not pd.isna(std_mem) else f"{mean_mem:.1f}",
-            "MQAR Acc (%)": f"{mean_mqar * 100:.1f}% ± {std_mqar * 100:.1f}%" if not pd.isna(std_mqar) else f"{mean_mqar * 100:.1f}%"
+            "Parameters": f"{p_count:,}" if not pd.isna(p_count) else "N/A",
+            "Val Perplexity": fmt_val(mean_ppl, std_ppl),
+            "Throughput (tok/s)": fmt_val(mean_tps, std_tps),
+            "Retrieval Acc (%)": fmt_val(mean_acc, std_acc, scale_factor=100.0, is_pct=True),
+            "Peak Memory (MB)": fmt_val(mean_mem, std_mem),
+            "MQAR Acc (%)": fmt_val(mean_mqar, std_mqar, scale_factor=100.0, is_pct=True)
         })
         
     df_summary = pd.DataFrame(summary_data)
