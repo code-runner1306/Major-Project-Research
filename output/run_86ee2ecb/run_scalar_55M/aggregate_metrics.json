@@ -1,0 +1,22 @@
+{
+    "scale": "55M",
+    "variant": "scalar",
+    "parameter_count": 53348288,
+    "seeds_evaluated": [
+        42,
+        43,
+        44
+    ],
+    "mean_val_loss": 10.147434711456299,
+    "std_val_loss": 0.09634032692747219,
+    "mean_val_perplexity": 25642.623046875,
+    "std_val_perplexity": 2418.6739964056915,
+    "mean_throughput_tokens_per_sec": 26.343690923065633,
+    "std_throughput_tokens_per_sec": 0.56627988639968,
+    "mean_retrieval_accuracy": 0.0,
+    "std_retrieval_accuracy": 0.0,
+    "mean_peak_memory_mb": 2267.65625,
+    "std_peak_memory_mb": 74.7483810878899,
+    "mean_mqar_accuracy": 0.0,
+    "std_mqar_accuracy": 0.0
+}

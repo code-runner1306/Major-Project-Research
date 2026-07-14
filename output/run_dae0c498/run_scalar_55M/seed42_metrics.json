@@ -1,0 +1,12 @@
+{
+    "scale": "55M",
+    "variant": "scalar",
+    "seed": 42,
+    "parameter_count": 53348288,
+    "train_losses": [
+        10.848006248474121,
+        10.506587982177734
+    ],
+    "val_loss": 10.018304824829102,
+    "val_perplexity": 22433.369140625
+}

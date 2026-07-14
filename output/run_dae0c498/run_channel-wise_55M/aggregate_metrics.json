@@ -1,0 +1,18 @@
+{
+    "scale": "55M",
+    "variant": "channel-wise",
+    "parameter_count": 55122368,
+    "seeds_evaluated": [
+        42,
+        43,
+        44
+    ],
+    "mean_val_loss": 10.208301544189453,
+    "std_val_loss": 0.06118769788507448,
+    "mean_val_perplexity": 27178.989583333332,
+    "std_val_perplexity": 1697.2465851005,
+    "mean_throughput_tokens_per_sec": 26.08194256819246,
+    "std_throughput_tokens_per_sec": 5.746753106073076,
+    "mean_retrieval_accuracy": 0.0,
+    "std_retrieval_accuracy": 0.0
+}

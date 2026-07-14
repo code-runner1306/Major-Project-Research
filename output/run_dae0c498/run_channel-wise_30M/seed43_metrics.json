@@ -1,0 +1,12 @@
+{
+    "scale": "30M",
+    "variant": "channel-wise",
+    "seed": 43,
+    "parameter_count": 30071040,
+    "train_losses": [
+        10.850149154663086,
+        10.683958053588867
+    ],
+    "val_loss": 10.322632312774658,
+    "val_perplexity": 30413.1953125
+}
