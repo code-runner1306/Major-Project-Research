@@ -36,7 +36,7 @@ def generate_plots(results_df, run_base_dir):
     
     # 1. Perplexity Plot
     plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["val_perplexity"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2)
+    plt.plot(scalar_df["scale"], scalar_df["val_perplexity"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
     plt.plot(cw_df["scale"], cw_df["val_perplexity"], marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
     plt.title("Validation Perplexity vs. Model Scale", fontsize=12, fontweight='bold')
     plt.xlabel("Model Scale", fontsize=10)
@@ -49,7 +49,7 @@ def generate_plots(results_df, run_base_dir):
     
     # 2. Throughput Plot
     plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["throughput_tokens_per_sec"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2)
+    plt.plot(scalar_df["scale"], scalar_df["throughput_tokens_per_sec"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
     plt.plot(cw_df["scale"], cw_df["throughput_tokens_per_sec"], marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
     plt.title("Decoding Throughput vs. Model Scale", fontsize=12, fontweight='bold')
     plt.xlabel("Model Scale", fontsize=10)
@@ -62,7 +62,7 @@ def generate_plots(results_df, run_base_dir):
     
     # 3. Retrieval Accuracy Plot
     plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["retrieval_accuracy"] * 100, marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2)
+    plt.plot(scalar_df["scale"], scalar_df["retrieval_accuracy"] * 100, marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
     plt.plot(cw_df["scale"], cw_df["retrieval_accuracy"] * 100, marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
     plt.title("Needle Retrieval Accuracy vs. Model Scale", fontsize=12, fontweight='bold')
     plt.xlabel("Model Scale", fontsize=10)
@@ -76,7 +76,7 @@ def generate_plots(results_df, run_base_dir):
 
     # 4. Memory Footprint Plot
     plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["peak_memory_mb"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2)
+    plt.plot(scalar_df["scale"], scalar_df["peak_memory_mb"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
     plt.plot(cw_df["scale"], cw_df["peak_memory_mb"], marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
     plt.title("Peak Memory Usage vs. Model Scale", fontsize=12, fontweight='bold')
     plt.xlabel("Model Scale", fontsize=10)
@@ -89,7 +89,7 @@ def generate_plots(results_df, run_base_dir):
 
     # 5. MQAR Accuracy Plot
     plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["mqar_accuracy"] * 100, marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2)
+    plt.plot(scalar_df["scale"], scalar_df["mqar_accuracy"] * 100, marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
     plt.plot(cw_df["scale"], cw_df["mqar_accuracy"] * 100, marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
     plt.title("MQAR Accuracy vs. Model Scale", fontsize=12, fontweight='bold')
     plt.xlabel("Model Scale", fontsize=10)
