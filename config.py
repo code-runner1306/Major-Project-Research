@@ -74,7 +74,7 @@ BETA2 = 0.95
 GRAD_CLIP = 1.0
 
 # Parallel execution settings
-PARALLEL_TRAININGS = 2  # Number of model configurations to train in parallel (Default: 1 for sequential)
+PARALLEL_TRAININGS = 1  # Sequential mode for maximum single-GPU speed and 0 Python GIL thrashing (Use 1 on single GPU)
 
 # Paths & Resume Options
 OUTPUT_DIR = "output"
