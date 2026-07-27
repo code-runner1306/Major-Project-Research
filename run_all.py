@@ -72,7 +72,7 @@ def check_parallel_capacity(num_requested, scales_to_run):
 def log_worker(worker_id, tag, message):
     """Formats log output lines with worker prefix for clear parallel monitoring."""
     prefix = f"[Worker-{worker_id} | {tag}]" if worker_id is not None else f"[{tag}]"
-    print(f"{prefix} {message}")
+    print(f"{prefix} {message}", flush=True)
 
 def process_model_config(scale, variant, worker_id, run_base_dir, global_results, tracker_lock):
     """Processes all seeds for a single model configuration, then unloads model from memory."""

@@ -122,9 +122,10 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
         
         train_losses.append(accum_loss)
         
-        # Periodic output log
-        if step % max(1, config.MAX_STEPS // 5) == 0 or step == config.MAX_STEPS:
-            print(f"Step {step}/{config.MAX_STEPS} - Loss: {accum_loss:.4f}")
+        # Periodic output log (Step 1, every 100 steps, or final step)
+        log_interval = 1 if config.SMOKE_TEST else 100
+        if step == 1 or step % log_interval == 0 or step == config.MAX_STEPS:
+            print(f"  Step {step}/{config.MAX_STEPS} - Loss: {accum_loss:.4f}", flush=True)
             
         # Periodic Validation check
         if step % config.EVAL_INTERVAL == 0:
