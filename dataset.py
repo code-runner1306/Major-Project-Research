@@ -7,7 +7,7 @@ import tiktoken
 from datasets import load_dataset
 import config
 
-def save_or_load_split_manifest(seed, split="train", buffer_size=10000, run_dir=None):
+def save_or_load_split_manifest(seed, split="train", dataset_len=None, run_dir=None):
     splits_dir = getattr(config, "SPLITS_DIR", os.path.join("data", "splits"))
     os.makedirs(splits_dir, exist_ok=True)
     manifest_path = os.path.join(splits_dir, f"seed_{seed}_{split}_split.json")
@@ -26,7 +26,10 @@ def save_or_load_split_manifest(seed, split="train", buffer_size=10000, run_dir=
             "dataset_name": "roneneldan/TinyStories",
             "split": split,
             "seed": seed,
-            "buffer_size": buffer_size,
+            "total_stories_in_dataset": dataset_len if dataset_len is not None else "unknown",
+            "subset_limit": config.DATASET_SUBSET_SIZE if config.SMOKE_TEST else "full_dataset",
+            "context_length": config.CONTEXT_LENGTH,
+            "batch_size": config.BATCH_SIZE,
             "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         }
         with open(manifest_path, "w") as f:
@@ -44,25 +47,26 @@ def save_or_load_split_manifest(seed, split="train", buffer_size=10000, run_dir=
     return manifest
 
 def load_dataset_with_retry(split, seed=None, run_dir=None, max_retries=10, delay=5):
+    cache_dir = os.path.join("data", "cache")
+    os.makedirs(cache_dir, exist_ok=True)
+    
     for attempt in range(1, max_retries + 1):
         try:
-            print(f"Attempting to load TinyStories dataset (split: {split}, seed: {seed}), attempt {attempt}...")
-            # Stream the dataset to avoid downloading the entire 1GB file
-            dataset = load_dataset("roneneldan/TinyStories", split=split, streaming=True)
+            print(f"Loading TinyStories dataset from local cache / downloading (split: {split}, seed: {seed}), attempt {attempt}...")
+            # Load dataset locally (cached in data/cache) to prevent HTTP network streaming bottlenecks
+            dataset = load_dataset("roneneldan/TinyStories", split=split, cache_dir=cache_dir)
             
             if seed is not None and split == "train":
-                manifest = save_or_load_split_manifest(seed, split=split, run_dir=run_dir)
-                dataset = dataset.shuffle(seed=manifest["seed"], buffer_size=manifest["buffer_size"])
+                manifest = save_or_load_split_manifest(seed, split=split, dataset_len=len(dataset), run_dir=run_dir)
+                dataset = dataset.shuffle(seed=manifest["seed"])
                 
-            # Try to fetch the first element to ensure network success
-            next(iter(dataset))
-            print(f"TinyStories dataset (split: {split}, seed: {seed}) loaded successfully.")
+            print(f"TinyStories dataset (split: {split}, seed: {seed}) loaded successfully from disk cache.")
             return dataset
         except Exception as e:
             print(f"Error loading dataset on attempt {attempt}: {e}. Retrying in {delay} seconds...")
             time.sleep(delay)
             delay = min(delay * 1.5, 60)  # capped exponential backoff
-    raise RuntimeError("Failed to load TinyStories dataset from Hugging Face after multiple retries.")
+    raise RuntimeError("Failed to load TinyStories dataset after multiple retries.")
 
 class TinyStoriesDataset(IterableDataset):
     def __init__(self, split="train", seed=None, run_dir=None):
