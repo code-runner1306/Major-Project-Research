@@ -1,4 +1,7 @@
 import os
+# Force non-interactive Agg backend before matplotlib import to prevent IPython/Colab MPLBACKEND conflicts
+os.environ['MPLBACKEND'] = 'Agg'
+
 import json
 import uuid
 import gc
@@ -6,7 +9,6 @@ import torch
 import pandas as pd
 import numpy as np
 
-# Non-interactive backend for headless environments
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
