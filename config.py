@@ -71,7 +71,10 @@ BETA1 = 0.9
 BETA2 = 0.95
 GRAD_CLIP = 1.0
 
-# Paths
+# Paths & Resume Options
 OUTPUT_DIR = "output"
 GLOBAL_TRACKER_FILE = os.path.join(OUTPUT_DIR, "global_tracker.json")
 DATA_DIR = "data"
+SPLITS_DIR = os.path.join(DATA_DIR, "splits")
+RESUME_RUN_ID = os.environ.get("RESUME_RUN_ID", None)  # Set to run ID string (e.g. "run_dae0c498") to resume or target specific directory
+

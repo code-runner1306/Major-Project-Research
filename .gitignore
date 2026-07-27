@@ -8,9 +8,28 @@ wheels/
 
 # Virtual environments
 .venv
+# Large model weights and binary files (exceed GitHub size limits)
 *.pt
+*.ckpt
+*.bin
+*.safetensors
+*.arrow
+*.parquet
+*.tar.gz
+*.zip
+output/**/*.pt
+
+# Ignore heavy raw dataset cache in data/, but keep JSON split manifests tracked
+data/*
+!data/splits/
+!data/splits/*.json
+!data/**/*.json
+!data/**/splits/
+!data/**/splits/*.json
+
 .agent/
 .github/
 .opencode/
 openspec/
 *.pdf
+

@@ -15,105 +15,164 @@ import config
 from model import GatedDeltaNetLM
 from dataset import get_dataloader
 from train import train_model
-from eval import benchmark_inference, needle_in_a_haystack_test, mqar_test
+from eval import benchmark_inference, needle_in_a_haystack_test, mqar_test, compute_statistical_tests
 
-def generate_plots(results_df, run_base_dir):
-    # Calculate mean metrics grouped by scale and variant
-    agg_df = results_df.groupby(["scale", "variant"]).agg({
-        "parameter_count": "mean",
-        "val_perplexity": "mean",
-        "throughput_tokens_per_sec": "mean",
-        "retrieval_accuracy": "mean",
-        "peak_memory_mb": "mean",
-        "mqar_accuracy": "mean"
-    }).reset_index()
+def is_seed_completed(config_dir, seed):
+    """Checks if a seed configuration has already completed training and metrics logging."""
+    metrics_file = os.path.join(config_dir, f"seed{seed}_metrics.json")
+    if os.path.exists(metrics_file):
+        try:
+            with open(metrics_file, "r") as f:
+                data = json.load(f)
+            # Verify required metric keys exist
+            if "val_perplexity" in data and "val_loss" in data:
+                return True, data
+        except Exception:
+            return False, None
+    return False, None
+
+def generate_plots(results_df, run_base_dir, stats_results=None):
+    """
+    Generates publication-grade scaling plots with error bars (std dev)
+    and statistical significance annotations. Also plots loss convergence trajectories.
+    """
+    # Group results by scale and variant to get mean and std dev
+    agg = results_df.groupby(["scale", "variant"]).agg({
+        "parameter_count": ["mean"],
+        "val_perplexity": ["mean", "std"],
+        "throughput_tokens_per_sec": ["mean", "std"],
+        "retrieval_accuracy": ["mean", "std"],
+        "peak_memory_mb": ["mean", "std"],
+        "mqar_accuracy": ["mean", "std"]
+    })
+    agg.columns = ['_'.join(c).strip('_') for c in agg.columns]
+    agg = agg.reset_index()
     
     # Sort scales logically
     scale_order = {s: i for i, s in enumerate(config.SCALES)}
-    agg_df["scale_rank"] = agg_df["scale"].map(scale_order)
-    agg_df = agg_df.sort_values("scale_rank")
+    agg["scale_rank"] = agg["scale"].map(scale_order)
+    agg = agg.sort_values("scale_rank")
     
-    scalar_df = agg_df[agg_df["variant"] == "scalar"]
-    cw_df = agg_df[agg_df["variant"] == "channel-wise"]
+    scalar_agg = agg[agg["variant"] == "scalar"]
+    cw_agg = agg[agg["variant"] == "channel-wise"]
     
-    # 1. Perplexity Plot
-    plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["val_perplexity"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
-    plt.plot(cw_df["scale"], cw_df["val_perplexity"], marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
-    plt.title("Validation Perplexity vs. Model Scale", fontsize=12, fontweight='bold')
-    plt.xlabel("Model Scale", fontsize=10)
-    plt.ylabel("Validation Perplexity", fontsize=10)
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(run_base_dir, "perplexity_scaling.png"), dpi=150)
-    plt.close()
+    metrics_info = [
+        ("val_perplexity", "Validation Perplexity", "Validation Perplexity vs. Model Scale", "perplexity_scaling.png", False, 1.0),
+        ("throughput_tokens_per_sec", "Throughput (tokens/sec)", "Decoding Throughput vs. Model Scale", "throughput_scaling.png", False, 1.0),
+        ("retrieval_accuracy", "Retrieval Accuracy (%)", "Needle Retrieval Accuracy vs. Model Scale", "retrieval_scaling.png", True, 100.0),
+        ("peak_memory_mb", "Peak Memory (MB)", "Peak Memory Usage vs. Model Scale", "memory_scaling.png", False, 1.0),
+        ("mqar_accuracy", "MQAR Accuracy (%)", "MQAR Accuracy vs. Model Scale", "mqar_scaling.png", True, 100.0)
+    ]
     
-    # 2. Throughput Plot
-    plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["throughput_tokens_per_sec"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
-    plt.plot(cw_df["scale"], cw_df["throughput_tokens_per_sec"], marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
-    plt.title("Decoding Throughput vs. Model Scale", fontsize=12, fontweight='bold')
-    plt.xlabel("Model Scale", fontsize=10)
-    plt.ylabel("Throughput (tokens/second)", fontsize=10)
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(run_base_dir, "throughput_scaling.png"), dpi=150)
-    plt.close()
-    
-    # 3. Retrieval Accuracy Plot
-    plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["retrieval_accuracy"] * 100, marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
-    plt.plot(cw_df["scale"], cw_df["retrieval_accuracy"] * 100, marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
-    plt.title("Needle Retrieval Accuracy vs. Model Scale", fontsize=12, fontweight='bold')
-    plt.xlabel("Model Scale", fontsize=10)
-    plt.ylabel("Retrieval Accuracy (%)", fontsize=10)
-    plt.ylim(-5, 105)
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(run_base_dir, "retrieval_scaling.png"), dpi=150)
-    plt.close()
+    for metric_col, ylabel, title, filename, is_pct, scale_factor in metrics_info:
+        plt.figure(figsize=(7.5, 4.8))
+        
+        s_mean = scalar_agg[f"{metric_col}_mean"] * scale_factor
+        s_std = scalar_agg[f"{metric_col}_std"].fillna(0.0) * scale_factor
+        
+        c_mean = cw_agg[f"{metric_col}_mean"] * scale_factor
+        c_std = cw_agg[f"{metric_col}_std"].fillna(0.0) * scale_factor
+        
+        x_indices = np.arange(len(config.SCALES))
+        
+        plt.errorbar(
+            x_indices, s_mean, yerr=s_std,
+            marker='o', color="#1f77b4", label="Scalar Gating (A)",
+            linewidth=2, linestyle='--', capsize=4, elinewidth=1.5
+        )
+        plt.errorbar(
+            x_indices, c_mean, yerr=c_std,
+            marker='s', color="#ff7f0e", label="Channel-wise Gating (B)",
+            linewidth=2, capsize=4, elinewidth=1.5
+        )
+        
+        # Annotate statistical significance markers if stats_results exist
+        if stats_results:
+            for idx, scale in enumerate(config.SCALES):
+                if scale in stats_results and metric_col in stats_results[scale]:
+                    sig = stats_results[scale][metric_col].get("significance", "ns")
+                    sig_label = ""
+                    if "**" in sig:
+                        sig_label = "**"
+                    elif "*" in sig:
+                        sig_label = "*"
+                    
+                    if sig_label:
+                        y_pos = max(s_mean.iloc[idx] + s_std.iloc[idx], c_mean.iloc[idx] + c_std.iloc[idx])
+                        plt.text(idx, y_pos * 1.02, sig_label, ha='center', va='bottom', fontsize=11, fontweight='bold', color='#d62728')
+                        
+        plt.xticks(x_indices, config.SCALES)
+        plt.title(title, fontsize=12, fontweight='bold')
+        plt.xlabel("Model Scale", fontsize=10)
+        plt.ylabel(ylabel, fontsize=10)
+        if is_pct:
+            plt.ylim(-5, 108)
+        plt.grid(True, linestyle="--", alpha=0.6)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(run_base_dir, filename), dpi=150)
+        plt.close()
+        
+    # Plot loss convergence trajectories per scale
+    for scale in config.SCALES:
+        plt.figure(figsize=(7.5, 4.5))
+        has_loss_data = False
+        
+        for variant, color, ls, label_name in [("scalar", "#1f77b4", "--", "Scalar Gating (A)"), ("channel-wise", "#ff7f0e", "-", "Channel-wise Gating (B)")]:
+            config_dir = os.path.join(run_base_dir, f"run_{variant}_{scale}")
+            seed_losses = []
+            
+            for seed in config.SEEDS:
+                metrics_file = os.path.join(config_dir, f"seed{seed}_metrics.json")
+                if os.path.exists(metrics_file):
+                    try:
+                        with open(metrics_file, "r") as f:
+                            m = json.load(f)
+                        if "train_losses" in m and len(m["train_losses"]) > 0:
+                            seed_losses.append(m["train_losses"])
+                    except Exception:
+                        pass
+                        
+            if seed_losses:
+                # Truncate to min length across seeds
+                min_len = min(len(l) for l in seed_losses)
+                arr = np.array([l[:min_len] for l in seed_losses])
+                mean_loss = np.mean(arr, axis=0)
+                std_loss = np.std(arr, axis=0)
+                steps = np.arange(1, min_len + 1)
+                
+                plt.plot(steps, mean_loss, color=color, linestyle=ls, label=label_name, linewidth=2)
+                plt.fill_between(steps, mean_loss - std_loss, mean_loss + std_loss, color=color, alpha=0.2)
+                has_loss_data = True
+                
+        if has_loss_data:
+            plt.title(f"Training Loss Trajectory - {scale} Scale", fontsize=12, fontweight='bold')
+            plt.xlabel("Step", fontsize=10)
+            plt.ylabel("Training Loss", fontsize=10)
+            plt.grid(True, linestyle="--", alpha=0.6)
+            plt.legend()
+            plt.tight_layout()
+            plt.savefig(os.path.join(run_base_dir, f"loss_convergence_{scale}.png"), dpi=150)
+            plt.close()
 
-    # 4. Memory Footprint Plot
-    plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["peak_memory_mb"], marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
-    plt.plot(cw_df["scale"], cw_df["peak_memory_mb"], marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
-    plt.title("Peak Memory Usage vs. Model Scale", fontsize=12, fontweight='bold')
-    plt.xlabel("Model Scale", fontsize=10)
-    plt.ylabel("Peak Memory (MB)", fontsize=10)
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(run_base_dir, "memory_scaling.png"), dpi=150)
-    plt.close()
-
-    # 5. MQAR Accuracy Plot
-    plt.figure(figsize=(7, 4.5))
-    plt.plot(scalar_df["scale"], scalar_df["mqar_accuracy"] * 100, marker='o', color="#1f77b4", label="Scalar Gating (A)", linewidth=2, linestyle='--')
-    plt.plot(cw_df["scale"], cw_df["mqar_accuracy"] * 100, marker='s', color="#ff7f0e", label="Channel-wise Gating (B)", linewidth=2)
-    plt.title("MQAR Accuracy vs. Model Scale", fontsize=12, fontweight='bold')
-    plt.xlabel("Model Scale", fontsize=10)
-    plt.ylabel("MQAR Accuracy (%)", fontsize=10)
-    plt.ylim(-5, 105)
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(os.path.join(run_base_dir, "mqar_scaling.png"), dpi=150)
-    plt.close()
-    
-    print("Scaling performance charts (5 figures) saved successfully.")
+    print("Research scaling plots with error bars and loss trajectory curves saved successfully.")
 
 def main():
-    # 1. Generate run-specific UUID
-    run_uuid = str(uuid.uuid4())[:8]
-    run_base_dir = os.path.join(config.OUTPUT_DIR, f"run_{run_uuid}")
+    # Determine run output directory (Resume vs New Run)
+    resume_id = getattr(config, "RESUME_RUN_ID", None)
+    if resume_id:
+        run_uuid = resume_id
+        run_base_dir = os.path.join(config.OUTPUT_DIR, run_uuid if run_uuid.startswith("run_") else f"run_{run_uuid}")
+        print(f"RESUMING / TARGETING specified run directory: {run_base_dir}")
+    else:
+        run_uuid = str(uuid.uuid4())[:8]
+        run_base_dir = os.path.join(config.OUTPUT_DIR, f"run_{run_uuid}")
+        
     os.makedirs(run_base_dir, exist_ok=True)
     
     print("==================================================")
     print(" GATED DELTANET GATING STUDY ORCHESTRATOR ")
-    print(f" Run UUID: {run_uuid}")
+    print(f" Run Identifier: {run_uuid}")
     print(f" Output Location: {run_base_dir}")
     print("==================================================")
     print(f"SMOKE_TEST Mode: {config.SMOKE_TEST}")
@@ -125,11 +184,6 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
     
-    # Initialize streaming dataloaders
-    print("Initializing streaming dataloaders...")
-    dataloader_train = get_dataloader("train", batch_size=config.BATCH_SIZE)
-    dataloader_val = get_dataloader("validation", batch_size=config.BATCH_SIZE)
-    
     results = []
     run_counter = 1
     total_runs = len(config.SCALES) * len(config.VARIANTS) * len(config.SEEDS)
@@ -137,14 +191,48 @@ def main():
     # Run the grid search sequentially
     for scale in config.SCALES:
         for variant in config.VARIANTS:
-            # Create a directory specifically for this scale and variant
             config_dir = os.path.join(run_base_dir, f"run_{variant}_{scale}")
             os.makedirs(config_dir, exist_ok=True)
             
             config_seed_metrics = []
             
             for seed in config.SEEDS:
-                print(f"\n>>> Running configuration {run_counter}/{total_runs} (Scale={scale}, Variant={variant}, Seed={seed}) <<<")
+                print(f"\n>>> Processing configuration {run_counter}/{total_runs} (Scale={scale}, Variant={variant}, Seed={seed}) <<<")
+                
+                # Check for run resumption / completed cache
+                completed, cached_metrics = is_seed_completed(config_dir, seed)
+                if completed:
+                    print(f"  [CACHE HIT] Found completed metrics for seed {seed}. Restoring metrics from disk...")
+                    
+                    # Also try to restore latency/throughput/retrieval/mqar if cached in tracker or seed config
+                    ms_per_token = cached_metrics.get("latency_ms_per_token", float('nan'))
+                    tokens_per_sec = cached_metrics.get("throughput_tokens_per_sec", float('nan'))
+                    retrieval_acc = cached_metrics.get("retrieval_accuracy", float('nan'))
+                    mqar_acc = cached_metrics.get("mqar_accuracy", float('nan'))
+                    
+                    seed_res = {
+                        "run_id": run_counter,
+                        "scale": scale,
+                        "variant": variant,
+                        "seed": seed,
+                        "parameter_count": cached_metrics.get("parameter_count", 0),
+                        "val_loss": cached_metrics.get("val_loss", float('nan')),
+                        "val_perplexity": cached_metrics.get("val_perplexity", float('nan')),
+                        "latency_ms_per_token": ms_per_token,
+                        "throughput_tokens_per_sec": tokens_per_sec,
+                        "retrieval_accuracy": retrieval_acc,
+                        "peak_memory_mb": cached_metrics.get("peak_memory_mb", float('nan')),
+                        "mqar_accuracy": mqar_acc
+                    }
+                    results.append(seed_res)
+                    config_seed_metrics.append(seed_res)
+                    run_counter += 1
+                    continue
+                    
+                # Initialize seed-controlled dataloaders
+                print(f"Initializing seed-controlled dataloaders for seed {seed}...")
+                dataloader_train = get_dataloader("train", batch_size=config.BATCH_SIZE, seed=seed, run_dir=run_base_dir)
+                dataloader_val = get_dataloader("validation", batch_size=config.BATCH_SIZE, seed=seed, run_dir=run_base_dir)
                 
                 try:
                     # 1. Train model
@@ -172,7 +260,20 @@ def main():
                     mqar_acc = mqar_test(model, device, num_pairs=3 if config.SMOKE_TEST else 5, num_trials=5 if config.SMOKE_TEST else 20)
                     print(f"MQAR Accuracy: {mqar_acc * 100:.1f}%")
                     
-                    # Record result trace
+                    # Update seed metric json to include benchmark scores for full resumption
+                    metrics_file = os.path.join(config_dir, f"seed{seed}_metrics.json")
+                    if os.path.exists(metrics_file):
+                        with open(metrics_file, "r") as f:
+                            m_data = json.load(f)
+                        m_data.update({
+                            "latency_ms_per_token": ms_per_token,
+                            "throughput_tokens_per_sec": tokens_per_sec,
+                            "retrieval_accuracy": retrieval_acc,
+                            "mqar_accuracy": mqar_acc
+                        })
+                        with open(metrics_file, "w") as f:
+                            json.dump(m_data, f, indent=4)
+
                     seed_res = {
                         "run_id": run_counter,
                         "scale": scale,
@@ -197,13 +298,12 @@ def main():
                             torch.cuda.empty_cache()
                         gc.collect()
                         
-                        # Estimate parameters if model instantiation failed
                         param_count_est = 0
                         try:
                             temp_model = GatedDeltaNetLM(config.SCALE_CONFIGS[scale], variant=variant)
                             param_count_est = sum(p.numel() for p in temp_model.parameters())
                             del temp_model
-                        except:
+                        except Exception:
                             pass
                             
                         seed_res = {
@@ -225,28 +325,27 @@ def main():
                     else:
                         raise e
                 finally:
-                    # Garbage collect and clear CUDA cache to release memory
                     if 'model' in locals():
                         del model
                     if torch.cuda.is_available():
                         torch.cuda.empty_cache()
                     gc.collect()
 
-                # Save global tracker progressively to base folder
+                # Progressive global tracker
                 global_tracker_path = os.path.join(run_base_dir, "global_tracker.json")
                 with open(global_tracker_path, "w") as f:
                     json.dump(results, f, indent=4)
                     
                 run_counter += 1
                 
-            # Perform seed-level aggregation calculation for this specific (scale, variant)
+            # Perform seed-level aggregation for this configuration
             val_losses = [r["val_loss"] for r in config_seed_metrics]
             val_perplexities = [r["val_perplexity"] for r in config_seed_metrics]
             throughputs = [r["throughput_tokens_per_sec"] for r in config_seed_metrics]
             accuracies = [r["retrieval_accuracy"] for r in config_seed_metrics]
             memories = [r["peak_memory_mb"] for r in config_seed_metrics]
             mqars = [r["mqar_accuracy"] for r in config_seed_metrics]
-            param_count = config_seed_metrics[0]["parameter_count"]
+            param_count = config_seed_metrics[0]["parameter_count"] if config_seed_metrics else 0
             
             def get_nan_mean(lst):
                 val = np.nanmean(lst)
@@ -280,17 +379,19 @@ def main():
                 json.dump(agg_metrics, f, indent=4)
             print(f"Aggregated statistics saved to {agg_metrics_path}")
             
-    # Post-run plotting and reporting
+    # Post-run reporting & hypothesis testing
     df = pd.DataFrame(results)
-    
-    # Save raw CSV in UUID base directory
     csv_path = os.path.join(run_base_dir, "results.csv")
     df.to_csv(csv_path, index=False)
     
-    # Create matplotlib scaling plots
-    generate_plots(df, run_base_dir)
+    # Run statistical hypothesis testing (Wilcoxon, t-test, Cohen's d, CIs)
+    print("\nExecuting multi-seed statistical hypothesis testing...")
+    stats_results = compute_statistical_tests(df, run_base_dir)
     
-    # Format value helper for table
+    # Generate matplotlib scaling and trajectory plots with error bars
+    generate_plots(df, run_base_dir, stats_results=stats_results)
+    
+    # Summary table generation
     def fmt_val(mean, std, scale_factor=1.0, is_pct=False):
         if pd.isna(mean):
             return "N/A"
@@ -301,7 +402,6 @@ def main():
             return f"{mean_val:.2f}{suffix} ± {std_val:.2f}{suffix}" if not is_pct else f"{mean_val:.1f}{suffix} ± {std_val:.1f}{suffix}"
         return f"{mean_val:.2f}{suffix}" if not is_pct else f"{mean_val:.1f}{suffix}"
         
-    # Group results for markdown output table
     summary_data = []
     grouped = df.groupby(["scale", "variant"])
     for (scale, variant), group in grouped:
@@ -333,7 +433,7 @@ def main():
     
     md_summary = f"""# Gated DeltaNet Gating Granularity Study Summary
 
-## Execution Run ID: {run_uuid}
+## Execution Run Identifier: {run_uuid}
 *Device: `{device}`*
 
 ### Aggregated Performance (Mean ± Std Dev)
@@ -341,12 +441,15 @@ def main():
 {md_table}
 
 ---
-### Scaling Charts Generated:
-1. `perplexity_scaling.png` (Validation Perplexity vs. Parameters)
-2. `throughput_scaling.png` (Tokens per second vs. Parameters)
-3. `retrieval_scaling.png` (Needle retrieval accuracy vs. Parameters)
-4. `memory_scaling.png` (Peak Memory in MB vs. Parameters)
-5. `mqar_scaling.png` (MQAR accuracy vs. Parameters)
+### Statistical Reports & Scaling Artifacts Generated:
+1. `statistical_report.md` (Detailed Wilcoxon signed-rank, t-test, Cohen's d, and 95% CIs)
+2. `statistical_analysis.json` (Structured JSON statistical analysis)
+3. `perplexity_scaling.png` (Validation Perplexity with error bars)
+4. `throughput_scaling.png` (Tokens/sec with error bars)
+5. `retrieval_scaling.png` (Needle retrieval accuracy with error bars)
+6. `memory_scaling.png` (Peak Memory in MB with error bars)
+7. `mqar_scaling.png` (MQAR accuracy with error bars)
+8. `loss_convergence_*.png` (Step-wise training loss trajectories per scale)
 """
     
     summary_md_path = os.path.join(run_base_dir, "summary_table.md")
