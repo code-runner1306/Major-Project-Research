@@ -5,6 +5,8 @@ os.environ['MPLBACKEND'] = 'Agg'
 import json
 import uuid
 import gc
+import threading
+from concurrent.futures import ThreadPoolExecutor
 import torch
 import pandas as pd
 import numpy as np
@@ -33,12 +35,214 @@ def is_seed_completed(config_dir, seed):
             return False, None
     return False, None
 
+def check_parallel_capacity(num_requested, scales_to_run):
+    """
+    Inspects free GPU memory via torch.cuda.mem_get_info() to verify if `num_requested` models
+    can be trained concurrently. Applies an 85% safety threshold and falls back to 1 (sequential) if capacity is tight.
+    """
+    if num_requested <= 1:
+        return 1
+        
+    if not torch.cuda.is_available():
+        print("[Parallel Check] No CUDA GPU available. Defaulting PARALLEL_TRAININGS to 1 (Sequential).")
+        return 1
+        
+    try:
+        free_vram_bytes, total_vram_bytes = torch.cuda.mem_get_info()
+        free_vram_gb = free_vram_bytes / (1024 ** 3)
+        
+        # Estimate max VRAM required per model (with our micro-batched 0.82 GB peak logits footprint)
+        vram_estimates_gb = {"10M": 1.2, "30M": 2.2, "55M": 3.5, "100M": 5.5}
+        max_scale_vram = max(vram_estimates_gb.get(s, 5.5) for s in scales_to_run)
+        
+        required_vram_gb = max_scale_vram * num_requested
+        usable_vram_gb = free_vram_gb * 0.85  # 85% safety threshold
+        
+        if required_vram_gb > usable_vram_gb:
+            print(f"\n[Parallel Check] WARNING: Insufficient VRAM! Needed ~{required_vram_gb:.1f} GB for {num_requested} parallel models, but only ~{usable_vram_gb:.1f} GB usable free VRAM is available.")
+            print("  -> Defaulting gracefully to PARALLEL_TRAININGS = 1 (Sequential Execution).\n")
+            return 1
+        else:
+            print(f"\n[Parallel Check] Sufficient GPU VRAM available (~{free_vram_gb:.1f} GB free). Running PARALLEL_TRAININGS = {num_requested}.\n")
+            return num_requested
+    except Exception as e:
+        print(f"[Parallel Check] Could not inspect CUDA memory: {e}. Defaulting to PARALLEL_TRAININGS = 1.")
+        return 1
+
+def log_worker(worker_id, tag, message):
+    """Formats log output lines with worker prefix for clear parallel monitoring."""
+    prefix = f"[Worker-{worker_id} | {tag}]" if worker_id is not None else f"[{tag}]"
+    print(f"{prefix} {message}")
+
+def process_model_config(scale, variant, worker_id, run_base_dir, global_results, tracker_lock):
+    """Processes all seeds for a single model configuration, then unloads model from memory."""
+    tag = f"{scale}-{variant}"
+    config_dir = os.path.join(run_base_dir, f"run_{variant}_{scale}")
+    os.makedirs(config_dir, exist_ok=True)
+    
+    log_worker(worker_id, tag, f"Starting processing for Scale={scale}, Variant={variant}")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    config_seed_metrics = []
+    
+    for seed in config.SEEDS:
+        # Check for run resumption / completed cache
+        completed, cached_metrics = is_seed_completed(config_dir, seed)
+        if completed:
+            log_worker(worker_id, tag, f"[CACHE HIT] Seed {seed} metrics found. Restoring metrics from disk...")
+            ms_per_token = cached_metrics.get("latency_ms_per_token", float('nan'))
+            tokens_per_sec = cached_metrics.get("throughput_tokens_per_sec", float('nan'))
+            retrieval_acc = cached_metrics.get("retrieval_accuracy", float('nan'))
+            mqar_acc = cached_metrics.get("mqar_accuracy", float('nan'))
+            
+            seed_res = {
+                "scale": scale,
+                "variant": variant,
+                "seed": seed,
+                "parameter_count": cached_metrics.get("parameter_count", 0),
+                "val_loss": cached_metrics.get("val_loss", float('nan')),
+                "val_perplexity": cached_metrics.get("val_perplexity", float('nan')),
+                "latency_ms_per_token": ms_per_token,
+                "throughput_tokens_per_sec": tokens_per_sec,
+                "retrieval_accuracy": retrieval_acc,
+                "peak_memory_mb": cached_metrics.get("peak_memory_mb", float('nan')),
+                "mqar_accuracy": mqar_acc
+            }
+            with tracker_lock:
+                global_results.append(seed_res)
+            config_seed_metrics.append(seed_res)
+            continue
+            
+        log_worker(worker_id, tag, f"Initializing seed-controlled dataloaders for Seed {seed}...")
+        dataloader_train = get_dataloader("train", batch_size=config.BATCH_SIZE, seed=seed, run_dir=run_base_dir)
+        dataloader_val = get_dataloader("validation", batch_size=config.BATCH_SIZE, seed=seed, run_dir=run_base_dir)
+        
+        model = None
+        try:
+            # 1. Train model
+            log_worker(worker_id, tag, f"Starting Training Loop (Seed {seed})...")
+            model, train_metrics = train_model(
+                scale=scale,
+                variant=variant,
+                seed=seed,
+                dataloader_train=dataloader_train,
+                dataloader_val=dataloader_val,
+                run_dir=config_dir
+            )
+            
+            # 2. Benchmarking
+            log_worker(worker_id, tag, f"Running inference benchmark (Seed {seed})...")
+            ms_per_token, tokens_per_sec = benchmark_inference(model, device)
+            log_worker(worker_id, tag, f"Throughput: {tokens_per_sec:.2f} tok/s, Latency: {ms_per_token:.2f} ms/tok")
+            
+            # 3. Needle-in-a-Haystack Retrieval
+            log_worker(worker_id, tag, f"Running needle retrieval probe (Seed {seed})...")
+            retrieval_acc = needle_in_a_haystack_test(model, device, num_trials=5 if config.SMOKE_TEST else 20)
+            log_worker(worker_id, tag, f"Retrieval Accuracy: {retrieval_acc * 100:.1f}%")
+
+            # 4. Multi-Query Associative Recall (MQAR) Test
+            log_worker(worker_id, tag, f"Running MQAR test (Seed {seed})...")
+            mqar_acc = mqar_test(model, device, num_pairs=3 if config.SMOKE_TEST else 5, num_trials=5 if config.SMOKE_TEST else 20)
+            log_worker(worker_id, tag, f"MQAR Accuracy: {mqar_acc * 100:.1f}%")
+            
+            # Update metrics JSON file
+            metrics_file = os.path.join(config_dir, f"seed{seed}_metrics.json")
+            if os.path.exists(metrics_file):
+                with open(metrics_file, "r") as f:
+                    m_data = json.load(f)
+                m_data.update({
+                    "latency_ms_per_token": ms_per_token,
+                    "throughput_tokens_per_sec": tokens_per_sec,
+                    "retrieval_accuracy": retrieval_acc,
+                    "mqar_accuracy": mqar_acc
+                })
+                with open(metrics_file, "w") as f:
+                    json.dump(m_data, f, indent=4)
+
+            seed_res = {
+                "scale": scale,
+                "variant": variant,
+                "seed": seed,
+                "parameter_count": train_metrics["parameter_count"],
+                "val_loss": train_metrics["val_loss"],
+                "val_perplexity": train_metrics["val_perplexity"],
+                "latency_ms_per_token": ms_per_token,
+                "throughput_tokens_per_sec": tokens_per_sec,
+                "retrieval_accuracy": retrieval_acc,
+                "peak_memory_mb": train_metrics["peak_memory_mb"],
+                "mqar_accuracy": mqar_acc
+            }
+            with tracker_lock:
+                global_results.append(seed_res)
+            config_seed_metrics.append(seed_res)
+            
+        except RuntimeError as e:
+            if "out of memory" in str(e).lower():
+                log_worker(worker_id, tag, f"[WARNING] OOM encountered for Scale={scale}, Seed={seed}")
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+                gc.collect()
+            else:
+                raise e
+        finally:
+            # Memory cleanup after seed execution
+            if model is not None:
+                del model
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                
+    # Perform seed-level aggregation calculation for this specific (scale, variant)
+    val_losses = [r["val_loss"] for r in config_seed_metrics]
+    val_perplexities = [r["val_perplexity"] for r in config_seed_metrics]
+    throughputs = [r["throughput_tokens_per_sec"] for r in config_seed_metrics]
+    accuracies = [r["retrieval_accuracy"] for r in config_seed_metrics]
+    memories = [r["peak_memory_mb"] for r in config_seed_metrics]
+    mqars = [r["mqar_accuracy"] for r in config_seed_metrics]
+    param_count = config_seed_metrics[0]["parameter_count"] if config_seed_metrics else 0
+    
+    def get_nan_mean(lst):
+        val = np.nanmean(lst)
+        return float(val) if not np.isnan(val) else 0.0
+        
+    def get_nan_std(lst):
+        val = np.nanstd(lst)
+        return float(val) if not np.isnan(val) else 0.0
+    
+    agg_metrics = {
+        "scale": scale,
+        "variant": variant,
+        "parameter_count": param_count,
+        "seeds_evaluated": config.SEEDS,
+        "mean_val_loss": get_nan_mean(val_losses),
+        "std_val_loss": get_nan_std(val_losses),
+        "mean_val_perplexity": get_nan_mean(val_perplexities),
+        "std_val_perplexity": get_nan_std(val_perplexities),
+        "mean_throughput_tokens_per_sec": get_nan_mean(throughputs),
+        "std_throughput_tokens_per_sec": get_nan_std(throughputs),
+        "mean_retrieval_accuracy": get_nan_mean(accuracies),
+        "std_retrieval_accuracy": get_nan_std(accuracies),
+        "mean_peak_memory_mb": get_nan_mean(memories),
+        "std_peak_memory_mb": get_nan_std(memories),
+        "mean_mqar_accuracy": get_nan_mean(mqars),
+        "std_mqar_accuracy": get_nan_std(mqars)
+    }
+    
+    agg_metrics_path = os.path.join(config_dir, "aggregate_metrics.json")
+    with open(agg_metrics_path, "w") as f:
+        json.dump(agg_metrics, f, indent=4)
+        
+    log_worker(worker_id, tag, f"Finished all seeds. Unloaded model and cleared VRAM cache.\n")
+    
+    with tracker_lock:
+        global_tracker_path = os.path.join(run_base_dir, "global_tracker.json")
+        with open(global_tracker_path, "w") as f:
+            json.dump(list(global_results), f, indent=4)
+
 def generate_plots(results_df, run_base_dir, stats_results=None):
     """
     Generates publication-grade scaling plots with error bars (std dev)
     and statistical significance annotations. Also plots loss convergence trajectories.
     """
-    # Group results by scale and variant to get mean and std dev
     agg = results_df.groupby(["scale", "variant"]).agg({
         "parameter_count": ["mean"],
         "val_perplexity": ["mean", "std"],
@@ -50,7 +254,6 @@ def generate_plots(results_df, run_base_dir, stats_results=None):
     agg.columns = ['_'.join(c).strip('_') for c in agg.columns]
     agg = agg.reset_index()
     
-    # Sort scales logically
     scale_order = {s: i for i, s in enumerate(config.SCALES)}
     agg["scale_rank"] = agg["scale"].map(scale_order)
     agg = agg.sort_values("scale_rank")
@@ -88,7 +291,6 @@ def generate_plots(results_df, run_base_dir, stats_results=None):
             linewidth=2, capsize=4, elinewidth=1.5
         )
         
-        # Annotate statistical significance markers if stats_results exist
         if stats_results:
             for idx, scale in enumerate(config.SCALES):
                 if scale in stats_results and metric_col in stats_results[scale]:
@@ -115,7 +317,6 @@ def generate_plots(results_df, run_base_dir, stats_results=None):
         plt.savefig(os.path.join(run_base_dir, filename), dpi=150)
         plt.close()
         
-    # Plot loss convergence trajectories per scale
     for scale in config.SCALES:
         plt.figure(figsize=(7.5, 4.5))
         has_loss_data = False
@@ -136,7 +337,6 @@ def generate_plots(results_df, run_base_dir, stats_results=None):
                         pass
                         
             if seed_losses:
-                # Truncate to min length across seeds
                 min_len = min(len(l) for l in seed_losses)
                 arr = np.array([l[:min_len] for l in seed_losses])
                 mean_loss = np.mean(arr, axis=0)
@@ -160,7 +360,6 @@ def generate_plots(results_df, run_base_dir, stats_results=None):
     print("Research scaling plots with error bars and loss trajectory curves saved successfully.")
 
 def main():
-    # Determine run output directory (Resume vs New Run)
     resume_id = getattr(config, "RESUME_RUN_ID", None)
     if resume_id:
         run_uuid = resume_id
@@ -186,214 +385,42 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
     
-    results = []
-    run_counter = 1
-    total_runs = len(config.SCALES) * len(config.VARIANTS) * len(config.SEEDS)
+    requested_parallel = getattr(config, "PARALLEL_TRAININGS", 1)
+    parallel_jobs = check_parallel_capacity(requested_parallel, config.SCALES)
     
-    # Run the grid search sequentially
+    tasks_list = []
     for scale in config.SCALES:
         for variant in config.VARIANTS:
-            config_dir = os.path.join(run_base_dir, f"run_{variant}_{scale}")
-            os.makedirs(config_dir, exist_ok=True)
+            tasks_list.append((scale, variant))
             
-            config_seed_metrics = []
-            
-            for seed in config.SEEDS:
-                print(f"\n>>> Processing configuration {run_counter}/{total_runs} (Scale={scale}, Variant={variant}, Seed={seed}) <<<")
-                
-                # Check for run resumption / completed cache
-                completed, cached_metrics = is_seed_completed(config_dir, seed)
-                if completed:
-                    print(f"  [CACHE HIT] Found completed metrics for seed {seed}. Restoring metrics from disk...")
-                    
-                    # Also try to restore latency/throughput/retrieval/mqar if cached in tracker or seed config
-                    ms_per_token = cached_metrics.get("latency_ms_per_token", float('nan'))
-                    tokens_per_sec = cached_metrics.get("throughput_tokens_per_sec", float('nan'))
-                    retrieval_acc = cached_metrics.get("retrieval_accuracy", float('nan'))
-                    mqar_acc = cached_metrics.get("mqar_accuracy", float('nan'))
-                    
-                    seed_res = {
-                        "run_id": run_counter,
-                        "scale": scale,
-                        "variant": variant,
-                        "seed": seed,
-                        "parameter_count": cached_metrics.get("parameter_count", 0),
-                        "val_loss": cached_metrics.get("val_loss", float('nan')),
-                        "val_perplexity": cached_metrics.get("val_perplexity", float('nan')),
-                        "latency_ms_per_token": ms_per_token,
-                        "throughput_tokens_per_sec": tokens_per_sec,
-                        "retrieval_accuracy": retrieval_acc,
-                        "peak_memory_mb": cached_metrics.get("peak_memory_mb", float('nan')),
-                        "mqar_accuracy": mqar_acc
-                    }
-                    results.append(seed_res)
-                    config_seed_metrics.append(seed_res)
-                    run_counter += 1
-                    continue
-                    
-                # Initialize seed-controlled dataloaders
-                print(f"Initializing seed-controlled dataloaders for seed {seed}...")
-                dataloader_train = get_dataloader("train", batch_size=config.BATCH_SIZE, seed=seed, run_dir=run_base_dir)
-                dataloader_val = get_dataloader("validation", batch_size=config.BATCH_SIZE, seed=seed, run_dir=run_base_dir)
-                
-                try:
-                    # 1. Train model
-                    model, train_metrics = train_model(
-                        scale=scale,
-                        variant=variant,
-                        seed=seed,
-                        dataloader_train=dataloader_train,
-                        dataloader_val=dataloader_val,
-                        run_dir=config_dir
-                    )
-                    
-                    # 2. Benchmarking
-                    print("Running inference benchmark...")
-                    ms_per_token, tokens_per_sec = benchmark_inference(model, device)
-                    print(f"Throughput: {tokens_per_sec:.2f} tokens/sec, Latency: {ms_per_token:.2f} ms/token")
-                    
-                    # 3. Needle-in-a-Haystack Retrieval
-                    print("Running needle-in-a-haystack retrieval probe...")
-                    retrieval_acc = needle_in_a_haystack_test(model, device, num_trials=5 if config.SMOKE_TEST else 20)
-                    print(f"Retrieval Accuracy: {retrieval_acc * 100:.1f}%")
-
-                    # 4. Multi-Query Associative Recall (MQAR) Test
-                    print("Running multi-query associative recall (MQAR) test...")
-                    mqar_acc = mqar_test(model, device, num_pairs=3 if config.SMOKE_TEST else 5, num_trials=5 if config.SMOKE_TEST else 20)
-                    print(f"MQAR Accuracy: {mqar_acc * 100:.1f}%")
-                    
-                    # Update seed metric json to include benchmark scores for full resumption
-                    metrics_file = os.path.join(config_dir, f"seed{seed}_metrics.json")
-                    if os.path.exists(metrics_file):
-                        with open(metrics_file, "r") as f:
-                            m_data = json.load(f)
-                        m_data.update({
-                            "latency_ms_per_token": ms_per_token,
-                            "throughput_tokens_per_sec": tokens_per_sec,
-                            "retrieval_accuracy": retrieval_acc,
-                            "mqar_accuracy": mqar_acc
-                        })
-                        with open(metrics_file, "w") as f:
-                            json.dump(m_data, f, indent=4)
-
-                    seed_res = {
-                        "run_id": run_counter,
-                        "scale": scale,
-                        "variant": variant,
-                        "seed": seed,
-                        "parameter_count": train_metrics["parameter_count"],
-                        "val_loss": train_metrics["val_loss"],
-                        "val_perplexity": train_metrics["val_perplexity"],
-                        "latency_ms_per_token": ms_per_token,
-                        "throughput_tokens_per_sec": tokens_per_sec,
-                        "retrieval_accuracy": retrieval_acc,
-                        "peak_memory_mb": train_metrics["peak_memory_mb"],
-                        "mqar_accuracy": mqar_acc
-                    }
-                    results.append(seed_res)
-                    config_seed_metrics.append(seed_res)
-                    
-                except RuntimeError as e:
-                    if "out of memory" in str(e).lower():
-                        print(f"\n[WARNING] Configuration failed due to CUDA Out of Memory (OOM): Scale={scale}, Variant={variant}, Seed={seed}")
-                        if torch.cuda.is_available():
-                            torch.cuda.empty_cache()
-                        gc.collect()
-                        
-                        param_count_est = 0
-                        try:
-                            temp_model = GatedDeltaNetLM(config.SCALE_CONFIGS[scale], variant=variant)
-                            param_count_est = sum(p.numel() for p in temp_model.parameters())
-                            del temp_model
-                        except Exception:
-                            pass
-                            
-                        seed_res = {
-                            "run_id": run_counter,
-                            "scale": scale,
-                            "variant": variant,
-                            "seed": seed,
-                            "parameter_count": param_count_est,
-                            "val_loss": float('nan'),
-                            "val_perplexity": float('nan'),
-                            "latency_ms_per_token": float('nan'),
-                            "throughput_tokens_per_sec": float('nan'),
-                            "retrieval_accuracy": float('nan'),
-                            "peak_memory_mb": float('nan'),
-                            "mqar_accuracy": float('nan')
-                        }
-                        results.append(seed_res)
-                        config_seed_metrics.append(seed_res)
-                    else:
-                        raise e
-                finally:
-                    if 'model' in locals():
-                        del model
-                    if torch.cuda.is_available():
-                        torch.cuda.empty_cache()
-                    gc.collect()
-
-                # Progressive global tracker
-                global_tracker_path = os.path.join(run_base_dir, "global_tracker.json")
-                with open(global_tracker_path, "w") as f:
-                    json.dump(results, f, indent=4)
-                    
-                run_counter += 1
-                
-            # Perform seed-level aggregation for this configuration
-            val_losses = [r["val_loss"] for r in config_seed_metrics]
-            val_perplexities = [r["val_perplexity"] for r in config_seed_metrics]
-            throughputs = [r["throughput_tokens_per_sec"] for r in config_seed_metrics]
-            accuracies = [r["retrieval_accuracy"] for r in config_seed_metrics]
-            memories = [r["peak_memory_mb"] for r in config_seed_metrics]
-            mqars = [r["mqar_accuracy"] for r in config_seed_metrics]
-            param_count = config_seed_metrics[0]["parameter_count"] if config_seed_metrics else 0
-            
-            def get_nan_mean(lst):
-                val = np.nanmean(lst)
-                return float(val) if not np.isnan(val) else 0.0
-                
-            def get_nan_std(lst):
-                val = np.nanstd(lst)
-                return float(val) if not np.isnan(val) else 0.0
-            
-            agg_metrics = {
-                "scale": scale,
-                "variant": variant,
-                "parameter_count": param_count,
-                "seeds_evaluated": config.SEEDS,
-                "mean_val_loss": get_nan_mean(val_losses),
-                "std_val_loss": get_nan_std(val_losses),
-                "mean_val_perplexity": get_nan_mean(val_perplexities),
-                "std_val_perplexity": get_nan_std(val_perplexities),
-                "mean_throughput_tokens_per_sec": get_nan_mean(throughputs),
-                "std_throughput_tokens_per_sec": get_nan_std(throughputs),
-                "mean_retrieval_accuracy": get_nan_mean(accuracies),
-                "std_retrieval_accuracy": get_nan_std(accuracies),
-                "mean_peak_memory_mb": get_nan_mean(memories),
-                "std_peak_memory_mb": get_nan_std(memories),
-                "mean_mqar_accuracy": get_nan_mean(mqars),
-                "std_mqar_accuracy": get_nan_std(mqars)
-            }
-            
-            agg_metrics_path = os.path.join(config_dir, "aggregate_metrics.json")
-            with open(agg_metrics_path, "w") as f:
-                json.dump(agg_metrics, f, indent=4)
-            print(f"Aggregated statistics saved to {agg_metrics_path}")
+    global_results = []
+    tracker_lock = threading.Lock()
+    
+    if parallel_jobs > 1:
+        print(f"\n[PARALLEL] Launching Parallel Worker Pool with {parallel_jobs} concurrent model jobs...\n")
+        with ThreadPoolExecutor(max_workers=parallel_jobs) as executor:
+            futures = []
+            for idx, (scale, variant) in enumerate(tasks_list):
+                worker_id = (idx % parallel_jobs) + 1
+                f = executor.submit(process_model_config, scale, variant, worker_id, run_base_dir, global_results, tracker_lock)
+                futures.append(f)
+            for f in futures:
+                f.result()
+    else:
+        print("\n[SEQUENTIAL] Running Model Configurations Sequentially...\n")
+        for scale, variant in tasks_list:
+            process_model_config(scale, variant, worker_id=1, run_base_dir=run_base_dir, global_results=global_results, tracker_lock=tracker_lock)
             
     # Post-run reporting & hypothesis testing
-    df = pd.DataFrame(results)
+    df = pd.DataFrame(global_results)
     csv_path = os.path.join(run_base_dir, "results.csv")
     df.to_csv(csv_path, index=False)
     
-    # Run statistical hypothesis testing (Wilcoxon, t-test, Cohen's d, CIs)
     print("\nExecuting multi-seed statistical hypothesis testing...")
     stats_results = compute_statistical_tests(df, run_base_dir)
     
-    # Generate matplotlib scaling and trajectory plots with error bars
     generate_plots(df, run_base_dir, stats_results=stats_results)
     
-    # Summary table generation
     def fmt_val(mean, std, scale_factor=1.0, is_pct=False):
         if pd.isna(mean):
             return "N/A"

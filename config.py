@@ -73,6 +73,9 @@ BETA1 = 0.9
 BETA2 = 0.95
 GRAD_CLIP = 1.0
 
+# Parallel execution settings
+PARALLEL_TRAININGS = 2  # Number of model configurations to train in parallel (Default: 1 for sequential)
+
 # Paths & Resume Options
 OUTPUT_DIR = "output"
 GLOBAL_TRACKER_FILE = os.path.join(OUTPUT_DIR, "global_tracker.json")
