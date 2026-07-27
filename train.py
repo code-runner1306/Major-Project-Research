@@ -29,7 +29,8 @@ def evaluate_model(model, dataloader_val, device, max_steps):
                     break
             
             x, y = x.to(device), y.to(device)
-            _, loss = model(x, y)
+            with torch.amp.autocast('cuda', enabled=(device.type == "cuda")):
+                _, loss = model(x, y)
             val_loss_sum += loss.item()
             val_steps += 1
             
@@ -79,8 +80,9 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
         final_div_factor=10.0
     )
     
-    # AMP GradScaler
-    scaler = torch.cuda.amp.GradScaler(enabled=(device.type == "cuda"))
+    # Modern PyTorch AMP GradScaler (PyTorch 2.x+)
+    scaler = torch.amp.GradScaler('cuda', enabled=(device.type == "cuda"))
+    grad_accum_steps = getattr(config, "GRAD_ACCUM_STEPS", 1)
     
     # Checkpointing and Early Stopping parameters
     best_val_loss = float('inf')
@@ -92,32 +94,37 @@ def train_model(scale, variant, seed, dataloader_train, dataloader_val, run_dir)
     iter_train = iter(dataloader_train)
     
     for step in range(1, config.MAX_STEPS + 1):
-        try:
-            x, y = next(iter_train)
-        except StopIteration:
-            # Re-initialize dataset if we exhaust the stream
-            iter_train = iter(dataloader_train)
-            x, y = next(iter_train)
-            
-        x, y = x.to(device), y.to(device)
-        
         optimizer.zero_grad()
-        with torch.cuda.amp.autocast(enabled=(device.type == "cuda")):
-            _, loss = model(x, y)
+        accum_loss = 0.0
+        
+        for _ in range(grad_accum_steps):
+            try:
+                x, y = next(iter_train)
+            except StopIteration:
+                # Re-initialize dataset if we exhaust the stream
+                iter_train = iter(dataloader_train)
+                x, y = next(iter_train)
+                
+            x, y = x.to(device), y.to(device)
             
-        scaler.scale(loss).backward()
+            with torch.amp.autocast('cuda', enabled=(device.type == "cuda")):
+                _, loss = model(x, y)
+                loss = loss / grad_accum_steps
+                
+            scaler.scale(loss).backward()
+            accum_loss += loss.item() * grad_accum_steps
+            
         scaler.unscale_(optimizer)
         torch.nn.utils.clip_grad_norm_(model.parameters(), config.GRAD_CLIP)
         scaler.step(optimizer)
         scaler.update()
         scheduler.step()
         
-        loss_val = loss.item()
-        train_losses.append(loss_val)
+        train_losses.append(accum_loss)
         
         # Periodic output log
         if step % max(1, config.MAX_STEPS // 5) == 0 or step == config.MAX_STEPS:
-            print(f"Step {step}/{config.MAX_STEPS} - Loss: {loss_val:.4f}")
+            print(f"Step {step}/{config.MAX_STEPS} - Loss: {accum_loss:.4f}")
             
         # Periodic Validation check
         if step % config.EVAL_INTERVAL == 0:

@@ -1,0 +1,7 @@
+{
+    "dataset_name": "roneneldan/TinyStories",
+    "split": "train",
+    "seed": 44,
+    "buffer_size": 10000,
+    "created_at": "2026-07-27T05:39:03Z"
+}

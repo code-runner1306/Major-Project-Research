@@ -1,7 +1,7 @@
 import os
 
 # Smoke test config flag
-SMOKE_TEST = False  # Set to False for actual full training
+SMOKE_TEST = True  # Set to False for actual full training
 
 # Grid search parameters
 SCALES = ["10M", "30M", "55M", "100M"]  # 4 scales
@@ -11,6 +11,7 @@ SEEDS = [42, 43, 44]  # 3 seeds -> 4 scales * 2 variants * 3 seeds = 24 runs
 # Common Hyperparameters (Full Run vs. Smoke Test)
 if SMOKE_TEST:
     BATCH_SIZE = 2
+    GRAD_ACCUM_STEPS = 1
     MAX_STEPS = 4        # Set to 4 steps in smoke test to check periodic eval logic
     VAL_STEPS = 2
     CONTEXT_LENGTH = 64
@@ -22,7 +23,8 @@ if SMOKE_TEST:
     EVAL_INTERVAL = 2    # Run validation checks every 2 steps in smoke test
     PATIENCE = 2         # Early stopping patience
 else:
-    BATCH_SIZE = 32
+    BATCH_SIZE = 8       # Micro-batch size to prevent CUDA OOM (0.82 GB peak logits vs 3.29 GB)
+    GRAD_ACCUM_STEPS = 4 # Effective batch size = 8 * 4 = 32
     MAX_STEPS = 15000    # Optimal steps for convergence on TinyStories
     VAL_STEPS = 200
     CONTEXT_LENGTH = 512
