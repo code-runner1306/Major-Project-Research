@@ -1,7 +1,7 @@
 import os
 
 # Smoke test config flag
-SMOKE_TEST = True  # Set to False for actual full training
+SMOKE_TEST = False  # Set to False for actual full training
 
 # Grid search parameters
 SCALES = ["10M", "30M", "55M", "100M"]  # 4 scales
