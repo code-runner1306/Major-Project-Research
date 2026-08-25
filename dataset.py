@@ -1,121 +1,115 @@
+"""Deterministic TinyStories and offline toy-language data loaders."""
+
+from __future__ import annotations
+
+from hashlib import sha256
 import os
-import json
-import time
+from pathlib import Path
+from typing import Iterator
+
 import torch
-from torch.utils.data import IterableDataset, DataLoader
-import tiktoken
-from datasets import load_dataset
-import config
+from torch.utils.data import DataLoader, Dataset, IterableDataset
 
-def save_or_load_split_manifest(seed, split="train", dataset_len=None, run_dir=None):
-    splits_dir = getattr(config, "SPLITS_DIR", os.path.join("data", "splits"))
-    os.makedirs(splits_dir, exist_ok=True)
-    manifest_path = os.path.join(splits_dir, f"seed_{seed}_{split}_split.json")
-    
-    manifest = None
-    if os.path.exists(manifest_path):
-        try:
-            with open(manifest_path, "r") as f:
-                manifest = json.load(f)
-            print(f"Loaded existing dataset split manifest for seed {seed} from {manifest_path}")
-        except Exception as e:
-            print(f"Error reading split manifest {manifest_path}: {e}. Creating new manifest.")
-            
-    if manifest is None:
-        manifest = {
-            "dataset_name": "roneneldan/TinyStories",
-            "split": split,
-            "seed": seed,
-            "total_stories_in_dataset": dataset_len if dataset_len is not None else "unknown",
-            "subset_limit": config.DATASET_SUBSET_SIZE if config.SMOKE_TEST else "full_dataset",
-            "context_length": config.CONTEXT_LENGTH,
-            "batch_size": config.BATCH_SIZE,
-            "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        }
-        with open(manifest_path, "w") as f:
-            json.dump(manifest, f, indent=4)
-        print(f"Saved dataset split manifest for seed {seed} to {manifest_path}")
-        
-    if run_dir:
-        run_splits_dir = os.path.join(run_dir, "splits")
-        os.makedirs(run_splits_dir, exist_ok=True)
-        run_manifest_path = os.path.join(run_splits_dir, f"seed_{seed}_{split}_split.json")
-        with open(run_manifest_path, "w") as f:
-            json.dump(manifest, f, indent=4)
-        print(f"Saved copy of dataset split manifest to {run_manifest_path}")
-        
-    return manifest
+from artifacts import atomic_write_json, read_json
+from config import ExperimentConfig
 
-def load_dataset_with_retry(split, seed=None, run_dir=None, max_retries=10, delay=5):
-    cache_dir = os.path.join("data", "cache")
-    os.makedirs(cache_dir, exist_ok=True)
-    
-    for attempt in range(1, max_retries + 1):
-        try:
-            print(f"Loading TinyStories dataset from local cache / downloading (split: {split}, seed: {seed}), attempt {attempt}...")
-            # Load dataset locally (cached in data/cache) to prevent HTTP network streaming bottlenecks
-            dataset = load_dataset("roneneldan/TinyStories", split=split, cache_dir=cache_dir)
-            
-            if seed is not None and split == "train":
-                manifest = save_or_load_split_manifest(seed, split=split, dataset_len=len(dataset), run_dir=run_dir)
-                dataset = dataset.shuffle(seed=manifest["seed"])
-                
-            print(f"TinyStories dataset (split: {split}, seed: {seed}) loaded successfully from disk cache.")
-            return dataset
-        except Exception as e:
-            print(f"Error loading dataset on attempt {attempt}: {e}. Retrying in {delay} seconds...")
-            time.sleep(delay)
-            delay = min(delay * 1.5, 60)  # capped exponential backoff
-    raise RuntimeError("Failed to load TinyStories dataset after multiple retries.")
 
-class TinyStoriesDataset(IterableDataset):
-    def __init__(self, split="train", seed=None, run_dir=None):
+class ToyLanguageDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
+    """A tiny local dataset for smoke tests; no Hugging Face or tokenizer access."""
+
+    def __init__(self, *, examples: int, context_length: int, vocab_size: int, seed: int):
+        generator = torch.Generator().manual_seed(seed)
+        # A predictable local pattern gives the two-step smoke path a valid LM loss
+        # without pretending this represents TinyStories quality.
+        starts = torch.randint(0, vocab_size, (examples, 1), generator=generator)
+        offsets = torch.arange(context_length + 1).view(1, -1)
+        self.tokens = (starts + offsets) % vocab_size
+
+    def __len__(self) -> int:
+        return self.tokens.size(0)
+
+    def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
+        sequence = self.tokens[index]
+        return sequence[:-1].clone(), sequence[1:].clone()
+
+
+def toy_dataloader(profile: ExperimentConfig, *, seed: int, split: str) -> DataLoader:
+    examples = 12 if split == "train" else 4
+    dataset = ToyLanguageDataset(
+        examples=examples, context_length=profile.budget.context_length,
+        vocab_size=profile.vocab_size, seed=seed + (0 if split == "train" else 10_000),
+    )
+    return DataLoader(dataset, batch_size=profile.budget.batch_size, shuffle=False, num_workers=0)
+
+
+def split_manifest_path(profile: ExperimentConfig, *, seed: int, split: str) -> Path:
+    return profile.output_dir / "data_manifests" / f"tinystories_seed{seed}_{split}.json"
+
+
+def _dataset_identity(dataset: object) -> str:
+    return str(getattr(dataset, "_fingerprint", "unknown"))
+
+
+def load_tinystories_dataset(
+    profile: ExperimentConfig, *, split: str, data_seed: int, run_dir: str | Path | None = None
+) -> IterableDataset:
+    """Load/cache the production corpus with a persisted deterministic order identity."""
+
+    if profile.run_mode == "smoke":
+        raise RuntimeError("Smoke mode must use toy_dataloader and never access TinyStories")
+    try:
+        import tiktoken
+        from datasets import load_dataset
+    except ImportError as exc:
+        raise RuntimeError("TinyStories requires the datasets and tiktoken dependencies") from exc
+
+    cache_dir = Path("data") / "cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    dataset = load_dataset("roneneldan/TinyStories", split=split, cache_dir=str(cache_dir))
+    if split == "train":
+        dataset = dataset.shuffle(seed=data_seed)
+    identity = {
+        "dataset_name": "roneneldan/TinyStories",
+        "split": split,
+        "data_seed": data_seed,
+        "shuffle_algorithm": "datasets.Dataset.shuffle",
+        "dataset_fingerprint": _dataset_identity(dataset),
+        "context_length": profile.budget.context_length,
+    }
+    identity["identity_hash"] = sha256(str(sorted(identity.items())).encode()).hexdigest()
+    target = split_manifest_path(profile, seed=data_seed, split=split)
+    if target.exists():
+        existing = read_json(target)
+        if existing != identity:
+            raise RuntimeError("TinyStories split manifest drifted; refusing to change paired data order")
+    else:
+        atomic_write_json(target, identity)
+    if run_dir is not None:
+        atomic_write_json(Path(run_dir) / "data_identity.json", identity)
+    return TinyStoriesDataset(dataset, tiktoken.get_encoding("gpt2"), profile.budget.context_length)
+
+
+class TinyStoriesDataset(IterableDataset[tuple[torch.Tensor, torch.Tensor]]):
+    def __init__(self, dataset: object, tokenizer: object, context_length: int):
         super().__init__()
-        self.split = split
-        self.seed = seed
-        self.run_dir = run_dir
-        self.tokenizer = tiktoken.get_encoding("gpt2")
-        self.eot_token = self.tokenizer.eot_token
-        
-        # Load dataset with retry logic and optional seed shuffling
-        self.dataset = load_dataset_with_retry(split, seed=seed, run_dir=run_dir)
+        self.dataset, self.tokenizer, self.context_length = dataset, tokenizer, context_length
 
-        
-    def __iter__(self):
-        token_buffer = []
-        story_count = 0
-        
-        for story in self.dataset:
-            # Limit the number of stories processed in smoke test to keep it fast
-            if config.SMOKE_TEST and config.DATASET_SUBSET_SIZE is not None:
-                if story_count >= config.DATASET_SUBSET_SIZE:
-                    break
-            
+    def __iter__(self) -> Iterator[tuple[torch.Tensor, torch.Tensor]]:
+        token_buffer: list[int] = []
+        for story in self.dataset:  # type: ignore[union-attr]
             text = story.get("text", "")
             if not text:
                 continue
-                
-            # Tokenize text and append EOT token
-            tokens = self.tokenizer.encode(text, allowed_special="all")
-            tokens.append(self.eot_token)
-            
-            token_buffer.extend(tokens)
-            story_count += 1
-            
-            # Yield chunks of CONTEXT_LENGTH + 1
-            while len(token_buffer) >= config.CONTEXT_LENGTH + 1:
-                chunk = token_buffer[:config.CONTEXT_LENGTH + 1]
-                # Slide buffer to start the next chunk exactly where the last one ended (with 1 token overlap for causality)
-                token_buffer = token_buffer[config.CONTEXT_LENGTH:]
-                
-                x = torch.tensor(chunk[:-1], dtype=torch.long)
-                y = torch.tensor(chunk[1:], dtype=torch.long)
-                yield x, y
-
-def get_dataloader(split="train", batch_size=None, seed=None, run_dir=None):
-    if batch_size is None:
-        batch_size = config.BATCH_SIZE
-    dataset = TinyStoriesDataset(split=split, seed=seed, run_dir=run_dir)
-    return DataLoader(dataset, batch_size=batch_size, num_workers=0)
+            token_buffer.extend(self.tokenizer.encode(text, allowed_special="all"))  # type: ignore[union-attr]
+            token_buffer.append(self.tokenizer.eot_token)  # type: ignore[union-attr]
+            while len(token_buffer) >= self.context_length + 1:
+                chunk = token_buffer[: self.context_length + 1]
+                token_buffer = token_buffer[self.context_length :]
+                yield torch.tensor(chunk[:-1]), torch.tensor(chunk[1:])
 
 
+def tinystories_dataloader(
+    profile: ExperimentConfig, *, split: str, data_seed: int, run_dir: str | Path | None = None
+) -> DataLoader:
+    dataset = load_tinystories_dataset(profile, split=split, data_seed=data_seed, run_dir=run_dir)
+    return DataLoader(dataset, batch_size=profile.budget.batch_size, num_workers=0)

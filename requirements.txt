@@ -1,0 +1,15 @@
+# Linux x86-64 / Python 3.11 production environment. Check nvidia-smi before
+# installation; see README for choosing another official CUDA wheel channel.
+--extra-index-url https://download.pytorch.org/whl/cu126
+torch==2.12.0+cu126
+datasets==4.6.1
+matplotlib==3.10.8
+nvidia-ml-py==13.595.45
+pandas==2.3.3
+psutil==7.2.2
+pytest==9.0.2
+scipy==1.17.1
+tabulate==0.10.0
+tiktoken==0.12.0
+tqdm==4.67.1
+transformers==4.57.6
