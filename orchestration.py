@@ -20,12 +20,26 @@ from diagnostics import collect_gate_diagnostics, static_cost_report
 from energy import EnergyProvider
 from eval import benchmark_inference, evaluate_needle_suite, persisted_needle_suite
 from preflight import require_production_cuda
+from recurrence import RecurrenceOptions, backend_metadata, ensure_backend_available, qualification_hash
 from reporting import write_first_submission_reports
 from retrieval import RetrievalDataset, evaluate_retrieval, retrieval_dataloader
 from train import SeedBundle, seed_everything, train_fixed_budget
 
 
 Family = Literal["tinystories", "mqar", "overwrite"]
+
+
+def recurrence_options_for(profile: ExperimentConfig) -> RecurrenceOptions:
+    return RecurrenceOptions(
+        backend=profile.recurrence_backend,
+        input_dtype=profile.recurrence_input_dtype,
+        state_accumulator_dtype=profile.state_accumulator_dtype,
+        chunk_size=profile.recurrence_chunk_size,
+        qualification_artifact=(
+            str(profile.recurrence_qualification_artifact)
+            if profile.recurrence_qualification_artifact is not None else None
+        ),
+    )
 
 
 def _run_path(profile: ExperimentConfig, family: Family, scale: str, variant: str, seed: int) -> Path:
@@ -131,17 +145,21 @@ def _evaluate(
         if profile.run_mode == "production":
             suite = persisted_needle_suite(run_dir.parent.parent.parent / "needle_suite_v1.json", seed=evaluation_seed)
             needle = evaluate_needle_suite(gdn_model, suite, device)
+        static_cost = static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length)
+        static_cost["recurrence"] = backend_metadata(recurrence_options_for(profile), device=device)
         return {
             "benchmarks": benchmarks, "gate_diagnostics": gate,
-            "static_cost": static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length),
+            "static_cost": static_cost,
             "natural_language_retrieval": needle,
         }
     assert held_out_retrieval is not None
     diagnostic_batches = [held_out_retrieval[0][0].unsqueeze(0)]
+    static_cost = static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length)
+    static_cost["recurrence"] = backend_metadata(recurrence_options_for(profile), device=device)
     return {
         "retrieval": evaluate_retrieval(gdn_model, held_out_retrieval, device),
         "gate_diagnostics": collect_gate_diagnostics(gdn_model, diagnostic_batches, device) if profile.enable_gate_diagnostics else {"disabled": True},
-        "static_cost": static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length),
+        "static_cost": static_cost,
     }
 
 
@@ -152,7 +170,8 @@ def run_seed(
     """Run/recover one isolated seed, refusing stale or partial artifacts as complete."""
 
     if profile.run_mode == "production":
-        require_production_cuda()
+        preflight = require_production_cuda(recurrence_backend=profile.recurrence_backend)
+        ensure_backend_available(recurrence_options_for(profile), device=torch.device("cuda"))
         profile.budget.require_ready()
     run_dir = _run_path(profile, family, scale, variant, seed)
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -161,7 +180,9 @@ def run_seed(
     seed_everything(seeds.model_seed)
     backbone = _resolved_backbone(profile, family, scale)
     vocab_size = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
-    model, resolved_model, model_metadata = construct_model(backbone, variant, vocab_size)
+    model, resolved_model, model_metadata = construct_model(
+        backbone, variant, vocab_size, recurrence_options=recurrence_options_for(profile),
+    )
     manifest = _manifest(
         profile=profile, family=family, scale=scale, variant=variant, resolved_model=resolved_model,
         model_metadata=model_metadata, seeds=seeds, data_identity=data_identity,
@@ -193,7 +214,13 @@ def run_seed(
             )
             partial_metrics = {
                 "schema_version": 1, "family": family, "scale": scale, "variant": variant,
-                "seed": seed, "parameter": model_metadata, **training,
+                "seed": seed, "parameter": model_metadata,
+                "recurrence": {
+                    **backend_metadata(recurrence_options_for(profile), device=device),
+                    "qualification_hash": qualification_hash(recurrence_options_for(profile).qualification_artifact),
+                    "cuda_preflight": preflight.to_dict() if profile.run_mode == "production" else None,
+                },
+                **training,
             }
             atomic_write_json(run_dir / "metrics.json", partial_metrics)
             transition_lifecycle(run_dir, "trained", manifest_data["fingerprint"])

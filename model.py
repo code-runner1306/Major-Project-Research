@@ -11,6 +11,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from config import ModelConfig
+from recurrence import RecurrenceOptions, reference_recurrence, run_recurrence
 
 
 LayerCache = dict[str, torch.Tensor | str]
@@ -86,37 +87,20 @@ def recurrent_forward(
     g: torch.Tensor | None = None,
     initial_state: torch.Tensor | None = None,
 ) -> tuple[torch.Tensor, torch.Tensor]:
-    """Sequential DeltaNet recurrence, optionally continuing a cached state."""
+    """Legacy convenience wrapper around the canonical reference recurrence."""
 
-    batch, time, heads, width = q.shape
-    expected_state = (batch, heads, width, width)
-    if initial_state is None:
-        state = torch.zeros(expected_state, device=q.device, dtype=q.dtype)
-    else:
-        if tuple(initial_state.shape) != expected_state:
-            raise ValueError(f"Invalid recurrent state shape {tuple(initial_state.shape)}; expected {expected_state}")
-        if initial_state.device != q.device or initial_state.dtype != q.dtype:
-            raise ValueError("Recurrent state must match Q device and dtype")
-        state = initial_state
-
-    q = F.normalize(q, p=2, dim=-1)
-    k = F.normalize(k, p=2, dim=-1)
-    outputs: list[torch.Tensor] = []
-    for step in range(time):
-        q_t = q[:, step].unsqueeze(-1)
-        k_t = k[:, step].unsqueeze(-1)
-        v_t = v[:, step].unsqueeze(-1)
-        alpha_t = alpha[:, step].unsqueeze(-1)
-        beta_t = beta[:, step].unsqueeze(-1)
-        error = v_t - state.matmul(k_t)
-        state = alpha_t * state + beta_t * error.matmul(k_t.transpose(-1, -2))
-        outputs.append(state.matmul(q_t).squeeze(-1))
-    output = torch.stack(outputs, dim=1)
+    output, state = reference_recurrence(
+        F.normalize(q, p=2, dim=-1), F.normalize(k, p=2, dim=-1), v, alpha, beta,
+        initial_state, options=RecurrenceOptions(),
+    )
     return (output * g if g is not None else output), state
 
 
 class GatedDeltaNetAttention(nn.Module):
-    def __init__(self, d_model: int, n_head: int, d_head: int, variant: str = "scalar"):
+    def __init__(
+        self, d_model: int, n_head: int, d_head: int, variant: str = "scalar",
+        recurrence_options: RecurrenceOptions = RecurrenceOptions(),
+    ):
         super().__init__()
         if variant not in {"scalar", "channel-wise"}:
             raise ValueError(f"Unknown Gated DeltaNet variant {variant!r}")
@@ -135,6 +119,7 @@ class GatedDeltaNetAttention(nn.Module):
         self.out_proj = nn.Linear(projection_dim, d_model, bias=False)
         self.layer_idx = -1
         self._gate_observer: Callable[[torch.Tensor, str, int], None] | None = None
+        self.recurrence_options = recurrence_options
 
     def set_gate_observer(self, observer: Callable[[torch.Tensor, str, int], None] | None) -> None:
         self._gate_observer = observer
@@ -158,7 +143,11 @@ class GatedDeltaNetAttention(nn.Module):
         if self._gate_observer is not None:
             self._gate_observer(alpha.detach(), self.variant, self.layer_idx)
         g = F.silu(self.gate_proj(x)).view(batch, time, heads, width)
-        output, state = recurrent_forward(q, k, v, alpha, beta, g, cache.get("state"))
+        output, state = run_recurrence(
+            F.normalize(q, p=2, dim=-1), F.normalize(k, p=2, dim=-1), v, alpha, beta,
+            cache.get("state"), options=self.recurrence_options,
+        )
+        output = output * g
         output = self.out_proj(output.reshape(batch, time, heads * width))
         if not use_cache:
             return output
@@ -226,7 +215,7 @@ class SwiGLUMLP(nn.Module):
 class GatedDeltaNetBlock(nn.Module):
     def __init__(
         self, layer_idx: int, d_model: int, n_head: int, d_head: int, d_ff: int,
-        variant: str, attention_layout: str,
+        variant: str, attention_layout: str, recurrence_options: RecurrenceOptions,
     ):
         super().__init__()
         self.layer_idx = layer_idx
@@ -234,7 +223,7 @@ class GatedDeltaNetBlock(nn.Module):
         is_full_attention = attention_layout == "hybrid" and layer_idx % 4 == 3
         self.attn: GatedDeltaNetAttention | CausalSelfAttention = (
             CausalSelfAttention(d_model, n_head, d_head)
-            if is_full_attention else GatedDeltaNetAttention(d_model, n_head, d_head, variant)
+            if is_full_attention else GatedDeltaNetAttention(d_model, n_head, d_head, variant, recurrence_options)
         )
         if isinstance(self.attn, GatedDeltaNetAttention):
             self.attn.layer_idx = layer_idx
@@ -266,17 +255,21 @@ def _normalize_config(config_dict: ModelConfig | Mapping[str, Any]) -> ModelConf
 
 
 class GatedDeltaNetLM(nn.Module):
-    def __init__(self, config_dict: ModelConfig | Mapping[str, Any], variant: str = "scalar", vocab_size: int = 50_257):
+    def __init__(
+        self, config_dict: ModelConfig | Mapping[str, Any], variant: str = "scalar", vocab_size: int = 50_257,
+        recurrence_options: RecurrenceOptions = RecurrenceOptions(),
+    ):
         super().__init__()
         if variant == "scalar-matched":
             variant = "scalar"
         self.model_config = _normalize_config(config_dict)
         self.variant, self.vocab_size, self.d_model = variant, vocab_size, self.model_config.d_model
+        self.recurrence_options = recurrence_options
         self.tok_embeddings = nn.Embedding(vocab_size, self.d_model)
         self.blocks = nn.ModuleList([
             GatedDeltaNetBlock(
                 index, self.d_model, self.model_config.n_head, self.model_config.d_head,
-                self.model_config.ffn_widths[index], variant, self.model_config.attention_layout,
+                self.model_config.ffn_widths[index], variant, self.model_config.attention_layout, recurrence_options,
             )
             for index in range(self.model_config.n_layer)
         ])

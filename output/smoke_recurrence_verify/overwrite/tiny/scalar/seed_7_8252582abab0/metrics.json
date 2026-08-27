@@ -1,0 +1,380 @@
+{
+  "best_validation_secondary": {
+    "loss": 4.871645927429199,
+    "perplexity": 130.5355987548828,
+    "step": 2,
+    "steps": 1
+  },
+  "energy": {
+    "device": {
+      "cuda_runtime": null,
+      "device_type": "cpu"
+    },
+    "training": {
+      "average_watts": null,
+      "device": {
+        "cuda_runtime": null,
+        "device_type": "cpu"
+      },
+      "duration_seconds": 0.18555369999376126,
+      "joules": null,
+      "joules_per_million_training_tokens": null,
+      "method": null,
+      "peak_watts": null,
+      "reason": "CUDA/NVML is unavailable on this device",
+      "sampling_interval_seconds": null,
+      "supported": false,
+      "token_count": 9.2e-05
+    }
+  },
+  "family": "overwrite",
+  "final_checkpoint": {
+    "completed_steps": 2,
+    "path": "final_checkpoint.pt",
+    "processed_tokens": 92,
+    "sha256": "01f2db9c0000a538b4fc19797a71dcb34ebec980bbde5b01b9713d1f788c068b"
+  },
+  "final_validation": {
+    "loss": 4.871645927429199,
+    "perplexity": 130.5355987548828,
+    "steps": 1
+  },
+  "gate_diagnostics": {
+    "diagnostic_hooks_in_timed_regions": false,
+    "layers": {
+      "0": {
+        "channel_diversity": null,
+        "count": 92,
+        "half_life_quantiles": {
+          "0.05": 0.8861243724822998,
+          "0.5": 0.9722673296928406,
+          "0.95": 1.1689732074737549
+        },
+        "mean": 0.49564432061236835,
+        "near_one_fraction": 0.0,
+        "near_zero_fraction": 0.0,
+        "quantiles": {
+          "0.05": 0.4573853611946106,
+          "0.5": 0.490211546421051,
+          "0.95": 0.5526922941207886
+        },
+        "std": 0.0319487034229596,
+        "variant": "scalar"
+      },
+      "1": {
+        "channel_diversity": null,
+        "count": 92,
+        "half_life_quantiles": {
+          "0.05": 0.8972709774971008,
+          "0.5": 1.0250506401062012,
+          "0.95": 1.1093981266021729
+        },
+        "mean": 0.5042692267376444,
+        "near_one_fraction": 0.0,
+        "near_zero_fraction": 0.0,
+        "quantiles": {
+          "0.05": 0.46184638142585754,
+          "0.5": 0.5085418224334717,
+          "0.95": 0.5353707671165466
+        },
+        "std": 0.026107959072900033,
+        "variant": "scalar"
+      },
+      "2": {
+        "channel_diversity": null,
+        "count": 92,
+        "half_life_quantiles": {
+          "0.05": 0.907710075378418,
+          "0.5": 1.0200432538986206,
+          "0.95": 1.084799885749817
+        },
+        "mean": 0.5032228386920431,
+        "near_one_fraction": 0.0,
+        "near_zero_fraction": 0.0,
+        "quantiles": {
+          "0.05": 0.4659756124019623,
+          "0.5": 0.5068565011024475,
+          "0.95": 0.5278394222259521
+        },
+        "std": 0.025671992847880243,
+        "variant": "scalar"
+      }
+    }
+  },
+  "parameter": {
+    "control_strategy": "same_backbone",
+    "gate_parameter_overhead": 2688,
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 3840,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 40320
+    },
+    "parameter_count": 40320,
+    "per_layer_ffn_widths": [
+      64,
+      64,
+      64
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "variant": "scalar"
+  },
+  "recurrence": {
+    "chunk_policy": "sequential-reference",
+    "chunk_size": 64,
+    "compiled_architectures": [],
+    "cuda_preflight": null,
+    "device_type": "cpu",
+    "input_dtype": "autocast",
+    "load_failure_reason": null,
+    "qualification_artifact": null,
+    "qualification_hash": null,
+    "requested_backend": "reference",
+    "resolved_backend": "reference",
+    "semantic_version": "gdn-recurrence-v1",
+    "state_accumulator_dtype": "input",
+    "state_layout": "[B,H,D,D]",
+    "supported_alpha_layouts": [
+      "[B,T,H,1]",
+      "[B,T,H,D]"
+    ],
+    "supported_input_dtypes": [
+      "float32",
+      "float16",
+      "bfloat16"
+    ]
+  },
+  "retrieval": {
+    "breakdowns": {
+      "key_count": {
+        "2": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 8
+        },
+        "3": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "memory_load": {
+        "3": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 4
+        },
+        "4": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 6
+        },
+        "5": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 2
+        }
+      },
+      "overwrite_count": {
+        "1": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 6
+        },
+        "2": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 6
+        }
+      },
+      "query_distance": {
+        "2": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 8
+        },
+        "4": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 4
+        }
+      },
+      "sequence_length": {
+        "16": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 6
+        },
+        "24": {
+          "accuracy": 0.0,
+          "correct": 0,
+          "total": 6
+        }
+      }
+    },
+    "correct": 0,
+    "exact_query_accuracy": 0.0,
+    "generator_manifest": {
+      "examples": 6,
+      "generator_version": "mqar-overwrite-v1",
+      "hash": "43786d45e537eacd7901520addbec80e1172e182f07c28d57de6200f9dadaa9b",
+      "parameters": {
+        "held_out_examples": 6,
+        "key_counts": [
+          2,
+          3
+        ],
+        "overwrite_counts": [
+          1,
+          2
+        ],
+        "query_distances": [
+          2,
+          4
+        ],
+        "sequence_lengths": [
+          16,
+          24
+        ],
+        "train_examples": 8,
+        "vocabulary_size": 128
+      },
+      "seed": 200007,
+      "sequence_length": null,
+      "split": "held_out",
+      "task": "overwrite"
+    },
+    "latest_value_accuracy": 0.0,
+    "stale_value_error_rate": 0.0,
+    "total": 12,
+    "unrelated_association_retention": 0.0
+  },
+  "scale": "tiny",
+  "schema_version": 1,
+  "seed": 7,
+  "static_cost": {
+    "attention_kv_cache_bytes_at_context": 0,
+    "cache_formula": "GDN: layers * batch * heads * head_dim^2; attention: layers * 2 * batch * heads * context * head_dim",
+    "gate_parameter_overhead": 2688,
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 3840,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 40320
+    },
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "device_type": "cpu",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "recurrent_convolution_cache_bytes": 6912,
+    "recurrent_state_bytes": 6144,
+    "theoretical_gate_projection_ops_per_token": 896
+  },
+  "training": {
+    "clipped_gradient_norms": [
+      1.0,
+      1.0
+    ],
+    "fixed_optimizer_steps": 2,
+    "microbatches": 2,
+    "optimizer_step_seconds": [
+      0.06686130000161938,
+      0.0694023000105517
+    ],
+    "processed_tokens": 92,
+    "stability_events": [],
+    "train_losses": [
+      4.958772659301758,
+      4.86546516418457
+    ],
+    "training_tokens_per_second": 495.7521583863655,
+    "unclipped_gradient_norms": [
+      4.26849365234375,
+      3.95556640625
+    ],
+    "wall_time_seconds": 0.1855766000080621
+  },
+  "training_energy": {
+    "average_watts": null,
+    "device": {
+      "cuda_runtime": null,
+      "device_type": "cpu"
+    },
+    "duration_seconds": 0.18555369999376126,
+    "joules": null,
+    "joules_per_million_training_tokens": null,
+    "method": null,
+    "peak_watts": null,
+    "reason": "CUDA/NVML is unavailable on this device",
+    "sampling_interval_seconds": null,
+    "supported": false,
+    "token_count": 9.2e-05
+  },
+  "validation_history": [
+    {
+      "loss": 4.871665954589844,
+      "perplexity": 130.5382080078125,
+      "step": 1,
+      "steps": 1
+    },
+    {
+      "loss": 4.871645927429199,
+      "perplexity": 130.5355987548828,
+      "step": 2,
+      "steps": 1
+    }
+  ],
+  "variant": "scalar"
+}

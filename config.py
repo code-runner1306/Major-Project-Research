@@ -15,6 +15,9 @@ import os
 
 Variant = Literal["scalar", "channel-wise", "scalar-matched"]
 ExperimentFamily = Literal["tinystories", "mqar", "overwrite"]
+RecurrenceBackend = Literal["reference", "cuda-fused"]
+RecurrenceInputDtype = Literal["autocast", "float32"]
+StateAccumulatorDtype = Literal["input", "float32"]
 
 
 @dataclass(frozen=True)
@@ -105,6 +108,11 @@ class ExperimentConfig:
     beta1: float = 0.9
     beta2: float = 0.95
     grad_clip: float = 1.0
+    recurrence_backend: RecurrenceBackend = "reference"
+    recurrence_input_dtype: RecurrenceInputDtype = "autocast"
+    state_accumulator_dtype: StateAccumulatorDtype = "input"
+    recurrence_chunk_size: int = 64
+    recurrence_qualification_artifact: Path | None = None
 
     @property
     def variants(self) -> tuple[Variant, ...]:
@@ -139,6 +147,16 @@ class ExperimentConfig:
             "beta1": self.beta1,
             "beta2": self.beta2,
             "grad_clip": self.grad_clip,
+            "recurrence": {
+                "backend": self.recurrence_backend,
+                "input_dtype": self.recurrence_input_dtype,
+                "state_accumulator_dtype": self.state_accumulator_dtype,
+                "chunk_size": self.recurrence_chunk_size,
+                "qualification_artifact": (
+                    str(self.recurrence_qualification_artifact)
+                    if self.recurrence_qualification_artifact is not None else None
+                ),
+            },
         }
 
 

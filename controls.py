@@ -6,6 +6,7 @@ from dataclasses import replace
 
 from config import ModelConfig
 from model import GatedDeltaNetLM, parameter_breakdown
+from recurrence import RecurrenceOptions, backend_metadata
 
 
 def gdn_layer_count(model_config: ModelConfig) -> int:
@@ -75,12 +76,17 @@ def construct_model(
     model_config: ModelConfig,
     variant: str,
     vocab_size: int,
+    *,
+    recurrence_options: RecurrenceOptions = RecurrenceOptions(),
 ) -> tuple[GatedDeltaNetLM, ModelConfig, dict]:
     """Build a variant and attach the reproducible control-accounting metadata."""
 
     resolved_config = matched_scalar_config(model_config) if variant == "scalar-matched" else model_config
     actual_variant = "scalar" if variant == "scalar-matched" else variant
-    model = GatedDeltaNetLM(resolved_config, variant=actual_variant, vocab_size=vocab_size)
+    model = GatedDeltaNetLM(
+        resolved_config, variant=actual_variant, vocab_size=vocab_size,
+        recurrence_options=recurrence_options,
+    )
     total = sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
     expected = expected_parameter_count(model_config, variant, vocab_size)
     if total != expected:
@@ -92,6 +98,7 @@ def construct_model(
         "gate_parameter_overhead": channel_wise_gate_overhead(model_config),
         "per_layer_ffn_widths": list(resolved_config.ffn_widths),
         "parameter_components": parameter_breakdown(model),
+        "recurrence": backend_metadata(recurrence_options),
     }
     if variant == "scalar-matched":
         channel_model = GatedDeltaNetLM(model_config, variant="channel-wise", vocab_size=vocab_size)

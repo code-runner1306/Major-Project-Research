@@ -147,6 +147,10 @@ def manifest_compatibility(path: str | Path, expected: SeedManifest) -> tuple[bo
         return False, f"invalid manifest: {exc}"
     if actual.get("schema_version") != SCHEMA_VERSION:
         return False, "schema version is missing or incompatible (legacy artifact)"
+    stored_fingerprint = actual.get("fingerprint")
+    actual_payload = {key: value for key, value in actual.items() if key != "fingerprint"}
+    if not isinstance(stored_fingerprint, str) or stored_fingerprint != fingerprint(actual_payload):
+        return False, "manifest fingerprint does not match manifest contents"
     if actual.get("run_mode") != expected.run_mode:
         return False, f"run mode differs ({actual.get('run_mode')} vs {expected.run_mode})"
     if actual.get("fingerprint") != expected.to_dict()["fingerprint"]:

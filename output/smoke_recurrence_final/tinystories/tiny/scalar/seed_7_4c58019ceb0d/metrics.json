@@ -1,0 +1,444 @@
+{
+  "benchmarks": {
+    "context_4": {
+      "cached_decode": {
+        "cache_bytes": 6528,
+        "energy": {
+          "average_watts": null,
+          "device": {
+            "cuda_runtime": null,
+            "device_type": "cpu"
+          },
+          "duration_seconds": 0.011425200005760416,
+          "joules": null,
+          "joules_per_generated_token": null,
+          "method": null,
+          "peak_watts": null,
+          "reason": "CUDA/NVML is unavailable on this device",
+          "sampling_interval_seconds": null,
+          "supported": false,
+          "token_count": 2
+        },
+        "latency_seconds": 0.006350199997541495,
+        "milliseconds_per_generated_token": 3.1750999987707473,
+        "peak_memory_mb": 281.65234375,
+        "tokens_per_second": 314.95071033578597
+      },
+      "full_prefix_generation": {
+        "energy": {
+          "average_watts": null,
+          "device": {
+            "cuda_runtime": null,
+            "device_type": "cpu"
+          },
+          "duration_seconds": 0.00919489999068901,
+          "joules": null,
+          "joules_per_generated_token": null,
+          "method": null,
+          "peak_watts": null,
+          "reason": "CUDA/NVML is unavailable on this device",
+          "sampling_interval_seconds": null,
+          "supported": false,
+          "token_count": 2
+        },
+        "latency_seconds": 0.00917930000287015,
+        "milliseconds_per_generated_token": 4.589650001435075,
+        "peak_memory_mb": 281.65234375,
+        "tokens_per_second": 217.88153773976745
+      },
+      "metadata": {
+        "batch_size": 1,
+        "dtype": "torch.float32",
+        "generated_tokens": 2,
+        "prompt_length": 4,
+        "repetitions": 1,
+        "synchronized": false,
+        "warmup": 1
+      },
+      "prefill": {
+        "cache_bytes": 6528,
+        "energy": {
+          "average_watts": null,
+          "device": {
+            "cuda_runtime": null,
+            "device_type": "cpu"
+          },
+          "duration_seconds": 0.004626099995221011,
+          "joules": null,
+          "joules_per_prefill_token": null,
+          "method": null,
+          "peak_watts": null,
+          "reason": "CUDA/NVML is unavailable on this device",
+          "sampling_interval_seconds": null,
+          "supported": false,
+          "token_count": 4
+        },
+        "latency_seconds": 0.004578000007313676,
+        "peak_memory_mb": 281.65234375,
+        "time_to_first_token_seconds": 0.004578000007313676,
+        "tokens_per_second": 873.7439916141807
+      }
+    },
+    "context_8": {
+      "cached_decode": {
+        "cache_bytes": 6528,
+        "energy": {
+          "average_watts": null,
+          "device": {
+            "cuda_runtime": null,
+            "device_type": "cpu"
+          },
+          "duration_seconds": 0.00939479999942705,
+          "joules": null,
+          "joules_per_generated_token": null,
+          "method": null,
+          "peak_watts": null,
+          "reason": "CUDA/NVML is unavailable on this device",
+          "sampling_interval_seconds": null,
+          "supported": false,
+          "token_count": 2
+        },
+        "latency_seconds": 0.00519519999215845,
+        "milliseconds_per_generated_token": 2.597599996079225,
+        "peak_memory_mb": 281.5546875,
+        "tokens_per_second": 384.97074280465955
+      },
+      "full_prefix_generation": {
+        "energy": {
+          "average_watts": null,
+          "device": {
+            "cuda_runtime": null,
+            "device_type": "cpu"
+          },
+          "duration_seconds": 0.009437899992917664,
+          "joules": null,
+          "joules_per_generated_token": null,
+          "method": null,
+          "peak_watts": null,
+          "reason": "CUDA/NVML is unavailable on this device",
+          "sampling_interval_seconds": null,
+          "supported": false,
+          "token_count": 2
+        },
+        "latency_seconds": 0.00942380000196863,
+        "milliseconds_per_generated_token": 4.711900000984315,
+        "peak_memory_mb": 281.5546875,
+        "tokens_per_second": 212.2286126172245
+      },
+      "metadata": {
+        "batch_size": 1,
+        "dtype": "torch.float32",
+        "generated_tokens": 2,
+        "prompt_length": 8,
+        "repetitions": 1,
+        "synchronized": false,
+        "warmup": 1
+      },
+      "prefill": {
+        "cache_bytes": 6528,
+        "energy": {
+          "average_watts": null,
+          "device": {
+            "cuda_runtime": null,
+            "device_type": "cpu"
+          },
+          "duration_seconds": 0.004837900007260032,
+          "joules": null,
+          "joules_per_prefill_token": null,
+          "method": null,
+          "peak_watts": null,
+          "reason": "CUDA/NVML is unavailable on this device",
+          "sampling_interval_seconds": null,
+          "supported": false,
+          "token_count": 8
+        },
+        "latency_seconds": 0.004816499989829026,
+        "peak_memory_mb": 281.5546875,
+        "time_to_first_token_seconds": 0.004816499989829026,
+        "tokens_per_second": 1660.9571300516043
+      }
+    }
+  },
+  "best_validation_secondary": {
+    "loss": 4.870563983917236,
+    "perplexity": 130.39443969726562,
+    "step": 2,
+    "steps": 1
+  },
+  "energy": {
+    "device": {
+      "cuda_runtime": null,
+      "device_type": "cpu"
+    },
+    "training": {
+      "average_watts": null,
+      "device": {
+        "cuda_runtime": null,
+        "device_type": "cpu"
+      },
+      "duration_seconds": 0.08973739999055397,
+      "joules": null,
+      "joules_per_million_training_tokens": null,
+      "method": null,
+      "peak_watts": null,
+      "reason": "CUDA/NVML is unavailable on this device",
+      "sampling_interval_seconds": null,
+      "supported": false,
+      "token_count": 6.4e-05
+    }
+  },
+  "family": "tinystories",
+  "final_checkpoint": {
+    "completed_steps": 2,
+    "path": "final_checkpoint.pt",
+    "processed_tokens": 64,
+    "sha256": "5f154625317570cc92381e2e82f4c2531cfa2f54c6873362af07f3d0bc5bebc6"
+  },
+  "final_validation": {
+    "loss": 4.870563983917236,
+    "perplexity": 130.39443969726562,
+    "steps": 1
+  },
+  "gate_diagnostics": {
+    "diagnostic_hooks_in_timed_regions": false,
+    "layers": {
+      "0": {
+        "channel_diversity": null,
+        "count": 128,
+        "half_life_quantiles": {
+          "0.05": 0.8842927813529968,
+          "0.5": 1.0036909580230713,
+          "0.95": 1.1485432386398315
+        },
+        "mean": 0.5018675327301025,
+        "near_one_fraction": 0.0,
+        "near_zero_fraction": 0.0,
+        "quantiles": {
+          "0.05": 0.45664724707603455,
+          "0.5": 0.5012760162353516,
+          "0.95": 0.546893298625946
+        },
+        "std": 0.02850124724538853,
+        "variant": "scalar"
+      },
+      "1": {
+        "channel_diversity": null,
+        "count": 128,
+        "half_life_quantiles": {
+          "0.05": 0.8818843960762024,
+          "0.5": 0.9936774373054504,
+          "0.95": 1.1905094385147095
+        },
+        "mean": 0.5003570914268494,
+        "near_one_fraction": 0.0,
+        "near_zero_fraction": 0.0,
+        "quantiles": {
+          "0.05": 0.45567086338996887,
+          "0.5": 0.497799277305603,
+          "0.95": 0.5586508512496948
+        },
+        "std": 0.03037452866269192,
+        "variant": "scalar"
+      },
+      "2": {
+        "channel_diversity": null,
+        "count": 128,
+        "half_life_quantiles": {
+          "0.05": 0.8862914443016052,
+          "0.5": 0.9916359782218933,
+          "0.95": 1.1245014667510986
+        },
+        "mean": 0.49726402759552,
+        "near_one_fraction": 0.0,
+        "near_zero_fraction": 0.0,
+        "quantiles": {
+          "0.05": 0.45745137333869934,
+          "0.5": 0.4970853328704834,
+          "0.95": 0.5398778915405273
+        },
+        "std": 0.024469131489516096,
+        "variant": "scalar"
+      }
+    }
+  },
+  "natural_language_retrieval": {
+    "label": "exploratory_zero_shot",
+    "not_run_in_smoke": true
+  },
+  "parameter": {
+    "control_strategy": "same_backbone",
+    "gate_parameter_overhead": 2688,
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 3840,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 40320
+    },
+    "parameter_count": 40320,
+    "per_layer_ffn_widths": [
+      64,
+      64,
+      64
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "implementation_source_hash": "f7d866b48a0f879ee6f5e2f8c107f7254f01ff7eaded96bdfde425962dd99ae4",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "variant": "scalar"
+  },
+  "recurrence": {
+    "chunk_policy": "sequential-reference",
+    "chunk_size": 64,
+    "compiled_architectures": [],
+    "cuda_preflight": null,
+    "device_type": "cpu",
+    "implementation_source_hash": "f7d866b48a0f879ee6f5e2f8c107f7254f01ff7eaded96bdfde425962dd99ae4",
+    "input_dtype": "autocast",
+    "load_failure_reason": null,
+    "qualification_artifact": null,
+    "qualification_hash": null,
+    "requested_backend": "reference",
+    "resolved_backend": "reference",
+    "semantic_version": "gdn-recurrence-v1",
+    "state_accumulator_dtype": "input",
+    "state_layout": "[B,H,D,D]",
+    "supported_alpha_layouts": [
+      "[B,T,H,1]",
+      "[B,T,H,D]"
+    ],
+    "supported_input_dtypes": [
+      "float32",
+      "float16",
+      "bfloat16"
+    ]
+  },
+  "scale": "tiny",
+  "schema_version": 1,
+  "seed": 7,
+  "static_cost": {
+    "attention_kv_cache_bytes_at_context": 0,
+    "cache_formula": "GDN: layers * batch * heads * head_dim^2; attention: layers * 2 * batch * heads * context * head_dim",
+    "gate_parameter_overhead": 2688,
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 3840,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 40320
+    },
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "device_type": "cpu",
+      "implementation_source_hash": "f7d866b48a0f879ee6f5e2f8c107f7254f01ff7eaded96bdfde425962dd99ae4",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "recurrent_convolution_cache_bytes": 6912,
+    "recurrent_state_bytes": 6144,
+    "theoretical_gate_projection_ops_per_token": 896
+  },
+  "training": {
+    "clipped_gradient_norms": [
+      1.0,
+      1.0
+    ],
+    "fixed_optimizer_steps": 2,
+    "microbatches": 2,
+    "optimizer_step_seconds": [
+      0.0415804000076605,
+      0.027261799987172708
+    ],
+    "processed_tokens": 64,
+    "stability_events": [],
+    "train_losses": [
+      4.87345027923584,
+      4.8461174964904785
+    ],
+    "training_tokens_per_second": 713.0196270133454,
+    "unclipped_gradient_norms": [
+      1.445326566696167,
+      1.9887691736221313
+    ],
+    "wall_time_seconds": 0.0897590999957174
+  },
+  "training_energy": {
+    "average_watts": null,
+    "device": {
+      "cuda_runtime": null,
+      "device_type": "cpu"
+    },
+    "duration_seconds": 0.08973739999055397,
+    "joules": null,
+    "joules_per_million_training_tokens": null,
+    "method": null,
+    "peak_watts": null,
+    "reason": "CUDA/NVML is unavailable on this device",
+    "sampling_interval_seconds": null,
+    "supported": false,
+    "token_count": 6.4e-05
+  },
+  "validation_history": [
+    {
+      "loss": 4.87083101272583,
+      "perplexity": 130.42926025390625,
+      "step": 1,
+      "steps": 1
+    },
+    {
+      "loss": 4.870563983917236,
+      "perplexity": 130.39443969726562,
+      "step": 2,
+      "steps": 1
+    }
+  ],
+  "variant": "scalar"
+}

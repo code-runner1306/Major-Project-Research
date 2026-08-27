@@ -5,11 +5,12 @@ import copy
 import torch
 
 from artifacts import (
-    SeedManifest, atomic_write_json, initialize_lifecycle, manifest_compatibility,
+    SeedManifest, atomic_write_json, fingerprint, initialize_lifecycle, manifest_compatibility,
     save_checkpoint, transition_lifecycle, validate_checkpoint, validate_completion, write_manifest,
 )
 from config import smoke_profile
 from controls import construct_model
+from recurrence import RecurrenceOptions, backend_metadata
 
 
 def _manifest(profile, *, run_mode="smoke"):
@@ -45,6 +46,52 @@ def test_configuration_drift_and_corrupt_checkpoint_are_rejected(tmp_path, smoke
     corrupt.write_bytes(b"not a torch checkpoint")
     valid, reason, _ = validate_checkpoint(corrupt, 2, 4)
     assert not valid and "cannot be loaded" in reason
+
+
+def test_recurrence_provenance_drift_and_legacy_gap_are_rejected(tmp_path, smoke_config):
+    run_dir = tmp_path / "run"
+    qualification = tmp_path / "qualification.json"
+    qualification.write_text('{"result":"first"}', encoding="utf-8")
+    baseline = _manifest(smoke_config)
+    baseline = SeedManifest(
+        family=baseline.family, run_mode=baseline.run_mode, scale=baseline.scale, variant=baseline.variant,
+        model={**baseline.model, "recurrence": backend_metadata(RecurrenceOptions(chunk_size=64, qualification_artifact=str(qualification)))},
+        seeds=baseline.seeds, budget=baseline.budget, data_identity=baseline.data_identity,
+        evaluation_protocol=baseline.evaluation_protocol, expected_artifacts=baseline.expected_artifacts,
+    )
+    raw = write_manifest(run_dir / "manifest.json", baseline)
+    artifact_option = {"qualification_artifact": str(qualification)}
+    for changed in (
+        RecurrenceOptions(backend="cuda-fused", **artifact_option),
+        RecurrenceOptions(input_dtype="float32", **artifact_option),
+        RecurrenceOptions(state_accumulator_dtype="float32", **artifact_option),
+        RecurrenceOptions(chunk_size=32, **artifact_option),
+    ):
+        expected = SeedManifest(
+            family=baseline.family, run_mode=baseline.run_mode, scale=baseline.scale, variant=baseline.variant,
+            model={**baseline.model, "recurrence": backend_metadata(changed)}, seeds=baseline.seeds,
+            budget=baseline.budget, data_identity=baseline.data_identity,
+            evaluation_protocol=baseline.evaluation_protocol, expected_artifacts=baseline.expected_artifacts,
+        )
+        assert manifest_compatibility(run_dir / "manifest.json", expected) == (
+            False, "configuration/environment/source fingerprint differs",
+        )
+    qualification.write_text('{"result":"second"}', encoding="utf-8")
+    changed_qualification = SeedManifest(
+        family=baseline.family, run_mode=baseline.run_mode, scale=baseline.scale, variant=baseline.variant,
+        model={**baseline.model, "recurrence": backend_metadata(RecurrenceOptions(chunk_size=64, qualification_artifact=str(qualification)))},
+        seeds=baseline.seeds, budget=baseline.budget, data_identity=baseline.data_identity,
+        evaluation_protocol=baseline.evaluation_protocol, expected_artifacts=baseline.expected_artifacts,
+    )
+    assert manifest_compatibility(run_dir / "manifest.json", changed_qualification) == (
+        False, "configuration/environment/source fingerprint differs",
+    )
+    del raw["model"]["recurrence"]
+    raw["fingerprint"] = fingerprint({key: value for key, value in raw.items() if key != "fingerprint"})
+    atomic_write_json(run_dir / "manifest.json", raw)
+    assert manifest_compatibility(run_dir / "manifest.json", baseline) == (
+        False, "configuration/environment/source fingerprint differs",
+    )
 
 
 def test_atomic_lifecycle_checkpoint_and_completeness(tmp_path, smoke_config):

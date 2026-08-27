@@ -1,0 +1,106 @@
+{
+  "budget": {
+    "batch_size": 2,
+    "context_length": 16,
+    "grad_accum_steps": 1,
+    "max_optimizer_steps": 2,
+    "status": "smoke_fixed_budget"
+  },
+  "data_identity": {
+    "generator_version": "mqar-overwrite-v1",
+    "held_out_hash": "59c99c8c57e757d6bc928f7afe4830a28eb238f35848de5f3d05d83222eaa12d",
+    "paired_order": "indexed_seeded_order",
+    "train_hash": "7f85dfc9f30cbaa7b194b40a3e9dda932ff97ef3c534804251763373cb365f7d"
+  },
+  "environment": {
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "python": "3.13.3",
+    "torch": "2.13.0+cpu"
+  },
+  "evaluation_protocol": {
+    "cache_benchmarks": true,
+    "energy": true,
+    "gate_diagnostics": true,
+    "natural_language_retrieval": null,
+    "retrieval_version": "mqar-overwrite-v1"
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "mqar",
+  "fingerprint": "0b920240c577c7d7b8f7ee8f3770e5c1168fe880b29c17a74da3b680773cc25c",
+  "model": {
+    "attention_layout": "pure_gdn",
+    "control_strategy": "same_backbone",
+    "d_ff": [
+      64,
+      64,
+      64
+    ],
+    "d_head": 8,
+    "d_model": 32,
+    "gate_parameter_overhead": 2688,
+    "n_head": 4,
+    "n_layer": 3,
+    "name": "tiny",
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 3840,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 40320
+    },
+    "parameter_count": 40320,
+    "per_layer_ffn_widths": [
+      64,
+      64,
+      64
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ]
+    },
+    "variant": "scalar"
+  },
+  "run_mode": "smoke",
+  "scale": "tiny",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 100007,
+    "evaluation_seed": 200007,
+    "model_seed": 7,
+    "research_seed": 7
+  },
+  "source": {
+    "dirty": true,
+    "revision": "91470e545024745d7b4c9e8e31a8b79fcee8ce03"
+  },
+  "variant": "scalar"
+}

@@ -44,14 +44,22 @@ python run_mqar.py --smoke
 python run_overwrite.py --smoke
 ```
 
-The production entry point is intentionally blocked until a V100 pilot records a fixed training duration:
+The production entry point is intentionally blocked until a V100 pilot records a fixed training duration. First run the reference pilot on the college V100S; it does real optimizer work but does not unlock or mutate the fixed training budget:
 
 ```bash
-python run_all.py --mode production --matched-control
-python run_all.py --mode production --family mqar
+python run_all.py --pilot --recurrence-backend reference --pilot-scales 55M,100M --pilot-warmup 25 --pilot-steps 200 --pilot-trace --pilot-data-fed
 ```
 
-After the V100 pilot, set a recorded `max_optimizer_steps` in the production profile for every family. CPU smoke timing must never be used to select this budget.
+It creates a unique `output/pilots/pilot_<timestamp>_<fingerprint>_<nonce>/` directory containing JSON, Markdown, and (when requested) one Chrome trace. It records GPU-event and wall-clock step distributions, host/launch gap, throughput, allocated/reserved memory, and NVML energy. The resident-tensor measurement isolates model/recurrence work; `--pilot-data-fed` adds a paired window with TinyStories fetch, tokenization, host-to-device transfer, and the same optimizer step after loader setup. Start with the reference backend: this tells us whether recurrence is actually the dominant cost before building a CUDA kernel.
+
+Production commands must state their backend explicitly, preventing silent backend changes:
+
+```bash
+python run_all.py --mode production --recurrence-backend reference --matched-control
+python run_all.py --mode production --recurrence-backend reference --family mqar
+```
+
+`cuda-fused` is reserved for the repository-owned `sm_70` extension. It will require a matching V100 qualification artifact, local CUDA toolkit (`nvcc` and headers), and C++ compiler; production preflight records and checks these conditions before data loading. It never falls back to `reference` silently. The reference backend is the portable rollback path and is allowed for explicitly recorded diagnostics. After the V100 pilot, set a recorded `max_optimizer_steps` in the production profile for every family. CPU smoke timing must never be used to select this budget.
 
 ## Controlled model counts
 
@@ -108,5 +116,7 @@ python -m pytest
 python run_smoke.py
 openspec validate harden-experimental-evaluation
 ```
+
+The recurrence change additionally has a V100-only pilot and CUDA qualification path. CPU runs deliberately exercise only `reference`; a request for `cuda-fused` on a CPU machine fails with an actionable reason rather than pretending CUDA work was tested.
 
 The tests use temporary directories and never target existing `output/` data. Legacy output folders are left untouched and remain readable as historical files, but lack the hardened manifest/fingerprint schema and are rejected with an actionable resumption reason.

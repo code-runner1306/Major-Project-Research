@@ -1,0 +1,19 @@
+{
+  "cuda_required": false,
+  "elapsed_seconds": 9.105339600006118,
+  "measured_rss_mb_at_completion": 355.3515625,
+  "network_required": false,
+  "recovery_first_pass": {
+    "run_dir": "output\\smoke_recurrence_final\\tinystories\\tiny\\scalar\\seed_7_4c58019ceb0d",
+    "status": "trained"
+  },
+  "recovery_resume": {
+    "run_dir": "output\\smoke_recurrence_final\\tinystories\\tiny\\scalar\\seed_7_4c58019ceb0d",
+    "status": "complete"
+  },
+  "resource_target": {
+    "ram_gb": 2,
+    "seconds": 300
+  },
+  "status": "complete"
+}
