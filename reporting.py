@@ -93,6 +93,141 @@ def rebuild_validated_records(
     return records, exclusions
 
 
+def _collect_backend_identity(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Aggregate backend/provenance identity across validated records (additive)."""
+
+    requested: set[str] = set()
+    resolved: set[str] = set()
+    semantic_versions: set[str] = set()
+    chunk_sizes: set[str] = set()
+    input_dtypes: set[str] = set()
+    accumulator_dtypes: set[str] = set()
+    qualification_hashes: set[str] = set()
+    load_failure_reasons: list[dict[str, str]] = []
+    for record in records:
+        metrics = record.get("metrics", {})
+        recurrence = metrics.get("recurrence", {})
+        static_recurrence = metrics.get("static_cost", {}).get("recurrence", {}) if isinstance(metrics.get("static_cost"), dict) else {}
+        for source in (recurrence, static_recurrence):
+            if not isinstance(source, dict):
+                continue
+            if source.get("requested_backend") is not None:
+                requested.add(str(source["requested_backend"]))
+            if source.get("resolved_backend") is not None:
+                resolved.add(str(source["resolved_backend"]))
+            for key, bucket in (
+                ("semantic_version", semantic_versions), ("chunk_size", chunk_sizes),
+                ("input_dtype", input_dtypes), ("state_accumulator_dtype", accumulator_dtypes),
+                ("qualification_hash", qualification_hashes),
+            ):
+                if source.get(key) is not None:
+                    bucket.add(str(source[key]))
+            if source.get("load_failure_reason"):
+                load_failure_reasons.append({"path": record.get("path", ""), "reason": str(source["load_failure_reason"])})
+    return {
+        "requested_backends": sorted(requested),
+        "resolved_backends": sorted(resolved),
+        "semantic_versions": sorted(semantic_versions),
+        "chunk_sizes": sorted(chunk_sizes),
+        "input_dtypes": sorted(input_dtypes),
+        "state_accumulator_dtypes": sorted(accumulator_dtypes),
+        "qualification_hashes": sorted(qualification_hashes),
+        "load_failure_reasons": load_failure_reasons,
+    }
+
+
+def _scan_profiling_artifacts(root: Path) -> dict[str, Any]:
+    """Summarize pilot/bench artifacts found under root without requiring them."""
+
+    pilots: list[dict[str, Any]] = []
+    for path in sorted(root.rglob("pilot_result.json")):
+        try:
+            payload = read_json(path)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            pilots.append({"path": str(path), "status": "unreadable", "reason": str(exc)})
+            continue
+        runs = payload.get("runs", []) if isinstance(payload, dict) else []
+        entry: dict[str, Any] = {"path": str(path), "status": "ok", "runs": len(runs) if isinstance(runs, list) else 0}
+        recurrence = payload.get("recurrence", {}) if isinstance(payload, dict) else {}
+        if isinstance(recurrence, dict):
+            entry["resolved_backend"] = recurrence.get("resolved_backend")
+            entry["qualification_hash"] = recurrence.get("qualification_hash")
+        pilots.append(entry)
+    benchmarks: list[dict[str, Any]] = []
+    for name in ("recurrence_benchmark.json", "recurrence_microbenchmark.json"):
+        for path in sorted(root.rglob(name)):
+            try:
+                payload = read_json(path)
+            except (OSError, ValueError, json.JSONDecodeError) as exc:
+                benchmarks.append({"path": str(path), "status": "unreadable", "reason": str(exc)})
+                continue
+            cases = payload.get("cases", []) if isinstance(payload, dict) else []
+            benchmarks.append({
+                "path": str(path), "status": "ok",
+                "cases": len(cases) if isinstance(cases, list) else 0,
+                "speedups": payload.get("speedups", []) if isinstance(payload, dict) else [],
+            })
+    return {
+        "pilots": pilots,
+        "recurrence_benchmarks": benchmarks,
+        "note": "Absent pilot/bench artifacts are reported as empty lists, never fabricated.",
+    }
+
+
+def _collect_performance_comparisons(records: list[dict[str, Any]]) -> dict[str, Any]:
+    """Speed/memory/energy comparisons rebuilt from validated metrics (additive)."""
+
+    comparisons: dict[str, Any] = {}
+    for record in records:
+        key = f"{record['family']}/{record['scale']}/{record['variant']}"
+        metrics = record.get("metrics", {})
+        benchmarks = metrics.get("benchmarks", {}) if isinstance(metrics.get("benchmarks"), dict) else {}
+        tokens_per_second: dict[str, float | None] = {}
+        for context, value in benchmarks.items():
+            if isinstance(value, dict) and isinstance(value.get("prefill"), dict):
+                tokens = value["prefill"].get("tokens_per_second")
+                tokens_per_second[str(context)] = float(tokens) if isinstance(tokens, (int, float)) and math.isfinite(tokens) else None
+        energy = metrics.get("energy", {})
+        training_energy = metrics.get("training_energy", {})
+        entry = comparisons.setdefault(key, {"family": record["family"], "scale": record["scale"], "variant": record["variant"], "seeds": []})
+        entry["seeds"].append({
+            "seed": record["seed"], "path": record.get("path", ""),
+            "tokens_per_second": tokens_per_second,
+            "training_joules_per_million_tokens": (
+                training_energy.get("joules_per_million_training_tokens")
+                if isinstance(training_energy, dict) else None
+            ),
+            "energy_supported": bool(energy.get("training", {}).get("supported", False)) if isinstance(energy, dict) else False,
+        })
+    return comparisons
+
+
+def _collect_availability_notes(root: Path, records: list[dict[str, Any]], exclusions: list[dict[str, str]]) -> dict[str, Any]:
+    """Unavailable/unqualified reasons from records, profiling artifacts, and exclusions."""
+
+    unavailable: list[dict[str, str]] = []
+    unqualified: list[dict[str, str]] = []
+    for record in records:
+        metrics = record.get("metrics", {})
+        recurrence = metrics.get("recurrence", {})
+        if not isinstance(recurrence, dict):
+            continue
+        if recurrence.get("load_failure_reason"):
+            unavailable.append({"path": record.get("path", ""), "reason": str(recurrence["load_failure_reason"])})
+        if recurrence.get("requested_backend") == "cuda-fused" and not recurrence.get("qualification_hash"):
+            unqualified.append({"path": record.get("path", ""), "reason": "cuda-fused record has no qualification hash"})
+    profiling = _scan_profiling_artifacts(root)
+    for pilot in profiling["pilots"]:
+        if pilot.get("status") == "unreadable":
+            unavailable.append({"path": pilot["path"], "reason": pilot.get("reason", "unreadable pilot artifact")})
+    for bench in profiling["recurrence_benchmarks"]:
+        if bench.get("status") == "unreadable":
+            unavailable.append({"path": bench["path"], "reason": bench.get("reason", "unreadable benchmark artifact")})
+    for item in exclusions:
+        unavailable.append({"path": item["path"], "reason": item["reason"]})
+    return {"unavailable": unavailable, "unqualified": unqualified}
+
+
 def write_first_submission_reports(root: str | Path, *, expected_run_mode: str | None = None) -> dict[str, Any]:
     """Write raw seed tables and descriptive paired results; never significance stars."""
 
@@ -103,12 +238,21 @@ def write_first_submission_reports(root: str | Path, *, expected_run_mode: str |
         "retrieval.latest_value_accuracy", "retrieval.stale_value_error_rate",
         "retrieval.unrelated_association_retention",
     )
+    backend_identity = _collect_backend_identity(records)
     report = {
         "report_version": 1,
         "interpretation": "descriptive paired seed summaries only; no null-hypothesis significance tests or significance stars",
         "validated_records": records,
         "exclusions": exclusions,
         "summary": descriptive_summary(records, metrics),
+        # Additive backend/profiling coverage for 7.4; existing keys are unchanged.
+        "backend_identity": backend_identity,
+        "qualification_evidence": {
+            "hashes": backend_identity["qualification_hashes"],
+            "profiling_artifacts": _scan_profiling_artifacts(root),
+        },
+        "performance_comparisons": _collect_performance_comparisons(records),
+        "availability_notes": _collect_availability_notes(root, records, exclusions),
     }
     report["plots"] = generate_research_plots(root, records)
     atomic_write_json(root / "aggregate_report.json", report)
@@ -128,6 +272,14 @@ def write_first_submission_reports(root: str | Path, *, expected_run_mode: str |
     if exclusions:
         lines.extend(["", "## Excluded artifacts"])
         lines.extend(f"- `{item['path']}`: {item['reason']}" for item in exclusions)
+    lines.extend([
+        "", "## Backend and qualification coverage",
+        f"- Requested backends: {report['backend_identity']['requested_backends'] or 'none recorded'}",
+        f"- Resolved backends: {report['backend_identity']['resolved_backends'] or 'none recorded'}",
+        f"- Qualification hashes: {report['backend_identity']['qualification_hashes'] or 'none recorded'}",
+        f"- Unavailable reasons: {len(report['availability_notes']['unavailable'])}; "
+        f"unqualified reasons: {len(report['availability_notes']['unqualified'])}",
+    ])
     (root / "first_submission_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     return report
 

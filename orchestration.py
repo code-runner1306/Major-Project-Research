@@ -170,8 +170,17 @@ def run_seed(
     """Run/recover one isolated seed, refusing stale or partial artifacts as complete."""
 
     if profile.run_mode == "production":
-        preflight = require_production_cuda(recurrence_backend=profile.recurrence_backend)
-        ensure_backend_available(recurrence_options_for(profile), device=torch.device("cuda"))
+        options = recurrence_options_for(profile)
+        head_dims = tuple(sorted({profile.model_for(scale).d_head for scale in profile.scales}))
+        preflight = require_production_cuda(
+            recurrence_backend=options.backend,
+            input_dtype=options.input_dtype,
+            state_accumulator_dtype=options.state_accumulator_dtype,
+            chunk_size=options.chunk_size,
+            qualification_artifact=options.qualification_artifact,
+            head_dims=head_dims,
+        )
+        ensure_backend_available(options, device=torch.device("cuda"))
         profile.budget.require_ready()
     run_dir = _run_path(profile, family, scale, variant, seed)
     run_dir.mkdir(parents=True, exist_ok=True)

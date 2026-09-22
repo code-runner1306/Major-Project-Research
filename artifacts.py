@@ -140,6 +140,32 @@ def write_manifest(path: str | Path, manifest: SeedManifest) -> dict[str, Any]:
     return data
 
 
+def _recurrence_drift(actual: Mapping[str, Any], expected: SeedManifest) -> str | None:
+    """Fail-closed backend/build/dtype/chunk/qualification comparison.
+
+    The canonical fingerprint comparison below already rejects any drift, but
+    this explicit guard keeps optimized-production resumption fail-closed with
+    a stable message when recurrence provenance is missing or differs.
+    """
+    expected_model = expected.model
+    actual_recurrence = actual.get("model", {}).get("recurrence") if isinstance(actual.get("model"), Mapping) else None
+    expected_recurrence = expected_model.get("recurrence") if isinstance(expected_model, Mapping) else None
+    if expected_recurrence is None:
+        return None
+    if not isinstance(actual_recurrence, Mapping):
+        return "configuration/environment/source fingerprint differs"
+    keys = (
+        "requested_backend", "semantic_version", "implementation_source_hash",
+        "input_dtype", "state_accumulator_dtype", "chunk_size",
+        "qualification_artifact", "qualification_hash",
+        "compiled_architectures", "chunk_policy",
+    )
+    for key in keys:
+        if actual_recurrence.get(key) != expected_recurrence.get(key):
+            return "configuration/environment/source fingerprint differs"
+    return None
+
+
 def manifest_compatibility(path: str | Path, expected: SeedManifest) -> tuple[bool, str]:
     try:
         actual = read_json(path)
@@ -153,6 +179,9 @@ def manifest_compatibility(path: str | Path, expected: SeedManifest) -> tuple[bo
         return False, "manifest fingerprint does not match manifest contents"
     if actual.get("run_mode") != expected.run_mode:
         return False, f"run mode differs ({actual.get('run_mode')} vs {expected.run_mode})"
+    drift = _recurrence_drift(actual, expected)
+    if drift is not None:
+        return False, drift
     if actual.get("fingerprint") != expected.to_dict()["fingerprint"]:
         return False, "configuration/environment/source fingerprint differs"
     return True, "compatible"

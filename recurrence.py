@@ -121,21 +121,39 @@ def reference_recurrence(
 
 def _fused_load_reason() -> str:
     try:
-        import gdn_cuda  # type: ignore[import-not-found]  # pragma: no cover - V100 only
+        import gdn_cuda  # noqa: PLC0415 - lazy so CPU imports never need a toolkit
 
-        _ = gdn_cuda
-    except Exception as exc:  # pragma: no cover - V100 only
+        ok, reason = gdn_cuda.load_extension()
+        if ok:
+            return "cuda-fused extension loaded but has not yet been qualified"
+        return reason or "cuda-fused extension is unavailable"
+    except Exception as exc:  # pragma: no cover - defensive; loader must not break CPU
         return f"cuda-fused extension is unavailable: {type(exc).__name__}: {exc}"
-    return "cuda-fused extension loaded but has not yet been qualified"
 
 
 def backend_metadata(options: RecurrenceOptions, *, device: torch.device | None = None) -> dict[str, object]:
     """Return serializable provenance without forcing CUDA extension imports."""
 
+    try:
+        import gdn_cuda  # noqa: PLC0415 - pure-Python scaffold; CPU-safe
+
+        extension_identity = gdn_cuda.build_identity()
+        decode_version = gdn_cuda.DECODE_BACKEND_VERSION
+        extension_version = gdn_cuda.EXTENSION_SEMANTIC_VERSION
+        target_arch = gdn_cuda.TARGET_ARCH
+    except Exception:
+        extension_identity = "unavailable"
+        decode_version = "decode-v1-fused-stub"
+        extension_version = "gdn-cuda-v0-scaffold"
+        target_arch = "sm_70"
     metadata: dict[str, object] = {
         "requested_backend": options.backend,
         "semantic_version": RECURRENCE_SEMANTIC_VERSION,
         "implementation_source_hash": sha256(Path(__file__).read_bytes()).hexdigest(),
+        "extension_semantic_version": extension_version,
+        "extension_build_identity": extension_identity,
+        "target_architecture": target_arch,
+        "decode_backend_version": decode_version,
         "input_dtype": options.input_dtype,
         "state_accumulator_dtype": options.state_accumulator_dtype,
         "chunk_size": options.chunk_size,
@@ -177,6 +195,12 @@ def ensure_backend_available(options: RecurrenceOptions, *, device: torch.device
             "cuda-fused recurrence is currently qualified only for Volta sm_70; "
             f"found sm_{torch.cuda.get_device_capability(device)[0]}{torch.cuda.get_device_capability(device)[1]}"
         )
+    if qualification_hash(options.qualification_artifact) is None:
+        raise BackendUnavailableError(
+            "cuda-fused production requires a matching qualification artifact "
+            f"({options.qualification_artifact!r} missing or unreadable); "
+            "qualify on the V100S first or run reference explicitly for diagnostics"
+        )
     reason = str(metadata["load_failure_reason"])
     raise BackendUnavailableError(reason)
 
@@ -195,4 +219,7 @@ def run_recurrence(
     if options.backend == "reference":
         return reference_recurrence(q, k, v, alpha, beta, initial_state, options=options)
     ensure_backend_available(options, device=q.device)
-    raise AssertionError("ensure_backend_available must either raise or dispatch cuda-fused")
+    import gdn_cuda  # noqa: PLC0415 - lazy so CPU import never needs a toolkit
+
+    gdn_cuda.validate_fused_inputs(q, k, v, alpha, beta, initial_state, chunk_size=options.chunk_size)
+    return gdn_cuda.fused_forward(q, k, v, alpha, beta, initial_state, chunk_size=options.chunk_size)

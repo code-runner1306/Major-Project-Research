@@ -14,6 +14,11 @@ import torch
 
 CUDA_12_MIN_DRIVER = (525, 60, 13)
 
+# Fail-closed cuda-fused support matrix ( Volta V100S target + production scales ).
+SUPPORTED_HEAD_DIMS = (40, 48, 56)
+SUPPORTED_INPUT_DTYPES = ("autocast", "float32")
+SUPPORTED_STATE_ACCUMULATOR_DTYPES = ("input", "float32")
+
 
 def _version_tuple(value: str | None) -> tuple[int, ...] | None:
     if not value:
@@ -136,22 +141,157 @@ def collect_cuda_preflight() -> CudaPreflight:
     )
 
 
-def require_production_cuda(*, recurrence_backend: str = "reference") -> CudaPreflight:
+def _qualification_file_hash(path: str | None) -> str | None:
+    """Hash a qualification artifact without importing recurrence (CPU-safe)."""
+    if not path:
+        return None
+    try:
+        target = Path(path)
+        if not target.is_file():
+            return None
+        from hashlib import sha256
+        return sha256(target.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _check_qualification_coverage(
+    *, qualification_artifact: str | None, input_dtype: str,
+    state_accumulator_dtype: str, chunk_size: int, head_dims: tuple[int, ...] | None,
+) -> None:
+    """Fail closed when the qualification artifact is missing, unreadable, or
+    explicitly does not cover the requested configuration.
+
+    Artifacts without explicit coverage fields are accepted here on presence +
+    hash alone; exact backend/build/dtype/chunk/qualification drift is rejected
+    by manifest fingerprint compatibility at resumption time.
+    """
+    import json
+
+    if not qualification_artifact:
+        raise RuntimeError(
+            "cuda-fused production requires --qualification-artifact pointing at the "
+            "accepted V100 qualification JSON; re-run qualification or select "
+            "--recurrence-backend reference explicitly for diagnostics."
+        )
+    digest = _qualification_file_hash(qualification_artifact)
+    if digest is None:
+        raise RuntimeError(
+            f"Qualification artifact {qualification_artifact!r} is missing or unreadable "
+            f"(sha256 unavailable). Provide the immutable qualification JSON from the "
+            "successful V100 qualification run; refusing cuda-fused startup."
+        )
+    try:
+        payload = json.loads(Path(qualification_artifact).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        # Non-JSON artifacts: presence + hash is the compatibility identity.
+        return
+    if not isinstance(payload, dict):
+        return
+    problems: list[str] = []
+    coverage_dtypes = payload.get("supported_input_dtypes", payload.get("input_dtypes"))
+    if isinstance(coverage_dtypes, list) and input_dtype not in coverage_dtypes:
+        problems.append(f"input dtype {input_dtype!r} not in qualified {coverage_dtypes}")
+    coverage_accum = payload.get("supported_state_accumulator_dtypes", payload.get("state_accumulator_dtypes"))
+    if isinstance(coverage_accum, list) and state_accumulator_dtype not in coverage_accum:
+        problems.append(f"state accumulator {state_accumulator_dtype!r} not in qualified {coverage_accum}")
+    coverage_chunk = payload.get("supported_chunk_sizes", payload.get("chunk_sizes", payload.get("chunk_size")))
+    if isinstance(coverage_chunk, list) and chunk_size not in coverage_chunk:
+        problems.append(f"chunk_size {chunk_size} not in qualified {coverage_chunk}")
+    elif coverage_chunk is not None and not isinstance(coverage_chunk, list) and chunk_size != coverage_chunk:
+        problems.append(f"chunk_size {chunk_size} != qualified {coverage_chunk}")
+    coverage_heads = payload.get("supported_head_dims", payload.get("head_dims"))
+    if isinstance(coverage_heads, list) and head_dims is not None:
+        uncovered = [h for h in head_dims if h not in coverage_heads]
+        if uncovered:
+            problems.append(f"head dims {uncovered} not in qualified {coverage_heads}")
+    if problems:
+        raise RuntimeError(
+            "Qualification artifact "
+            f"{qualification_artifact!r} (sha256 {digest[:12]}) does not cover the requested "
+            "cuda-fused configuration: " + "; ".join(problems) +
+            ". Qualify this exact backend/build/dtype/chunk/shape combination first."
+        )
+
+
+def require_production_cuda(
+    *,
+    recurrence_backend: str = "reference",
+    input_dtype: str = "autocast",
+    state_accumulator_dtype: str = "input",
+    chunk_size: int = 64,
+    qualification_artifact: str | None = None,
+    head_dims: tuple[int, ...] | list[int] | None = None,
+    recurrence_options: Any | None = None,
+) -> CudaPreflight:
+    if recurrence_options is not None:
+        recurrence_backend = recurrence_options.backend
+        input_dtype = recurrence_options.input_dtype
+        state_accumulator_dtype = recurrence_options.state_accumulator_dtype
+        chunk_size = recurrence_options.chunk_size
+        qualification_artifact = recurrence_options.qualification_artifact
     result = collect_cuda_preflight()
     if not result.compatible:
         raise RuntimeError(
             f"Production CUDA preflight failed: {result.reason}. Run nvidia-smi, record the driver version, "
             "and choose a compatible official PyTorch CUDA wheel before launching production training."
         )
-    if recurrence_backend == "cuda-fused":
-        if result.compute_capability != (7, 0):
+    if recurrence_backend == "reference":
+        # Explicitly recorded reference production run for diagnostics; no
+        # optimized qualification is claimed. CUDA compatibility above still applies.
+        return result
+    if recurrence_backend != "cuda-fused":
+        raise RuntimeError(
+            f"Unknown recurrence backend {recurrence_backend!r}; production requires "
+            "'reference' (explicit diagnostics) or 'cuda-fused' (qualified V100 path)."
+        )
+    if result.compute_capability != (7, 0):
+        raise RuntimeError(
+            "cuda-fused recurrence is targeted at the college V100S (sm_70); "
+            f"found compute capability {result.compute_capability}. "
+            "Run on the qualified V100S or select --recurrence-backend reference explicitly."
+        )
+    if input_dtype not in SUPPORTED_INPUT_DTYPES:
+        raise RuntimeError(
+            f"cuda-fused input dtype {input_dtype!r} is outside qualified {list(SUPPORTED_INPUT_DTYPES)}; "
+            "qualify this dtype combination first instead of approximating."
+        )
+    if state_accumulator_dtype not in SUPPORTED_STATE_ACCUMULATOR_DTYPES:
+        raise RuntimeError(
+            f"cuda-fused state accumulator {state_accumulator_dtype!r} is outside qualified "
+            f"{list(SUPPORTED_STATE_ACCUMULATOR_DTYPES)}; qualify this accumulator mode first."
+        )
+    if not isinstance(chunk_size, int) or chunk_size < 1:
+        raise RuntimeError(
+            f"cuda-fused chunk_size {chunk_size!r} is invalid; provide the qualified positive "
+            "checkpoint chunk size (production default 64)."
+        )
+    if head_dims is not None:
+        unsupported = [h for h in head_dims if h not in SUPPORTED_HEAD_DIMS]
+        if unsupported:
             raise RuntimeError(
-                "cuda-fused recurrence is targeted at the college V100S (sm_70); "
-                f"found compute capability {result.compute_capability}."
+                f"cuda-fused head dims {unsupported} are outside qualified {list(SUPPORTED_HEAD_DIMS)}; "
+                "qualify these production shapes before training instead of approximating."
             )
-        if not result.extension_toolchain["ready_for_extension_build"]:
-            raise RuntimeError(
-                "cuda-fused recurrence requires a local CUDA toolkit, nvcc, and C++ compiler. "
-                f"Discovered toolchain: {result.extension_toolchain}"
-            )
+    if not result.extension_toolchain["ready_for_extension_build"]:
+        raise RuntimeError(
+            "cuda-fused recurrence requires a local CUDA toolkit, nvcc, and C++ compiler. "
+            f"Discovered toolchain: {result.extension_toolchain}. "
+            "Install CUDA_HOME/nvcc plus a C++ compiler with headers on the V100S host."
+        )
+    try:
+        import gdn_cuda  # type: ignore[import-not-found]  # noqa: F401
+
+        _ = gdn_cuda
+    except Exception as exc:
+        raise RuntimeError(
+            "cuda-fused extension is unloadable; build the repository-owned sm_70 extension "
+            f"on the V100 host before production startup ({type(exc).__name__}: {exc}). "
+            f"Toolchain seen: {result.extension_toolchain}"
+        ) from exc
+    _check_qualification_coverage(
+        qualification_artifact=qualification_artifact, input_dtype=input_dtype,
+        state_accumulator_dtype=state_accumulator_dtype, chunk_size=chunk_size,
+        head_dims=tuple(head_dims) if head_dims is not None else None,
+    )
     return result
