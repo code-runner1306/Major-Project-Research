@@ -20,7 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from config import PRODUCTION_MODELS  # noqa: E402
-from controls import expected_parameter_count, gdn_layer_count  # noqa: E402
+from controls import expected_parameter_count  # noqa: E402
 
 
 OUT_DIR = ROOT / "figures"
@@ -194,48 +194,52 @@ def architecture_figure() -> None:
     arrow(ax, (block_x + block_w + 0.15, block_y + 1.42), (gate_x - 0.1, gate_y + 1.05), color="#2368a2")
 
     code = (
-        "alpha_dim = n_head        # scalar\n"
-        "alpha_dim = H * D_head    # channel-wise\n"
+        "alpha_dim = n_head      # scalar\n"
+        "alpha_dim = H*d_head    # channel\n"
         "alpha = sigmoid(alpha_proj(x))\n"
-        "alpha = alpha.view(B, T, H, alpha_width)"
+        "alpha = alpha.view(\n"
+        "    B, T, H, alpha_width)"
     )
-    ax.text(4.9, 3.03, "Implementation switch", fontsize=10.5, weight="bold")
+    lower_y, lower_h = 0.55, 2.05
+
+    code_x, code_y, code_w = 5.1, lower_y, 3.05
+    panel(ax, code_x, code_y, code_w, lower_h, "Implementation switch")
     ax.text(
-        4.9,
-        2.33,
+        code_x + 0.22,
+        code_y + 1.27,
         code,
-        fontsize=7.2,
+        fontsize=6.6,
         family="DejaVu Sans Mono",
-        bbox={"boxstyle": "round,pad=0.35", "facecolor": "#f7f7f7", "edgecolor": COLORS["frame"]},
+        va="top",
+        bbox={"boxstyle": "round,pad=0.28", "facecolor": "#f7f7f7", "edgecolor": "#d8dee6"},
     )
 
-    counts_x, counts_y = 0.55, 0.52
-    ax.text(counts_x, 1.85, "Configured production scales", fontsize=10.6, weight="bold")
-    headers = ["Scale", "Layers", "GDN", "d_model", "Heads", "Scalar", "Channel-wise"]
-    col_w = [0.62, 0.72, 0.55, 0.82, 0.62, 0.9, 1.08]
-    x_positions = [counts_x]
+    counts_x, counts_y = 0.55, lower_y
+    panel(ax, counts_x, counts_y, 4.25, lower_h, "Configured production scales")
+    headers = ["Scale", "Layers", "d_model", "Heads", "Scalar", "Channel-wise"]
+    col_w = [0.48, 0.55, 0.68, 0.55, 0.72, 0.88]
+    table_x = counts_x + 0.2
+    table_y = counts_y + 0.24
+    x_positions = [table_x]
     for width in col_w[:-1]:
         x_positions.append(x_positions[-1] + width)
     table_w = sum(col_w)
-    row_h = 0.27
-    ax.add_patch(FancyBboxPatch((counts_x - 0.05, counts_y - 0.07), table_w + 0.1, 5 * row_h + 0.16,
-                                boxstyle="round,pad=0.02,rounding_size=0.035",
-                                facecolor="white", edgecolor=COLORS["frame"], linewidth=1.0))
+    row_h = 0.24
     for j, header in enumerate(headers):
-        ax.text(x_positions[j] + col_w[j] / 2, counts_y + 4 * row_h, header, ha="center", fontsize=7.7, weight="bold")
+        ax.text(x_positions[j] + col_w[j] / 2, table_y + 4 * row_h, header, ha="center", fontsize=6.2, weight="bold")
     for r, (scale, cfg) in enumerate(PRODUCTION_MODELS.items()):
-        y = counts_y + (3 - r) * row_h
+        y = table_y + (3 - r) * row_h
         scalar = expected_parameter_count(cfg, "scalar", 50_257) / 1_000_000
         channel = expected_parameter_count(cfg, "channel-wise", 50_257) / 1_000_000
-        values = [scale, cfg.n_layer, gdn_layer_count(cfg), cfg.d_model, cfg.n_head, f"{scalar:.2f}M", f"{channel:.2f}M"]
+        values = [scale, cfg.n_layer, cfg.d_model, cfg.n_head, f"{scalar:.2f}M", f"{channel:.2f}M"]
         for j, value in enumerate(values):
-            ax.text(x_positions[j] + col_w[j] / 2, y, str(value), ha="center", fontsize=7.7, color=COLORS["ink"])
+            ax.text(x_positions[j] + col_w[j] / 2, y, str(value), ha="center", fontsize=6.4, color=COLORS["ink"])
     for r in range(1, 5):
-        ax.plot([counts_x, counts_x + table_w], [counts_y + r * row_h - 0.13, counts_y + r * row_h - 0.13],
+        ax.plot([table_x, table_x + table_w], [table_y + r * row_h - 0.12, table_y + r * row_h - 0.12],
                 color="#edf0f3", lw=0.8)
 
-    control_x, control_y = 8.75, 0.52
-    panel(ax, control_x, control_y, 4.0, 1.78, "Control guardrails")
+    control_x, control_y = 8.75, lower_y
+    panel(ax, control_x, control_y, 4.0, lower_h, "Control guardrails")
     bullets = [
         "Analytical count formula",
         "Runtime construction assertion",
@@ -243,7 +247,7 @@ def architecture_figure() -> None:
         "No dummy parameters",
     ]
     for i, item in enumerate(bullets):
-        ax.text(control_x + 0.28, control_y + 1.1 - i * 0.31, f"- {item}", fontsize=8.0, color=COLORS["muted"])
+        ax.text(control_x + 0.32, control_y + 1.33 - i * 0.35, f"- {item}", fontsize=8.0, color=COLORS["muted"])
 
     save_figure(fig, "slm_architecture_slide")
 
@@ -272,15 +276,16 @@ def status_figure() -> None:
     left_x, left_y = 0.65, 2.65
     panel(ax, left_x, left_y, 3.75, 2.45, "Implemented modules")
     implemented = [
-        "Scalar and channel-wise Gated DeltaNet variants",
+        "Scalar Gated DeltaNet variant",
+        "Channel-wise Gated DeltaNet variant",
         "Exact parameter accounting",
-        "TinyStories, MQAR, overwrite recall",
-        "Cache-aware prefill/decode evaluation",
-        "Gate, latency, memory, energy diagnostics",
+        "TinyStories/MQAR/overwrite paths",
+        "Cache-aware prefill and decode",
+        "Gate/latency/memory/energy diagnostics",
         "Manifest/checkpoint lifecycle",
     ]
     for i, item in enumerate(implemented):
-        ax.text(left_x + 0.28, left_y + 1.76 - i * 0.27, f"- {item}", fontsize=8.0, color=COLORS["muted"], va="top")
+        ax.text(left_x + 0.28, left_y + 1.76 - i * 0.24, f"- {item}", fontsize=7.6, color=COLORS["muted"], va="top")
 
     mid_x, mid_y = 4.75, 2.65
     panel(ax, mid_x, mid_y, 3.35, 2.45, "Verification evidence")
@@ -289,7 +294,6 @@ def status_figure() -> None:
         ("Smoke path", "offline CPU suite"),
         ("Cache check", "decode equivalence"),
         ("Artifact safety", "drift/corrupt rejection"),
-        ("Energy path", "explicit unsupported reason"),
     ]
     for i, (k, v) in enumerate(verification):
         ax.text(mid_x + 0.28, mid_y + 1.78 - i * 0.33, k, fontsize=8.0, weight="bold")

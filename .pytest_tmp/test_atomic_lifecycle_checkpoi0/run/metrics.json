@@ -1,0 +1,20 @@
+{
+  "benchmarks": {},
+  "energy": {
+    "supported": false
+  },
+  "final_checkpoint": {
+    "completed_steps": 2,
+    "path": "final_checkpoint.pt",
+    "processed_tokens": 4,
+    "sha256": "f98b068c9387eefe237102e0af280e822966ef37299c6c7a39f629a7bc324b1e"
+  },
+  "final_validation": {
+    "perplexity": 1.0
+  },
+  "gate_diagnostics": {},
+  "static_cost": {},
+  "training": {
+    "processed_tokens": 4
+  }
+}

@@ -1,0 +1,19 @@
+## 1. Configuration Settings
+
+- [x] 1.1 Add `PARALLEL_TRAININGS = 2` setting to `config.py`.
+
+## 2. VRAM Capacity & Parallel Worker Infrastructure
+
+- [x] 2.1 Implement `check_parallel_capacity(num_requested, scales_to_run)` in `run_all.py` to inspect VRAM via `torch.cuda.mem_get_info()` and apply 85% safety threshold fallback.
+- [x] 2.2 Add thread synchronization lock (`tracker_lock = threading.Lock()`) in `run_all.py` for safe `global_tracker.json` updates.
+- [x] 2.3 Implement worker-tagged logger helper `log_worker(worker_id, model_tag, message)` for formatted output.
+
+## 3. Parallel Worker Execution & Model Memory Unloading
+
+- [x] 3.1 Refactor model processing in `run_all.py` into worker function `process_model_config(scale, variant, worker_id, run_base_dir)`.
+- [x] 3.2 Add explicit memory unloading (`del model`, `gc.collect()`, `torch.cuda.empty_cache()`) after a model configuration completes all its seeds.
+- [x] 3.3 Integrate `ThreadPoolExecutor(max_workers=parallel_jobs)` in `main()` of `run_all.py` to manage parallel worker jobs.
+
+## 4. Verification
+
+- [x] 4.1 Run smoke test with `PARALLEL_TRAININGS = 2`, verify worker log prefixes, confirm VRAM pre-check succeeds, test fallback behavior, and verify `statistical_analysis.json` and plots are generated properly.

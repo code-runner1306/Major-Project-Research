@@ -30,6 +30,5 @@ data/*
 .agent/
 .github/
 .opencode/
-openspec/
 *.pdf
 .codex/

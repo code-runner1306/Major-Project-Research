@@ -1,0 +1,52 @@
+{
+  "budget": {
+    "max_optimizer_steps": 2
+  },
+  "data_identity": {
+    "id": "toy"
+  },
+  "environment": {
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "python": "3.13.3",
+    "torch": "2.13.0+cpu"
+  },
+  "evaluation_protocol": {
+    "version": 1
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "tinystories",
+  "fingerprint": "58160d263553c132be8239c5eea068e6268abdefb5d559227469b15db903784d",
+  "model": {
+    "attention_layout": "pure_gdn",
+    "d_ff": [
+      64,
+      64,
+      64
+    ],
+    "d_head": 8,
+    "d_model": 32,
+    "n_head": 4,
+    "n_layer": 3,
+    "name": "tiny"
+  },
+  "run_mode": "smoke",
+  "scale": "tiny",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 8,
+    "evaluation_seed": 9,
+    "model_seed": 7,
+    "research_seed": 7
+  },
+  "source": {
+    "dirty": true,
+    "revision": "8f51abf0bbdf4668101513a13acae734a7488e71"
+  },
+  "variant": "scalar"
+}
