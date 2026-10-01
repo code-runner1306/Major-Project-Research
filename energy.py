@@ -43,17 +43,23 @@ class EnergyRegion(AbstractContextManager["EnergyRegion"]):
         if not self.provider.supported:
             return self
         if self.provider.energy_counter_supported:
-            self._start_counter = self.provider.read_energy_millijoules()
+            try:
+                self._start_counter = self.provider.read_energy_millijoules()
+            except Exception as exc:
+                if not self.provider.power_sampling_supported:
+                    self.provider.supported = False
+                    self.provider.reason = f"NVML energy counter became unavailable: {exc}"
+                    return self
+                self.provider.energy_counter_supported = False
+                self.provider.reason = f"NVML energy counter failed; falling back to sampled power: {exc}"
+        if not self.provider.energy_counter_supported:
             try:
                 self._sample_once()
-            except Exception:
-                # Counter-based energy remains valid even if instantaneous power
-                # is not exposed by this particular NVML device/driver pair.
-                pass
-        else:
-            self._sample_once()
-            self._thread = threading.Thread(target=self._sample_loop, daemon=True)
-            self._thread.start()
+                self._thread = threading.Thread(target=self._sample_loop, daemon=True)
+                self._thread.start()
+            except Exception as exc:
+                self.provider.supported = False
+                self.provider.reason = f"NVML power sampling became unavailable: {exc}"
         return self
 
     def _sample_once(self) -> None:
@@ -61,12 +67,20 @@ class EnergyRegion(AbstractContextManager["EnergyRegion"]):
 
     def _sample_loop(self) -> None:
         while not self._stop.wait(self.provider.sampling_interval_seconds):
-            self._sample_once()
+            try:
+                self._sample_once()
+            except Exception as exc:
+                self.provider.supported = False
+                self.provider.reason = f"NVML power sampling failed during measurement: {exc}"
+                self._stop.set()
 
     def __exit__(self, exc_type: object, exc: object, traceback: object) -> bool:
         end_time = time.perf_counter()
         duration = end_time - (self._start_time or end_time)
         if not self.provider.supported:
+            self._stop.set()
+            if self._thread is not None:
+                self._thread.join(timeout=self.provider.sampling_interval_seconds * 2 + 1)
             self.result = EnergyResult(
                 supported=False, method=None, joules=None, duration_seconds=duration,
                 average_watts=None, peak_watts=None, sampling_interval_seconds=None,
@@ -75,7 +89,16 @@ class EnergyRegion(AbstractContextManager["EnergyRegion"]):
             return False
         if self.provider.energy_counter_supported:
             assert self._start_counter is not None
-            joules = max(0.0, (self.provider.read_energy_millijoules() - self._start_counter) / 1000.0)
+            try:
+                joules = max(0.0, (self.provider.read_energy_millijoules() - self._start_counter) / 1000.0)
+            except Exception as exc:
+                self.result = EnergyResult(
+                    supported=False, method=None, joules=None, duration_seconds=duration,
+                    average_watts=None, peak_watts=None, sampling_interval_seconds=None,
+                    reason=f"NVML energy counter failed during measurement: {exc}",
+                    device=self.provider.device_metadata,
+                )
+                return False
             try:
                 self._sample_once()
             except Exception:
@@ -91,7 +114,16 @@ class EnergyRegion(AbstractContextManager["EnergyRegion"]):
             self._stop.set()
             if self._thread is not None:
                 self._thread.join(timeout=self.provider.sampling_interval_seconds * 2 + 1)
-            self._sample_once()
+            try:
+                self._sample_once()
+            except Exception as exc:
+                self.result = EnergyResult(
+                    supported=False, method=None, joules=None, duration_seconds=duration,
+                    average_watts=None, peak_watts=None, sampling_interval_seconds=None,
+                    reason=f"NVML power sampling failed at measurement end: {exc}",
+                    device=self.provider.device_metadata,
+                )
+                return False
             joules = 0.0
             for (previous_t, previous_w), (current_t, current_w) in zip(self._samples, self._samples[1:]):
                 joules += (current_t - previous_t) * (previous_w + current_w) / 2
@@ -111,12 +143,14 @@ class EnergyProvider:
 
     def __init__(
         self, *, supported: bool, reason: str | None, device_metadata: dict[str, Any],
-        energy_counter_supported: bool = False, sampling_interval_seconds: float = 0.05,
+        energy_counter_supported: bool = False, power_sampling_supported: bool = False,
+        sampling_interval_seconds: float = 0.05,
     ):
         self.supported = supported
         self.reason = reason
         self.device_metadata = device_metadata
         self.energy_counter_supported = energy_counter_supported
+        self.power_sampling_supported = power_sampling_supported
         self.sampling_interval_seconds = sampling_interval_seconds
 
     @classmethod
@@ -130,23 +164,36 @@ class EnergyProvider:
             import pynvml  # type: ignore[import-not-found]
 
             pynvml.nvmlInit()
-            handle = pynvml.nvmlDeviceGetHandleByIndex(device.index or torch.cuda.current_device())
+            index = device.index if device.index is not None else torch.cuda.current_device()
+            handle = pynvml.nvmlDeviceGetHandleByIndex(index)
             metadata = {
                 "device_type": "cuda",
                 "name": pynvml.nvmlDeviceGetName(handle).decode("utf-8"),
                 "uuid": pynvml.nvmlDeviceGetUUID(handle).decode("ascii"),
                 "driver": pynvml.nvmlSystemGetDriverVersion().decode("ascii"),
                 "cuda_runtime": torch.version.cuda,
-                "power_limit_watts": pynvml.nvmlDeviceGetEnforcedPowerLimit(handle) / 1000.0,
             }
+            try:
+                metadata["power_limit_watts"] = pynvml.nvmlDeviceGetEnforcedPowerLimit(handle) / 1000.0
+            except pynvml.NVMLError:
+                metadata["power_limit_watts"] = None
             try:
                 pynvml.nvmlDeviceGetTotalEnergyConsumption(handle)
                 counter = True
             except pynvml.NVMLError:
                 counter = False
+            try:
+                pynvml.nvmlDeviceGetPowerUsage(handle)
+                power_sampling = True
+            except pynvml.NVMLError:
+                power_sampling = False
+            supported = counter or power_sampling
             provider = cls(
-                supported=True, reason=None, device_metadata=metadata,
-                energy_counter_supported=counter, sampling_interval_seconds=sampling_interval_seconds,
+                supported=supported,
+                reason=None if supported else "NVML exposes neither a total-energy counter nor GPU power samples",
+                device_metadata=metadata, energy_counter_supported=counter,
+                power_sampling_supported=power_sampling,
+                sampling_interval_seconds=sampling_interval_seconds,
             )
             provider._pynvml, provider._handle = pynvml, handle  # type: ignore[attr-defined]
             return provider

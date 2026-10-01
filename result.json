@@ -1,0 +1,69 @@
+{
+  "purpose": "decision fine-tuning feasibility only; no benchmark test split used",
+  "device": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "workflow": "customer_service",
+  "question_id": "action",
+  "labels": [
+    "answer_directly",
+    "close_no_action",
+    "escalate_to_human",
+    "execute_refund",
+    "request_information"
+  ],
+  "dataset_split": "train only; 80/20 internal split",
+  "checkpoint_source": "https://drive.google.com/file/d/1ThcNNaZssxK1lGjWw9830aU1X4G2vHCl/view",
+  "dataset_fingerprint": "204dc064fcdddd1f",
+  "available_train_cases": 240,
+  "available_validation_cases": 60,
+  "state_truncations": {
+    "train": 44,
+    "validation": 15
+  },
+  "results": [
+    {
+      "variant": "scalar",
+      "checkpoint": "/tmp/decision_feasibility_t587u1ey/scalar_final_checkpoint.pt",
+      "steps": 5,
+      "batch_size": 2,
+      "max_length": 256,
+      "train_examples": 48,
+      "validation_examples": 16,
+      "first_train_loss": 1.9576621055603027,
+      "last_train_loss": 1.2025717496871948,
+      "mean_validation_soft_loss": 1.1410285830497742,
+      "step_seconds": [
+        4.178968556000655,
+        2.97781328200017,
+        3.261220585999581,
+        3.2887665169992033,
+        2.8984362030005286
+      ],
+      "steady_step_median_seconds": 3.1195169339998756,
+      "peak_allocated_gib": 0.9828305244445801,
+      "peak_reserved_gib": 1.17578125
+    },
+    {
+      "variant": "channel-wise",
+      "checkpoint": "/tmp/decision_feasibility_t587u1ey/channel-wise_final_checkpoint.pt",
+      "steps": 5,
+      "batch_size": 2,
+      "max_length": 256,
+      "train_examples": 48,
+      "validation_examples": 16,
+      "first_train_loss": 1.7963898181915283,
+      "last_train_loss": 1.1627013683319092,
+      "mean_validation_soft_loss": 1.1460406705737114,
+      "step_seconds": [
+        3.453268444999594,
+        2.850127935999808,
+        2.829954355999689,
+        2.840643383000497,
+        3.7963184990003356
+      ],
+      "steady_step_median_seconds": 2.8453856595001525,
+      "peak_allocated_gib": 1.0005879402160645,
+      "peak_reserved_gib": 1.193359375
+    }
+  ]
+}

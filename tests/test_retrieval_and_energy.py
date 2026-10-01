@@ -3,6 +3,7 @@ from __future__ import annotations
 import time
 
 from energy import EnergyProvider
+from resource_telemetry import DeviceResourceCapture
 from retrieval import RetrievalDataset
 
 
@@ -54,6 +55,14 @@ class _SampledEnergy(EnergyProvider):
         return 42.0
 
 
+class _UnavailablePower(EnergyProvider):
+    def __init__(self):
+        super().__init__(supported=True, reason=None, device_metadata={"name": "mock"})
+
+    def read_power_watts(self):
+        raise RuntimeError("power telemetry denied")
+
+
 def test_nvml_counter_and_sampling_paths():
     counter = _CounterEnergy()
     with counter.region("counter") as region:
@@ -67,3 +76,25 @@ def test_nvml_counter_and_sampling_paths():
     assert region.result is not None
     assert region.result.method == "nvml_sampled_power"
     assert region.result.joules is not None and region.result.joules >= 0
+
+
+def test_unavailable_power_telemetry_is_recordable_without_failing_work():
+    provider = _UnavailablePower()
+    with provider.region("unavailable") as region:
+        pass
+    assert region.result is not None
+    assert region.result.supported is False
+    assert region.result.joules is None
+    assert "power sampling" in (region.result.reason or "")
+
+
+def test_cpu_resource_capture_records_unknown_gpu_telemetry_without_failure():
+    import torch
+
+    capture = DeviceResourceCapture(torch.device("cpu"), activity_interval_seconds=0.001)
+    with capture:
+        time.sleep(0.002)
+    assert capture.result is not None
+    assert capture.result["energy"]["supported"] is False
+    assert capture.result["activity_sample_count"] >= 2
+    assert capture.result["other_gpu_activity"]["status"] == "unknown"
