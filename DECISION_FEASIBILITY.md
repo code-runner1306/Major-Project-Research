@@ -18,27 +18,38 @@ ships PyTorch. Its current Python version may not satisfy this repository's
 Python 3.11 project pin.
 
 ```python
-%pip install datasets==4.6.1 tiktoken==0.12.0
+%pip install datasets==4.6.1 tiktoken==0.12.0 gdown
 ```
 
 In the repository directory, upload `decision_feasibility.py` from the local
-working tree if it has not been pushed to GitHub. Put the two `.pt` files on
-Google Drive and mount it:
+working tree if it has not been pushed to GitHub:
 
 ```python
-from google.colab import drive, files
-drive.mount('/content/drive')
+from google.colab import files
 %cd /content/Major-Project-Research
 files.upload()  # choose decision_feasibility.py if absent from the clone
 ```
 
-Set the checkpoint paths to the actual files on your Drive:
+The supplied Drive link contains `results.tar.gz`. This command downloads it
+and streams out only the scalar seed 43 and channel-wise seed 42 checkpoint
+files. It accepts `output/tinystories/...`, `outputs/tinystories/...`, or an
+additional enclosing directory inside the archive:
 
 ```python
 !python decision_feasibility.py \
   --variant both \
-  --scalar-checkpoint '/content/drive/MyDrive/scalar_seed43_final_checkpoint.pt' \
-  --channel-checkpoint '/content/drive/MyDrive/channel_seed42_final_checkpoint.pt' \
+  --checkpoint-archive-url \
+  --steps 5 --batch-size 2 --max-length 256
+```
+
+If the link needs Google authentication or Drive blocks direct download,
+mount Drive and pass the file path instead:
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+!python decision_feasibility.py --variant both \
+  --checkpoint-archive '/content/drive/MyDrive/results.tar.gz' \
   --steps 5 --batch-size 2 --max-length 256
 ```
 
@@ -56,6 +67,8 @@ runtime of a full study, or the feasibility of longer inputs and larger
 batches. If memory is tight, try `--batch-size 1`; record the change when
 comparing results.
 
-The checkpoint files are about 350 MB each and are training outputs, not part
-of a normal Git clone. The script uses `weights_only=True` when loading them;
-only use checkpoints from a trusted source.
+The selected checkpoint files are about 350 MB each and are training outputs,
+not part of a normal Git clone. The archive is downloaded into temporary
+storage, and only the two selected regular files are copied out. The script
+uses `weights_only=True` when loading them; only use an archive from a trusted
+source.

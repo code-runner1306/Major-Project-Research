@@ -7,10 +7,14 @@ not a test-set result or the final decision-model architecture.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
 import json
+import shutil
 import statistics
+import tarfile
+import tempfile
 import time
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import tiktoken
 import torch
@@ -26,6 +30,62 @@ DEFAULT_CHECKPOINTS = {
     "scalar": Path("output/tinystories/30M/scalar/seed_43_ef7dde5a783e/final_checkpoint.pt"),
     "channel-wise": Path("output/tinystories/30M/channel-wise/seed_42_ced68e206c8b/final_checkpoint.pt"),
 }
+DRIVE_RESULTS_URL = "https://drive.google.com/file/d/1ThcNNaZssxK1lGjWw9830aU1X4G2vHCl/view"
+
+
+def extract_checkpoints(archive: Path, target_dir: Path, variants: list[str]) -> dict[str, Path]:
+    """Stream only the selected regular files; never extract archive paths."""
+    wanted = {
+        variant: tuple(DEFAULT_CHECKPOINTS[variant].parts[-5:])
+        for variant in variants
+    }
+    found = {}
+    with tarfile.open(archive, mode="r|gz") as members:
+        for member in members:
+            parts = PurePosixPath(member.name.replace("\\", "/")).parts
+            for variant, suffix in wanted.items():
+                if tuple(parts[-5:]) != suffix:
+                    continue
+                if variant in found:
+                    raise ValueError(f"Archive contains duplicate {variant} checkpoint")
+                if not member.isfile() or member.size > 1024**3:
+                    raise ValueError(f"Invalid {variant} checkpoint archive member")
+                source = members.extractfile(member)
+                if source is None:
+                    raise ValueError(f"Cannot read {variant} checkpoint archive member")
+                destination = target_dir / f"{variant}_final_checkpoint.pt"
+                with source, destination.open("wb") as output:
+                    shutil.copyfileobj(source, output)
+                print(f"Extracted {variant} checkpoint ({member.size / 2**20:.1f} MiB)", flush=True)
+                found[variant] = destination
+    missing = set(variants) - found.keys()
+    if missing:
+        raise FileNotFoundError(f"Missing checkpoints in {archive}: {', '.join(sorted(missing))}")
+    return found
+
+
+@contextmanager
+def checkpoint_paths(args, variants: list[str]):
+    if args.checkpoint_archive is None and args.checkpoint_archive_url is None:
+        yield {"scalar": args.scalar_checkpoint, "channel-wise": args.channel_checkpoint}
+        return
+    with tempfile.TemporaryDirectory(prefix="decision_feasibility_") as temporary:
+        temp_dir = Path(temporary)
+        archive = args.checkpoint_archive
+        if args.checkpoint_archive_url is not None:
+            try:
+                import gdown
+            except ImportError as exc:
+                raise RuntimeError("Install gdown to download the checkpoint archive: pip install gdown") from exc
+            archive = temp_dir / "results.tar.gz"
+            print("Downloading checkpoint archive from Google Drive...", flush=True)
+            downloaded = gdown.download(args.checkpoint_archive_url, str(archive), fuzzy=True, quiet=False)
+            if downloaded is None or not archive.is_file():
+                raise RuntimeError("Drive download failed. Check that the file is accessible to anyone with the link.")
+        assert archive is not None
+        if not archive.is_file():
+            raise FileNotFoundError(f"Checkpoint archive not found: {archive}")
+        yield extract_checkpoints(archive, temp_dir, variants)
 
 
 def decoded(value):
@@ -179,6 +239,12 @@ def main():
     parser.add_argument("--variant", choices=["scalar", "channel-wise", "both"], default="both")
     parser.add_argument("--scalar-checkpoint", type=Path, default=DEFAULT_CHECKPOINTS["scalar"])
     parser.add_argument("--channel-checkpoint", type=Path, default=DEFAULT_CHECKPOINTS["channel-wise"])
+    archive_source = parser.add_mutually_exclusive_group()
+    archive_source.add_argument("--checkpoint-archive", type=Path, help="Local results.tar.gz, including a mounted Drive path")
+    archive_source.add_argument(
+        "--checkpoint-archive-url", nargs="?", const=DRIVE_RESULTS_URL,
+        help="Download results.tar.gz from Google Drive; omit the value to use this project's shared link",
+    )
     parser.add_argument("--workflow", default="customer_service")
     parser.add_argument("--question-id", help="Choice question ID; default is first choice in the workflow")
     parser.add_argument("--steps", type=int, default=5)
@@ -210,8 +276,8 @@ def main():
     print(f"Question: {question_id}; choices: {labels}; train/val: {len(train_examples)}/{len(val_examples)}", flush=True)
     print(f"Truncated state prefixes: train={train_truncated}, validation={val_truncated}", flush=True)
     variants = ["scalar", "channel-wise"] if args.variant == "both" else [args.variant]
-    paths = {"scalar": args.scalar_checkpoint, "channel-wise": args.channel_checkpoint}
-    results = [run_variant(args, variant, paths[variant], train_examples, val_examples, encoder, labels, device) for variant in variants]
+    with checkpoint_paths(args, variants) as paths:
+        results = [run_variant(args, variant, paths[variant], train_examples, val_examples, encoder, labels, device) for variant in variants]
     report = {
         "purpose": "decision fine-tuning feasibility only; no benchmark test split used",
         "device": torch.cuda.get_device_name() if device.type == "cuda" else "CPU",
@@ -220,6 +286,11 @@ def main():
         "question_id": question_id,
         "labels": labels,
         "dataset_split": "train only; 80/20 internal split",
+        "checkpoint_source": (
+            args.checkpoint_archive_url or str(args.checkpoint_archive)
+            if args.checkpoint_archive is not None or args.checkpoint_archive_url is not None
+            else "individual checkpoint paths"
+        ),
         "dataset_fingerprint": rows._fingerprint,
         "available_train_cases": len(split["train"]),
         "available_validation_cases": len(split["test"]),
