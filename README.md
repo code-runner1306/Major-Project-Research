@@ -17,13 +17,13 @@ Before installing, record the V100 driver with:
 nvidia-smi
 ```
 
-`requirements.txt` uses the official PyTorch CUDA 12.6 wheel index and pins `torch==2.12.0+cu126`:
+`requirements.txt` uses the official PyTorch CUDA 12.8 wheel index and pins `torch==2.11.0+cu128`:
 
 ```bash
 python3.11 -m pip install -r requirements.txt
 ```
 
-No local CUDA toolkit is required for that wheel. CUDA 12.x requires an NVIDIA driver at least `525.60.13`; the production launcher performs the same fail-closed preflight and records Python, PyTorch, CUDA runtime, driver, GPU, NVML, energy-counter, power-sampling, and power-limit information. If the V100 driver is older, do not silently fall back to CPU: select an appropriate official PyTorch wheel channel, update `requirements.txt`, and record the decision before starting the grid.
+No local CUDA toolkit is required for that wheel. CUDA 12.x requires an NVIDIA driver at least `525.60.13`; the production launcher performs the same fail-closed preflight and records Python, PyTorch, CUDA runtime, driver, GPU, NVML, energy-counter, power-sampling, and power-limit information. If the driver is older or the runtime provides a different CUDA/PyTorch channel, do not silently fall back to CPU: select an appropriate official PyTorch wheel channel, update `requirements.txt`, and record the decision before starting the grid.
 
 For local CPU development, install a CPU PyTorch build independently if needed. Do not install the CUDA requirements file on a machine without a suitable NVIDIA driver.
 
