@@ -483,8 +483,31 @@ def validate_workflow_rows(
     return materialized
 
 
-def _ordered_labels(primitive: str, criteria: Mapping[str, Any]) -> list[str]:
+def _coerce_criteria(criteria: Any) -> dict[str, Any]:
+    if isinstance(criteria, Mapping):
+        return dict(criteria)
+    if isinstance(criteria, str):
+        text = criteria.strip()
+        if not text or text.lower() in ("null", "none", "n/a", "{}"):
+            return {}
+        try:
+            parsed = json.loads(text)
+            if isinstance(parsed, Mapping):
+                return dict(parsed)
+        except Exception:
+            pass
+    return {}
+
+
+def _ordered_labels(primitive: str, criteria: Mapping[str, Any], answer: Any = None) -> list[str]:
     labels = [str(label) for label in criteria]
+    if not labels:
+        if primitive == "noul":
+            return ["false", "true"]
+        if isinstance(answer, Mapping):
+            probs = answer.get("probabilities")
+            if isinstance(probs, Mapping):
+                return [str(l) for l in probs]
     if primitive == "noul":
         available = {label.lower(): label for label in labels}
         if {"false", "true"}.issubset(available):
@@ -499,12 +522,7 @@ def _ordered_labels(primitive: str, criteria: Mapping[str, Any]) -> list[str]:
 
 
 def _option_descriptions(question: Mapping[str, Any], labels: Sequence[str]) -> dict[str, str]:
-    criteria = question.get("criteria")
-    if not isinstance(criteria, Mapping):
-        if not criteria:
-            criteria = {}
-        else:
-            raise DecisionDataError("question.criteria must be an object")
+    criteria = _coerce_criteria(question.get("criteria"))
     descriptions = {str(label): canonical_text(description) for label, description in criteria.items()}
     if not descriptions and set(labels) == {"false", "true"}:
         descriptions = {"false": "The statement is false.", "true": "The statement is true."}
@@ -609,13 +627,8 @@ def normalize_case(
         if primitive not in PRIMITIVES:
             raise DecisionDataError(f"{workflow}/{case_id}/{question_id}: invalid primitive {primitive!r}")
         answer = gold.get(question_id)
-        criteria = question.get("criteria")
-        if not isinstance(criteria, Mapping):
-            if not criteria:
-                criteria = {}
-            else:
-                raise DecisionDataError(f"{workflow}/{case_id}/{question_id}: criteria must be an object")
-        labels = _ordered_labels(primitive, criteria)
+        criteria = _coerce_criteria(question.get("criteria"))
+        labels = _ordered_labels(primitive, criteria, answer)
         if primitive == "noul" and not labels:
             labels = ["false", "true"]
         descriptions = _option_descriptions(question, labels)
