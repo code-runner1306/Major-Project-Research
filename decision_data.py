@@ -500,10 +500,11 @@ def _ordered_labels(primitive: str, criteria: Mapping[str, Any]) -> list[str]:
 
 def _option_descriptions(question: Mapping[str, Any], labels: Sequence[str]) -> dict[str, str]:
     criteria = question.get("criteria")
-    if criteria is None:
-        criteria = {}
     if not isinstance(criteria, Mapping):
-        raise DecisionDataError("question.criteria must be an object")
+        if not criteria:
+            criteria = {}
+        else:
+            raise DecisionDataError("question.criteria must be an object")
     descriptions = {str(label): canonical_text(description) for label, description in criteria.items()}
     if not descriptions and set(labels) == {"false", "true"}:
         descriptions = {"false": "The statement is false.", "true": "The statement is true."}
@@ -609,10 +610,11 @@ def normalize_case(
             raise DecisionDataError(f"{workflow}/{case_id}/{question_id}: invalid primitive {primitive!r}")
         answer = gold.get(question_id)
         criteria = question.get("criteria")
-        if criteria is None:
-            criteria = {}
         if not isinstance(criteria, Mapping):
-            raise DecisionDataError(f"{workflow}/{case_id}/{question_id}: criteria must be an object")
+            if not criteria:
+                criteria = {}
+            else:
+                raise DecisionDataError(f"{workflow}/{case_id}/{question_id}: criteria must be an object")
         labels = _ordered_labels(primitive, criteria)
         if primitive == "noul" and not labels:
             labels = ["false", "true"]
