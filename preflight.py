@@ -11,6 +11,8 @@ from typing import Any
 
 import torch
 
+from nvml_utils import nvml_text
+
 
 CUDA_12_MIN_DRIVER = (525, 60, 13)
 
@@ -85,11 +87,11 @@ def collect_cuda_preflight() -> CudaPreflight:
 
         pynvml.nvmlInit()
         nvml_available = True
-        driver = pynvml.nvmlSystemGetDriverVersion().decode("ascii")
+        driver = nvml_text(pynvml.nvmlSystemGetDriverVersion(), "ascii")
         if torch.cuda.is_available():
             handle = pynvml.nvmlDeviceGetHandleByIndex(torch.cuda.current_device())
-            gpu_name = pynvml.nvmlDeviceGetName(handle).decode("utf-8")
-            gpu_uuid = pynvml.nvmlDeviceGetUUID(handle).decode("ascii")
+            gpu_name = nvml_text(pynvml.nvmlDeviceGetName(handle))
+            gpu_uuid = nvml_text(pynvml.nvmlDeviceGetUUID(handle), "ascii")
             try:
                 pynvml.nvmlDeviceGetTotalEnergyConsumption(handle)
                 energy_counter_supported = True

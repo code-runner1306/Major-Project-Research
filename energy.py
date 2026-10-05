@@ -10,6 +10,8 @@ from typing import Any
 
 import torch
 
+from nvml_utils import nvml_text
+
 
 @dataclass
 class EnergyResult:
@@ -168,9 +170,9 @@ class EnergyProvider:
             handle = pynvml.nvmlDeviceGetHandleByIndex(index)
             metadata = {
                 "device_type": "cuda",
-                "name": pynvml.nvmlDeviceGetName(handle).decode("utf-8"),
-                "uuid": pynvml.nvmlDeviceGetUUID(handle).decode("ascii"),
-                "driver": pynvml.nvmlSystemGetDriverVersion().decode("ascii"),
+                "name": nvml_text(pynvml.nvmlDeviceGetName(handle)),
+                "uuid": nvml_text(pynvml.nvmlDeviceGetUUID(handle), "ascii"),
+                "driver": nvml_text(pynvml.nvmlSystemGetDriverVersion(), "ascii"),
                 "cuda_runtime": torch.version.cuda,
             }
             try:
