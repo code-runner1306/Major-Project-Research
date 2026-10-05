@@ -17,6 +17,9 @@ from energy import EnergyProvider, normalized_energy
 from model import GatedDeltaNetLM
 
 
+PROGRESS_INTERVAL = 50
+
+
 @dataclass(frozen=True)
 class SeedBundle:
     research_seed: int
@@ -155,6 +158,9 @@ def train_fixed_budget(
             if len(losses) >= 6 and loss_sum > 5 * (sum(losses[-6:-1]) / 5):
                 events.append({"step": step, "kind": "loss_spike", "loss": loss_sum})
             step_durations.append(time.perf_counter() - step_started)
+
+            if step % PROGRESS_INTERVAL == 0 or step == max_steps:
+                print(f"Training progress: {step}/{max_steps} optimizer steps completed", flush=True)
 
             if step % profile.budget.evaluation_interval == 0 or step == max_steps:
                 validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)
