@@ -59,6 +59,12 @@ python run_all.py --mode production --recurrence-backend reference --matched-con
 python run_all.py --mode production --recurrence-backend reference --family mqar
 ```
 
+Limit a run to selected model scales and seeds with comma-separated overrides. For example, this runs both gating variants at 10M for seed 42:
+
+```bash
+python run_all.py --mode production --recurrence-backend reference --family tinystories --models 10M --seeds 42
+```
+
 `cuda-fused` is reserved for the repository-owned `sm_70` extension. It will require a matching V100 qualification artifact, local CUDA toolkit (`nvcc` and headers), and C++ compiler; production preflight records and checks these conditions before data loading. It never falls back to `reference` silently. The reference backend is the portable rollback path and is allowed for explicitly recorded diagnostics. After the V100 pilot, set a recorded `max_optimizer_steps` in the production profile for every family. CPU smoke timing must never be used to select this budget.
 
 ## Controlled model counts

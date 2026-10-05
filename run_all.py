@@ -12,6 +12,15 @@ from orchestration import run_cpu_smoke, run_selected
 from pilot import PilotSettings, run_v100_pilot
 
 
+def _parse_csv_values(value: str, option: str) -> tuple[str, ...]:
+    values = tuple(item.strip() for item in value.split(","))
+    if not values or any(not item for item in values):
+        raise ValueError(f"{option} expects a comma-separated list without empty values")
+    if len(set(values)) != len(values):
+        raise ValueError(f"{option} values must be unique")
+    return values
+
+
 def build_profile(
     mode: str, output: str | None, matched: bool, *, recurrence_backend: str | None,
     state_accumulator_dtype: str, qualification_artifact: str | None,
@@ -39,6 +48,8 @@ def main() -> None:
     parser.add_argument("--mode", choices=("production", "smoke"), default="production")
     parser.add_argument("--output", help="isolated output root; smoke defaults to a unique directory")
     parser.add_argument("--family", choices=("all", "tinystories", "mqar", "overwrite"), default="all")
+    parser.add_argument("--models", help="comma-separated model scales to run, e.g. 10M,30M")
+    parser.add_argument("--seeds", help="comma-separated seeds to run, e.g. 42,43")
     parser.add_argument("--matched-control", action="store_true", help="add exactly parameter-matched expanded-FFN scalar control")
     parser.add_argument("--full-prefix-benchmark", action="store_true", help="include the slow no-cache generation benchmark")
     parser.add_argument("--no-cache-benchmarks", action="store_true")
@@ -67,8 +78,28 @@ def main() -> None:
         )
     except ValueError as exc:
         parser.error(str(exc))
+    profile_overrides = {}
+    try:
+        if args.models is not None:
+            models = _parse_csv_values(args.models, "--models")
+            unknown_models = tuple(model for model in models if model not in profile.models)
+            if unknown_models:
+                raise ValueError(
+                    f"Unknown model scale(s) {', '.join(unknown_models)}; "
+                    f"choose from {', '.join(profile.models)}"
+                )
+            profile_overrides["scales"] = models
+        if args.seeds is not None:
+            seed_strings = _parse_csv_values(args.seeds, "--seeds")
+            try:
+                profile_overrides["seeds"] = tuple(int(seed) for seed in seed_strings)
+            except ValueError as exc:
+                raise ValueError("--seeds values must be integers") from exc
+    except ValueError as exc:
+        parser.error(str(exc))
     profile = replace(
         profile,
+        **profile_overrides,
         enable_full_prefix_benchmark=args.full_prefix_benchmark,
         enable_cache_benchmarks=profile.enable_cache_benchmarks and not args.no_cache_benchmarks,
         enable_gate_diagnostics=profile.enable_gate_diagnostics and not args.no_gate_diagnostics,
