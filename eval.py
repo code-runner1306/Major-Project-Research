@@ -56,7 +56,7 @@ def benchmark_inference(
     generated_tokens: int | None = None,
     seed: int = 0,
 ) -> dict[str, Any]:
-    """Measure legacy full-prefix, prefill, and genuine cached decode separately."""
+    """Measure optional full-prefix generation, prefill, and cached decode separately."""
 
     model.eval()
     model.set_gate_observer(None)  # Diagnostics must never pollute timed regions.
@@ -73,17 +73,35 @@ def benchmark_inference(
         if device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(device)
 
-        full_times: list[float] = []
-        with energy_provider.region("full_prefix_generation") as full_energy:
-            for _ in range(profile.benchmark_repeats):
-                current = prompt.clone()
-                _sync(device)
-                started = time.perf_counter()
-                for _ in range(generated_tokens):
-                    logits, _ = model(current)
-                    current = torch.cat((current, logits[:, -1:].argmax(dim=-1)), dim=1)
-                _sync(device)
-                full_times.append(time.perf_counter() - started)
+        full_prefix_result: dict[str, Any]
+        if profile.enable_full_prefix_benchmark:
+            full_times: list[float] = []
+            with energy_provider.region("full_prefix_generation") as full_energy:
+                for _ in range(profile.benchmark_repeats):
+                    current = prompt.clone()
+                    _sync(device)
+                    started = time.perf_counter()
+                    for _ in range(generated_tokens):
+                        logits, _ = model(current)
+                        current = torch.cat((current, logits[:, -1:].argmax(dim=-1)), dim=1)
+                    _sync(device)
+                    full_times.append(time.perf_counter() - started)
+            assert full_energy.result is not None
+            full_average = sum(full_times) / len(full_times)
+            full_prefix_result = {
+                "enabled": True,
+                "latency_seconds": full_average,
+                "milliseconds_per_generated_token": full_average / generated_tokens * 1000,
+                "tokens_per_second": generated_tokens / full_average,
+                "peak_memory_mb": _peak_memory_mb(device),
+                "energy": normalized_energy(
+                    full_energy.result,
+                    tokens=generated_tokens * profile.benchmark_repeats,
+                    unit="generated_token",
+                ),
+            }
+        else:
+            full_prefix_result = {"enabled": False, "reason": "disabled in experiment profile"}
 
         prefill_times: list[float] = []
         prefill_cache_bytes: list[int] = []
@@ -109,9 +127,8 @@ def benchmark_inference(
                 _sync(device)
                 decode_times.append(time.perf_counter() - started)
 
-        assert full_energy.result and prefill_energy.result and decode_energy.result
+        assert prefill_energy.result and decode_energy.result
         prefix = f"context_{prompt_length}"
-        full_average = sum(full_times) / len(full_times)
         prefill_average = sum(prefill_times) / len(prefill_times)
         decode_average = sum(decode_times) / len(decode_times)
         results[prefix] = {
@@ -120,12 +137,7 @@ def benchmark_inference(
                 "dtype": str(next(model.parameters()).dtype), "warmup": profile.benchmark_warmup,
                 "repetitions": profile.benchmark_repeats, "synchronized": device.type == "cuda",
             },
-            "full_prefix_generation": {
-                "latency_seconds": full_average, "milliseconds_per_generated_token": full_average / generated_tokens * 1000,
-                "tokens_per_second": generated_tokens / full_average,
-                "peak_memory_mb": _peak_memory_mb(device),
-                "energy": normalized_energy(full_energy.result, tokens=generated_tokens * profile.benchmark_repeats, unit="generated_token"),
-            },
+            "full_prefix_generation": full_prefix_result,
             "prefill": {
                 "latency_seconds": prefill_average, "time_to_first_token_seconds": prefill_average,
                 "tokens_per_second": prompt_length / prefill_average,

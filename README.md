@@ -80,9 +80,11 @@ For each run, the pipeline stores fixed steps, processed tokens, optimizer/micro
 
 Inference reports three separately named protocols rather than conflating them:
 
-- `full_prefix_generation`: legacy generation that recomputes the prefix;
+- `full_prefix_generation`: optional legacy generation that recomputes the prefix; it is disabled by default because it is much slower;
 - `prefill`: one prompt pass and time-to-first-token;
 - `cached_decode`: one-token stateful decoding using recurrent/convolution caches and full-attention K/V caches.
+
+Enable the slow full-prefix benchmark explicitly with `--full-prefix-benchmark`. Routine runs still perform prefill and cached-decode benchmarks using the configured warmup and repetition counts.
 
 Each context length records latency, throughput, peak memory, cache/state bytes, warmup/repetition/batch/dtype metadata, and cache-equivalence coverage. Energy uses NVML total-energy deltas where available, otherwise sampled board-power integration. It reports joules/run, joules per million training tokens, joules per prefill token, and joules per generated token. CPU/unsupported systems emit `supported: false` with a reason rather than fake zero joules.
 

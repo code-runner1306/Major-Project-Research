@@ -98,6 +98,7 @@ class ExperimentConfig:
     enabled_families: tuple[ExperimentFamily, ...] = ("tinystories", "mqar", "overwrite")
     enable_parameter_matched_scalar_control: bool = False
     enable_cache_benchmarks: bool = True
+    enable_full_prefix_benchmark: bool = False
     enable_gate_diagnostics: bool = True
     enable_energy_collection: bool = True
     benchmark_warmup: int = 10
@@ -137,6 +138,7 @@ class ExperimentConfig:
             "enabled_families": list(self.enabled_families),
             "variants": list(self.variants),
             "enable_cache_benchmarks": self.enable_cache_benchmarks,
+            "enable_full_prefix_benchmark": self.enable_full_prefix_benchmark,
             "enable_gate_diagnostics": self.enable_gate_diagnostics,
             "enable_energy_collection": self.enable_energy_collection,
             "benchmark_warmup": self.benchmark_warmup,
