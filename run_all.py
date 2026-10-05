@@ -50,6 +50,10 @@ def main() -> None:
     parser.add_argument("--family", choices=("all", "tinystories", "mqar", "overwrite"), default="all")
     parser.add_argument("--models", help="comma-separated model scales to run, e.g. 10M,30M")
     parser.add_argument("--seeds", help="comma-separated seeds to run, e.g. 42,43")
+    parser.add_argument(
+        "--max-optimizer-steps", type=int,
+        help="fixed production training budget; required when the profile has no step budget",
+    )
     parser.add_argument("--matched-control", action="store_true", help="add exactly parameter-matched expanded-FFN scalar control")
     parser.add_argument("--full-prefix-benchmark", action="store_true", help="include the slow no-cache generation benchmark")
     parser.add_argument("--no-cache-benchmarks", action="store_true")
@@ -95,6 +99,13 @@ def main() -> None:
                 profile_overrides["seeds"] = tuple(int(seed) for seed in seed_strings)
             except ValueError as exc:
                 raise ValueError("--seeds values must be integers") from exc
+        if args.max_optimizer_steps is not None:
+            if args.max_optimizer_steps <= 0:
+                raise ValueError("--max-optimizer-steps must be a positive integer")
+            profile_overrides["budget"] = replace(
+                profile_overrides.get("budget", profile.budget),
+                max_optimizer_steps=args.max_optimizer_steps,
+            )
     except ValueError as exc:
         parser.error(str(exc))
     profile = replace(
