@@ -51,6 +51,10 @@ def main() -> None:
     parser.add_argument("--models", help="comma-separated model scales to run, e.g. 10M,30M")
     parser.add_argument("--seeds", help="comma-separated seeds to run, e.g. 42,43")
     parser.add_argument(
+        "--variant", "--varient", dest="variant",
+        help="comma-separated model variants to run, e.g. scalar,channelwise",
+    )
+    parser.add_argument(
         "--max-optimizer-steps", type=int,
         help="fixed production training budget; required when the profile has no step budget",
     )
@@ -99,6 +103,15 @@ def main() -> None:
                 profile_overrides["seeds"] = tuple(int(seed) for seed in seed_strings)
             except ValueError as exc:
                 raise ValueError("--seeds values must be integers") from exc
+        if args.variant is not None:
+            variants = _parse_csv_values(args.variant, "--variant")
+            unknown_variants = tuple(variant for variant in variants if variant not in profile.variants)
+            if unknown_variants:
+                raise ValueError(
+                    f"Unknown variant(s) {', '.join(unknown_variants)}; "
+                    f"choose from {', '.join(profile.variants)}"
+                )
+            profile_overrides["variants"] = variants
         if args.max_optimizer_steps is not None:
             if args.max_optimizer_steps <= 0:
                 raise ValueError("--max-optimizer-steps must be a positive integer")
