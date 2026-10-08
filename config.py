@@ -97,6 +97,7 @@ class ExperimentConfig:
     vocab_size: int
     enabled_families: tuple[ExperimentFamily, ...] = ("tinystories", "mqar", "overwrite")
     enable_parameter_matched_scalar_control: bool = False
+    selected_variants: tuple[Variant, ...] | None = None
     enable_cache_benchmarks: bool = True
     enable_full_prefix_benchmark: bool = False
     enable_gate_diagnostics: bool = True
@@ -118,7 +119,10 @@ class ExperimentConfig:
     @property
     def variants(self) -> tuple[Variant, ...]:
         primary: tuple[Variant, ...] = ("scalar", "channel-wise")
-        return primary + (("scalar-matched",) if self.enable_parameter_matched_scalar_control else ())
+        available = primary + (("scalar-matched",) if self.enable_parameter_matched_scalar_control else ())
+        if self.selected_variants is None:
+            return available
+        return tuple(variant for variant in self.selected_variants if variant in available)
 
     def model_for(self, scale: str) -> ModelConfig:
         try:

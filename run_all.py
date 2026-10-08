@@ -51,7 +51,7 @@ def main() -> None:
     parser.add_argument("--models", help="comma-separated model scales to run, e.g. 10M,30M")
     parser.add_argument("--seeds", help="comma-separated seeds to run, e.g. 42,43")
     parser.add_argument(
-        "--variant", "--varient", dest="variant",
+        "--variant", "--variants", "--varient", dest="variant",
         help="comma-separated model variants to run, e.g. scalar,channelwise",
     )
     parser.add_argument(
@@ -111,7 +111,7 @@ def main() -> None:
                     f"Unknown variant(s) {', '.join(unknown_variants)}; "
                     f"choose from {', '.join(profile.variants)}"
                 )
-            profile_overrides["variants"] = variants
+            profile_overrides["selected_variants"] = variants
         if args.max_optimizer_steps is not None:
             if args.max_optimizer_steps <= 0:
                 raise ValueError("--max-optimizer-steps must be a positive integer")
