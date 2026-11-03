@@ -46,6 +46,54 @@ def cache_equivalence_error(model: GatedDeltaNetLM, tokens: torch.Tensor) -> flo
 
 
 @torch.no_grad()
+def generation_cache_equivalence(
+    model: GatedDeltaNetLM, prompt: torch.Tensor, generated_tokens: int,
+) -> dict[str, Any]:
+    """Compare greedy tokens from full-prefix recomputation and cached decoding."""
+
+    if generated_tokens < 1:
+        raise ValueError("generated_tokens must be positive")
+    model.eval()
+    _sync(prompt.device)
+    full_started = time.perf_counter()
+    full_sequence = prompt.clone()
+    full_tokens: list[int] = []
+    for _ in range(generated_tokens):
+        logits, _ = model(full_sequence)
+        token = logits[:, -1].argmax(dim=-1, keepdim=True)
+        full_tokens.append(int(token.item()))
+        full_sequence = torch.cat((full_sequence, token), dim=1)
+    _sync(prompt.device)
+    full_seconds = time.perf_counter() - full_started
+
+    _sync(prompt.device)
+    cached_started = time.perf_counter()
+    logits, cache = model.prefill(prompt)
+    cached_tokens: list[int] = []
+    token = logits[:, -1].argmax(dim=-1, keepdim=True)
+    cached_tokens.append(int(token.item()))
+    for _ in range(1, generated_tokens):
+        logits, cache = model.decode(token, cache)
+        token = logits[:, -1].argmax(dim=-1, keepdim=True)
+        cached_tokens.append(int(token.item()))
+    _sync(prompt.device)
+    cached_seconds = time.perf_counter() - cached_started
+
+    first_mismatch = next(
+        (index for index, (left, right) in enumerate(zip(full_tokens, cached_tokens)) if left != right),
+        None,
+    )
+    return {
+        "generated_tokens": generated_tokens,
+        "greedy_outputs_match": first_mismatch is None,
+        "first_mismatch_index": first_mismatch,
+        "full_prefix_seconds": full_seconds,
+        "cached_decode_seconds_including_prefill": cached_seconds,
+        "prompt_length": int(prompt.size(1)),
+    }
+
+
+@torch.no_grad()
 def benchmark_inference(
     model: GatedDeltaNetLM,
     profile: ExperimentConfig,
@@ -54,18 +102,21 @@ def benchmark_inference(
     *,
     prompt_lengths: tuple[int, ...] | None = None,
     generated_tokens: int | None = None,
+    vocab_size: int | None = None,
     seed: int = 0,
 ) -> dict[str, Any]:
     """Measure optional full-prefix generation, prefill, and cached decode separately."""
 
     model.eval()
     model.set_gate_observer(None)  # Diagnostics must never pollute timed regions.
-    prompt_lengths = prompt_lengths or ((4, 8) if profile.run_mode == "smoke" else (64, 128, 256, 512))
-    generated_tokens = generated_tokens or (2 if profile.run_mode == "smoke" else profile.budget.context_length)
+    prompt_lengths = prompt_lengths or profile.benchmark_prompt_lengths
+    prompt_lengths = tuple(sorted({min(int(length), profile.budget.context_length) for length in prompt_lengths}))
+    generated_tokens = generated_tokens or profile.benchmark_generated_tokens
+    vocab_size = vocab_size or profile.vocab_size
     generator = torch.Generator(device=device).manual_seed(seed)
     results: dict[str, Any] = {}
     for prompt_length in prompt_lengths:
-        prompt = torch.randint(0, profile.vocab_size, (1, prompt_length), generator=generator, device=device)
+        prompt = torch.randint(0, vocab_size, (1, prompt_length), generator=generator, device=device)
         for _ in range(profile.benchmark_warmup):
             logits, cache = model.prefill(prompt)
             model.decode(logits[:, -1:].argmax(dim=-1), cache)
@@ -147,11 +198,23 @@ def benchmark_inference(
             "cached_decode": {
                 "latency_seconds": decode_average, "milliseconds_per_generated_token": decode_average / generated_tokens * 1000,
                 "tokens_per_second": generated_tokens / decode_average,
-                "cache_bytes": cache_num_bytes(cache), "peak_memory_mb": _peak_memory_mb(device),
+                "cache_bytes": cache_num_bytes(cache), "state_memory_bytes": _cache_memory_bytes(cache, "gdn"),
+                "attention_kv_memory_bytes": _cache_memory_bytes(cache, "attention"),
+                "peak_memory_mb": _peak_memory_mb(device),
                 "energy": normalized_energy(decode_energy.result, tokens=generated_tokens * profile.benchmark_repeats, unit="generated_token"),
             },
         }
+    equiv_prompt_length = min(profile.equivalence_prompt_length, profile.budget.context_length)
+    equiv_prompt = torch.randint(0, vocab_size, (1, equiv_prompt_length), generator=generator, device=device)
+    results["cache_equivalence"] = generation_cache_equivalence(
+        model, equiv_prompt, min(profile.equivalence_generated_tokens, profile.budget.context_length),
+    )
     return results
+
+
+def _cache_memory_bytes(cache: list[dict[str, torch.Tensor | str]], kind: str) -> int:
+    selected = [layer for layer in cache if layer.get("kind") == kind]
+    return cache_num_bytes(selected)
 
 
 def persisted_needle_suite(path: str | Path, *, seed: int, cases: int = 10) -> dict[str, Any]:

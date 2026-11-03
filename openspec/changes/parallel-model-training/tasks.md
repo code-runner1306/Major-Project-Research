@@ -17,3 +17,10 @@
 ## 4. Verification
 
 - [x] 4.1 Run smoke test with `PARALLEL_TRAININGS = 2`, verify worker log prefixes, confirm VRAM pre-check succeeds, test fallback behavior, and verify `statistical_analysis.json` and plots are generated properly.
+
+## 5. Pilot Capacity Qualification
+
+- [x] 5.1 Add data-fed optimizer timing for TinyStories, MQAR, and overwrite on each selected pilot scale.
+- [x] 5.2 Add a bounded 1/2/3-worker low-tier pilot sweep guarded by measured per-worker peak reserved VRAM and the 85% free-memory safety threshold.
+- [x] 5.3 Capture one shared CPU/GPU resource timeline per concurrency trial and report aggregate throughput, speedup, CPU saturation indicators, GPU utilization, and a recommended worker count without changing production settings.
+- [x] 5.4 Write a pilot Markdown/JSON report with per-family per-scale estimates, 1/3/5-seed totals, and concurrency findings/caveats.

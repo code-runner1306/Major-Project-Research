@@ -18,11 +18,12 @@ from controls import construct_model
 from dataset import tinystories_dataloader, toy_dataloader
 from diagnostics import collect_gate_diagnostics, static_cost_report
 from energy import EnergyProvider
-from eval import benchmark_inference, evaluate_needle_suite, persisted_needle_suite
+from eval import benchmark_inference, evaluate_needle_suite, generation_cache_equivalence, persisted_needle_suite
 from preflight import require_production_cuda
 from recurrence import RecurrenceOptions, backend_metadata, ensure_backend_available, qualification_hash
 from reporting import write_first_submission_reports
 from retrieval import RetrievalDataset, evaluate_retrieval, retrieval_dataloader
+from resource_telemetry import DeviceResourceCapture
 from train import SeedBundle, seed_everything, train_fixed_budget
 
 
@@ -108,7 +109,16 @@ def _manifest(
         },
         data_identity=data_identity,
         evaluation_protocol={
+            "version": 2,
             "cache_benchmarks": profile.enable_cache_benchmarks,
+            "benchmark_warmup": profile.benchmark_warmup,
+            "benchmark_repeats": profile.benchmark_repeats,
+            "benchmark_prompt_lengths": list(profile.benchmark_prompt_lengths),
+            "benchmark_generated_tokens": profile.benchmark_generated_tokens,
+            "equivalence_prompt_length": profile.equivalence_prompt_length,
+            "equivalence_generated_tokens": profile.equivalence_generated_tokens,
+            "resource_capture_version": 1,
+            "resource_sample_interval_seconds": 1.0,
             "gate_diagnostics": profile.enable_gate_diagnostics,
             "energy": profile.enable_energy_collection,
             "retrieval_version": "mqar-overwrite-v1" if family != "tinystories" else None,
@@ -134,11 +144,22 @@ def _evaluate(
 ) -> dict[str, Any]:
     assert isinstance(model, torch.nn.Module)
     gdn_model = model  # dedicated name kept to make timing/diagnostic separation obvious
+    vocab_size = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
+    if profile.enable_cache_benchmarks:
+        benchmarks = benchmark_inference(
+            gdn_model, profile, device, energy_provider, vocab_size=vocab_size, seed=evaluation_seed,
+        )
+    else:
+        generator = torch.Generator(device=device).manual_seed(evaluation_seed)
+        prompt_length = min(profile.equivalence_prompt_length, profile.budget.context_length)
+        prompt = torch.randint(0, vocab_size, (1, prompt_length), generator=generator, device=device)
+        benchmarks = {
+            "disabled": True,
+            "cache_equivalence": generation_cache_equivalence(
+                gdn_model, prompt, min(profile.equivalence_generated_tokens, profile.budget.context_length),
+            ),
+        }
     if family == "tinystories":
-        if profile.enable_cache_benchmarks:
-            benchmarks = benchmark_inference(gdn_model, profile, device, energy_provider, seed=evaluation_seed)
-        else:
-            benchmarks = {"disabled": True}
         diagnostic_batches = [next(iter(validation_data))[0]]
         gate = collect_gate_diagnostics(gdn_model, diagnostic_batches, device) if profile.enable_gate_diagnostics else {"disabled": True}
         needle = {"label": "exploratory_zero_shot", "not_run_in_smoke": profile.run_mode == "smoke"}
@@ -157,6 +178,7 @@ def _evaluate(
     static_cost = static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length)
     static_cost["recurrence"] = backend_metadata(recurrence_options_for(profile), device=device)
     return {
+        "benchmarks": benchmarks,
         "retrieval": evaluate_retrieval(gdn_model, held_out_retrieval, device),
         "gate_diagnostics": collect_gate_diagnostics(gdn_model, diagnostic_batches, device) if profile.enable_gate_diagnostics else {"disabled": True},
         "static_cost": static_cost,
@@ -165,7 +187,7 @@ def _evaluate(
 
 def run_seed(
     profile: ExperimentConfig, *, family: Family, scale: str, variant: str, seed: int,
-    stop_after_trained: bool = False,
+    stop_after_trained: bool = False, evaluate_only: bool = False,
 ) -> dict[str, Any]:
     """Run/recover one isolated seed, refusing stale or partial artifacts as complete."""
 
@@ -211,16 +233,23 @@ def run_seed(
 
     lifecycle = read_json(run_dir / "lifecycle.json")
     status = lifecycle["status"]
+    if evaluate_only and status not in {"trained", "evaluating", "complete"}:
+        raise RuntimeError(
+            f"Cannot evaluate {family}/{scale}/{variant}/seed {seed}: run status is {status!r}; "
+            "run the matching --train-only command first."
+        )
     device = torch.device("cuda" if profile.run_mode == "production" else "cpu")
     energy_provider = EnergyProvider.create(device) if profile.enable_energy_collection else EnergyProvider(False, "energy collection disabled", {"device_type": device.type})
     try:
-        if status in {"pending", "training"}:
+        if not evaluate_only and status in {"pending", "training"}:
             if status == "pending":
                 transition_lifecycle(run_dir, "training", manifest_data["fingerprint"])
-            training = train_fixed_budget(
-                model=model, train_dataloader=train_data, validation_dataloader=validation_data,
-                profile=profile, device=device, run_dir=str(run_dir), energy_provider=energy_provider,
-            )
+            with DeviceResourceCapture(device) as resource_capture:
+                training = train_fixed_budget(
+                    model=model, train_dataloader=train_data, validation_dataloader=validation_data,
+                    profile=profile, device=device, run_dir=str(run_dir), energy_provider=energy_provider,
+                )
+            training_resources = resource_capture.result
             partial_metrics = {
                 "schema_version": 1, "family": family, "scale": scale, "variant": variant,
                 "seed": seed, "parameter": model_metadata,
@@ -230,6 +259,7 @@ def run_seed(
                     "cuda_preflight": preflight.to_dict() if profile.run_mode == "production" else None,
                 },
                 **training,
+                "training_resources": training_resources,
             }
             atomic_write_json(run_dir / "metrics.json", partial_metrics)
             transition_lifecycle(run_dir, "trained", manifest_data["fingerprint"])
@@ -242,11 +272,13 @@ def run_seed(
             _load_final_checkpoint(model, run_dir, profile, processed_tokens)
             if status == "trained":
                 transition_lifecycle(run_dir, "evaluating", manifest_data["fingerprint"])
-            evaluation = _evaluate(
-                profile=profile, family=family, model=model, validation_data=validation_data,
-                held_out_retrieval=held_out_retrieval, device=device, energy_provider=energy_provider,
-                run_dir=run_dir, evaluation_seed=seeds.evaluation_seed,
-            )
+            with DeviceResourceCapture(device) as evaluation_capture:
+                evaluation = _evaluate(
+                    profile=profile, family=family, model=model, validation_data=validation_data,
+                    held_out_retrieval=held_out_retrieval, device=device, energy_provider=energy_provider,
+                    run_dir=run_dir, evaluation_seed=seeds.evaluation_seed,
+                )
+            evaluation["evaluation_resources"] = evaluation_capture.result
             energy = {"training": partial_metrics["training_energy"], "device": energy_provider.device_metadata}
             metrics = {**partial_metrics, **evaluation, "energy": energy}
             atomic_write_json(run_dir / "metrics.json", metrics)
@@ -258,20 +290,32 @@ def run_seed(
         raise
 
 
-def run_family(profile: ExperimentConfig, family: Family, *, stop_after_trained: bool = False) -> list[dict[str, Any]]:
+def run_family(
+    profile: ExperimentConfig, family: Family, *, stop_after_trained: bool = False,
+    evaluate_only: bool = False,
+) -> list[dict[str, Any]]:
     if family not in profile.enabled_families:
         return []
     results = []
     for scale in profile.scales:
         for variant in profile.variants:
             for seed in profile.seeds:
-                results.append(run_seed(profile, family=family, scale=scale, variant=variant, seed=seed, stop_after_trained=stop_after_trained))
+                results.append(run_seed(
+                    profile, family=family, scale=scale, variant=variant, seed=seed,
+                    stop_after_trained=stop_after_trained, evaluate_only=evaluate_only,
+                ))
     return results
 
 
-def run_selected(profile: ExperimentConfig, families: tuple[Family, ...] | None = None) -> dict[str, Any]:
+def run_selected(
+    profile: ExperimentConfig, families: tuple[Family, ...] | None = None, *,
+    stop_after_trained: bool = False, evaluate_only: bool = False,
+) -> dict[str, Any]:
     families = families or profile.enabled_families
-    results = {family: run_family(profile, family) for family in families}
+    results = {
+        family: run_family(profile, family, stop_after_trained=stop_after_trained, evaluate_only=evaluate_only)
+        for family in families
+    }
     results["report"] = write_first_submission_reports(profile.output_dir, expected_run_mode=profile.run_mode)
     return results
 

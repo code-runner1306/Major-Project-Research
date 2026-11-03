@@ -27,3 +27,10 @@ Updates to `global_tracker.json` across concurrent workers SHALL be protected by
 #### Scenario: Concurrent workers updating global tracker
 - **WHEN** two parallel worker tasks finish a seed run simultaneously
 - **THEN** global tracker file writes are serialized safely without data corruption.
+
+### Requirement: Pilot-based concurrency qualification
+The V100 pilot SHALL measure bounded concurrent optimizer workloads for configured low-tier model scales and report aggregate throughput and per-worker speedup against a single-worker baseline before recommending production concurrency.
+
+#### Scenario: Comparing low-tier worker counts
+- **WHEN** a pilot requests worker counts 1, 2, or 3 and the VRAM pre-check passes
+- **THEN** the pilot records completed optimizer steps per second, wall time, and sampled CPU/GPU utilization for each trial, and reports a recommendation without silently changing production execution settings.

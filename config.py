@@ -102,8 +102,12 @@ class ExperimentConfig:
     enable_full_prefix_benchmark: bool = False
     enable_gate_diagnostics: bool = True
     enable_energy_collection: bool = True
-    benchmark_warmup: int = 10
-    benchmark_repeats: int = 50
+    benchmark_warmup: int = 2
+    benchmark_repeats: int = 5
+    benchmark_prompt_lengths: tuple[int, ...] = (64, 256, 512)
+    benchmark_generated_tokens: int = 256
+    equivalence_prompt_length: int = 64
+    equivalence_generated_tokens: int = 256
     retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
     learning_rate: float = 6e-4
     weight_decay: float = 0.1
@@ -147,6 +151,10 @@ class ExperimentConfig:
             "enable_energy_collection": self.enable_energy_collection,
             "benchmark_warmup": self.benchmark_warmup,
             "benchmark_repeats": self.benchmark_repeats,
+            "benchmark_prompt_lengths": list(self.benchmark_prompt_lengths),
+            "benchmark_generated_tokens": self.benchmark_generated_tokens,
+            "equivalence_prompt_length": self.equivalence_prompt_length,
+            "equivalence_generated_tokens": self.equivalence_generated_tokens,
             "retrieval": asdict(self.retrieval),
             "learning_rate": self.learning_rate,
             "weight_decay": self.weight_decay,
@@ -225,6 +233,10 @@ def smoke_profile(output_dir: str | Path = "output/smoke") -> ExperimentConfig:
         enable_parameter_matched_scalar_control=True,
         benchmark_warmup=1,
         benchmark_repeats=1,
+        benchmark_prompt_lengths=(4, 8),
+        benchmark_generated_tokens=2,
+        equivalence_prompt_length=8,
+        equivalence_generated_tokens=2,
         retrieval=RetrievalConfig(
             vocabulary_size=128,
             train_examples=8,

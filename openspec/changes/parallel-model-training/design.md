@@ -34,5 +34,9 @@ To maximize training throughput without causing OOM errors or output collisions,
 
 ## Risks / Trade-offs
 
-* **Risk**: High GPU compute contention if $N > 4$ on low-end GPUs.
-  * **Mitigation**: Setting `PARALLEL_TRAININGS = 2` by default provides optimal speedup without CPU/GPU bottlenecking.
+* **Risk**: High GPU compute or CPU input contention if $N > 1$ on the target host.
+* **Mitigation**: Do not assume a universal parallel default. Use the bounded pilot's measured speedup and capacity report before selecting a production worker count.
+
+## Pilot Qualification
+
+Before production concurrency is selected, the V100 pilot measures resident and data-fed optimizer steps for TinyStories, MQAR, and overwrite. For configured low-tier scales, it may run bounded concurrent optimizer work at worker counts 1–3 only when measured single-worker reserved memory predicts that the requested workers fit below the 85% free-VRAM threshold. One shared resource sampler records process/system CPU and whole-device GPU utilization during each trial. The report compares aggregate completed optimizer steps per second and speedup against the single-worker baseline; it labels CPU saturation as a contention indicator, not proof of thermal throttling. These measurements inform the operator and do not automatically change production worker count.

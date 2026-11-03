@@ -189,6 +189,20 @@ def _collect_performance_comparisons(records: list[dict[str, Any]]) -> dict[str,
                 tokens_per_second[str(context)] = float(tokens) if isinstance(tokens, (int, float)) and math.isfinite(tokens) else None
         energy = metrics.get("energy", {})
         training_energy = metrics.get("training_energy", {})
+        resource_usage: dict[str, Any] = {}
+        for phase in ("training_resources", "evaluation_resources"):
+            capture = metrics.get(phase)
+            if isinstance(capture, dict):
+                resource_usage[phase.removesuffix("_resources")] = {
+                    "duration_wall_seconds": capture.get("duration_wall_seconds"),
+                    "activity_sample_interval_seconds": capture.get("activity_sample_interval_seconds"),
+                    "activity_sample_count": capture.get("activity_sample_count"),
+                    "runtime": capture.get("runtime", {}),
+                    "activity_summary": capture.get("activity_summary", {}),
+                    "torch_memory": capture.get("torch_memory", {}),
+                    "other_gpu_activity": capture.get("other_gpu_activity", {}),
+                    "monitor_errors": capture.get("monitor_errors", []),
+                }
         entry = comparisons.setdefault(key, {"family": record["family"], "scale": record["scale"], "variant": record["variant"], "seeds": []})
         entry["seeds"].append({
             "seed": record["seed"], "path": record.get("path", ""),
@@ -198,6 +212,7 @@ def _collect_performance_comparisons(records: list[dict[str, Any]]) -> dict[str,
                 if isinstance(training_energy, dict) else None
             ),
             "energy_supported": bool(energy.get("training", {}).get("supported", False)) if isinstance(energy, dict) else False,
+            "resource_usage": resource_usage,
         })
     return comparisons
 

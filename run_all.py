@@ -21,6 +21,20 @@ def _parse_csv_values(value: str, option: str) -> tuple[str, ...]:
     return values
 
 
+def _parse_seed_counts(value: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for item in value.split(","):
+        try:
+            scale, raw_count = item.split(":", maxsplit=1)
+            count = int(raw_count)
+        except ValueError as exc:
+            raise ValueError("--estimate-seeds format is SCALE:COUNT,..., for example 10M:5,30M:5") from exc
+        if scale not in {"10M", "30M", "55M", "100M"} or count < 1 or scale in counts:
+            raise ValueError(f"Invalid or duplicate estimated seed count: {item!r}")
+        counts[scale] = count
+    return counts
+
+
 def build_profile(
     mode: str, output: str | None, matched: bool, *, recurrence_backend: str | None,
     state_accumulator_dtype: str, qualification_artifact: str | None,
@@ -66,12 +80,35 @@ def main() -> None:
     parser.add_argument("--recurrence-backend", choices=("reference", "cuda-fused"))
     parser.add_argument("--state-accumulator-dtype", choices=("input", "float32"), default="input")
     parser.add_argument("--qualification-artifact")
+    execution_group = parser.add_mutually_exclusive_group()
+    execution_group.add_argument(
+        "--train-only", action="store_true",
+        help="train selected runs to the trained lifecycle state without evaluation",
+    )
+    execution_group.add_argument(
+        "--evaluate-only", action="store_true",
+        help="evaluate compatible trained checkpoints without starting training",
+    )
     parser.add_argument("--pilot", action="store_true", help="measure real V100 training work without unlocking production training")
     parser.add_argument("--pilot-scales", default="55M,100M", help="comma-separated production scales for --pilot")
     parser.add_argument("--pilot-warmup", type=int, default=25)
     parser.add_argument("--pilot-steps", type=int, default=200)
-    parser.add_argument("--pilot-data-fed", action="store_true", help="also sample TinyStories input fetch outside timed GPU windows")
+    parser.add_argument(
+        "--pilot-data-fed", dest="pilot_data_fed", action="store_true", default=True,
+        help="sample input fetch/generation for TinyStories, MQAR, and overwrite (default)",
+    )
+    parser.add_argument(
+        "--pilot-no-data-fed", dest="pilot_data_fed", action="store_false",
+        help="skip dataset-fed timing and use resident-compute proxies",
+    )
     parser.add_argument("--pilot-trace", action="store_true", help="capture one Chrome profiler trace outside measured pilot steps")
+    parser.add_argument("--pilot-parallel-scales", default="10M,30M", help="low-tier scales for bounded concurrency qualification")
+    parser.add_argument("--pilot-parallel-workers", default="2,3", help="comma-separated concurrent worker counts to try")
+    parser.add_argument("--pilot-no-parallel-check", action="store_true", help="skip parallel capacity/throughput qualification")
+    parser.add_argument(
+        "--estimate-seeds", default="10M:5,30M:5,55M:1,100M:1",
+        help="seed-count plan included in the pilot time estimate, e.g. 10M:5,30M:5,55M:1,100M:1",
+    )
     args = parser.parse_args()
     if args.pilot and args.mode != "production":
         parser.error("--pilot requires --mode production and the college CUDA machine")
@@ -132,9 +169,19 @@ def main() -> None:
     if args.pilot:
         scales = tuple(scale.strip() for scale in args.pilot_scales.split(",") if scale.strip())
         try:
+            estimate_seed_counts = _parse_seed_counts(args.estimate_seeds)
+            parallel_scales = (
+                tuple(scale.strip() for scale in args.pilot_parallel_scales.split(",") if scale.strip())
+                if not args.pilot_no_parallel_check else ()
+            )
+            parallel_workers = tuple(int(worker.strip()) for worker in args.pilot_parallel_workers.split(",") if worker.strip())
             result = run_v100_pilot(profile, PilotSettings(
                 scales=scales, warmup_steps=args.pilot_warmup, measured_steps=args.pilot_steps,
                 data_fed=args.pilot_data_fed, collect_trace=args.pilot_trace,
+                planned_optimizer_steps=profile.budget.max_optimizer_steps or 1_000,
+                seed_counts=estimate_seed_counts,
+                parallel_scales=tuple(scale for scale in parallel_scales if scale in scales),
+                parallel_worker_counts=parallel_workers,
             ))
         except (RuntimeError, ValueError) as exc:
             parser.error(str(exc))
@@ -142,9 +189,13 @@ def main() -> None:
         result = run_cpu_smoke(profile)
     else:
         families = None if args.family == "all" else (args.family,)
-        result = run_selected(profile, families)
+        result = run_selected(
+            profile, families,
+            stop_after_trained=args.train_only,
+            evaluate_only=args.evaluate_only,
+        )
     print(f"Completed: {profile.output_dir}")
-    print(result.get("smoke", {"status": "complete"}))
+    print(result if args.pilot else result.get("smoke", {"status": "complete"}))
 
 
 if __name__ == "__main__":

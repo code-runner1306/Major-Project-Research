@@ -29,6 +29,46 @@ For local CPU development, install a CPU PyTorch build independently if needed. 
 
 ## Commands
 
+Run the configurable sequential research grid on the production Linux/V100 host:
+
+```bash
+bash ./run_research_grid.sh --pilot
+```
+
+The default grid uses 1,000 optimizer steps, seeds 42–46 for 10M and 30M, and
+seed 42 for 55M and 100M. It runs TinyStories, MQAR, and overwrite as separate
+train-only then evaluation-only stages. Each evaluation command resumes the
+matching trained checkpoints and marks complete runs. `--pilot` first runs a
+selected-scale V100 pilot with data-fed TinyStories, MQAR, and overwrite
+samples, plus a bounded 1/2/3-worker concurrency check for low-tier scales and
+the all-family CPU smoke suite. The pilot writes
+`training_time_estimate.md` and `.json` beside `pilot_result.json`, with
+per-model/per-dataset/per-seed estimates and totals for uniform 1-, 3-, and
+5-seed grids plus the configured seed plan. Data-fed samples include CPU
+fetch/generation and host-to-device transfer for each family. Parallel trials
+record throughput, speedup, CPU/GPU utilization, and VRAM-based skipped worker
+counts; the report recommends a worker count for the measured workload without
+changing production settings. CPU utilization is a contention indicator, not a
+direct thermal-throttling measurement. The estimate covers training only, not
+held-out evaluation or inference tests. Because each selected model and family
+is profiled, this expanded pilot can take longer than 15–20 minutes.
+
+Configure the grid without editing the script, for example:
+
+```bash
+MODELS="10M 30M 55M" SEEDS_10M="42,43,44,45,46" SEEDS_30M="42,43,44,45,46" \
+  SEEDS_55M="42" MAX_OPTIMIZER_STEPS=1000 OUTPUT_DIR=output/major_study \
+  bash ./run_research_grid.sh --pilot
+```
+
+Use `--dry-run` to print commands. The production launcher requires a fixed
+optimizer-step budget and an explicit recurrence backend; `reference` is the
+default in this script. A pilot is a preflight and profiling stage, not a
+production run or a guarantee that the full grid will finish within a fixed
+wall-clock duration. The CLI also supports the individual stages directly:
+add `--train-only` to train checkpoints without evaluating, then rerun the
+same command with `--evaluate-only` to evaluate and complete them.
+
 Run the complete offline CPU smoke suite:
 
 ```bash
@@ -84,9 +124,11 @@ Headline quality uses the fixed-budget final checkpoint, not a validation-select
 
 For each run, the pipeline stores fixed steps, processed tokens, optimizer/microbatch counts, losses, wall time, step durations, training tokens/sec, unclipped/clipped gradient norms, stability events, and primary final validation loss/perplexity.
 
-Inference reports three separately named protocols rather than conflating them:
+Every completed training run records a short inference check for all three experiment families. It reports cached decode as the primary efficiency measure (latency, throughput, persistent recurrent-state bytes, attention K/V bytes, and total cache bytes), plus prefill throughput and time-to-first-token at prompt lengths 64, 256, and 512 (clamped to the configured context for smaller profiles). The default uses two warmups and five repetitions. A deterministic 256-token greedy-generation check compares cached decoding against full-prefix recomputation and records whether the token sequences match and the time each path takes. This equivalence check is correctness coverage, not a full-prefix efficiency benchmark.
 
-- `full_prefix_generation`: optional legacy generation that recomputes the prefix; it is disabled by default because it is much slower;
+Inference can also report three separately named protocols:
+
+- `full_prefix_generation`: optional repeated benchmark that recomputes the prefix; it is disabled by default because it is much slower;
 - `prefill`: one prompt pass and time-to-first-token;
 - `cached_decode`: one-token stateful decoding using recurrent/convolution caches and full-attention K/V caches.
 
@@ -94,7 +136,7 @@ Enable the slow full-prefix benchmark explicitly with `--full-prefix-benchmark`.
 
 Each context length records latency, throughput, peak memory, cache/state bytes, warmup/repetition/batch/dtype metadata, and cache-equivalence coverage. Energy uses NVML total-energy deltas where available, otherwise sampled board-power integration. It reports joules/run, joules per million training tokens, joules per prefill token, and joules per generated token. CPU/unsupported systems emit `supported: false` with a reason rather than fake zero joules.
 
-Gate diagnostics run outside timed and energy regions on a fixed corpus. They include per-layer/head means, standard deviations, quantiles, saturation fractions, half-life summaries, and channel diversity (scalar is `null`, not invented). Static reports include parameter components, gate/projection overhead, recurrent-state size, and cache-size formulas.
+Gate diagnostics run outside timed and energy regions on a fixed corpus. They include per-layer/head means, standard deviations, quantiles, saturation fractions, half-life summaries, and channel diversity (scalar is `null`, not invented). Static reports include parameter components, gate/projection overhead, recurrent-state size, and cache-size formulas. During training and evaluation, a best-effort one-second resource sampler records process and system CPU utilization and memory, GPU utilization and memory, power, temperature, clocks, and visible competing compute processes. GPU fields remain explicitly unavailable if NVML cannot provide them; the sampler does not interrupt model work.
 
 ## MQAR and overwrite recall
 

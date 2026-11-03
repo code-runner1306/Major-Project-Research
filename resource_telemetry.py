@@ -22,13 +22,18 @@ def _text(value: Any) -> str:
 class DeviceResourceCapture:
     """Capture whole-device telemetry; inability to query it never fails model work."""
 
-    def __init__(self, device: torch.device, *, activity_interval_seconds: float = 1.0):
+    def __init__(
+        self, device: torch.device, *, activity_interval_seconds: float = 1.0,
+        capture_energy: bool = False,
+    ):
         self.device = device
         self.activity_interval_seconds = activity_interval_seconds
-        self.energy_provider = EnergyProvider.create(device)
-        self.energy_region = self.energy_provider.region("resource_capture")
+        self.energy_provider = EnergyProvider.create(device) if capture_energy else None
+        self.energy_region = self.energy_provider.region("resource_capture") if self.energy_provider else None
         self.pynvml = None
         self.handle = None
+        self.psutil = None
+        self.process = None
         self.nvml_error: str | None = None
         self.samples: list[dict[str, Any]] = []
         self.errors: list[str] = []
@@ -39,6 +44,15 @@ class DeviceResourceCapture:
         self._thread: threading.Thread | None = None
         self.result: dict[str, Any] | None = None
         self._torch_memory_before: dict[str, int] | None = None
+        try:
+            import psutil  # type: ignore[import-not-found]
+
+            self.psutil = psutil
+            self.process = psutil.Process()
+            self.process.cpu_percent(interval=None)  # Prime the process CPU sampler.
+            psutil.cpu_percent(interval=None)
+        except Exception as exc:
+            self.errors.append(f"CPU telemetry unavailable: {type(exc).__name__}: {exc}")
         self._open_nvml()
 
     def _open_nvml(self) -> None:
@@ -108,6 +122,19 @@ class DeviceResourceCapture:
 
     def _sample(self) -> dict[str, Any]:
         sample: dict[str, Any] = {"timestamp_utc": datetime.now(timezone.utc).isoformat()}
+        if self.psutil is not None and self.process is not None:
+            try:
+                sample["process_cpu_percent"] = self.process.cpu_percent(interval=None)
+                sample["system_cpu_percent"] = self.psutil.cpu_percent(interval=None)
+                sample["process_rss_bytes"] = self.process.memory_info().rss
+                sample["system_memory_used_bytes"] = self.psutil.virtual_memory().used
+            except Exception as exc:
+                sample.setdefault("field_errors", {})["cpu_memory"] = f"{type(exc).__name__}: {exc}"
+            try:
+                frequency = self.psutil.cpu_freq()
+                sample["cpu_frequency_current_mhz"] = frequency.current if frequency else None
+            except Exception as exc:
+                sample.setdefault("field_errors", {})["cpu_frequency_current_mhz"] = f"{type(exc).__name__}: {exc}"
         p, handle = self.pynvml, self.handle
         if p is None or handle is None:
             sample.update({"available": False, "reason": self.nvml_error})
@@ -162,7 +189,8 @@ class DeviceResourceCapture:
                 torch.cuda.reset_peak_memory_stats(self.device)
             except Exception as exc:
                 self.errors.append(f"PyTorch CUDA memory telemetry unavailable: {type(exc).__name__}: {exc}")
-        self.energy_region.__enter__()
+        if self.energy_region is not None:
+            self.energy_region.__enter__()
         try:
             self.samples.append(self._sample())
             self._thread = threading.Thread(target=self._sample_loop, daemon=True)
@@ -180,7 +208,8 @@ class DeviceResourceCapture:
             self.samples.append(self._sample())
         except Exception as sample_exc:
             self.errors.append(f"Final activity sample failed: {type(sample_exc).__name__}: {sample_exc}")
-        self.energy_region.__exit__(exc_type, exc, traceback)
+        if self.energy_region is not None:
+            self.energy_region.__exit__(exc_type, exc, traceback)
         self.finished_utc = datetime.now(timezone.utc).isoformat()
         torch_memory: dict[str, Any] = {"available": False, "scope": "current process PyTorch CUDA allocator"}
         if self.device.type == "cuda" and torch.cuda.is_available():
@@ -198,6 +227,8 @@ class DeviceResourceCapture:
             except Exception as exc:
                 torch_memory["reason"] = f"{type(exc).__name__}: {exc}"
         numeric_fields = (
+            "process_cpu_percent", "system_cpu_percent", "process_rss_bytes", "system_memory_used_bytes",
+            "cpu_frequency_current_mhz",
             "gpu_utilization_percent", "memory_utilization_percent", "memory_used_bytes",
             "power_watts", "temperature_celsius", "sm_clock_mhz", "memory_clock_mhz",
             "other_compute_process_count",
@@ -232,7 +263,10 @@ class DeviceResourceCapture:
             "finished_utc": self.finished_utc,
             "duration_wall_seconds": time.perf_counter() - self._start_time,
             "runtime": self.runtime_metadata(),
-            "energy": self.energy_region.result.to_dict() if self.energy_region.result else None,
+            "energy": (
+                self.energy_region.result.to_dict()
+                if self.energy_region is not None and self.energy_region.result else None
+            ),
             "torch_memory": torch_memory,
             "activity_summary": aggregates,
             "other_gpu_activity": other_activity,
