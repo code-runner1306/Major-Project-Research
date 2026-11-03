@@ -28,8 +28,16 @@ class DeviceResourceCapture:
     ):
         self.device = device
         self.activity_interval_seconds = activity_interval_seconds
-        self.energy_provider = EnergyProvider.create(device) if capture_energy else None
-        self.energy_region = self.energy_provider.region("resource_capture") if self.energy_provider else None
+        self.energy_provider = (
+            EnergyProvider.create(device)
+            if capture_energy
+            else EnergyProvider(
+                supported=False,
+                reason="Energy capture disabled for this resource measurement",
+                device_metadata={"device_type": device.type},
+            )
+        )
+        self.energy_region = self.energy_provider.region("resource_capture")
         self.pynvml = None
         self.handle = None
         self.psutil = None
@@ -189,8 +197,7 @@ class DeviceResourceCapture:
                 torch.cuda.reset_peak_memory_stats(self.device)
             except Exception as exc:
                 self.errors.append(f"PyTorch CUDA memory telemetry unavailable: {type(exc).__name__}: {exc}")
-        if self.energy_region is not None:
-            self.energy_region.__enter__()
+        self.energy_region.__enter__()
         try:
             self.samples.append(self._sample())
             self._thread = threading.Thread(target=self._sample_loop, daemon=True)
@@ -208,8 +215,7 @@ class DeviceResourceCapture:
             self.samples.append(self._sample())
         except Exception as sample_exc:
             self.errors.append(f"Final activity sample failed: {type(sample_exc).__name__}: {sample_exc}")
-        if self.energy_region is not None:
-            self.energy_region.__exit__(exc_type, exc, traceback)
+        self.energy_region.__exit__(exc_type, exc, traceback)
         self.finished_utc = datetime.now(timezone.utc).isoformat()
         torch_memory: dict[str, Any] = {"available": False, "scope": "current process PyTorch CUDA allocator"}
         if self.device.type == "cuda" and torch.cuda.is_available():
@@ -265,7 +271,7 @@ class DeviceResourceCapture:
             "runtime": self.runtime_metadata(),
             "energy": (
                 self.energy_region.result.to_dict()
-                if self.energy_region is not None and self.energy_region.result else None
+                if self.energy_region.result else None
             ),
             "torch_memory": torch_memory,
             "activity_summary": aggregates,
