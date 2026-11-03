@@ -101,6 +101,9 @@ class ExperimentConfig:
     enable_cache_benchmarks: bool = True
     enable_full_prefix_benchmark: bool = False
     enable_gate_diagnostics: bool = True
+    enable_posthoc_gate_grouping: bool = True
+    posthoc_gate_group_counts: tuple[int, ...] = (1, 2, 4, 8)
+    posthoc_gate_eval_examples: int = 512
     enable_energy_collection: bool = True
     benchmark_warmup: int = 2
     benchmark_repeats: int = 5
@@ -149,6 +152,9 @@ class ExperimentConfig:
             "enable_cache_benchmarks": self.enable_cache_benchmarks,
             "enable_full_prefix_benchmark": self.enable_full_prefix_benchmark,
             "enable_gate_diagnostics": self.enable_gate_diagnostics,
+            "enable_posthoc_gate_grouping": self.enable_posthoc_gate_grouping,
+            "posthoc_gate_group_counts": list(self.posthoc_gate_group_counts),
+            "posthoc_gate_eval_examples": self.posthoc_gate_eval_examples,
             "enable_energy_collection": self.enable_energy_collection,
             "benchmark_warmup": self.benchmark_warmup,
             "benchmark_repeats": self.benchmark_repeats,
@@ -233,6 +239,7 @@ def smoke_profile(output_dir: str | Path = "output/smoke") -> ExperimentConfig:
         ),
         vocab_size=128,
         enable_parameter_matched_scalar_control=True,
+        enable_posthoc_gate_grouping=False,
         benchmark_warmup=1,
         benchmark_repeats=1,
         benchmark_prompt_lengths=(4, 8),

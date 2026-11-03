@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from hashlib import sha256
 import random
-from typing import Any, Literal
+from typing import Any, Literal, Sequence
 
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -186,9 +186,17 @@ def retrieval_dataloader(dataset: RetrievalDataset, batch_size: int) -> DataLoad
 
 
 @torch.no_grad()
-def evaluate_retrieval(model: GatedDeltaNetLM, dataset: RetrievalDataset, device: torch.device) -> dict[str, Any]:
+def evaluate_retrieval(
+    model: GatedDeltaNetLM, dataset: RetrievalDataset, device: torch.device,
+    *, example_indices: Sequence[int] | None = None,
+) -> dict[str, Any]:
     model_was_training = model.training
     model.eval()
+    indices = tuple(range(len(dataset))) if example_indices is None else tuple(example_indices)
+    if not indices:
+        raise ValueError("Retrieval evaluation requires at least one example index")
+    if len(set(indices)) != len(indices) or any(index < 0 or index >= len(dataset) for index in indices):
+        raise ValueError("Retrieval evaluation indices must be unique and within the dataset")
     total = correct = latest_total = latest_correct = stale_errors = unrelated_total = unrelated_correct = 0
     breakdown: dict[str, dict[str, list[int]]] = {
         key: {} for key in (
@@ -196,7 +204,7 @@ def evaluate_retrieval(model: GatedDeltaNetLM, dataset: RetrievalDataset, device
             "memory_load", "overwrite_count",
         )
     }
-    for index in range(len(dataset)):
+    for index in indices:
         example = dataset.example(index)
         logits, _ = model(example.tokens.unsqueeze(0).to(device))
         predictions = logits[0].argmax(dim=-1).cpu()
@@ -222,6 +230,8 @@ def evaluate_retrieval(model: GatedDeltaNetLM, dataset: RetrievalDataset, device
     result: dict[str, Any] = {
         "generator_manifest": dataset.manifest(), "exact_query_accuracy": correct / total if total else None,
         "correct": correct, "total": total, "breakdowns": formatted,
+        "evaluated_examples": len(indices),
+        "example_indices_sha256": sha256(",".join(map(str, indices)).encode()).hexdigest(),
     }
     if dataset.task == "overwrite":
         result.update({

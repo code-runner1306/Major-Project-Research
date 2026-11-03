@@ -22,9 +22,9 @@ from eval import benchmark_inference, evaluate_needle_suite, generation_cache_eq
 from preflight import require_production_cuda
 from recurrence import RecurrenceOptions, backend_metadata, ensure_backend_available, qualification_hash
 from reporting import write_first_submission_reports
-from retrieval import RetrievalDataset, evaluate_retrieval, retrieval_dataloader
+from retrieval import GENERATOR_VERSION, RetrievalDataset, evaluate_retrieval, retrieval_dataloader
 from resource_telemetry import DeviceResourceCapture
-from train import SeedBundle, seed_everything, train_fixed_budget
+from train import SeedBundle, evaluate_model, seed_everything, train_fixed_budget
 
 
 Family = Literal["tinystories", "mqar", "overwrite"]
@@ -121,8 +121,11 @@ def _manifest(
             "resource_capture_version": 1,
             "resource_sample_interval_seconds": 1.0,
             "gate_diagnostics": profile.enable_gate_diagnostics,
+            "posthoc_gate_grouping": profile.enable_posthoc_gate_grouping,
+            "posthoc_gate_group_counts": list(profile.posthoc_gate_group_counts),
+            "posthoc_gate_eval_examples": profile.posthoc_gate_eval_examples,
             "energy": profile.enable_energy_collection,
-            "retrieval_version": "mqar-overwrite-v1" if family != "tinystories" else None,
+            "retrieval_version": GENERATOR_VERSION if family != "tinystories" else None,
             "natural_language_retrieval": "exploratory_zero_shot" if family == "tinystories" else None,
         },
         expected_artifacts=("manifest.json", "lifecycle.json", "metrics.json", "final_checkpoint.pt"),
@@ -136,6 +139,76 @@ def _load_final_checkpoint(model: torch.nn.Module, run_dir: Path, profile: Exper
     if not valid or checkpoint is None:
         raise RuntimeError(f"Cannot recover evaluation from final checkpoint: {reason}")
     model.load_state_dict(checkpoint["model_state"])
+
+
+def _evenly_spaced_indices(dataset_size: int, requested_count: int) -> tuple[int, ...]:
+    count = min(dataset_size, requested_count)
+    if count < 1:
+        raise ValueError("Post-hoc gate evaluation needs a non-empty retrieval set")
+    if count == 1:
+        return (dataset_size // 2,)
+    return tuple(round(index * (dataset_size - 1) / (count - 1)) for index in range(count))
+
+
+def _posthoc_gate_grouping(
+    *, profile: ExperimentConfig, family: Family, model: torch.nn.Module,
+    validation_data: Any, held_out_retrieval: RetrievalDataset | None, device: torch.device,
+) -> dict[str, Any]:
+    if not profile.enable_posthoc_gate_grouping or profile.run_mode != "production":
+        return {"status": "disabled"}
+    if not isinstance(model, torch.nn.Module) or not hasattr(model, "set_runtime_gate_groups"):
+        raise TypeError("Post-hoc gate grouping requires a GatedDeltaNetLM")
+    if getattr(model, "variant", None) != "channel-wise":
+        return {"status": "not_applicable", "reason": "only channel-wise checkpoints have multiple gate channels"}
+
+    head_dim = int(model.model_config.d_head)
+    requested_groups = tuple(profile.posthoc_gate_group_counts)
+    group_counts = sorted({
+        groups for groups in (*requested_groups, head_dim)
+        if isinstance(groups, int) and 1 <= groups <= head_dim and head_dim % groups == 0
+    })
+    excluded_groups = [groups for groups in requested_groups if groups not in group_counts]
+    grouped_results: dict[str, Any] = {}
+    indices: tuple[int, ...] | None = None
+    if family != "tinystories":
+        if held_out_retrieval is None:
+            raise ValueError("Retrieval group evaluation requires the held-out dataset")
+        indices = _evenly_spaced_indices(len(held_out_retrieval), profile.posthoc_gate_eval_examples)
+
+    try:
+        for groups in group_counts:
+            model.set_runtime_gate_groups(groups)
+            if family == "tinystories":
+                max_steps = min(
+                    profile.budget.validation_steps,
+                    max(1, (profile.posthoc_gate_eval_examples + profile.budget.batch_size - 1)
+                        // profile.budget.batch_size),
+                )
+                grouped_results[str(groups)] = evaluate_model(
+                    model, validation_data, device, max_steps=max_steps,
+                )
+            else:
+                assert held_out_retrieval is not None and indices is not None
+                grouped_results[str(groups)] = evaluate_retrieval(
+                    model, held_out_retrieval, device, example_indices=indices,
+                )
+    finally:
+        model.set_runtime_gate_groups(None)
+
+    return {
+        "status": "complete",
+        "evaluation_type": "posthoc_gate_sharing_intervention_no_retraining",
+        "head_dimension": head_dim,
+        "group_counts_per_head": group_counts,
+        "excluded_non_divisor_group_counts": excluded_groups,
+        "requested_retrieval_examples": profile.posthoc_gate_eval_examples,
+        "evaluated_retrieval_examples": len(indices) if indices is not None else None,
+        "metrics_by_group_count": grouped_results,
+        "interpretation_note": (
+            "This measures sensitivity of a fully channel-wise trained checkpoint to sharing its "
+            "gate values at inference; it does not estimate how a model trained with fewer groups performs."
+        ),
+    }
 
 
 def _evaluate(
@@ -169,21 +242,31 @@ def _evaluate(
             needle = evaluate_needle_suite(gdn_model, suite, device)
         static_cost = static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length)
         static_cost["recurrence"] = backend_metadata(recurrence_options_for(profile), device=device)
-        return {
+        result = {
             "benchmarks": benchmarks, "gate_diagnostics": gate,
             "static_cost": static_cost,
             "natural_language_retrieval": needle,
         }
+        result["posthoc_gate_grouping"] = _posthoc_gate_grouping(
+            profile=profile, family=family, model=gdn_model, validation_data=validation_data,
+            held_out_retrieval=held_out_retrieval, device=device,
+        )
+        return result
     assert held_out_retrieval is not None
     diagnostic_batches = [held_out_retrieval[0][0].unsqueeze(0)]
     static_cost = static_cost_report(gdn_model, batch_size=profile.budget.batch_size, context_length=profile.budget.context_length)
     static_cost["recurrence"] = backend_metadata(recurrence_options_for(profile), device=device)
-    return {
+    result = {
         "benchmarks": benchmarks,
         "retrieval": evaluate_retrieval(gdn_model, held_out_retrieval, device),
         "gate_diagnostics": collect_gate_diagnostics(gdn_model, diagnostic_batches, device) if profile.enable_gate_diagnostics else {"disabled": True},
         "static_cost": static_cost,
     }
+    result["posthoc_gate_grouping"] = _posthoc_gate_grouping(
+        profile=profile, family=family, model=gdn_model, validation_data=validation_data,
+        held_out_retrieval=held_out_retrieval, device=device,
+    )
+    return result
 
 
 def run_seed(

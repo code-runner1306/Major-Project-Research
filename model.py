@@ -119,10 +119,19 @@ class GatedDeltaNetAttention(nn.Module):
         self.out_proj = nn.Linear(projection_dim, d_model, bias=False)
         self.layer_idx = -1
         self._gate_observer: Callable[[torch.Tensor, str, int], None] | None = None
+        self._runtime_gate_groups: int | None = None
         self.recurrence_options = recurrence_options
 
     def set_gate_observer(self, observer: Callable[[torch.Tensor, str, int], None] | None) -> None:
         self._gate_observer = observer
+
+    def set_runtime_gate_groups(self, groups: int | None) -> None:
+        if groups is not None:
+            if self.variant != "channel-wise":
+                raise ValueError("Post-hoc gate grouping is only valid for channel-wise models")
+            if groups < 1 or self.d_head % groups:
+                raise ValueError(f"Gate group count must be a positive divisor of head dimension {self.d_head}")
+        self._runtime_gate_groups = groups
 
     def forward(
         self, x: torch.Tensor, cache: Mapping[str, torch.Tensor | str] | None = None, *, use_cache: bool = False
@@ -140,6 +149,11 @@ class GatedDeltaNetAttention(nn.Module):
         beta = torch.sigmoid(self.beta_proj(x)).view(batch, time, heads, 1)
         alpha_width = 1 if self.variant == "scalar" else width
         alpha = torch.sigmoid(self.alpha_proj(x)).view(batch, time, heads, alpha_width)
+        if self._runtime_gate_groups is not None:
+            groups = self._runtime_gate_groups
+            group_width = width // groups
+            alpha = alpha.view(batch, time, heads, groups, group_width).mean(dim=-1, keepdim=True)
+            alpha = alpha.expand(batch, time, heads, groups, group_width).reshape(batch, time, heads, width)
         if self._gate_observer is not None:
             self._gate_observer(alpha.detach(), self.variant, self.layer_idx)
         g = F.silu(self.gate_proj(x)).view(batch, time, heads, width)
@@ -289,6 +303,16 @@ class GatedDeltaNetLM(nn.Module):
         for block in self.blocks:
             if isinstance(block.attn, GatedDeltaNetAttention):
                 block.attn.set_gate_observer(observer)
+
+    def set_runtime_gate_groups(self, groups: int | None) -> None:
+        """Temporarily share each channel-wise gate across contiguous channel groups."""
+        recurrent_layers = [
+            block.attn for block in self.blocks if isinstance(block.attn, GatedDeltaNetAttention)
+        ]
+        if not recurrent_layers:
+            raise ValueError("This model has no Gated DeltaNet layers")
+        for layer in recurrent_layers:
+            layer.set_runtime_gate_groups(groups)
 
     def _validate_model_cache(self, cache: Sequence[Mapping[str, torch.Tensor | str]] | None) -> None:
         if cache is not None and len(cache) != len(self.blocks):

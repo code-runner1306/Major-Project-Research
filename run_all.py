@@ -77,6 +77,7 @@ def main() -> None:
     parser.add_argument("--full-prefix-benchmark", action="store_true", help="include the slow no-cache generation benchmark")
     parser.add_argument("--no-cache-benchmarks", action="store_true")
     parser.add_argument("--no-gate-diagnostics", action="store_true")
+    parser.add_argument("--no-posthoc-gate-grouping", action="store_true", help="skip post-training gate-sharing diagnostic evaluations")
     parser.add_argument("--no-energy", action="store_true")
     parser.add_argument("--recurrence-backend", choices=("reference", "cuda-fused"))
     parser.add_argument("--state-accumulator-dtype", choices=("input", "float32"), default="input")
@@ -182,6 +183,7 @@ def main() -> None:
         enable_full_prefix_benchmark=args.full_prefix_benchmark,
         enable_cache_benchmarks=profile.enable_cache_benchmarks and not args.no_cache_benchmarks,
         enable_gate_diagnostics=profile.enable_gate_diagnostics and not args.no_gate_diagnostics,
+        enable_posthoc_gate_grouping=profile.enable_posthoc_gate_grouping and not args.no_posthoc_gate_grouping,
         enable_energy_collection=profile.enable_energy_collection and not args.no_energy,
     )
     if args.pilot:

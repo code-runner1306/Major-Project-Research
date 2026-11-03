@@ -36,6 +36,28 @@ def test_pure_gdn_smoke_control_and_cache_equivalence(smoke_config):
             assert info["parameter_equality_asserted"]
 
 
+def test_posthoc_gate_grouping_is_temporary_and_cache_safe(smoke_config):
+    model, _, _ = construct_model(smoke_config.model_for("tiny"), "channel-wise", smoke_config.vocab_size)
+    tokens = torch.randint(0, smoke_config.vocab_size, (1, 7))
+    baseline, _ = model(tokens)
+
+    model.set_runtime_gate_groups(8)
+    full_grouping, _ = model(tokens)
+    assert torch.allclose(baseline, full_grouping)
+
+    model.set_runtime_gate_groups(4)
+    grouped, _ = model(tokens)
+    assert grouped.shape == baseline.shape
+    assert torch.isfinite(grouped).all()
+    assert cache_equivalence_error(model, tokens) < 1e-5
+
+    with pytest.raises(ValueError, match="divisor"):
+        model.set_runtime_gate_groups(3)
+    model.set_runtime_gate_groups(None)
+    restored, _ = model(tokens)
+    assert torch.allclose(baseline, restored)
+
+
 def test_invalid_control_fails_explicitly():
     impossible = ModelConfig("impossible", d_model=10, n_layer=1, n_head=3, d_ff=20, attention_layout="pure_gdn")
     with pytest.raises(ValueError, match="Exact useful scalar matching"):

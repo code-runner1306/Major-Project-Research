@@ -2,9 +2,14 @@ from __future__ import annotations
 
 import time
 
+import torch
+
 from energy import EnergyProvider
 from resource_telemetry import DeviceResourceCapture
-from retrieval import RetrievalDataset
+from retrieval import RetrievalDataset, evaluate_retrieval
+from controls import construct_model
+from dataclasses import replace
+from orchestration import _posthoc_gate_grouping
 
 
 def test_retrieval_is_deterministic_masked_and_split_distinct(smoke_config):
@@ -42,6 +47,33 @@ def test_query_distance_metadata_matches_realized_memory_to_query_gap(smoke_conf
             assert example.metadata["query_distance_definition"] == (
                 "filler tokens between final memory token and first query marker"
             )
+
+
+def test_retrieval_evaluation_accepts_a_fixed_posthoc_subset(smoke_config):
+    dataset = RetrievalDataset(task="mqar", examples=6, config=smoke_config.retrieval, seed=19, split="held_out")
+    model, _, _ = construct_model(smoke_config.model_for("tiny"), "channel-wise", smoke_config.retrieval.vocabulary_size)
+    result = evaluate_retrieval(model, dataset, torch.device("cpu"), example_indices=(0, 2, 5))
+    assert result["evaluated_examples"] == 3
+    assert len(result["example_indices_sha256"]) == 64
+    assert result["total"] > 0
+
+
+def test_posthoc_gate_grouping_uses_the_same_retrieval_subset(smoke_config):
+    profile = replace(
+        smoke_config, run_mode="production", enable_posthoc_gate_grouping=True,
+        posthoc_gate_group_counts=(1, 4, 8), posthoc_gate_eval_examples=3,
+    )
+    dataset = RetrievalDataset(task="mqar", examples=6, config=profile.retrieval, seed=23, split="held_out")
+    model, _, _ = construct_model(profile.model_for("tiny"), "channel-wise", profile.retrieval.vocabulary_size)
+    result = _posthoc_gate_grouping(
+        profile=profile, family="mqar", model=model, validation_data=None,
+        held_out_retrieval=dataset, device=torch.device("cpu"),
+    )
+    assert result["group_counts_per_head"] == [1, 4, 8]
+    grouped = result["metrics_by_group_count"]
+    assert all(grouped[str(count)]["evaluated_examples"] == 3 for count in (1, 4, 8))
+    assert len({grouped[str(count)]["example_indices_sha256"] for count in (1, 4, 8)}) == 1
+    assert all(layer.attn._runtime_gate_groups is None for layer in model.blocks)
 
 
 def test_cpu_energy_is_structured_unsupported():

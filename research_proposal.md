@@ -88,12 +88,14 @@ Taken together, the literature establishes the direction of the effect (channel-
 - **RQ2:** How does the size of any gating-granularity advantage change as model scale increases from 10M to 100M parameters (i.e., is the gap growing, shrinking, or flat)?
 - **RQ3:** What is the latency/throughput cost of channel-wise gating relative to scalar gating at each scale, and at what point (if any) does the accuracy benefit justify that cost?
 - **RQ4 (stretch):** Does the accuracy gap on a simple synthetic long-context retrieval probe mirror the perplexity gap, or do the two metrics diverge?
+- **RQ5 (post-training diagnostic):** How sensitive is a trained channel-wise model to sharing its decay values across increasingly large channel groups at evaluation time?
 
 **Objectives:**
 
 - Implement a small, from-scratch Gated DeltaNet language model with a swappable gating module (scalar vs. channel-wise), building on an existing open-source reference implementation rather than writing the mechanism from a blank page.
 - Train matched pairs of models (same data, optimizer, schedule, and seeds) at four scales, varying only the gate.
 - Evaluate all models on validation perplexity, wall-clock inference latency/throughput, and a simple synthetic retrieval benchmark.
+- For each existing channel-wise checkpoint, evaluate post-hoc gate sharing at several group counts without retraining, using the same validation and held-out retrieval examples.
 - Report results with multiple seeds per configuration and honest statistical treatment (mean ± standard deviation, not single-run numbers).
 - Write up the result — whichever direction it points — as a clear, honestly-scoped empirical finding suitable for a workshop-tier submission.
 
@@ -155,7 +157,13 @@ For each trained model, measure inference latency (ms/token, decode phase) and t
 
 Construct a simple needle-in-a-haystack style synthetic evaluation (insert a fact at a random position in a long, otherwise-irrelevant context and query the model to retrieve it) scaled appropriately to the small models' context length. This is included as a stretch goal, not a committed deliverable, since it adds evaluation-design complexity; if time allows, it lets us check whether perplexity and retrieval accuracy tell the same story or diverge, which would itself be an interesting finding.
 
-### 5.4 Statistical Treatment
+### 5.4 Experiment 4 — Post-Training Gate-Grouping Sensitivity
+
+This evaluation-only diagnostic reuses each trained channel-wise checkpoint; it adds no training runs and does not replace a dataset. After the channel-wise gate has been computed for each token, average its values within contiguous groups of channels and broadcast each group average back across those channels. Test one group (scalarization), a few intermediate group counts (for example 2, 4, and 8 where they divide the head dimension), and the full channel count. Use the same validation batches and the same fixed held-out MQAR and overwrite examples for every setting.
+
+Report TinyStories validation loss/perplexity and retrieval accuracy for each group count, alongside the unmodified channel-wise result and the existing gate-diversity diagnostics. Interpret a drop as sensitivity of the trained model to removing channel differences. Because the model was trained with fully channel-wise gates, this intervention does not measure how a model trained from scratch with fewer gate groups would perform; it is a mechanistic diagnostic, not a new trained-model comparison. This check is secondary to the scalar-versus-channel-wise results.
+
+### 5.5 Statistical Treatment
 
 All headline results are reported as mean ± standard deviation across seeds, not single-run numbers. Where compute allows, we additionally report a simple significance test (e.g., a t-test across seeds) for the perplexity difference between variants at each scale, so that any claimed trend is not an artifact of run-to-run noise.
 
