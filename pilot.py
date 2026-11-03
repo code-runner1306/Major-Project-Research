@@ -191,9 +191,8 @@ def _parallel_worker_process(
         try:
             import psutil  # type: ignore[import-not-found]
             process = psutil.Process()
-            cpu_before = sum(process.cpu_times()[:2])
         except Exception:
-            cpu_before = None
+            process = None
         with torch.cuda.stream(stream):
             for _ in range(warmup_steps):
                 step()
@@ -201,6 +200,7 @@ def _parallel_worker_process(
             result_queue.put({"worker_index": worker_index, "status": "ready"})
             if not start_event.wait(timeout=180):
                 raise TimeoutError("parallel pilot start gate timed out")
+            cpu_before = sum(process.cpu_times()[:2]) if process is not None else None
             started = time.perf_counter()
             events: list[tuple[torch.cuda.Event, torch.cuda.Event]] = []
             losses: list[float] = []
@@ -218,10 +218,11 @@ def _parallel_worker_process(
                     )
             stream.synchronize()
             elapsed = time.perf_counter() - started
+            cpu_after = sum(process.cpu_times()[:2]) if process is not None else None
         gpu_seconds = [begin.elapsed_time(end) / 1000.0 for begin, end in events]
         cpu_percent = None
-        if process is not None and cpu_before is not None and elapsed > 0:
-            cpu_percent = max(0.0, (sum(process.cpu_times()[:2]) - cpu_before) * 100.0 / elapsed)
+        if cpu_before is not None and cpu_after is not None and elapsed > 0:
+            cpu_percent = max(0.0, (cpu_after - cpu_before) * 100.0 / elapsed)
         result_queue.put({
             "worker_index": worker_index, "status": "complete", "wall_seconds": elapsed,
             "gpu_seconds": sum(gpu_seconds), "step_wall_seconds": elapsed / measured_steps,
@@ -302,43 +303,43 @@ def _run_parallel_qualification(
                         f"parallel {trial_label}: launching isolated worker processes",
                         started_at=started_at,
                     )
-                    with DeviceResourceCapture(device) as capture:
-                        context = mp.get_context("spawn")
-                        start_event = context.Event()
-                        result_queue = context.Queue()
-                        processes = []
-                        worker_results = []
-                        try:
-                            for worker_index in range(worker_count):
-                                process = context.Process(
-                                    target=_parallel_worker_process,
-                                    args=(
-                                        profile, family, scale, variants[worker_index % len(variants)],
-                                        worker_index, settings.warmup_steps, settings.measured_steps,
-                                        options, str(output / "parallel_data"), start_event, result_queue,
-                                        trial_label, started_at,
-                                    ),
-                                    name=f"pilot-{family}-{scale}-worker-{worker_index + 1}",
+                    context = mp.get_context("spawn")
+                    start_event = context.Event()
+                    result_queue = context.Queue()
+                    processes = []
+                    worker_results = []
+                    try:
+                        for worker_index in range(worker_count):
+                            process = context.Process(
+                                target=_parallel_worker_process,
+                                args=(
+                                    profile, family, scale, variants[worker_index % len(variants)],
+                                    worker_index, settings.warmup_steps, settings.measured_steps,
+                                    options, str(output / "parallel_data"), start_event, result_queue,
+                                    trial_label, started_at,
+                                ),
+                                name=f"pilot-{family}-{scale}-worker-{worker_index + 1}",
+                            )
+                            process.start()
+                            processes.append(process)
+
+                        ready_workers: set[int] = set()
+                        ready_deadline = time.monotonic() + 180
+                        while len(ready_workers) < worker_count:
+                            remaining = ready_deadline - time.monotonic()
+                            if remaining <= 0:
+                                raise TimeoutError("parallel pilot workers did not finish warmup within 180 seconds")
+                            message = result_queue.get(timeout=remaining)
+                            if message.get("status") == "failed":
+                                raise RuntimeError(
+                                    f"worker {message.get('worker_index')} failed during setup: "
+                                    f"{message.get('reason')}\n{message.get('traceback', '')}"
                                 )
-                                process.start()
-                                processes.append(process)
+                            if message.get("status") == "ready":
+                                ready_workers.add(int(message["worker_index"]))
 
-                            ready_workers: set[int] = set()
-                            ready_deadline = time.monotonic() + 180
-                            while len(ready_workers) < worker_count:
-                                remaining = ready_deadline - time.monotonic()
-                                if remaining <= 0:
-                                    raise TimeoutError("parallel pilot workers did not finish warmup within 180 seconds")
-                                message = result_queue.get(timeout=remaining)
-                                if message.get("status") == "failed":
-                                    raise RuntimeError(
-                                        f"worker {message.get('worker_index')} failed during setup: "
-                                        f"{message.get('reason')}\n{message.get('traceback', '')}"
-                                    )
-                                if message.get("status") == "ready":
-                                    ready_workers.add(int(message["worker_index"]))
-
-                            _pilot_progress(f"parallel {trial_label}: all processes warmed up; starting measured steps", started_at=started_at)
+                        _pilot_progress(f"parallel {trial_label}: all processes warmed up; starting measured steps", started_at=started_at)
+                        with DeviceResourceCapture(device) as capture:
                             start_event.set()
                             while len(worker_results) < worker_count:
                                 message = result_queue.get(timeout=300)
@@ -355,14 +356,14 @@ def _run_parallel_qualification(
                                     raise TimeoutError(f"pilot worker {process.name} did not exit after reporting results")
                                 if process.exitcode != 0:
                                     raise RuntimeError(f"pilot worker {process.name} exited with code {process.exitcode}")
-                        finally:
-                            start_event.set()
-                            for process in processes:
-                                if process.is_alive():
-                                    process.terminate()
-                                process.join(timeout=10)
-                            result_queue.close()
-                            result_queue.join_thread()
+                    finally:
+                        start_event.set()
+                        for process in processes:
+                            if process.is_alive():
+                                process.terminate()
+                            process.join(timeout=10)
+                        result_queue.close()
+                        result_queue.join_thread()
                     parallel_wall = max(row["wall_seconds"] for row in worker_results)
                     aggregate_steps_per_second = worker_count * settings.measured_steps / parallel_wall
                     serial_expected_wall = worker_count * settings.measured_steps / baseline_throughput
