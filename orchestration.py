@@ -150,6 +150,53 @@ def _evenly_spaced_indices(dataset_size: int, requested_count: int) -> tuple[int
     return tuple(round(index * (dataset_size - 1) / (count - 1)) for index in range(count))
 
 
+def _gate_group_sensitivity(
+    grouped_results: dict[str, Any], family: Family, full_channel_group: int,
+) -> dict[str, Any]:
+    """Compare each inference intervention to the unmodified same-checkpoint result."""
+    reference = grouped_results[str(full_channel_group)]
+    sensitivity: dict[str, Any] = {}
+    for group_name, current in grouped_results.items():
+        if family == "tinystories":
+            sensitivity[group_name] = {
+                "validation_loss_delta_vs_full_channel": current["loss"] - reference["loss"],
+                "validation_perplexity_delta_vs_full_channel": current["perplexity"] - reference["perplexity"],
+            }
+            continue
+
+        overall: dict[str, float] = {}
+        metric_names = ["exact_query_accuracy"]
+        if family == "overwrite":
+            metric_names.extend((
+                "latest_value_accuracy", "stale_value_error_rate",
+                "unrelated_association_retention",
+            ))
+        for metric in metric_names:
+            value, baseline = current.get(metric), reference.get(metric)
+            if isinstance(value, (int, float)) and isinstance(baseline, (int, float)):
+                overall[f"{metric}_delta_vs_full_channel"] = float(value) - float(baseline)
+
+        bucket_deltas: dict[str, Any] = {}
+        for dimension, current_buckets in current.get("breakdowns", {}).items():
+            if not current_buckets:
+                continue
+            baseline_buckets = reference.get("breakdowns", {}).get(dimension, {})
+            bucket_deltas[dimension] = {}
+            for bucket, metrics in current_buckets.items():
+                baseline_metrics = baseline_buckets.get(bucket)
+                if baseline_metrics is None:
+                    continue
+                bucket_deltas[dimension][bucket] = {
+                    "accuracy_delta_vs_full_channel": metrics["accuracy"] - baseline_metrics["accuracy"],
+                    "examples_or_answers": metrics["total"],
+                }
+        sensitivity[group_name] = {
+            "overall_metric_deltas": overall,
+            "accuracy_deltas_by_difficulty": bucket_deltas,
+        }
+    return sensitivity
+
+
 def _posthoc_gate_grouping(
     *, profile: ExperimentConfig, family: Family, model: torch.nn.Module,
     validation_data: Any, held_out_retrieval: RetrievalDataset | None, device: torch.device,
@@ -204,6 +251,12 @@ def _posthoc_gate_grouping(
         "requested_retrieval_examples": profile.posthoc_gate_eval_examples,
         "evaluated_retrieval_examples": len(indices) if indices is not None else None,
         "metrics_by_group_count": grouped_results,
+        "sensitivity_vs_full_channel": _gate_group_sensitivity(grouped_results, family, head_dim),
+        "sensitivity_interpretation": (
+            "For retrieval, negative accuracy deltas mean lower accuracy than the full-channel setting; "
+            "positive stale-value-error deltas mean worse overwrite recall. These are same-checkpoint, "
+            "same-example point differences, not results from separately trained group-gated models."
+        ),
         "interpretation_note": (
             "This measures sensitivity of a fully channel-wise trained checkpoint to sharing its "
             "gate values at inference; it does not estimate how a model trained with fewer groups performs."

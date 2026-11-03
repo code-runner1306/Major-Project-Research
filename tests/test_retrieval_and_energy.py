@@ -73,6 +73,10 @@ def test_posthoc_gate_grouping_uses_the_same_retrieval_subset(smoke_config):
     grouped = result["metrics_by_group_count"]
     assert all(grouped[str(count)]["evaluated_examples"] == 3 for count in (1, 4, 8))
     assert len({grouped[str(count)]["example_indices_sha256"] for count in (1, 4, 8)}) == 1
+    scalarization = result["sensitivity_vs_full_channel"]["1"]
+    assert "query_distance" in scalarization["accuracy_deltas_by_difficulty"]
+    assert "memory_load" in scalarization["accuracy_deltas_by_difficulty"]
+    assert "overwrite_count" not in scalarization["accuracy_deltas_by_difficulty"]
     assert all(layer.attn._runtime_gate_groups is None for layer in model.blocks)
 
 
