@@ -106,6 +106,7 @@ def _manifest(
             "batch_size": profile.budget.batch_size,
             "context_length": profile.budget.context_length,
             "status": profile.budget.status,
+            "concurrent_training_runs": profile.concurrent_training_runs,
         },
         data_identity=data_identity,
         evaluation_protocol={
@@ -248,11 +249,30 @@ def run_seed(
                 training = train_fixed_budget(
                     model=model, train_dataloader=train_data, validation_dataloader=validation_data,
                     profile=profile, device=device, run_dir=str(run_dir), energy_provider=energy_provider,
+                    progress_label=f"{family}/{scale}/{variant}/seed{seed}",
                 )
             training_resources = resource_capture.result
             partial_metrics = {
                 "schema_version": 1, "family": family, "scale": scale, "variant": variant,
                 "seed": seed, "parameter": model_metadata,
+                "execution": {
+                    "concurrent_training_runs_limit": profile.concurrent_training_runs,
+                    "telemetry_scope": (
+                        "per-process CPU plus whole-device GPU/system aggregates; other training workers may overlap"
+                        if profile.concurrent_training_runs > 1 else
+                        "single training run on the device"
+                    ),
+                    "training_wall_time_note": (
+                        "The launcher may overlap this run with sibling GPU work; compare wall time only with the same concurrency policy."
+                        if profile.concurrent_training_runs > 1 else
+                        "Measured without concurrent training workers in this launcher."
+                    ),
+                    "energy_measurement_note": (
+                        "NVML energy/power readings cover the whole GPU while sibling runs may be active; do not sum per-run values."
+                        if profile.concurrent_training_runs > 1 else
+                        "Energy/power readings cover the device during this single run."
+                    ),
+                },
                 "recurrence": {
                     **backend_metadata(recurrence_options_for(profile), device=device),
                     "qualification_hash": qualification_hash(recurrence_options_for(profile).qualification_artifact),
@@ -309,14 +329,15 @@ def run_family(
 
 def run_selected(
     profile: ExperimentConfig, families: tuple[Family, ...] | None = None, *,
-    stop_after_trained: bool = False, evaluate_only: bool = False,
+    stop_after_trained: bool = False, evaluate_only: bool = False, write_report: bool = True,
 ) -> dict[str, Any]:
     families = families or profile.enabled_families
     results = {
         family: run_family(profile, family, stop_after_trained=stop_after_trained, evaluate_only=evaluate_only)
         for family in families
     }
-    results["report"] = write_first_submission_reports(profile.output_dir, expected_run_mode=profile.run_mode)
+    if write_report:
+        results["report"] = write_first_submission_reports(profile.output_dir, expected_run_mode=profile.run_mode)
     return results
 
 

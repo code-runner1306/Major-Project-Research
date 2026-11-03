@@ -7,6 +7,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
+from artifacts import atomic_write_json
 from config import production_profile, smoke_profile
 from orchestration import run_cpu_smoke, run_selected
 from pilot import PilotSettings, run_v100_pilot
@@ -89,6 +90,11 @@ def main() -> None:
         "--evaluate-only", action="store_true",
         help="evaluate compatible trained checkpoints without starting training",
     )
+    parser.add_argument("--skip-report", action="store_true", help="skip aggregate report generation for isolated worker jobs")
+    parser.add_argument(
+        "--concurrent-training-runs", type=int, default=1,
+        help="record the launcher concurrency limit in run provenance (default: 1)",
+    )
     parser.add_argument("--pilot", action="store_true", help="measure real V100 training work without unlocking production training")
     parser.add_argument("--pilot-scales", default="55M,100M", help="comma-separated production scales for --pilot")
     parser.add_argument("--pilot-warmup", type=int, default=25)
@@ -104,12 +110,23 @@ def main() -> None:
     parser.add_argument("--pilot-trace", action="store_true", help="capture one Chrome profiler trace outside measured pilot steps")
     parser.add_argument("--pilot-parallel-scales", default="10M,30M", help="low-tier scales for bounded concurrency qualification")
     parser.add_argument("--pilot-parallel-workers", default="2,3", help="comma-separated concurrent worker counts to try")
+    parser.add_argument(
+        "--pilot-require-parallel-workers", type=int,
+        help="qualify this exact count for every selected scale/dataset before parallel training",
+    )
     parser.add_argument("--pilot-no-parallel-check", action="store_true", help="skip parallel capacity/throughput qualification")
     parser.add_argument(
         "--estimate-seeds", default="10M:5,30M:5,55M:1,100M:1",
         help="seed-count plan included in the pilot time estimate, e.g. 10M:5,30M:5,55M:1,100M:1",
     )
     args = parser.parse_args()
+    if args.concurrent_training_runs < 1:
+        parser.error("--concurrent-training-runs must be at least 1")
+    if args.pilot_require_parallel_workers is not None:
+        if args.pilot_require_parallel_workers < 2:
+            parser.error("--pilot-require-parallel-workers must be at least 2")
+        if not args.pilot:
+            parser.error("--pilot-require-parallel-workers requires --pilot")
     if args.pilot and args.mode != "production":
         parser.error("--pilot requires --mode production and the college CUDA machine")
     if args.pilot and args.recurrence_backend is None:
@@ -156,6 +173,7 @@ def main() -> None:
                 profile_overrides.get("budget", profile.budget),
                 max_optimizer_steps=args.max_optimizer_steps,
             )
+        profile_overrides["concurrent_training_runs"] = args.concurrent_training_runs
     except ValueError as exc:
         parser.error(str(exc))
     profile = replace(
@@ -175,14 +193,43 @@ def main() -> None:
                 if not args.pilot_no_parallel_check else ()
             )
             parallel_workers = tuple(int(worker.strip()) for worker in args.pilot_parallel_workers.split(",") if worker.strip())
+            if args.pilot_require_parallel_workers is not None:
+                parallel_workers = (args.pilot_require_parallel_workers,)
+                if not set(scales).issubset(parallel_scales):
+                    raise ValueError("Parallel worker qualification must include every selected pilot scale")
             result = run_v100_pilot(profile, PilotSettings(
-                scales=scales, warmup_steps=args.pilot_warmup, measured_steps=args.pilot_steps,
+                scales=scales, variants=profile.variants,
+                warmup_steps=args.pilot_warmup, measured_steps=args.pilot_steps,
                 data_fed=args.pilot_data_fed, collect_trace=args.pilot_trace,
                 planned_optimizer_steps=profile.budget.max_optimizer_steps or 1_000,
                 seed_counts=estimate_seed_counts,
                 parallel_scales=tuple(scale for scale in parallel_scales if scale in scales),
                 parallel_worker_counts=parallel_workers,
             ))
+            if args.pilot_require_parallel_workers is not None:
+                required_count = str(args.pilot_require_parallel_workers)
+                statuses = result["parallel_worker_statuses"]
+                failures = [
+                    f"{scale}/{family}: {statuses.get(scale, {}).get(family, {}).get(required_count, 'missing')}"
+                    for scale in scales
+                    for family in ("tinystories", "mqar", "overwrite")
+                    if statuses.get(scale, {}).get(family, {}).get(required_count)
+                    not in {"complete", "skipped_vram_capacity"}
+                ]
+                if failures:
+                    raise RuntimeError("Parallel worker qualification failed: " + "; ".join(failures))
+                atomic_write_json(profile.output_dir / "parallel_worker_qualification.json", {
+                    "requested_workers": args.pilot_require_parallel_workers,
+                    "scale_dataset_statuses": {
+                        scale: {
+                            family: statuses.get(scale, {}).get(family, {}).get(required_count, "missing")
+                            for family in ("tinystories", "mqar", "overwrite")
+                        }
+                        for scale in scales
+                    },
+                    "pilot_output_dir": result["output_dir"],
+                    "capacity_skips_fall_back_to_sequential": True,
+                })
         except (RuntimeError, ValueError) as exc:
             parser.error(str(exc))
     elif args.mode == "smoke":
@@ -193,6 +240,7 @@ def main() -> None:
             profile, families,
             stop_after_trained=args.train_only,
             evaluate_only=args.evaluate_only,
+            write_report=not args.skip_report,
         )
     print(f"Completed: {profile.output_dir}")
     print(result if args.pilot else result.get("smoke", {"status": "complete"}))

@@ -29,7 +29,7 @@ For local CPU development, install a CPU PyTorch build independently if needed. 
 
 ## Commands
 
-Run the configurable sequential research grid on the production Linux/V100 host:
+Run the configurable research grid on the production Linux/V100 host:
 
 ```bash
 bash ./run_research_grid.sh --pilot
@@ -68,6 +68,26 @@ production run or a guarantee that the full grid will finish within a fixed
 wall-clock duration. The CLI also supports the individual stages directly:
 add `--train-only` to train checkpoints without evaluating, then rerun the
 same command with `--evaluate-only` to evaluate and complete them.
+The pilot prints timestamped progress during model warmup and measurement, each
+dataset's data-fed trial, and each parallel worker trial, including periodic
+step counts and VRAM skips or failures. The launcher mirrors terminal output to
+`research_grid_<timestamp>.log` under `OUTPUT_DIR`.
+
+Keep training sequential by default, or request bounded training concurrency:
+
+```bash
+bash ./run_research_grid.sh --workers 2
+```
+
+Values above 1 run a data-fed pilot qualification for the requested count on
+every selected scale and dataset before training. If the VRAM gate rejects that
+count for any dataset at a scale, that scale trains sequentially. Training jobs
+run in isolated Python processes with separate models, optimizers, data
+iterators, and checkpoint paths. Same-seed model variants deliberately use the
+same data order for the paired comparison. Evaluation remains sequential so
+inference latency and throughput measurements are not collected under GPU
+contention. Training time and device-level utilization recorded during parallel
+runs are labeled as concurrent/aggregate in the run metrics.
 
 Run the complete offline CPU smoke suite:
 

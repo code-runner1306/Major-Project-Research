@@ -55,6 +55,18 @@ def _summary(values: list[float]) -> dict[str, float | int | None]:
     }
 
 
+def _pilot_progress(message: str, *, started_at: float | None = None) -> None:
+    """Print a timestamped pilot status line immediately for interactive runs/logs."""
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    elapsed = f" +{time.perf_counter() - started_at:,.1f}s" if started_at is not None else ""
+    print(f"[{timestamp}{elapsed}] [pilot] {message}", flush=True)
+
+
+def _progress_interval(total: int) -> int:
+    """Emit about ten progress updates per loop, including tiny pilot loops."""
+    return max(1, math.ceil(total / 10))
+
+
 def _memory(device: torch.device) -> dict[str, float]:
     return {
         "peak_allocated_gib": torch.cuda.max_memory_allocated(device) / (1024 ** 3),
@@ -144,6 +156,7 @@ def _parallel_worker(
     *, profile: ExperimentConfig, model: torch.nn.Module, optimizer: optim.Optimizer,
     scaler: torch.amp.GradScaler, loader: Iterable[tuple[torch.Tensor, torch.Tensor]],
     device: torch.device, barrier: Barrier, warmup_steps: int, measured_steps: int,
+    worker_index: int, trial_label: str, started_at: float,
 ) -> dict[str, Any]:
     stream = torch.cuda.Stream(device=device)
     iterator = iter(loader)
@@ -157,20 +170,28 @@ def _parallel_worker(
 
     try:
         with torch.cuda.stream(stream):
+            _pilot_progress(f"parallel {trial_label}: worker {worker_index + 1} warmup started ({warmup_steps} steps)", started_at=started_at)
             for _ in range(warmup_steps):
                 step()
             stream.synchronize()
+            _pilot_progress(f"parallel {trial_label}: worker {worker_index + 1} warmup complete; waiting at start barrier", started_at=started_at)
             barrier.wait(timeout=180)
             started = time.perf_counter()
             events: list[tuple[torch.cuda.Event, torch.cuda.Event]] = []
             losses: list[float] = []
-            for _ in range(measured_steps):
+            interval = _progress_interval(measured_steps)
+            for measured_index in range(1, measured_steps + 1):
                 begin = torch.cuda.Event(enable_timing=True)
                 end = torch.cuda.Event(enable_timing=True)
                 begin.record(stream)
                 losses.append(step())
                 end.record(stream)
                 events.append((begin, end))
+                if measured_index % interval == 0 or measured_index == measured_steps:
+                    _pilot_progress(
+                        f"parallel {trial_label}: worker {worker_index + 1} measured {measured_index}/{measured_steps} steps",
+                        started_at=started_at,
+                    )
             stream.synchronize()
             elapsed = time.perf_counter() - started
         gpu_seconds = [begin.elapsed_time(end) / 1000.0 for begin, end in events]
@@ -188,34 +209,53 @@ def _parallel_worker(
 
 def _run_parallel_qualification(
     profile: ExperimentConfig, settings: PilotSettings, baseline_runs: list[dict[str, Any]],
-    output: Path, device: torch.device, options: Any,
+    output: Path, device: torch.device, options: Any, *, started_at: float,
 ) -> dict[str, Any]:
     families = ("tinystories", "mqar", "overwrite")
     results: dict[str, Any] = {}
     logical_cpus = os.cpu_count() or 1
     variants = ("scalar", "channel-wise")
+    total_trials = len(settings.parallel_scales) * len(families) * len(settings.parallel_worker_counts)
+    trial_number = 0
+    _pilot_progress(
+        f"parallel qualification started: {len(settings.parallel_scales)} scales × {len(families)} datasets × "
+        f"{len(settings.parallel_worker_counts)} worker counts ({total_trials} requested trials)",
+        started_at=started_at,
+    )
     for scale in settings.parallel_scales:
         scale_result: dict[str, Any] = {}
         base_rows = [row for row in baseline_runs if row["scale"] == scale]
-        peak_reserved = max((float(row["memory"]["peak_reserved_gib"]) for row in base_rows), default=0.0)
         for family in families:
             family_rows = [row for row in base_rows if f"{family}_fed" in row]
             baseline_step_times = [
                 float(row[f"{family}_fed"]["wall_seconds"]["p50"])
                 for row in family_rows
+                if row["variant"] in variants
                 if row[f"{family}_fed"]["wall_seconds"].get("p50")
             ]
             if not baseline_step_times:
+                _pilot_progress(f"parallel {scale}/{family}: skipped; no single-worker data-fed baseline", started_at=started_at)
                 scale_result[family] = {"status": "unavailable", "reason": "No data-fed single-worker baseline"}
                 continue
+            peak_reserved = max((
+                float(row.get(f"{family}_fed", {}).get("memory", row["memory"])["peak_reserved_gib"])
+                for row in family_rows
+            ), default=0.0)
             baseline_throughput = sum(1.0 / value for value in baseline_step_times) / len(baseline_step_times)
             trials: list[dict[str, Any]] = []
             for worker_count in settings.parallel_worker_counts:
+                trial_number += 1
+                trial_label = f"{scale}/{family}, {worker_count} workers (trial {trial_number}/{total_trials})"
                 free_bytes, total_bytes = torch.cuda.mem_get_info(device)
                 free_gib, total_gib = free_bytes / (1024 ** 3), total_bytes / (1024 ** 3)
                 required_gib = peak_reserved * worker_count
                 usable_gib = free_gib * 0.85
                 if required_gib > usable_gib:
+                    _pilot_progress(
+                        f"parallel {trial_label}: skipped by VRAM gate; estimated {required_gib:.2f} GiB required, "
+                        f"{free_gib:.2f} GiB free ({usable_gib:.2f} GiB after safety margin)",
+                        started_at=started_at,
+                    )
                     trials.append({
                         "workers": worker_count, "status": "skipped_vram_capacity",
                         "estimated_required_vram_gib": required_gib,
@@ -234,6 +274,10 @@ def _run_parallel_qualification(
                     "free_vram_before_trial_gib": free_gib,
                 }
                 try:
+                    _pilot_progress(
+                        f"parallel {trial_label}: preparing models, datasets, and resource capture",
+                        started_at=started_at,
+                    )
                     with DeviceResourceCapture(device) as capture:
                         for worker_index in range(worker_count):
                             variant = variants[worker_index % len(variants)]
@@ -265,7 +309,8 @@ def _run_parallel_qualification(
                                     _parallel_worker, profile=profile, model=models[i],
                                     optimizer=optimizers[i], scaler=scalers[i], loader=loaders[i],
                                     device=device, barrier=barrier, warmup_steps=settings.warmup_steps,
-                                    measured_steps=settings.measured_steps,
+                                    measured_steps=settings.measured_steps, worker_index=i,
+                                    trial_label=trial_label, started_at=started_at,
                                 )
                                 for i in range(worker_count)
                             ]
@@ -302,8 +347,15 @@ def _run_parallel_qualification(
                             "No CPU saturation indicator observed; thermal/frequency throttling is not directly measured."
                         ),
                     })
+                    _pilot_progress(
+                        f"parallel {trial_label}: complete in {parallel_wall:.1f}s; "
+                        f"speedup {speedup:.2f}×, aggregate {aggregate_steps_per_second:.3f} steps/s, "
+                        f"CPU process/system {process_cpu}%/{system_cpu}%, GPU {gpu_util}%",
+                        started_at=started_at,
+                    )
                 except Exception as exc:
                     trial.update({"status": "failed", "reason": f"{type(exc).__name__}: {exc}"})
+                    _pilot_progress(f"parallel {trial_label}: FAILED: {type(exc).__name__}: {exc}", started_at=started_at)
                 finally:
                     del models, optimizers, scalers, loaders
                     gc.collect()
@@ -565,6 +617,12 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
     if unknown_variants:
         raise ValueError(f"Unknown pilot variants: {sorted(unknown_variants)}")
 
+    started_at = time.perf_counter()
+    _pilot_progress(
+        f"starting; scales={','.join(settings.scales)}, variants={','.join(settings.variants)}, "
+        f"warmup={settings.warmup_steps}, measured_steps={settings.measured_steps}, data_fed={settings.data_fed}",
+        started_at=started_at,
+    )
     preflight = require_production_cuda(recurrence_backend=profile.recurrence_backend)
     device = torch.device("cuda")
     options = recurrence_options_for(profile)
@@ -572,12 +630,18 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     output = _pilot_output_dir(profile, settings, timestamp)
     output.mkdir(parents=True, exist_ok=False)
+    _pilot_progress(f"CUDA preflight passed; output directory: {output}", started_at=started_at)
     provider = EnergyProvider.create(device)
     runs: list[dict[str, Any]] = []
     trace: dict[str, Any] = {"requested": settings.collect_trace, "status": "not_requested"}
 
+    total_model_trials = len(settings.scales) * len(settings.variants)
+    model_trial = 0
     for scale in settings.scales:
         for variant in settings.variants:
+            model_trial += 1
+            label = f"{scale}/{variant} (model trial {model_trial}/{total_model_trials})"
+            _pilot_progress(f"{label}: constructing resident-batch model and optimizer", started_at=started_at)
             seed_everything(42)
             model, _, parameter = construct_model(
                 profile.model_for(scale), variant, profile.vocab_size, recurrence_options=options,
@@ -587,8 +651,11 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
                                     betas=(profile.beta1, profile.beta2))
             scaler = torch.amp.GradScaler("cuda", enabled=True)
             resident = _resident_batches(profile, device)
-            for _ in range(settings.warmup_steps):
+            _pilot_progress(f"{label}: resident-batch warmup started ({settings.warmup_steps} steps)", started_at=started_at)
+            for warmup_index in range(1, settings.warmup_steps + 1):
                 _step(model, optimizer, scaler, resident, device)
+                if warmup_index % _progress_interval(settings.warmup_steps) == 0 or warmup_index == settings.warmup_steps:
+                    _pilot_progress(f"{label}: resident-batch warmup {warmup_index}/{settings.warmup_steps}", started_at=started_at)
             if settings.collect_trace and trace["status"] == "not_requested":
                 try:
                     activities = [torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA]
@@ -604,12 +671,20 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
             gpu_seconds: list[float] = []
             wall_seconds: list[float] = []
             losses: list[float] = []
+            _pilot_progress(f"{label}: resident-batch measured run started ({settings.measured_steps} steps)", started_at=started_at)
             with provider.region(f"pilot_{scale}_{variant}") as energy_region:
-                for _ in range(settings.measured_steps):
+                interval = _progress_interval(settings.measured_steps)
+                for measured_index in range(1, settings.measured_steps + 1):
                     gpu, wall, loss = _timed_step(lambda: _step(model, optimizer, scaler, resident, device), device)
                     gpu_seconds.append(gpu)
                     wall_seconds.append(wall)
                     losses.append(loss)
+                    if measured_index % interval == 0 or measured_index == settings.measured_steps:
+                        _pilot_progress(
+                            f"{label}: resident-batch measured {measured_index}/{settings.measured_steps}; "
+                            f"latest loss={loss:.4f}, wall step={wall:.2f}s",
+                            started_at=started_at,
+                        )
             assert energy_region.result is not None
             tokens_per_step = profile.budget.batch_size * profile.budget.grad_accum_steps * profile.budget.context_length
             wall_p50 = float(_summary(wall_seconds)["p50"] or 0.0)
@@ -625,6 +700,8 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
             base_model_alive = True
             if settings.data_fed:
                 for family in ("tinystories", "mqar", "overwrite"):
+                    data_label = f"{label}, dataset={family}"
+                    _pilot_progress(f"{data_label}: preparing data-fed model and loader", started_at=started_at)
                     # Loader setup is excluded; measured updates include CPU fetch or
                     # generation, host-to-device transfer, and optimizer work.
                     if family == "tinystories":
@@ -666,17 +743,33 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
                         active_scaler = scaler if family == "tinystories" else data_scaler
                         return _step(active_model, active_optimizer, active_scaler, batches, device)
 
-                    for _ in range(settings.warmup_steps):
+                    _pilot_progress(f"{data_label}: warmup started ({settings.warmup_steps} steps)", started_at=started_at)
+                    torch.cuda.reset_peak_memory_stats(device)
+                    for warmup_index in range(1, settings.warmup_steps + 1):
                         data_fed_step()
+                        if warmup_index % _progress_interval(settings.warmup_steps) == 0 or warmup_index == settings.warmup_steps:
+                            _pilot_progress(f"{data_label}: warmup {warmup_index}/{settings.warmup_steps}", started_at=started_at)
                     fed_gpu_seconds: list[float] = []
                     fed_wall_seconds: list[float] = []
-                    for _ in range(settings.measured_steps):
+                    _pilot_progress(f"{data_label}: measured run started ({settings.measured_steps} steps)", started_at=started_at)
+                    interval = _progress_interval(settings.measured_steps)
+                    for measured_index in range(1, settings.measured_steps + 1):
                         gpu, wall, _ = _timed_step(data_fed_step, device)
                         fed_gpu_seconds.append(gpu)
                         fed_wall_seconds.append(wall)
+                        if measured_index % interval == 0 or measured_index == settings.measured_steps:
+                            _pilot_progress(
+                                f"{data_label}: measured {measured_index}/{settings.measured_steps}; wall step={wall:.2f}s",
+                                started_at=started_at,
+                            )
+                    _pilot_progress(
+                        f"{data_label}: complete; median wall step={_summary(fed_wall_seconds)['p50']:.2f}s",
+                        started_at=started_at,
+                    )
                     runs[-1][f"{family}_fed"] = {
                         "gpu_seconds": _summary(fed_gpu_seconds),
                         "wall_seconds": _summary(fed_wall_seconds),
+                        "memory": _memory(device),
                         "host_input_or_launch_overhead_seconds": _summary([
                             max(0.0, wall - gpu) for gpu, wall in zip(fed_gpu_seconds, fed_wall_seconds)
                         ]),
@@ -692,7 +785,7 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
             torch.cuda.empty_cache()
 
     parallel_training = (
-        _run_parallel_qualification(profile, settings, runs, output, device, options)
+        _run_parallel_qualification(profile, settings, runs, output, device, options, started_at=started_at)
         if settings.parallel_scales and settings.parallel_worker_counts and settings.data_fed else
         {
             "requested": False,
@@ -727,7 +820,23 @@ def run_v100_pilot(profile: ExperimentConfig, settings: PilotSettings) -> dict[s
     _write_markdown(output / "pilot_summary.md", payload)
     _write_training_time_estimate(output / "training_time_estimate.md", estimate)
     atomic_write_json(output / "training_time_estimate.json", estimate)
+    parallel_worker_statuses = {
+        scale: {
+            family: {
+                str(trial["workers"]): trial["status"]
+                for trial in family_result.get("trials", [])
+            }
+            for family, family_result in family_results.items()
+        }
+        for scale, family_results in parallel_training.get("scales", {}).items()
+    }
+    _pilot_progress(
+        f"complete in {time.perf_counter() - started_at:,.1f}s; reports: "
+        f"{output / 'pilot_summary.md'} and {output / 'training_time_estimate.md'}",
+        started_at=started_at,
+    )
     return {
         "status": "complete", "output_dir": str(output), "runs": len(runs),
         "training_time_estimate": str(output / "training_time_estimate.md"),
+        "parallel_worker_statuses": parallel_worker_statuses,
     }

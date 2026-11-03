@@ -24,3 +24,11 @@
 - [x] 5.2 Add a bounded 1/2/3-worker low-tier pilot sweep guarded by measured per-worker peak reserved VRAM and the 85% free-memory safety threshold.
 - [x] 5.3 Capture one shared CPU/GPU resource timeline per concurrency trial and report aggregate throughput, speedup, CPU saturation indicators, GPU utilization, and a recommended worker count without changing production settings.
 - [x] 5.4 Write a pilot Markdown/JSON report with per-family per-scale estimates, 1/3/5-seed totals, and concurrency findings/caveats.
+- [x] 5.5 Print timestamped progress through resident model, data-fed dataset, and parallel worker trials; persist launcher output to a timestamped run log.
+
+## 6. Production Training Concurrency
+
+- [x] 6.1 Add `PARALLEL_WORKERS` to the Bash launcher with sequential default and per-scale worker limits.
+- [x] 6.2 Qualify requested worker counts across selected scales and all three datasets; fall back to one worker on VRAM capacity skips and fail before training on other trial failures.
+- [x] 6.3 Launch isolated per-seed/variant training processes, keep evaluation sequential, and prevent concurrent aggregate report writes.
+- [x] 6.4 Record concurrency and telemetry scope in run manifests/metrics and label live training progress by run identity.

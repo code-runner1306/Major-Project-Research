@@ -119,6 +119,7 @@ class ExperimentConfig:
     state_accumulator_dtype: StateAccumulatorDtype = "input"
     recurrence_chunk_size: int = 64
     recurrence_qualification_artifact: Path | None = None
+    concurrent_training_runs: int = 1
 
     @property
     def variants(self) -> tuple[Variant, ...]:
@@ -171,6 +172,7 @@ class ExperimentConfig:
                     if self.recurrence_qualification_artifact is not None else None
                 ),
             },
+            "concurrent_training_runs": self.concurrent_training_runs,
         }
 
 

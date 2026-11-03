@@ -96,6 +96,7 @@ def train_fixed_budget(
     device: torch.device,
     run_dir: str,
     energy_provider: EnergyProvider,
+    progress_label: str = "training",
 ) -> dict[str, Any]:
     """Train to the exact configured step budget; validation can never stop it."""
 
@@ -160,7 +161,10 @@ def train_fixed_budget(
             step_durations.append(time.perf_counter() - step_started)
 
             if step % PROGRESS_INTERVAL == 0 or step == max_steps:
-                print(f"Training progress: {step}/{max_steps} optimizer steps completed", flush=True)
+                print(
+                    f"Training progress [{progress_label}]: {step}/{max_steps} optimizer steps completed",
+                    flush=True,
+                )
 
             if step % profile.budget.evaluation_interval == 0 or step == max_steps:
                 validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)

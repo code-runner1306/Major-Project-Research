@@ -20,9 +20,9 @@ To maximize training throughput without causing OOM errors or output collisions,
 
 ## Decisions
 
-### Decision 1: ThreadPoolExecutor vs Multiprocessing Pool
-* **Choice**: Use `concurrent.futures.ThreadPoolExecutor(max_workers=parallel_jobs)` combined with PyTorch's native CUDA stream management and explicit memory cleanup.
-* **Rationale**: Avoids multi-process serialization overhead for model weights and dataset streaming objects while permitting concurrent PyTorch kernel launches on CUDA device 0.
+### Decision 1: Isolated process workers
+* **Choice**: The Bash launcher starts one `run_all.py` process for each family/scale/variant/seed training run and bounds active processes with `PARALLEL_WORKERS`.
+* **Rationale**: Separate processes isolate Python, NumPy, and PyTorch random-number generators, model/optimizer state, and CUDA contexts. Each process writes to its unique run directory; worker training processes skip aggregate report writes, and the launcher evaluates runs sequentially afterward.
 
 ### Decision 2: Dynamic VRAM Capacity Pre-Check (85% Safety Margin)
 * **Choice**: Calculate `Required_VRAM = Max_Scale_VRAM * N`. Compare against `0.85 * Free_VRAM`.
@@ -40,3 +40,8 @@ To maximize training throughput without causing OOM errors or output collisions,
 ## Pilot Qualification
 
 Before production concurrency is selected, the V100 pilot measures resident and data-fed optimizer steps for TinyStories, MQAR, and overwrite. For configured low-tier scales, it may run bounded concurrent optimizer work at worker counts 1–3 only when measured single-worker reserved memory predicts that the requested workers fit below the 85% free-VRAM threshold. One shared resource sampler records process/system CPU and whole-device GPU utilization during each trial. The report compares aggregate completed optimizer steps per second and speedup against the single-worker baseline; it labels CPU saturation as a contention indicator, not proof of thermal throttling. These measurements inform the operator and do not automatically change production worker count.
+
+### Decision 4: Pilot capacity gate and measurement policy
+* **Choice**: For counts above 1, qualify the requested count across every selected scale and dataset before production training. Evaluation remains sequential.
+* **Rationale**: A scale falls back to one worker if any dataset trial fails the VRAM capacity gate; other trial failures stop the launch. Sequential evaluation avoids collecting inference latency and throughput under concurrent GPU load.
+* **Measurement caveat**: Per-run wall time may reflect concurrent GPU load, while GPU utilization and NVML energy are device-wide and overlap sibling processes. The requested concurrency limit is stored in each manifest and metrics artifact, with aggregate telemetry identified explicitly.
