@@ -28,6 +28,22 @@ def test_overwrite_targets_latest_value_and_marks_stale_values(smoke_config):
     assert int(example.labels[latest[0].label_position]) == latest[0].target
 
 
+def test_query_distance_metadata_matches_realized_memory_to_query_gap(smoke_config):
+    for task in ("mqar", "overwrite"):
+        dataset = RetrievalDataset(task=task, examples=8, config=smoke_config.retrieval, seed=31, split="held_out")
+        for index in range(len(dataset)):
+            example = dataset.example(index)
+            tokens = example.tokens.tolist()
+            query_position = tokens.index(0)
+            memory_end = max(position for position, token in enumerate(tokens[:query_position]) if token != 1)
+            realized_gap = query_position - memory_end - 1
+            assert realized_gap == example.metadata["query_distance"]
+            assert all(answer.distance == realized_gap for answer in example.answers)
+            assert example.metadata["query_distance_definition"] == (
+                "filler tokens between final memory token and first query marker"
+            )
+
+
 def test_cpu_energy_is_structured_unsupported():
     provider = EnergyProvider.create(__import__("torch").device("cpu"))
     with provider.region("test") as region:

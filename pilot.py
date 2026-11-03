@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timezone
 import gc
+import multiprocessing as mp
+import os
 from pathlib import Path
 import math
 from statistics import mean, median, pstdev
 import time
-from threading import Barrier
+import traceback
 from typing import Any, Iterable
 from uuid import uuid4
 
@@ -152,59 +153,86 @@ def _pilot_data_loader(
     return retrieval_dataloader(dataset, profile.budget.batch_size)
 
 
-def _parallel_worker(
-    *, profile: ExperimentConfig, model: torch.nn.Module, optimizer: optim.Optimizer,
-    scaler: torch.amp.GradScaler, loader: Iterable[tuple[torch.Tensor, torch.Tensor]],
-    device: torch.device, barrier: Barrier, warmup_steps: int, measured_steps: int,
-    worker_index: int, trial_label: str, started_at: float,
-) -> dict[str, Any]:
-    stream = torch.cuda.Stream(device=device)
-    iterator = iter(loader)
-
-    def step() -> float:
-        nonlocal iterator
-        batches, iterator = _next_data_batches(
-            iterator, loader, count=profile.budget.grad_accum_steps, device=device,
-        )
-        return _step(model, optimizer, scaler, batches, device)
-
+def _parallel_worker_process(
+    profile: ExperimentConfig, family: str, scale: str, variant: str, worker_index: int,
+    warmup_steps: int, measured_steps: int, options: Any, data_dir: str,
+    start_event: Any, result_queue: Any, trial_label: str, started_at: float,
+) -> None:
+    """Run one parallel pilot worker in its own process, like production."""
     try:
+        device = torch.device("cuda")
+        seed_everything(42 + worker_index)
+        backbone = profile.model_for(scale)
+        if family != "tinystories":
+            backbone = replace(backbone, attention_layout="pure_gdn")
+        vocab = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
+        model, _, _ = construct_model(backbone, variant, vocab, recurrence_options=options)
+        model.to(device)
+        optimizer = optim.AdamW(
+            model.parameters(), lr=profile.learning_rate, weight_decay=profile.weight_decay,
+            betas=(profile.beta1, profile.beta2),
+        )
+        scaler = torch.amp.GradScaler("cuda", enabled=True)
+        loader = _pilot_data_loader(
+            profile, family, data_dir=Path(data_dir) / family / f"worker_{worker_index}",
+            seed=142 + worker_index,
+        )
+        stream = torch.cuda.Stream(device=device)
+        iterator = iter(loader)
+
+        def step() -> float:
+            nonlocal iterator
+            batches, iterator = _next_data_batches(
+                iterator, loader, count=profile.budget.grad_accum_steps, device=device,
+            )
+            return _step(model, optimizer, scaler, batches, device)
+
+        process = None
+        try:
+            import psutil  # type: ignore[import-not-found]
+            process = psutil.Process()
+            cpu_before = sum(process.cpu_times()[:2])
+        except Exception:
+            cpu_before = None
         with torch.cuda.stream(stream):
-            _pilot_progress(f"parallel {trial_label}: worker {worker_index + 1} warmup started ({warmup_steps} steps)", started_at=started_at)
             for _ in range(warmup_steps):
                 step()
             stream.synchronize()
-            _pilot_progress(f"parallel {trial_label}: worker {worker_index + 1} warmup complete; waiting at start barrier", started_at=started_at)
-            barrier.wait(timeout=180)
+            result_queue.put({"worker_index": worker_index, "status": "ready"})
+            if not start_event.wait(timeout=180):
+                raise TimeoutError("parallel pilot start gate timed out")
             started = time.perf_counter()
             events: list[tuple[torch.cuda.Event, torch.cuda.Event]] = []
             losses: list[float] = []
             interval = _progress_interval(measured_steps)
             for measured_index in range(1, measured_steps + 1):
-                begin = torch.cuda.Event(enable_timing=True)
-                end = torch.cuda.Event(enable_timing=True)
+                begin, end = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
                 begin.record(stream)
                 losses.append(step())
                 end.record(stream)
                 events.append((begin, end))
                 if measured_index % interval == 0 or measured_index == measured_steps:
                     _pilot_progress(
-                        f"parallel {trial_label}: worker {worker_index + 1} measured {measured_index}/{measured_steps} steps",
-                        started_at=started_at,
+                        f"parallel {trial_label}: process worker {worker_index + 1} measured "
+                        f"{measured_index}/{measured_steps} steps", started_at=started_at,
                     )
             stream.synchronize()
             elapsed = time.perf_counter() - started
         gpu_seconds = [begin.elapsed_time(end) / 1000.0 for begin, end in events]
-        return {
-            "wall_seconds": elapsed,
-            "gpu_seconds": sum(gpu_seconds),
-            "step_wall_seconds": elapsed / measured_steps,
+        cpu_percent = None
+        if process is not None and cpu_before is not None and elapsed > 0:
+            cpu_percent = max(0.0, (sum(process.cpu_times()[:2]) - cpu_before) * 100.0 / elapsed)
+        result_queue.put({
+            "worker_index": worker_index, "status": "complete", "wall_seconds": elapsed,
+            "gpu_seconds": sum(gpu_seconds), "step_wall_seconds": elapsed / measured_steps,
             "step_gpu_seconds": sum(gpu_seconds) / measured_steps,
-            "mean_loss": sum(losses) / len(losses),
-        }
-    except BaseException:
-        barrier.abort()
-        raise
+            "mean_loss": sum(losses) / len(losses), "process_cpu_percent": cpu_percent,
+        })
+    except BaseException as exc:
+        result_queue.put({
+            "worker_index": worker_index, "status": "failed",
+            "reason": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc(),
+        })
 
 
 def _run_parallel_qualification(
@@ -264,10 +292,6 @@ def _run_parallel_qualification(
                     })
                     continue
 
-                models: list[torch.nn.Module] = []
-                optimizers: list[optim.Optimizer] = []
-                scalers: list[torch.amp.GradScaler] = []
-                loaders: list[Iterable[tuple[torch.Tensor, torch.Tensor]]] = []
                 trial: dict[str, Any] = {
                     "workers": worker_count, "status": "running",
                     "estimated_required_vram_gib": required_gib,
@@ -275,52 +299,80 @@ def _run_parallel_qualification(
                 }
                 try:
                     _pilot_progress(
-                        f"parallel {trial_label}: preparing models, datasets, and resource capture",
+                        f"parallel {trial_label}: launching isolated worker processes",
                         started_at=started_at,
                     )
                     with DeviceResourceCapture(device) as capture:
-                        for worker_index in range(worker_count):
-                            variant = variants[worker_index % len(variants)]
-                            seed_everything(42 + worker_index)
-                            backbone = profile.model_for(scale)
-                            if family != "tinystories":
-                                backbone = replace(backbone, attention_layout="pure_gdn")
-                            vocab = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
-                            model, _, _ = construct_model(backbone, variant, vocab, recurrence_options=options)
-                            model.to(device)
-                            optimizer = optim.AdamW(
-                                model.parameters(), lr=profile.learning_rate,
-                                weight_decay=profile.weight_decay, betas=(profile.beta1, profile.beta2),
-                            )
-                            scaler = torch.amp.GradScaler("cuda", enabled=True)
-                            loader = _pilot_data_loader(
-                                profile, family, data_dir=output / "parallel_data" / family,
-                                seed=142 + worker_index,
-                            )
-                            models.append(model)
-                            optimizers.append(optimizer)
-                            scalers.append(scaler)
-                            loaders.append(loader)
-                        torch.cuda.synchronize(device)
-                        barrier = Barrier(worker_count)
-                        with ThreadPoolExecutor(max_workers=worker_count, thread_name_prefix="gdn-pilot") as pool:
-                            futures = [
-                                pool.submit(
-                                    _parallel_worker, profile=profile, model=models[i],
-                                    optimizer=optimizers[i], scaler=scalers[i], loader=loaders[i],
-                                    device=device, barrier=barrier, warmup_steps=settings.warmup_steps,
-                                    measured_steps=settings.measured_steps, worker_index=i,
-                                    trial_label=trial_label, started_at=started_at,
+                        context = mp.get_context("spawn")
+                        start_event = context.Event()
+                        result_queue = context.Queue()
+                        processes = []
+                        worker_results = []
+                        try:
+                            for worker_index in range(worker_count):
+                                process = context.Process(
+                                    target=_parallel_worker_process,
+                                    args=(
+                                        profile, family, scale, variants[worker_index % len(variants)],
+                                        worker_index, settings.warmup_steps, settings.measured_steps,
+                                        options, str(output / "parallel_data"), start_event, result_queue,
+                                        trial_label, started_at,
+                                    ),
+                                    name=f"pilot-{family}-{scale}-worker-{worker_index + 1}",
                                 )
-                                for i in range(worker_count)
-                            ]
-                            worker_results = [future.result() for future in futures]
+                                process.start()
+                                processes.append(process)
+
+                            ready_workers: set[int] = set()
+                            ready_deadline = time.monotonic() + 180
+                            while len(ready_workers) < worker_count:
+                                remaining = ready_deadline - time.monotonic()
+                                if remaining <= 0:
+                                    raise TimeoutError("parallel pilot workers did not finish warmup within 180 seconds")
+                                message = result_queue.get(timeout=remaining)
+                                if message.get("status") == "failed":
+                                    raise RuntimeError(
+                                        f"worker {message.get('worker_index')} failed during setup: "
+                                        f"{message.get('reason')}\n{message.get('traceback', '')}"
+                                    )
+                                if message.get("status") == "ready":
+                                    ready_workers.add(int(message["worker_index"]))
+
+                            _pilot_progress(f"parallel {trial_label}: all processes warmed up; starting measured steps", started_at=started_at)
+                            start_event.set()
+                            while len(worker_results) < worker_count:
+                                message = result_queue.get(timeout=300)
+                                if message.get("status") == "failed":
+                                    raise RuntimeError(
+                                        f"worker {message.get('worker_index')} failed: {message.get('reason')}\n"
+                                        f"{message.get('traceback', '')}"
+                                    )
+                                if message.get("status") == "complete":
+                                    worker_results.append(message)
+                            for process in processes:
+                                process.join(timeout=10)
+                                if process.is_alive():
+                                    raise TimeoutError(f"pilot worker {process.name} did not exit after reporting results")
+                                if process.exitcode != 0:
+                                    raise RuntimeError(f"pilot worker {process.name} exited with code {process.exitcode}")
+                        finally:
+                            start_event.set()
+                            for process in processes:
+                                if process.is_alive():
+                                    process.terminate()
+                                process.join(timeout=10)
+                            result_queue.close()
+                            result_queue.join_thread()
                     parallel_wall = max(row["wall_seconds"] for row in worker_results)
                     aggregate_steps_per_second = worker_count * settings.measured_steps / parallel_wall
                     serial_expected_wall = worker_count * settings.measured_steps / baseline_throughput
                     speedup = serial_expected_wall / parallel_wall
                     activity = capture.result["activity_summary"] if capture.result else {}
-                    process_cpu = activity.get("process_cpu_percent", {}).get("mean")
+                    child_cpu_values = [
+                        float(row["process_cpu_percent"]) for row in worker_results
+                        if isinstance(row.get("process_cpu_percent"), (int, float))
+                    ]
+                    process_cpu = sum(child_cpu_values) if child_cpu_values else None
                     system_cpu = activity.get("system_cpu_percent", {}).get("mean")
                     cpu_frequency = activity.get("cpu_frequency_current_mhz", {}).get("mean")
                     gpu_util = activity.get("gpu_utilization_percent", {}).get("mean")
@@ -335,6 +387,7 @@ def _run_parallel_qualification(
                         "single_worker_baseline_steps_per_second": baseline_throughput,
                         "speedup_over_serial_equivalent": speedup,
                         "resource_capture": capture.result,
+                        "process_cpu_scope": "sum of worker-process CPU utilization; may exceed 100%",
                         "mean_process_cpu_percent": process_cpu,
                         "mean_system_cpu_percent": system_cpu,
                         "mean_cpu_frequency_current_mhz": cpu_frequency,
@@ -357,7 +410,6 @@ def _run_parallel_qualification(
                     trial.update({"status": "failed", "reason": f"{type(exc).__name__}: {exc}"})
                     _pilot_progress(f"parallel {trial_label}: FAILED: {type(exc).__name__}: {exc}", started_at=started_at)
                 finally:
-                    del models, optimizers, scalers, loaders
                     gc.collect()
                     torch.cuda.empty_cache()
                 trials.append(trial)
@@ -388,6 +440,7 @@ def _run_parallel_qualification(
         "worker_counts": list(settings.parallel_worker_counts),
         "families": list(families),
         "scales": results,
+        "worker_execution_mode": "spawned processes matching the production launcher",
         "interpretation": "Pilot-only guidance for the measured device/workload; it does not alter production execution settings.",
     }
 

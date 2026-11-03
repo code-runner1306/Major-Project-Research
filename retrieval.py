@@ -15,7 +15,7 @@ from config import RetrievalConfig
 from model import GatedDeltaNetLM
 
 
-GENERATOR_VERSION = "mqar-overwrite-v1"
+GENERATOR_VERSION = "mqar-overwrite-v2"
 QUERY_MARKER = 0
 FILLER_TOKEN = 1
 
@@ -60,7 +60,7 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     def _difficulty(self, index: int) -> tuple[int, int, int, int]:
         length = self.sequence_length or self.config.sequence_lengths[index % len(self.config.sequence_lengths)]
         key_count = self.config.key_counts[(index // len(self.config.sequence_lengths)) % len(self.config.key_counts)]
-        distance = self.config.query_distances[(index // (len(self.config.sequence_lengths) * len(self.config.key_counts))) % len(self.config.query_distances)]
+        distance = max(0, self.config.query_distances[(index // (len(self.config.sequence_lengths) * len(self.config.key_counts))) % len(self.config.query_distances)])
         overwrites = self.config.overwrite_counts[index % len(self.config.overwrite_counts)]
         # Reserve a marker and ensure small smoke sequences always remain valid.
         maximum_keys = max(1, (length - 6) // 2)
@@ -104,30 +104,30 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         keys, values = self._symbols(rng, key_count)
         memory = [symbol for pair in zip(keys, values) for symbol in pair]
         queried = list(range(key_count))
+        # Define query distance as the number of filler tokens between the end of
+        # the memory block and the first query marker. Preserve that gap exactly
+        # when feasible; record the realized (possibly capacity-limited) gap.
+        realized_distance = min(max(0, distance), max(0, length - len(memory) - 3))
+        query_capacity = max(1, (length - len(memory) - realized_distance) // 3)
+        queried = queried[:query_capacity]
         query_groups = [[QUERY_MARKER, keys[item], values[item]] for item in queried]
-        required = len(memory) + sum(len(group) for group in query_groups)
-        if required > length:
-            queried = queried[: max(1, (length - len(memory)) // 3)]
-            query_groups = [[QUERY_MARKER, keys[item], values[item]] for item in queried]
-            required = len(memory) + sum(len(group) for group in query_groups)
-        filler = [FILLER_TOKEN] * max(0, length - required)
-        # Place at least the requested amount of non-memory context before queries,
-        # bounded by the requested sequence length.
-        prefix_filler = min(distance, len(filler))
-        sequence = memory + filler[:prefix_filler] + filler[prefix_filler:] + [symbol for group in query_groups for symbol in group]
-        sequence = sequence[:length]
+        remaining = max(0, length - len(memory) - realized_distance - 3 * len(query_groups))
+        prefix_filler = [FILLER_TOKEN] * remaining
+        gap_filler = [FILLER_TOKEN] * realized_distance
+        sequence = prefix_filler + memory + gap_filler + [symbol for group in query_groups for symbol in group]
+        sequence.extend([FILLER_TOKEN] * (length - len(sequence)))
         answers: list[AnswerPosition] = []
-        for item in queried:
-            query_start = sequence.index(QUERY_MARKER, len(memory))
+        first_query = len(prefix_filler) + len(memory) + realized_distance
+        for item_index, item in enumerate(queried):
+            query_start = first_query + 3 * item_index
             label_position = query_start + 1
-            answers.append(AnswerPosition(label_position, values[item], (), "mqar", 0, label_position - (2 * item + 1)))
-            # Replace this marker so the next lookup starts later without changing sequence semantics.
-            sequence[query_start] = -1
-        sequence = [QUERY_MARKER if token == -1 else token for token in sequence]
+            answers.append(AnswerPosition(label_position, values[item], (), "mqar", 0, realized_distance))
         tokens, labels = self._labels(sequence, answers)
         return RetrievalExample(tokens, labels, tuple(answers), {
             "task": "mqar", "sequence_length": length, "key_count": key_count,
-            "query_distance": distance, "memory_load": key_count,
+            "query_distance": realized_distance, "requested_query_distance": distance,
+            "query_distance_definition": "filler tokens between final memory token and first query marker",
+            "memory_load": key_count,
         })
 
     def _overwrite(
@@ -152,17 +152,22 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         if unrelated is not None:
             groups.append([QUERY_MARKER, keys[unrelated], values[unrelated]])
         required = len(memory) + sum(len(group) for group in groups)
-        filler = [FILLER_TOKEN] * max(0, length - required)
-        sequence = (memory + filler + [symbol for group in groups for symbol in group])[:length]
+        realized_distance = min(max(0, distance), max(0, length - required))
+        prefix_filler = [FILLER_TOKEN] * max(0, length - required - realized_distance)
+        gap_filler = [FILLER_TOKEN] * realized_distance
+        sequence = prefix_filler + memory + gap_filler + [symbol for group in groups for symbol in group]
+        sequence.extend([FILLER_TOKEN] * (length - len(sequence)))
         answers: list[AnswerPosition] = []
-        cursor = len(memory) + len(filler)
-        answers.append(AnswerPosition(cursor + 1, latest, tuple(stale_values), "latest", overwrite_count, cursor - 1))
+        cursor = len(prefix_filler) + len(memory) + realized_distance
+        answers.append(AnswerPosition(cursor + 1, latest, tuple(stale_values), "latest", overwrite_count, realized_distance))
         if unrelated is not None and cursor + 4 < len(sequence):
-            answers.append(AnswerPosition(cursor + 4, values[unrelated], (), "unrelated", 0, cursor + 3 - 3))
+            answers.append(AnswerPosition(cursor + 4, values[unrelated], (), "unrelated", 0, realized_distance))
         tokens, labels = self._labels(sequence, answers)
         return RetrievalExample(tokens, labels, tuple(answers), {
             "task": "overwrite", "sequence_length": length, "key_count": key_count,
-            "query_distance": distance, "memory_load": key_count + overwrite_count,
+            "query_distance": realized_distance, "requested_query_distance": distance,
+            "query_distance_definition": "filler tokens between final memory token and first query marker",
+            "memory_load": key_count + overwrite_count,
             "overwrite_count": overwrite_count,
         })
 
@@ -185,7 +190,12 @@ def evaluate_retrieval(model: GatedDeltaNetLM, dataset: RetrievalDataset, device
     model_was_training = model.training
     model.eval()
     total = correct = latest_total = latest_correct = stale_errors = unrelated_total = unrelated_correct = 0
-    breakdown: dict[str, dict[str, list[int]]] = {key: {} for key in ("sequence_length", "key_count", "query_distance", "memory_load", "overwrite_count")}
+    breakdown: dict[str, dict[str, list[int]]] = {
+        key: {} for key in (
+            "sequence_length", "key_count", "requested_query_distance", "query_distance",
+            "memory_load", "overwrite_count",
+        )
+    }
     for index in range(len(dataset)):
         example = dataset.example(index)
         logits, _ = model(example.tokens.unsqueeze(0).to(device))

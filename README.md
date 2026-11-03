@@ -160,9 +160,9 @@ Gate diagnostics run outside timed and energy regions on a fixed corpus. They in
 
 ## MQAR and overwrite recall
 
-MQAR uses versioned deterministic symbolic key-value/query examples with a vocabulary of 8,192, 100,000 training examples, 3,000 held-out examples, masked query-answer loss, exact-token accuracy, and paired example order. Production sweeps sequence length, key count, and query distance through length 512.
+MQAR uses versioned deterministic symbolic key-value/query examples with a vocabulary of 8,192, 100,000 training examples, 3,000 held-out examples, masked query-answer loss, exact-token accuracy, and paired example order. Production sweeps sequence length, key count, and query distance through length 512. Query distance is defined as the number of filler tokens between the final memory token and first query marker. The generator records both the requested and realized distance; the realized distance may be shorter when the requested gap does not fit alongside the memory and query tokens.
 
-Overwrite recall is independently trained and evaluated, not a subscore of MQAR. A key is assigned an earlier value and later overwritten; a query must return the latest value. First-submission outputs include latest-value accuracy, stale-value error rate, unrelated-association retention, and breakdowns by overwrite count, overwrite-to-query distance, memory load, and sequence length.
+Overwrite recall is independently trained and evaluated, not a subscore of MQAR. A key is assigned an earlier value and later overwritten; a query must return the latest value. First-submission outputs include latest-value accuracy, stale-value error rate, unrelated-association retention, and breakdowns by overwrite count, requested and realized filler-token gap from the final memory token to the first query marker, memory load, and sequence length.
 
 Synthetic models use pure Gated DeltaNet layers to avoid full-attention shortcuts. Their results are labelled with their backbone scale and actual synthetic-vocabulary parameter count, not as the original TinyStories total. Natural-language needle results do not establish retrieval quality; they remain exploratory zero-shot diagnostics with a persisted paired prompt-suite hash.
 
@@ -188,5 +188,7 @@ openspec validate harden-experimental-evaluation
 ```
 
 The recurrence change additionally has a V100-only pilot and CUDA qualification path. CPU runs deliberately exercise only `reference`; a request for `cuda-fused` on a CPU machine fails with an actionable reason rather than pretending CUDA work was tested.
+
+Parallel worker qualification uses spawned Python processes, matching the production launcher’s process isolation and CUDA-context behavior. It measures short warmup and training samples, so it is a capacity and throughput screen for the selected device and model/data configuration; the first production launch should still be monitored for OOMs or contention that a short sample cannot expose.
 
 The tests use temporary directories and never target existing `output/` data. Legacy output folders are left untouched and remain readable as historical files, but lack the hardened manifest/fingerprint schema and are rejected with an actionable resumption reason.
