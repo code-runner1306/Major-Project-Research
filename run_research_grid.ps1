@@ -152,10 +152,11 @@ try {
             }
             foreach ($task in $tasks) {
                 $task.Process.WaitForExit()
+                $task.Process.Refresh()
                 if (Test-Path $task.Out) { Get-Content $task.Out | ForEach-Object { Write-Host $_ } }
                 if (Test-Path $task.Err) { Get-Content $task.Err | ForEach-Object { Write-Host $_ } }
                 Remove-Item -LiteralPath $task.Dir -Recurse -Force -ErrorAction SilentlyContinue
-                if ($task.Process.ExitCode -ne 0) { throw "Training worker failed: dataset=$($task.Family) model=$($task.Model) variant=$($task.Variant) seed=$($task.Seed), exit=$($task.Process.ExitCode). Stopping before evaluation." }
+                if ($null -eq $task.Process.ExitCode -or $task.Process.ExitCode -ne 0) { throw "Training worker failed: dataset=$($task.Family) model=$($task.Model) variant=$($task.Variant) seed=$($task.Seed), exit=$($task.Process.ExitCode). Stopping before evaluation." }
             }
         }
         Log-Progress "Starting evaluation/completion stage for dataset=$family"
@@ -171,7 +172,11 @@ try {
             if ($env:ENABLE_PARAMETER_MATCHED_SCALAR_CONTROL -match '^(1|true|yes)$') { $variants += 'scalar-matched' }
             foreach ($variant in $variants) { foreach ($seed in ($seedMap[$model] -split ',' | Where-Object { $_ })) {
                 Log-Progress "Evaluating dataset=$family model=$model variant=$variant seed=$seed"
-                Invoke-Logged @('run_all.py','--mode','production','--recurrence-backend',$env:RECURRENCE_BACKEND,'--family',$family,'--models',$model,'--seeds',$seed,'--variant',$variant,'--max-optimizer-steps',$env:MAX_OPTIMIZER_STEPS,'--output',$env:OUTPUT_DIR,'--concurrent-training-runs',"$modelWorkers",'--evaluate-only')
+                try {
+                    Invoke-Logged @('run_all.py','--mode','production','--recurrence-backend',$env:RECURRENCE_BACKEND,'--family',$family,'--models',$model,'--seeds',$seed,'--variant',$variant,'--max-optimizer-steps',$env:MAX_OPTIMIZER_STEPS,'--output',$env:OUTPUT_DIR,'--concurrent-training-runs',"$modelWorkers",'--evaluate-only')
+                } catch {
+                    throw "Evaluation failed: dataset=$family model=$model variant=$variant seed=$seed. $($_.Exception.Message)"
+                }
             } }
         }
     }

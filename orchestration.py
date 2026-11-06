@@ -132,12 +132,16 @@ def _manifest(
     )
 
 
-def _load_final_checkpoint(model: torch.nn.Module, run_dir: Path, profile: ExperimentConfig, processed_tokens: int) -> None:
+def _load_final_checkpoint(
+    model: torch.nn.Module, run_dir: Path, profile: ExperimentConfig, processed_tokens: int,
+    device: torch.device,
+) -> None:
     valid, reason, checkpoint = validate_checkpoint(
         run_dir / "final_checkpoint.pt", profile.budget.max_optimizer_steps or -1, processed_tokens,
     )
     if not valid or checkpoint is None:
         raise RuntimeError(f"Cannot recover evaluation from final checkpoint: {reason}")
+    model.to(device)
     model.load_state_dict(checkpoint["model_state"])
 
 
@@ -370,7 +374,7 @@ def run_seed(
 
     lifecycle = read_json(run_dir / "lifecycle.json")
     status = lifecycle["status"]
-    if evaluate_only and status not in {"trained", "evaluating", "complete"}:
+    if evaluate_only and status not in {"trained", "evaluating", "complete", "failed"}:
         raise RuntimeError(
             f"Cannot evaluate {family}/{scale}/{variant}/seed {seed}: run status is {status!r}; "
             "run the matching --train-only command first."
@@ -378,6 +382,23 @@ def run_seed(
     device = torch.device("cuda" if profile.run_mode == "production" else "cpu")
     energy_provider = EnergyProvider.create(device) if profile.enable_energy_collection else EnergyProvider(False, "energy collection disabled", {"device_type": device.type})
     try:
+        if evaluate_only and status == "failed":
+            # Failed evaluations retain partial training metrics. Permit recovery
+            # only when those metrics identify a valid final-budget checkpoint.
+            try:
+                partial = read_json(run_dir / "metrics.json")
+                processed_tokens = int(partial["training"]["processed_tokens"])
+                checkpoint_info = partial["final_checkpoint"]
+                valid, reason, _ = validate_checkpoint(
+                    run_dir / str(checkpoint_info["path"]), profile.budget.max_optimizer_steps or -1,
+                    processed_tokens,
+                )
+            except (OSError, KeyError, TypeError, ValueError) as exc:
+                raise RuntimeError(f"Cannot retry evaluation: completed-training artifacts are invalid: {exc}") from exc
+            if not valid or checkpoint_info.get("completed_steps") != (profile.budget.max_optimizer_steps or -1):
+                raise RuntimeError(f"Cannot retry evaluation: final training checkpoint is invalid: {reason}")
+            transition_lifecycle(run_dir, "evaluating", manifest_data["fingerprint"], details={"retry_after_evaluation_failure": True})
+            status = "evaluating"
         if not evaluate_only and status in {"pending", "training"}:
             if status == "pending":
                 transition_lifecycle(run_dir, "training", manifest_data["fingerprint"])
@@ -425,7 +446,7 @@ def run_seed(
         if status in {"trained", "evaluating"}:
             partial_metrics = read_json(run_dir / "metrics.json")
             processed_tokens = int(partial_metrics["training"]["processed_tokens"])
-            _load_final_checkpoint(model, run_dir, profile, processed_tokens)
+            _load_final_checkpoint(model, run_dir, profile, processed_tokens, device)
             if status == "trained":
                 transition_lifecycle(run_dir, "evaluating", manifest_data["fingerprint"])
             with DeviceResourceCapture(device) as evaluation_capture:

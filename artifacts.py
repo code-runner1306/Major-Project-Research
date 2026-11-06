@@ -24,7 +24,9 @@ VALID_TRANSITIONS = {
     "trained": {"evaluating", "failed"},
     "evaluating": {"complete", "failed"},
     "complete": set(),
-    "failed": set(),
+    # A failed run may retry evaluation only after orchestration validates that
+    # its completed-training metrics and checkpoint are intact.
+    "failed": {"evaluating"},
 }
 MANDATORY_METRICS = {
     "tinystories": ("final_validation", "benchmarks", "energy", "gate_diagnostics", "static_cost"),
