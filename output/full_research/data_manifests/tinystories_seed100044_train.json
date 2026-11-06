@@ -1,0 +1,9 @@
+{
+  "context_length": 512,
+  "data_seed": 100044,
+  "dataset_fingerprint": "11158cedef88c5e3",
+  "dataset_name": "roneneldan/TinyStories",
+  "identity_hash": "8ecff1d47df3c1e79ce07091c24d9aebb2ee7d2f15dd194edb77413d8b2a4756",
+  "shuffle_algorithm": "datasets.Dataset.shuffle",
+  "split": "train"
+}

@@ -1,0 +1,14 @@
+# First-submission experiment summary
+
+Results are raw seed values, means, standard deviations, and paired differences. They do not use significance stars.
+
+| Family | Scale | Variant/control | Seed values |
+| --- | --- | --- | --- |
+| tinystories | 10M | channel-wise | seed 42: {'final_validation.perplexity': 16.642972946166992, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 43: {'final_validation.perplexity': 16.622316360473633, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 44: {'final_validation.perplexity': 16.559560775756836, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 45: {'final_validation.perplexity': 16.633686065673828, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 46: {'final_validation.perplexity': 16.673864364624023, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None} |
+| tinystories | 10M | scalar | seed 42: {'final_validation.perplexity': 16.656633377075195, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 43: {'final_validation.perplexity': 16.483478546142578, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 44: {'final_validation.perplexity': 16.68599510192871, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 45: {'final_validation.perplexity': 16.5482234954834, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None}; seed 46: {'final_validation.perplexity': 16.70907974243164, 'retrieval.exact_query_accuracy': None, 'retrieval.latest_value_accuracy': None, 'retrieval.stale_value_error_rate': None, 'retrieval.unrelated_association_retention': None} |
+
+## Backend and qualification coverage
+- Requested backends: ['reference']
+- Resolved backends: ['reference']
+- Qualification hashes: none recorded
+- Unavailable reasons: 0; unqualified reasons: 0

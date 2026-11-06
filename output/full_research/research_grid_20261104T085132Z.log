@@ -1,0 +1,14 @@
+[2026-11-04T08:51:32Z] Run log: output/full_research/research_grid_20261104T085132Z.log
+[2026-11-04T08:51:32Z] Starting pilot: scales=10M,30M,55M,100M warmup=1 measured_steps=2 data-fed families=tinystories,mqar,overwrite
+
+[2026-11-04T08:51:32Z] + python3 run_all.py --pilot --recurrence-backend reference --output output/full_research --max-optimizer-steps 1000 --estimate-seeds 10M:5\,30M:5\,55M:1\,100M:1 --pilot-scales 10M\,30M\,55M\,100M --pilot-warmup 1 --pilot-steps 2 --pilot-data-fed --pilot-parallel-scales 10M\,30M --pilot-parallel-workers 2\,3
+Traceback (most recent call last):
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 12, in <module>
+    from orchestration import run_cpu_smoke, run_selected
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\orchestration.py", line 17, in <module>
+    from controls import construct_model
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\controls.py", line 8, in <module>
+    from model import GatedDeltaNetLM, parameter_breakdown
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\model.py", line 10, in <module>
+    import torch.nn as nn
+ModuleNotFoundError: No module named 'torch.nn'
