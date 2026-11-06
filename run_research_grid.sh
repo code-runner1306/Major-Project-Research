@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 PYTHON_BIN="${PYTHON_BIN:-python3}"
-MODELS="${MODELS:-10M 30M 55M 100M}"
+MODELS="${MODELS:-30M}"
 OUTPUT_DIR="${OUTPUT_DIR:-output/full_research}"
 MAX_OPTIMIZER_STEPS="${MAX_OPTIMIZER_STEPS:-1000}"
 RECURRENCE_BACKEND="${RECURRENCE_BACKEND:-reference}"
@@ -21,12 +21,11 @@ usage() {
   cat <<'USAGE'
 Usage: bash ./run_research_grid.sh [--workers N] [--pilot] [--dry-run]
 
-The launcher trains each selected family in its own stage, then resumes that
-family for sequential evaluation and completion before moving to the next family:
-TinyStories -> MQAR -> overwrite.
+The launcher trains every selected run across TinyStories, MQAR, and overwrite,
+then evaluates/completes the selected runs across all three families.
 
 Configuration is through environment variables:
-  MODELS="10M 30M 55M 100M"     Scales to include (space separated)
+  MODELS="30M"                 Scales to include (space separated; default: 30M)
   SEEDS_10M="42,43,44,45,46"   Seeds for each scale are configured separately
   SEEDS_30M="42,43,44,45,46"
   SEEDS_55M="42"
@@ -47,9 +46,8 @@ gate, then runs the all-family CPU smoke suite. These are short profiling
 samples, not production training. The larger workload means pilot duration can
 exceed 15–20 minutes; the estimate itself is written in seconds after sampling.
 
---dry-run prints the commands without executing them. The script defaults to
-the requested budget proposal: five seeds at 10M and 30M, one seed at 55M and
-100M. Override any SEEDS_<SCALE> value to change those counts.
+--dry-run prints the commands without executing them. By default, 30M runs use
+five seeds (42,43,44,45,46). Override MODELS and SEEDS_<SCALE> to change the plan.
 
 PARALLEL_WORKERS greater than 1 automatically runs a matching data-fed pilot
 qualification first. A requested count that fails the VRAM gate falls back to
@@ -235,6 +233,9 @@ for family in "${families[@]}"; do
     run_training_scale "$family" "$model" "$model_workers"
   done
 
+done
+
+for family in "${families[@]}"; do
   echo
   log_progress "Starting evaluation/completion stage for dataset=$family"
   for model in "${MODEL_LIST[@]}"; do
