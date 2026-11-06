@@ -361,7 +361,9 @@ def run_seed(
     )
     manifest_path = run_dir / "manifest.json"
     if manifest_path.exists():
-        compatible, reason = manifest_compatibility(manifest_path, manifest)
+        compatible, reason = manifest_compatibility(
+            manifest_path, manifest, allow_source_drift=evaluate_only,
+        )
         if not compatible:
             raise RuntimeError(f"Existing artifact is incompatible and will not be overwritten: {reason}")
     else:

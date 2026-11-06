@@ -31,6 +31,33 @@ def test_smoke_manifest_cannot_resume_as_production(tmp_path, smoke_config):
     assert not compatible and "run mode" in reason
 
 
+def test_evaluation_may_allow_source_revision_drift_only(tmp_path, smoke_config):
+    run_dir = tmp_path / "run"
+    original = _manifest(smoke_config)
+    write_manifest(run_dir / "manifest.json", original)
+    revised_source = SeedManifest(
+        family=original.family, run_mode=original.run_mode, scale=original.scale, variant=original.variant,
+        model=original.model, seeds=original.seeds, budget=original.budget,
+        data_identity=original.data_identity, evaluation_protocol=original.evaluation_protocol,
+        expected_artifacts=original.expected_artifacts, environment=original.environment,
+        source={"revision": "new-evaluation-only-revision", "dirty": False},
+    )
+    assert not manifest_compatibility(run_dir / "manifest.json", revised_source)[0]
+    assert manifest_compatibility(
+        run_dir / "manifest.json", revised_source, allow_source_drift=True,
+    ) == (True, "compatible")
+    changed_budget = SeedManifest(
+        family=original.family, run_mode=original.run_mode, scale=original.scale, variant=original.variant,
+        model=original.model, seeds=original.seeds, budget={"max_optimizer_steps": 3},
+        data_identity=original.data_identity, evaluation_protocol=original.evaluation_protocol,
+        expected_artifacts=original.expected_artifacts, environment=original.environment,
+        source=revised_source.source,
+    )
+    assert not manifest_compatibility(
+        run_dir / "manifest.json", changed_budget, allow_source_drift=True,
+    )[0]
+
+
 def test_configuration_drift_and_corrupt_checkpoint_are_rejected(tmp_path, smoke_config):
     run_dir = tmp_path / "run"
     manifest = _manifest(smoke_config)

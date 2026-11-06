@@ -168,7 +168,9 @@ def _recurrence_drift(actual: Mapping[str, Any], expected: SeedManifest) -> str 
     return None
 
 
-def manifest_compatibility(path: str | Path, expected: SeedManifest) -> tuple[bool, str]:
+def manifest_compatibility(
+    path: str | Path, expected: SeedManifest, *, allow_source_drift: bool = False,
+) -> tuple[bool, str]:
     try:
         actual = read_json(path)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
@@ -184,7 +186,13 @@ def manifest_compatibility(path: str | Path, expected: SeedManifest) -> tuple[bo
     drift = _recurrence_drift(actual, expected)
     if drift is not None:
         return False, drift
-    if actual.get("fingerprint") != expected.to_dict()["fingerprint"]:
+    expected_payload = expected.payload()
+    actual_comparable = dict(actual_payload)
+    expected_comparable = dict(expected_payload)
+    if allow_source_drift:
+        actual_comparable.pop("source", None)
+        expected_comparable.pop("source", None)
+    if actual_comparable != expected_comparable:
         return False, "configuration/environment/source fingerprint differs"
     return True, "compatible"
 
