@@ -27,11 +27,11 @@ function Show-Usage {
     @'
 Usage: .\run_research_grid.ps1 [--workers N] [--pilot] [--dry-run]
 
-Stages run in this order: TinyStories -> MQAR -> overwrite. Each dataset is
-trained first, then evaluated/completed sequentially before the next dataset.
+The launcher trains every selected run across TinyStories, MQAR, and overwrite,
+then evaluates/completes the selected runs across all three families.
 
 Environment configuration (same defaults as run_research_grid.sh):
-  MODELS="10M 30M 55M 100M"   Scales to include
+  MODELS="30M"                 Scales to include (default: 30M)
   SEEDS_10M="42,43,44,45,46"  Per-scale comma-separated seeds
   SEEDS_30M="42,43,44,45,46"
   SEEDS_55M="42"
@@ -53,7 +53,7 @@ by the CPU smoke suite. Parallel production runs automatically qualify first.
 if ($showHelp) { Show-Usage; exit 0 }
 if ($workerOverride -gt 0) { $env:PARALLEL_WORKERS = "$workerOverride" }
 if (-not $env:PYTHON_BIN) { $env:PYTHON_BIN = 'python' }
-if (-not $env:MODELS) { $env:MODELS = '10M 30M 55M 100M' }
+if (-not $env:MODELS) { $env:MODELS = '30M' }
 if (-not $env:OUTPUT_DIR) { $env:OUTPUT_DIR = 'output/full_research' }
 if (-not $env:MAX_OPTIMIZER_STEPS) { $env:MAX_OPTIMIZER_STEPS = '1000' }
 if (-not $env:RECURRENCE_BACKEND) { $env:RECURRENCE_BACKEND = 'reference' }
@@ -159,6 +159,8 @@ try {
                 if ($null -eq $task.Process.ExitCode -or $task.Process.ExitCode -ne 0) { throw "Training worker failed: dataset=$($task.Family) model=$($task.Model) variant=$($task.Variant) seed=$($task.Seed), exit=$($task.Process.ExitCode). Stopping before evaluation." }
             }
         }
+    }
+    foreach ($family in $families) {
         Log-Progress "Starting evaluation/completion stage for dataset=$family"
         foreach ($model in $models) {
             $modelWorkers = $workerLimit
