@@ -369,7 +369,10 @@ def run_seed(
     else:
         manifest_data = write_manifest(manifest_path, manifest)
         initialize_lifecycle(run_dir, manifest_data["fingerprint"])
-    manifest_data = manifest.to_dict()
+    # Keep the fingerprint already attached to this artifact set. Evaluation may
+    # accept source-only drift, but lifecycle transitions must continue using
+    # the fingerprint stored with the original manifest/checkpoint.
+    manifest_data = read_json(manifest_path)
     complete, _ = validate_completion(run_dir, manifest)
     if complete:
         return {"status": "skipped_complete", "run_dir": str(run_dir)}
