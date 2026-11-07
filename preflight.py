@@ -125,8 +125,9 @@ def collect_cuda_preflight() -> CudaPreflight:
             power_limit_watts=None, compute_capability=None, extension_toolchain=toolchain,
             compatible=False, reason="CUDA is not available to PyTorch",
         )
-    if not torch.version.cuda or not torch.version.cuda.startswith("12"):
-        reason = f"PyTorch CUDA runtime {torch.version.cuda!r} is not the configured CUDA 12.x channel"
+    cuda_ver = torch.version.cuda or ""
+    if not cuda_ver or not (cuda_ver.startswith("12") or cuda_ver.startswith("13")):
+        reason = f"PyTorch CUDA runtime {torch.version.cuda!r} is not a supported CUDA channel (expected 12.x or 13.x)"
         compatible = False
     elif not _at_least(_version_tuple(driver), CUDA_12_MIN_DRIVER):
         reason = "NVIDIA driver is unknown or below CUDA 12.x minimum 525.60.13; select a compatible official PyTorch wheel channel"
