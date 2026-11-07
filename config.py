@@ -193,6 +193,9 @@ PRODUCTION_MODELS = {
 def production_profile(output_dir: str | Path = "output") -> ExperimentConfig:
     """Return the V100-targeted profile. Its duration remains intentionally unset."""
 
+    batch_size = int(os.environ.get("BATCH_SIZE", "8"))
+    grad_accum_steps = int(os.environ.get("GRAD_ACCUM_STEPS", "4"))
+
     return ExperimentConfig(
         run_mode="production",
         output_dir=Path(output_dir),
@@ -201,8 +204,8 @@ def production_profile(output_dir: str | Path = "output") -> ExperimentConfig:
         seeds=(42, 43, 44),
         budget=TrainingBudget(
             max_optimizer_steps=None,
-            grad_accum_steps=4,
-            batch_size=8,
+            grad_accum_steps=grad_accum_steps,
+            batch_size=batch_size,
             context_length=512,
             validation_steps=200,
             evaluation_interval=1_000,

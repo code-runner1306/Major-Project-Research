@@ -73,6 +73,8 @@ def main() -> None:
         "--max-optimizer-steps", type=int,
         help="fixed production training budget; required when the profile has no step budget",
     )
+    parser.add_argument("--batch-size", type=int, help="micro-batch size per accumulation step (default: 8)")
+    parser.add_argument("--grad-accum-steps", type=int, help="gradient accumulation steps per optimizer update (default: 4)")
     parser.add_argument("--matched-control", action="store_true", help="add exactly parameter-matched expanded-FFN scalar control")
     parser.add_argument("--full-prefix-benchmark", action="store_true", help="include the slow no-cache generation benchmark")
     parser.add_argument("--no-cache-benchmarks", action="store_true")
@@ -173,6 +175,20 @@ def main() -> None:
             profile_overrides["budget"] = replace(
                 profile_overrides.get("budget", profile.budget),
                 max_optimizer_steps=args.max_optimizer_steps,
+            )
+        if args.batch_size is not None:
+            if args.batch_size <= 0:
+                raise ValueError("--batch-size must be a positive integer")
+            profile_overrides["budget"] = replace(
+                profile_overrides.get("budget", profile.budget),
+                batch_size=args.batch_size,
+            )
+        if args.grad_accum_steps is not None:
+            if args.grad_accum_steps <= 0:
+                raise ValueError("--grad-accum-steps must be a positive integer")
+            profile_overrides["budget"] = replace(
+                profile_overrides.get("budget", profile.budget),
+                grad_accum_steps=args.grad_accum_steps,
             )
         profile_overrides["concurrent_training_runs"] = args.concurrent_training_runs
     except ValueError as exc:
