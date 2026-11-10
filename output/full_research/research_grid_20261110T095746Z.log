@@ -1,0 +1,23 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261110152746
+Username: INTERN-2\Intern
+RunAs User: INTERN-2\Intern
+Configuration Name: 
+Machine: INTERN-2 (Microsoft Windows NT 10.0.26100.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe ./run_research_grid.ps1
+Process ID: 2436
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+[2026-11-10T09:57:46Z] Run log: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\output\full_research\research_grid_20261110T095746Z.log
+[2026-11-10T09:57:48Z] Skipping run with completed training artifacts; will evaluate after training stage: dataset=tinystories model=30M variant=channel-wise seed=42
+[2026-11-10T09:57:49Z] Skipping run with completed training artifacts; will evaluate after training stage: dataset=tinystories model=30M variant=scalar seed=42
+[2026-11-10T09:57:49Z] Training task dataset=tinystories model=30M variant=scalar seed=43
+[2026-11-10T09:57:49Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 43 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report

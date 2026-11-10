@@ -1,0 +1,83 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261110092352
+Username: INTERN-2\Intern
+RunAs User: INTERN-2\Intern
+Configuration Name: 
+Machine: INTERN-2 (Microsoft Windows NT 10.0.26100.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe ./evaluate_10m_all.ps1
+Process ID: 28236
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+[2026-11-10T03:53:52Z] Evaluating 10M: family=tinystories variant=scalar seed=42
+
+[2026-11-10T03:54:15Z] Evaluating 10M: family=tinystories variant=scalar seed=43
+
+[2026-11-10T03:54:32Z] Evaluating 10M: family=tinystories variant=scalar seed=44
+
+[2026-11-10T03:54:49Z] Evaluating 10M: family=tinystories variant=scalar seed=45
+
+[2026-11-10T03:55:06Z] Evaluating 10M: family=tinystories variant=scalar seed=46
+
+[2026-11-10T03:55:24Z] Evaluating 10M: family=tinystories variant=channel-wise seed=42
+
+[2026-11-10T03:55:41Z] Evaluating 10M: family=tinystories variant=channel-wise seed=43
+
+[2026-11-10T03:55:58Z] Evaluating 10M: family=tinystories variant=channel-wise seed=44
+
+[2026-11-10T03:56:16Z] Evaluating 10M: family=tinystories variant=channel-wise seed=45
+
+[2026-11-10T03:56:33Z] Evaluating 10M: family=tinystories variant=channel-wise seed=46
+
+[2026-11-10T03:56:50Z] Evaluating 10M: family=mqar variant=scalar seed=42
+
+[2026-11-10T04:09:35Z] Evaluating 10M: family=mqar variant=scalar seed=43
+
+[2026-11-10T04:21:59Z] Evaluating 10M: family=mqar variant=scalar seed=44
+
+[2026-11-10T04:34:21Z] Evaluating 10M: family=mqar variant=scalar seed=45
+
+[2026-11-10T04:46:42Z] Evaluating 10M: family=mqar variant=scalar seed=46
+
+[2026-11-10T04:59:01Z] Evaluating 10M: family=mqar variant=channel-wise seed=42
+
+[2026-11-10T05:20:48Z] Evaluating 10M: family=mqar variant=channel-wise seed=43
+
+[2026-11-10T05:43:17Z] Evaluating 10M: family=mqar variant=channel-wise seed=44
+
+[2026-11-10T06:05:02Z] Evaluating 10M: family=mqar variant=channel-wise seed=45
+
+[2026-11-10T06:27:26Z] Evaluating 10M: family=mqar variant=channel-wise seed=46
+
+[2026-11-10T06:49:27Z] Evaluating 10M: family=overwrite variant=scalar seed=42
+
+[2026-11-10T07:01:59Z] Evaluating 10M: family=overwrite variant=scalar seed=43
+
+[2026-11-10T07:14:28Z] Evaluating 10M: family=overwrite variant=scalar seed=44
+
+[2026-11-10T07:26:51Z] Evaluating 10M: family=overwrite variant=scalar seed=45
+
+[2026-11-10T07:39:06Z] Evaluating 10M: family=overwrite variant=scalar seed=46
+
+[2026-11-10T07:51:33Z] Evaluating 10M: family=overwrite variant=channel-wise seed=42
+
+[2026-11-10T08:13:52Z] Evaluating 10M: family=overwrite variant=channel-wise seed=43
+
+[2026-11-10T08:35:43Z] Evaluating 10M: family=overwrite variant=channel-wise seed=44
+
+[2026-11-10T08:57:48Z] Evaluating 10M: family=overwrite variant=channel-wise seed=45
+
+[2026-11-10T09:20:12Z] Evaluating 10M: family=overwrite variant=channel-wise seed=46
+
+All requested 10M evaluation runs are complete. Log: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\output\full_research\evaluate_10m_20261110T035352Z.log
+**********************
+Windows PowerShell transcript end
+End time: 20261110151248
+**********************
