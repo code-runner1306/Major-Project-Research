@@ -1,0 +1,91 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261106144942
+Username: INTERN-2\Intern
+RunAs User: INTERN-2\Intern
+Configuration Name: 
+Machine: INTERN-2 (Microsoft Windows NT 10.0.26100.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe ./run_research_grid.ps1
+Process ID: 19580
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+[2026-11-06T09:19:42Z] Run log: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\output\full_research\research_grid_20261106T091942Z.log
+[2026-11-06T09:19:42Z] Training task dataset=mqar model=10M variant=scalar seed=42
+[2026-11-06T09:19:42Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 42 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-06T12:08:15Z] Training task dataset=mqar model=10M variant=channel-wise seed=42
+[2026-11-06T12:08:15Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 42 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-06T14:59:43Z] Training task dataset=mqar model=10M variant=scalar seed=43
+[2026-11-06T14:59:43Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 43 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-06T17:50:40Z] Training task dataset=mqar model=10M variant=channel-wise seed=43
+[2026-11-06T17:50:40Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 43 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-06T20:38:10Z] Training task dataset=mqar model=10M variant=scalar seed=44
+[2026-11-06T20:38:10Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 44 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-06T23:24:50Z] Training task dataset=mqar model=10M variant=channel-wise seed=44
+[2026-11-06T23:24:50Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 44 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T02:14:25Z] Training task dataset=mqar model=10M variant=scalar seed=45
+[2026-11-07T02:14:25Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 45 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T05:03:39Z] Training task dataset=mqar model=10M variant=channel-wise seed=45
+[2026-11-07T05:03:39Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 45 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T07:54:41Z] Training task dataset=mqar model=10M variant=scalar seed=46
+[2026-11-07T07:54:41Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 46 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T10:42:49Z] Training task dataset=mqar model=10M variant=channel-wise seed=46
+[2026-11-07T10:42:49Z] +run_all.py --mode production --recurrence-backend reference --family mqar --models 10M --seeds 46 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T13:29:08Z] Training task dataset=overwrite model=10M variant=scalar seed=42
+[2026-11-07T13:29:08Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 42 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T16:18:46Z] Training task dataset=overwrite model=10M variant=channel-wise seed=42
+[2026-11-07T16:18:46Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 42 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T19:04:18Z] Training task dataset=overwrite model=10M variant=scalar seed=43
+[2026-11-07T19:04:18Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 43 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-07T21:51:10Z] Training task dataset=overwrite model=10M variant=channel-wise seed=43
+[2026-11-07T21:51:10Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 43 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T00:39:20Z] Training task dataset=overwrite model=10M variant=scalar seed=44
+[2026-11-08T00:39:20Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 44 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T03:26:13Z] Training task dataset=overwrite model=10M variant=channel-wise seed=44
+[2026-11-08T03:26:13Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 44 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T06:16:09Z] Training task dataset=overwrite model=10M variant=scalar seed=45
+[2026-11-08T06:16:09Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 45 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T09:06:00Z] Training task dataset=overwrite model=10M variant=channel-wise seed=45
+[2026-11-08T09:06:00Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 45 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T11:57:44Z] Training task dataset=overwrite model=10M variant=scalar seed=46
+[2026-11-08T11:57:44Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 46 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T14:47:29Z] Training task dataset=overwrite model=10M variant=channel-wise seed=46
+[2026-11-08T14:47:29Z] +run_all.py --mode production --recurrence-backend reference --family overwrite --models 10M --seeds 46 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T17:35:51Z] Training task dataset=tinystories model=30M variant=channel-wise seed=42
+[2026-11-08T17:35:51Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 42 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-08T21:32:51Z] Training task dataset=tinystories model=30M variant=scalar seed=42
+[2026-11-08T21:32:51Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 42 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+PS>TerminatingError(): "Command failed with exit code 1"
+>> TerminatingError(run_research_grid.ps1): "The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: Command failed with exit code 1"
+**********************
+Windows PowerShell transcript end
+End time: 20261109030305
+**********************

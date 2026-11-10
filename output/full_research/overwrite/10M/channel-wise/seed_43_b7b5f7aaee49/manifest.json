@@ -1,0 +1,140 @@
+{
+  "budget": {
+    "batch_size": 8,
+    "concurrent_training_runs": 1,
+    "context_length": 512,
+    "grad_accum_steps": 4,
+    "max_optimizer_steps": 1000,
+    "status": "pending_v100_pilot"
+  },
+  "data_identity": {
+    "generator_version": "mqar-overwrite-v2",
+    "held_out_hash": "ac322ec7a3c88d323f63deda3a44454f986f1b7716be512721751f981c3e97bc",
+    "paired_order": "indexed_seeded_order",
+    "train_hash": "13b7369d31cd7872dfa8745cbf318d795338261d72520af02958595e7b9d5134"
+  },
+  "environment": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "python": "3.13.14",
+    "torch": "2.11.0+cu128"
+  },
+  "evaluation_protocol": {
+    "benchmark_generated_tokens": 256,
+    "benchmark_prompt_lengths": [
+      64,
+      256,
+      512
+    ],
+    "benchmark_repeats": 5,
+    "benchmark_warmup": 2,
+    "cache_benchmarks": true,
+    "energy": true,
+    "equivalence_generated_tokens": 256,
+    "equivalence_prompt_length": 64,
+    "gate_diagnostics": true,
+    "natural_language_retrieval": null,
+    "posthoc_gate_eval_examples": 512,
+    "posthoc_gate_group_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "posthoc_gate_grouping": true,
+    "resource_capture_version": 1,
+    "resource_sample_interval_seconds": 1.0,
+    "retrieval_version": "mqar-overwrite-v2",
+    "version": 2
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "overwrite",
+  "fingerprint": "a5497698703606ee9a39785cc1cc0d3238232a71c3338267c6c496fc3ccbf533",
+  "model": {
+    "attention_layout": "pure_gdn",
+    "control_strategy": "same_backbone",
+    "d_ff": [
+      426,
+      426,
+      426,
+      426,
+      426,
+      426
+    ],
+    "d_head": 40,
+    "d_model": 160,
+    "gate_parameter_overhead": 149760,
+    "n_head": 4,
+    "n_layer": 6,
+    "name": "10M",
+    "parameter_components": {
+      "convolutions": 14400,
+      "embeddings": 1310720,
+      "ffns": 1226880,
+      "gates": 311040,
+      "norms": 160,
+      "other": 1920,
+      "output_head": 0,
+      "projections": 614400,
+      "tied_output_head": 0,
+      "total": 3479520
+    },
+    "parameter_count": 3479520,
+    "per_layer_ffn_widths": [
+      426,
+      426,
+      426,
+      426,
+      426,
+      426
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "decode_backend_version": "decode-v1-fused-stub",
+      "extension_build_identity": "sha256:8dee73b3b9d26426eb9ed8eec45c04d1edfc55b0856745ede2df89cdd77668c6",
+      "extension_semantic_version": "gdn-cuda-v0-scaffold",
+      "implementation_source_hash": "24f5a1f82b55560af7f02b4ebca034a6803d7ba9fac735557e68fa0a33418fcc",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ],
+      "target_architecture": "sm_70"
+    },
+    "variant": "channel-wise"
+  },
+  "run_mode": "production",
+  "scale": "10M",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 100043,
+    "evaluation_seed": 200043,
+    "model_seed": 43,
+    "research_seed": 43
+  },
+  "source": {
+    "dirty": true,
+    "revision": "a1288eadcf38a63c2a8914839fa02108f26bff2f"
+  },
+  "variant": "channel-wise"
+}
