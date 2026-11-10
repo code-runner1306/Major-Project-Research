@@ -33,3 +33,4 @@ data/*
 *.pdf
 .codex/
 tinystories/
+output/full_research/aggregate_report.json 
