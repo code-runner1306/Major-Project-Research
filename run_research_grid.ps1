@@ -53,7 +53,7 @@ by the CPU smoke suite. Parallel production runs automatically qualify first.
 if ($showHelp) { Show-Usage; exit 0 }
 if ($workerOverride -gt 0) { $env:PARALLEL_WORKERS = "$workerOverride" }
 if (-not $env:PYTHON_BIN) { $env:PYTHON_BIN = 'python' }
-if (-not $env:MODELS) { $env:MODELS = '10M 30M' }
+if (-not $env:MODELS) { $env:MODELS = '30M' }
 if (-not $env:OUTPUT_DIR) { $env:OUTPUT_DIR = 'output/full_research' }
 if (-not $env:MAX_OPTIMIZER_STEPS) { $env:MAX_OPTIMIZER_STEPS = '1000' }
 if (-not $env:RECURRENCE_BACKEND) { $env:RECURRENCE_BACKEND = 'reference' }
@@ -131,12 +131,14 @@ try {
         }
     }
     if ('30M' -in $models) {
-        $trainingTasks.Add([pscustomobject]@{ Family='tinystories'; Model='30M'; Seed='42'; Variant='channel-wise' })
+        # This checkpoint has already completed training; retain it in the plan
+        # so it is evaluated after the remaining 30M training finishes.
+        $trainingTasks.Add([pscustomobject]@{ Family='tinystories'; Model='30M'; Seed='42'; Variant='channel-wise'; SkipTraining=$true })
         foreach ($family in $families) {
             foreach ($seed in ($seedMap['30M'] -split ',' | Where-Object { $_ })) {
                 foreach ($variant in @('scalar','channel-wise')) {
                     if ($family -eq 'tinystories' -and $seed -eq '42' -and $variant -eq 'channel-wise') { continue }
-                    $trainingTasks.Add([pscustomobject]@{ Family=$family; Model='30M'; Seed=$seed; Variant=$variant })
+                    $trainingTasks.Add([pscustomobject]@{ Family=$family; Model='30M'; Seed=$seed; Variant=$variant; SkipTraining=$false })
                 }
             }
         }
@@ -146,6 +148,10 @@ try {
     }
     foreach ($task in $trainingTasks) {
         $family=$task.Family; $model=$task.Model; $seed=$task.Seed; $variant=$task.Variant
+        if ($task.SkipTraining) {
+            Log-Progress "Skipping already-trained run; will evaluate after training stage: dataset=$family model=$model variant=$variant seed=$seed"
+            continue
+        }
         Log-Progress "Training task dataset=$family model=$model variant=$variant seed=$seed"
         $argsList = @('run_all.py','--mode','production','--recurrence-backend',$env:RECURRENCE_BACKEND,'--family',$family,'--models',$model,'--seeds',$seed,'--variant',$variant,'--max-optimizer-steps',$env:MAX_OPTIMIZER_STEPS,'--output',$env:OUTPUT_DIR,'--concurrent-training-runs',"$workerLimit",'--train-only','--skip-report')
         Invoke-Logged $argsList
