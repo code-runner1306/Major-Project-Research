@@ -139,6 +139,14 @@ def test_atomic_lifecycle_checkpoint_and_completeness(tmp_path, smoke_config):
     atomic_write_json(run_dir / "metrics.json", metrics)
     transition_lifecycle(run_dir, "complete", data["fingerprint"])
     assert validate_completion(run_dir, manifest) == (True, "complete")
+    revised_source_manifest = SeedManifest(
+        family=manifest.family, run_mode=manifest.run_mode, scale=manifest.scale, variant=manifest.variant,
+        model=manifest.model, seeds=manifest.seeds, budget=manifest.budget,
+        data_identity=manifest.data_identity, evaluation_protocol=manifest.evaluation_protocol,
+        expected_artifacts=manifest.expected_artifacts, environment=manifest.environment,
+        source={"revision": "later-evaluation-code", "dirty": False},
+    )
+    assert validate_completion(run_dir, revised_source_manifest, allow_source_drift=True) == (True, "complete")
     corrupt = copy.deepcopy(metrics)
     corrupt["final_validation"]["perplexity"] = float("inf")
     # Atomic writer protects the prior file if serializing invalid JSON fails.

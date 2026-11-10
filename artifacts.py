@@ -296,13 +296,21 @@ def _contains_nonfinite(value: Any) -> bool:
     return False
 
 
-def validate_completion(run_dir: str | Path, expected: SeedManifest) -> tuple[bool, str]:
+def validate_completion(
+    run_dir: str | Path, expected: SeedManifest, *, allow_source_drift: bool = False,
+) -> tuple[bool, str]:
     """Validate every required primary artifact before a run may be resumed/skipped."""
 
     root = Path(run_dir)
-    compatible, reason = manifest_compatibility(root / "manifest.json", expected)
+    compatible, reason = manifest_compatibility(
+        root / "manifest.json", expected, allow_source_drift=allow_source_drift,
+    )
     if not compatible:
         return False, reason
+    try:
+        stored_manifest = read_json(root / "manifest.json")
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        return False, f"invalid manifest: {exc}"
     manifest = expected.to_dict()
     try:
         lifecycle = read_json(root / "lifecycle.json")
@@ -311,7 +319,10 @@ def validate_completion(run_dir: str | Path, expected: SeedManifest) -> tuple[bo
         return False, f"missing or corrupt lifecycle/metrics: {exc}"
     if lifecycle.get("status") != "complete":
         return False, f"lifecycle is {lifecycle.get('status')!r}, not complete"
-    if lifecycle.get("fingerprint") != manifest["fingerprint"]:
+    expected_lifecycle_fingerprint = (
+        stored_manifest.get("fingerprint") if allow_source_drift else manifest["fingerprint"]
+    )
+    if lifecycle.get("fingerprint") != expected_lifecycle_fingerprint:
         return False, "lifecycle fingerprint differs"
     required = MANDATORY_METRICS.get(expected.family, ())
     missing = [key for key in required if key not in metrics]

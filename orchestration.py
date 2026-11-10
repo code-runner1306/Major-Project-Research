@@ -373,7 +373,7 @@ def run_seed(
     # accept source-only drift, but lifecycle transitions must continue using
     # the fingerprint stored with the original manifest/checkpoint.
     manifest_data = read_json(manifest_path)
-    complete, _ = validate_completion(run_dir, manifest)
+    complete, _ = validate_completion(run_dir, manifest, allow_source_drift=evaluate_only)
     if complete:
         return {"status": "skipped_complete", "run_dir": str(run_dir)}
 
@@ -468,7 +468,8 @@ def run_seed(
             return {"status": "complete", "run_dir": str(run_dir)}
         raise RuntimeError(f"Cannot resume lifecycle status {status!r}")
     except Exception as exc:
-        transition_lifecycle(run_dir, "failed", manifest_data["fingerprint"], details={"type": type(exc).__name__, "message": str(exc)})
+        if read_json(run_dir / "lifecycle.json").get("status") != "complete":
+            transition_lifecycle(run_dir, "failed", manifest_data["fingerprint"], details={"type": type(exc).__name__, "message": str(exc)})
         raise
 
 
