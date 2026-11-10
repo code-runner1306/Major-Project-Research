@@ -53,7 +53,7 @@ by the CPU smoke suite. Parallel production runs automatically qualify first.
 if ($showHelp) { Show-Usage; exit 0 }
 if ($workerOverride -gt 0) { $env:PARALLEL_WORKERS = "$workerOverride" }
 if (-not $env:PYTHON_BIN) { $env:PYTHON_BIN = 'python' }
-if (-not $env:MODELS) { $env:MODELS = '10M 30M' }
+if (-not $env:MODELS) { $env:MODELS = '30M' }
 if (-not $env:OUTPUT_DIR) { $env:OUTPUT_DIR = 'output/full_research' }
 if (-not $env:MAX_OPTIMIZER_STEPS) { $env:MAX_OPTIMIZER_STEPS = '1000' }
 if (-not $env:RECURRENCE_BACKEND) { $env:RECURRENCE_BACKEND = 'reference' }
@@ -86,6 +86,28 @@ foreach ($model in $models) {
 
 function Timestamp { [DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ') }
 function Log-Progress([string]$Message) { Write-Host "[$(Timestamp)] $Message" }
+function Test-TrainingArtifactsPresent([string]$Family, [string]$Model, [string]$Variant, [string]$Seed) {
+    $familyRoot = Join-Path (Join-Path (Join-Path $script:Root $env:OUTPUT_DIR) $Family) (Join-Path $Model $Variant)
+    if (-not (Test-Path $familyRoot)) { return $false }
+    foreach ($runDir in (Get-ChildItem -LiteralPath $familyRoot -Directory -Filter "seed_${Seed}_*" -ErrorAction SilentlyContinue)) {
+        try {
+            $manifest = Get-Content -Raw (Join-Path $runDir.FullName 'manifest.json') | ConvertFrom-Json
+            $lifecycle = Get-Content -Raw (Join-Path $runDir.FullName 'lifecycle.json') | ConvertFrom-Json
+            $metrics = Get-Content -Raw (Join-Path $runDir.FullName 'metrics.json') | ConvertFrom-Json
+            if ($manifest.family -eq $Family -and $manifest.scale -eq $Model -and
+                $manifest.variant -eq $Variant -and [int]$manifest.seeds.research_seed -eq [int]$Seed -and
+                $lifecycle.status -in @('trained','evaluating','complete') -and
+                $metrics.training -and $metrics.final_checkpoint -and
+                (Test-Path (Join-Path $runDir.FullName ([string]$metrics.final_checkpoint.path)))) {
+                return $true
+            }
+        } catch {
+            # Ignore incomplete or malformed candidates; the normal launcher
+            # validation will report incompatibility if that run is selected.
+        }
+    }
+    return $false
+}
 function Invoke-Logged([string[]]$CommandArgs) {
     Log-Progress ('+' + ($CommandArgs -join ' '))
     if (-not $DryRun) {
@@ -121,22 +143,13 @@ try {
 
     $families = @('tinystories','mqar','overwrite')
     $trainingTasks = [System.Collections.Generic.List[object]]::new()
-    foreach ($family in @('mqar','overwrite')) {
-        if ('10M' -in $models) {
-            foreach ($seed in ($seedMap['10M'] -split ',' | Where-Object { $_ })) {
-                foreach ($variant in @('scalar','channel-wise')) {
-                    $trainingTasks.Add([pscustomobject]@{ Family=$family; Model='10M'; Seed=$seed; Variant=$variant })
-                }
-            }
-        }
-    }
     if ('30M' -in $models) {
-        $trainingTasks.Add([pscustomobject]@{ Family='tinystories'; Model='30M'; Seed='42'; Variant='channel-wise' })
+        $trainingTasks.Add([pscustomobject]@{ Family='tinystories'; Model='30M'; Seed='42'; Variant='channel-wise'; SkipTraining=$false })
         foreach ($family in $families) {
             foreach ($seed in ($seedMap['30M'] -split ',' | Where-Object { $_ })) {
                 foreach ($variant in @('scalar','channel-wise')) {
                     if ($family -eq 'tinystories' -and $seed -eq '42' -and $variant -eq 'channel-wise') { continue }
-                    $trainingTasks.Add([pscustomobject]@{ Family=$family; Model='30M'; Seed=$seed; Variant=$variant })
+                    $trainingTasks.Add([pscustomobject]@{ Family=$family; Model='30M'; Seed=$seed; Variant=$variant; SkipTraining=$false })
                 }
             }
         }
@@ -146,6 +159,10 @@ try {
     }
     foreach ($task in $trainingTasks) {
         $family=$task.Family; $model=$task.Model; $seed=$task.Seed; $variant=$task.Variant
+        if ($task.SkipTraining -or (Test-TrainingArtifactsPresent $family $model $variant $seed)) {
+            Log-Progress "Skipping run with completed training artifacts; will evaluate after training stage: dataset=$family model=$model variant=$variant seed=$seed"
+            continue
+        }
         Log-Progress "Training task dataset=$family model=$model variant=$variant seed=$seed"
         $argsList = @('run_all.py','--mode','production','--recurrence-backend',$env:RECURRENCE_BACKEND,'--family',$family,'--models',$model,'--seeds',$seed,'--variant',$variant,'--max-optimizer-steps',$env:MAX_OPTIMIZER_STEPS,'--output',$env:OUTPUT_DIR,'--concurrent-training-runs',"$workerLimit",'--train-only','--skip-report')
         Invoke-Logged $argsList
