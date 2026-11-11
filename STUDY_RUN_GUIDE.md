@@ -4,6 +4,24 @@ The current study protocol and task matrix live in [`RESEARCH_IMPLEMENTATION_PLA
 
 ## Commands
 
+### Two-day exploratory subset
+
+If you have only about two days, use the separate exploratory launcher below. It runs **10M only**, on **MQAR and overwrite**, for the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), with **one seed and 1,000 optimizer steps**. For each family, it trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are each capped at **512 examples per run**; training still uses 50,000 examples. Its default output is `output/granularity_48h_exploratory`, separate from both the full study and historical runs.
+
+Preview the eight training/evaluation pairs without starting work:
+
+```powershell
+.\run_48h_exploratory_study.ps1 -DryRun
+```
+
+Run the exploratory subset, explicitly selecting the activated environment if needed:
+
+```powershell
+.\run_48h_exploratory_study.ps1 -Python .\.venv\Scripts\python.exe
+```
+
+The script checks that PyTorch imports and CUDA is available, writes a master log plus per-task logs, and validates completed checkpoints before reusing them. It stops rather than overwriting a partial or incompatible run directory. If an evaluation failed after training, retry only evaluation with `-EvaluateOnly`; interrupted training is not resumable because the pipeline does not save optimizer state. The **18 h 40 min** training figure is only a baseline extrapolated from old 10M TinyStories timing. It excludes the revised validation every 100 steps, calibration, and evaluation, so the complete run is **not guaranteed to finish within 48 hours**. This one-seed, 1,000-step subset is exploratory evidence, **not** the full multi-seed, 100M/300M-token study or its E0/E1 qualification.
+
 Run a dry run first to inspect the expanded tasks and paths without starting training:
 
 ```powershell
