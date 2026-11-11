@@ -6,7 +6,7 @@ The current study protocol and task matrix live in [`RESEARCH_IMPLEMENTATION_PLA
 
 ### Two-day exploratory subset
 
-If you have only about two days, use the separate exploratory launcher below. It runs **10M only**, on **MQAR and overwrite**, for the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), with **one seed and 1,000 optimizer steps**. For each family, it trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are each capped at **512 examples per run**; training still uses 50,000 examples. Its default output is `output/granularity_48h_exploratory`, separate from both the full study and historical runs.
+If you have only about two days, use the separate exploratory launcher below. It runs **10M only**, on **MQAR and overwrite**, for the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), with **one seed and 1,000 optimizer steps**. All eight training runs use the fixed learning rate **3e-3**, a literature-informed shared choice that is **not tuned on these runs**. For each family, it trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are each capped at **512 examples per run**; training still uses 50,000 examples. Its default output is `output/granularity_48h_exploratory_lr3e-3`, separate from both the full study and historical runs.
 
 Preview the eight training/evaluation pairs without starting work:
 

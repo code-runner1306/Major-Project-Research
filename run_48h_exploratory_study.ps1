@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$Python = "python",
-    [string]$OutputRoot = "output/granularity_48h_exploratory",
+    [string]$OutputRoot = "output/granularity_48h_exploratory_lr3e-3",
     [switch]$DryRun,
     [switch]$EvaluateOnly,
     [string]$StudyConfig = "study_configs/granularity_init_study.json"
@@ -33,6 +33,7 @@ try {
     $scale = '10M'
     $seed = 42
     $stepBudget = 1000
+    $learningRate = 0.003
     $sourceBudget = $study.budgets.'10M'
     $trainingBudget = [ordered]@{
         max_optimizer_steps = $stepBudget
@@ -41,7 +42,7 @@ try {
         context_length = [int]$sourceBudget.context_length
         validation_steps = 100
         evaluation_interval = 100
-        learning_rate = [double]$sourceBudget.learning_rate
+        learning_rate = $learningRate
     }
     $calibration = $study.calibration
     $retrievalPilot = $study.retrieval | ConvertTo-Json -Depth 20 | ConvertFrom-Json
@@ -52,7 +53,7 @@ try {
         foreach ($condition in $conditions) {
             $runDir = Join-Path $root ("runs\{0}\{1}\{2}\seed_{3}" -f $family, $scale, $condition.id, $seed)
             $tasks += [pscustomobject]@{
-                experiment_id = 'granularity-init-48h-exploratory-v1'
+                experiment_id = 'granularity-init-48h-exploratory-lr3e-3-v1'
                 condition_id = $condition.id
                 family = $family
                 scale = $scale
@@ -81,12 +82,13 @@ try {
         }
     }
 
-    Write-Host ("Exploratory study: {0} 10M runs; datasets={1}; conditions={2}; seed={3}; steps={4}; workers=1" -f `
-        $tasks.Count, ($families -join ','), ($conditions.id -join ','), $seed, $stepBudget)
+    Write-Host ("Exploratory study: {0} 10M runs; datasets={1}; conditions={2}; seed={3}; steps={4}; LR={5}; workers=1" -f `
+        $tasks.Count, ($families -join ','), ($conditions.id -join ','), $seed, $stepBudget, $learningRate)
     Write-Host "Output root: $root"
     Write-Host "Each task trains for 1,000 steps and validates every 100 steps. Existing compatible tasks are reused; partial or incompatible task folders stop the script without overwrite."
     Write-Host "Old-timing baseline: about 18 h 40 min for training only. This excludes the revised 100-step validation overhead, calibration, and evaluation; total runtime is not guaranteed to fit within 48 hours."
     Write-Host "Synthetic validation and held-out evaluation use 512 examples each per run; the training set remains 50,000 examples."
+    Write-Host "Learning rate 3e-3 is fixed for all runs as a literature-informed choice; it is not tuned on these runs."
     Write-Host "This is an exploratory, one-seed, 1,000-step result; it is not the full 5-seed / token-budget study."
 
     $master = Join-Path $root ("logs\run_48h_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss'))
@@ -211,15 +213,17 @@ try {
     }
 
     $summary = [ordered]@{
-        experiment_id = 'granularity-init-48h-exploratory-v1'
+        experiment_id = 'granularity-init-48h-exploratory-lr3e-3-v1'
         created_at_utc = [DateTime]::UtcNow.ToString('o')
         datasets = $families
         scale = $scale
         conditions = @($conditions | ForEach-Object { $_.id })
         seed = $seed
         max_optimizer_steps = $stepBudget
+        learning_rate = $learningRate
         status = 'complete'
         records = @($script:Records)
+        learning_rate_selection = 'Fixed literature-informed rate; not tuned on these exploratory runs.'
         interpretation = 'One-seed, 1,000-step exploratory comparison only; not the full planned study.'
     }
     $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8
