@@ -194,3 +194,33 @@ The recurrence change additionally has a V100-only pilot and CUDA qualification 
 Parallel worker qualification uses spawned Python processes, matching the production launcher’s process isolation and CUDA-context behavior. It measures short warmup and training samples, so it is a capacity and throughput screen for the selected device and model/data configuration; the first production launch should still be monitored for OOMs or contention that a short sample cannot expose.
 
 The tests use temporary directories and never target existing `output/` data. Legacy output folders are left untouched and remain readable as historical files, but lack the hardened manifest/fingerprint schema and are rejected with an actionable resumption reason.
+# Granularity and initialization study
+
+The new orchestrator is `study_runner.py`, with the PowerShell entry point
+`run_granularity_init_study.ps1`. The default config expands to 90 10M runs
+(six conditions, five paired seeds, three dataset families) and 36 30M
+confirmation runs (four endpoint conditions, three seeds, three families).
+The configured LM budgets correspond to the plan's 100M/300M token targets;
+they are planning values and are not a protocol lock or convergence claim.
+
+```powershell
+# Expand every run and worker config without allocating a model/GPU.
+.\run_granularity_init_study.ps1 -DryRun
+
+# Run only the independent offline CPU smoke workflow.
+python run_smoke.py --output output/granularity_init_study/qualification/cpu_smoke
+
+# Continue at an explicitly selected stage only after its prerequisite lock exists.
+.\run_granularity_init_study.ps1 -StartAt E2 -StopAfter E2
+
+# Evaluate completed compatible checkpoints; missing training is reported and never started.
+.\run_granularity_init_study.ps1 -EvaluateOnly
+```
+
+Use `study_configs/granularity_init_smoke.json` to check the small worker
+plumbing configuration. Smoke runs do not qualify E0 learnability or E1's
+production recipe. The runner writes task JSON files, per-task logs, a master
+log, stage status, and study artifacts under the selected output root. E0/E1
+must establish answer-level validation criteria and a measured runtime estimate
+before a `protocol_lock.json` can authorize the main grid. E3/E4 evaluate
+existing checkpoints; E6 aggregates completed study artifacts.

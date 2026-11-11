@@ -13,7 +13,7 @@ from typing import Literal
 import os
 
 
-Variant = Literal["scalar", "channel-wise", "scalar-matched"]
+Variant = Literal["scalar", "grouped-4", "channel-wise", "scalar-matched"]
 ExperimentFamily = Literal["tinystories", "mqar", "overwrite"]
 RecurrenceBackend = Literal["reference", "cuda-fused"]
 RecurrenceInputDtype = Literal["autocast", "float32"]
@@ -84,6 +84,9 @@ class RetrievalConfig:
     key_counts: tuple[int, ...] = (8, 16, 32)
     query_distances: tuple[int, ...] = (16, 64, 128)
     overwrite_counts: tuple[int, ...] = (1, 2, 3)
+    # Legacy experiments keep their exact v2 data identity unless a study opts in.
+    generator_version: str = "mqar-overwrite-v2"
+    validation_examples: int | None = None
 
 
 @dataclass(frozen=True)
@@ -123,11 +126,27 @@ class ExperimentConfig:
     recurrence_chunk_size: int = 64
     recurrence_qualification_artifact: Path | None = None
     concurrent_training_runs: int = 1
+    # Study identity and gate initialization are independent from the historical
+    # profile fields so old run identities remain stable when these are absent.
+    experiment_id: str | None = None
+    condition_id: str | None = None
+    initialization: Literal["default", "calibrated-geometric"] = "default"
+    calibration_min_half_life: float | None = None
+    calibration_max_half_life: float | None = None
+    calibration_examples: int = 8
+    study_task_run_dir: Path | None = None
+    study_qualification: bool = False
+    study_qualification_stage: str | None = None
+    study_qualification_scope: str | None = None
+    study_validation_answer_accuracy: bool = False
+    curriculum: tuple[dict, ...] = ()
 
     @property
     def variants(self) -> tuple[Variant, ...]:
         primary: tuple[Variant, ...] = ("scalar", "channel-wise")
         available = primary + (("scalar-matched",) if self.enable_parameter_matched_scalar_control else ())
+        if self.selected_variants and "grouped-4" in self.selected_variants:
+            available += ("grouped-4",)
         if self.selected_variants is None:
             return available
         return tuple(variant for variant in self.selected_variants if variant in available)
@@ -139,7 +158,20 @@ class ExperimentConfig:
             raise ValueError(f"Unknown scale {scale!r}; expected one of {self.scales}") from exc
 
     def to_manifest_dict(self) -> dict:
-        return {
+        retrieval_data = {
+            "vocabulary_size": self.retrieval.vocabulary_size,
+            "train_examples": self.retrieval.train_examples,
+            "held_out_examples": self.retrieval.held_out_examples,
+            "sequence_lengths": list(self.retrieval.sequence_lengths),
+            "key_counts": list(self.retrieval.key_counts),
+            "query_distances": list(self.retrieval.query_distances),
+            "overwrite_counts": list(self.retrieval.overwrite_counts),
+        }
+        if self.retrieval.generator_version != "mqar-overwrite-v2":
+            retrieval_data["generator_version"] = self.retrieval.generator_version
+        if self.retrieval.validation_examples is not None:
+            retrieval_data["validation_examples"] = self.retrieval.validation_examples
+        data = {
             "run_mode": self.run_mode,
             "output_dir": str(self.output_dir),
             "scales": list(self.scales),
@@ -162,7 +194,7 @@ class ExperimentConfig:
             "benchmark_generated_tokens": self.benchmark_generated_tokens,
             "equivalence_prompt_length": self.equivalence_prompt_length,
             "equivalence_generated_tokens": self.equivalence_generated_tokens,
-            "retrieval": asdict(self.retrieval),
+            "retrieval": retrieval_data,
             "learning_rate": self.learning_rate,
             "weight_decay": self.weight_decay,
             "beta1": self.beta1,
@@ -180,6 +212,22 @@ class ExperimentConfig:
             },
             "concurrent_training_runs": self.concurrent_training_runs,
         }
+        # Do not perturb historical production/smoke profile fingerprints.
+        if self.experiment_id is not None:
+            data["study"] = {
+                "experiment_id": self.experiment_id,
+                "condition_id": self.condition_id,
+                "initialization": self.initialization,
+                "calibration_min_half_life": self.calibration_min_half_life,
+                "calibration_max_half_life": self.calibration_max_half_life,
+                "calibration_examples": self.calibration_examples,
+                "qualification": self.study_qualification,
+                "qualification_stage": self.study_qualification_stage,
+                "qualification_scope": self.study_qualification_scope,
+                "validation_answer_accuracy": self.study_validation_answer_accuracy,
+                "curriculum": list(self.curriculum),
+            }
+        return data
 
 
 PRODUCTION_MODELS = {
@@ -205,7 +253,7 @@ def production_profile(output_dir: str | Path = "output") -> ExperimentConfig:
             batch_size=8,
             context_length=512,
             validation_steps=200,
-            evaluation_interval=1_000,
+            evaluation_interval=100,
         ),
         vocab_size=50_257,
         enable_parameter_matched_scalar_control=os.environ.get(

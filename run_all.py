@@ -5,11 +5,12 @@ from __future__ import annotations
 import argparse
 from dataclasses import replace
 from datetime import datetime, timezone
+import json
 from pathlib import Path
 
 from artifacts import atomic_write_json
-from config import production_profile, smoke_profile
-from orchestration import run_cpu_smoke, run_selected
+from config import RetrievalConfig, TrainingBudget, production_profile, smoke_profile
+from orchestration import run_cpu_smoke, run_seed, run_selected
 from pilot import PilotSettings, run_v100_pilot
 
 
@@ -34,6 +35,123 @@ def _parse_seed_counts(value: str) -> dict[str, int]:
             raise ValueError(f"Invalid or duplicate estimated seed count: {item!r}")
         counts[scale] = count
     return counts
+
+
+def _run_study_task(path: str | Path) -> dict:
+    """Execute one isolated worker task emitted by the study orchestrator."""
+    with Path(path).open(encoding="utf-8-sig") as handle:
+        task = json.load(handle)
+    if not isinstance(task, dict):
+        raise ValueError("--study-task-config must contain a JSON object")
+    required = (
+        "operation", "experiment_id", "family", "scale", "variant", "initialization",
+        "seed", "output_dir", "max_optimizer_steps", "batch_size", "grad_accum_steps",
+        "context_length", "validation_steps", "evaluation_interval", "learning_rate",
+    )
+    missing = [key for key in required if key not in task]
+    if missing:
+        raise ValueError("Study task is missing required fields: " + ", ".join(missing))
+    accepted = set(required) | {
+        "condition_id", "run_mode", "recurrence_backend", "recurrence_input_dtype",
+        "state_accumulator_dtype", "recurrence_chunk_size", "calibration_min_half_life",
+        "calibration_max_half_life", "calibration_examples", "retrieval_config",
+        "qualification", "qualification_stage", "qualification_scope",
+        "validation_answer_accuracy", "concurrent_training_runs", "curriculum",
+    }
+    unknown = sorted(set(task) - accepted)
+    if unknown:
+        raise ValueError("Unknown study task field(s): " + ", ".join(unknown))
+    operation = task["operation"]
+    if operation not in {"train", "evaluate", "full"}:
+        raise ValueError("Study task operation must be train, evaluate, or full")
+    family, scale, variant = task["family"], task["scale"], task["variant"]
+    if family not in {"tinystories", "mqar", "overwrite"}:
+        raise ValueError(f"Unknown study task family {family!r}")
+    if task["initialization"] not in {"default", "calibrated-geometric"}:
+        raise ValueError("initialization must be default or calibrated-geometric")
+    if variant not in {"scalar", "grouped-4", "channel-wise"}:
+        raise ValueError("Study variant must be scalar, grouped-4, or channel-wise")
+    if not str(task["experiment_id"]).strip() or not str(task.get("condition_id", variant)).strip():
+        raise ValueError("Study experiment_id and condition_id must be non-empty")
+    run_dir = Path(task["output_dir"])
+    run_mode = task.get("run_mode", "production")
+    if run_mode == "smoke":
+        profile = smoke_profile(run_dir.parent)
+        if scale not in profile.models:
+            raise ValueError(f"Smoke scale {scale!r} is unavailable")
+        profile = replace(profile, scales=(scale,), seeds=(int(task["seed"]),))
+    elif run_mode == "production":
+        profile = production_profile(run_dir.parent)
+        if scale not in profile.models:
+            raise ValueError(f"Unknown study scale {scale!r}")
+        profile = replace(
+            profile, recurrence_backend=task.get("recurrence_backend", "reference"),
+            recurrence_input_dtype=task.get("recurrence_input_dtype", "autocast"),
+            state_accumulator_dtype=task.get("state_accumulator_dtype", "input"),
+            recurrence_chunk_size=int(task.get("recurrence_chunk_size", 64)),
+            scales=(scale,), seeds=(int(task["seed"]),), enabled_families=(family,),
+        )
+    else:
+        raise ValueError("run_mode must be production or smoke")
+    budget = TrainingBudget(
+        max_optimizer_steps=int(task["max_optimizer_steps"]),
+        grad_accum_steps=int(task["grad_accum_steps"]),
+        batch_size=int(task["batch_size"]),
+        context_length=int(task["context_length"]),
+        validation_steps=int(task["validation_steps"]),
+        evaluation_interval=int(task["evaluation_interval"]),
+        status="study_locked_budget",
+    )
+    if min(budget.max_optimizer_steps or 0, budget.grad_accum_steps, budget.batch_size,
+           budget.context_length, budget.validation_steps, budget.evaluation_interval) < 1:
+        raise ValueError("Study budgets and validation settings must be positive")
+    learning_rate = float(task["learning_rate"])
+    if learning_rate <= 0:
+        raise ValueError("Study learning_rate must be positive")
+    calibration_examples = int(task.get("calibration_examples", 8))
+    concurrency = int(task.get("concurrent_training_runs", 1))
+    if calibration_examples < 1 or concurrency < 1:
+        raise ValueError("calibration_examples and concurrent_training_runs must be positive")
+    overrides = {
+        "budget": budget,
+        "learning_rate": learning_rate,
+        "selected_variants": (variant,),
+        "experiment_id": str(task["experiment_id"]),
+        "condition_id": str(task.get("condition_id", variant)),
+        "initialization": task["initialization"],
+        "calibration_min_half_life": task.get("calibration_min_half_life"),
+        "calibration_max_half_life": task.get("calibration_max_half_life"),
+        "calibration_examples": calibration_examples,
+        "concurrent_training_runs": concurrency,
+        "study_task_run_dir": run_dir,
+        "study_qualification": bool(task.get("qualification", False)),
+        "study_qualification_stage": task.get("qualification_stage"),
+        "study_qualification_scope": task.get("qualification_scope"),
+        "study_validation_answer_accuracy": bool(task.get("validation_answer_accuracy", False)),
+    }
+    if task.get("retrieval_config"):
+        allowed = RetrievalConfig.__dataclass_fields__.keys()
+        unknown = sorted(set(task["retrieval_config"]) - set(allowed))
+        if unknown:
+            raise ValueError("Unknown retrieval_config key(s): " + ", ".join(unknown))
+        retrieval_values = dict(task["retrieval_config"])
+        retrieval_values.setdefault("generator_version", "mqar-overwrite-v3")
+        for key in ("sequence_lengths", "key_counts", "query_distances", "overwrite_counts"):
+            if key in retrieval_values:
+                retrieval_values[key] = tuple(retrieval_values[key])
+        overrides["retrieval"] = RetrievalConfig(**retrieval_values)
+    else:
+        overrides["retrieval"] = replace(profile.retrieval, generator_version="mqar-overwrite-v3")
+    if "curriculum" in task:
+        if not isinstance(task["curriculum"], list):
+            raise ValueError("curriculum must be a list of stage objects")
+        overrides["curriculum"] = tuple(task["curriculum"])
+    profile = replace(profile, **overrides)
+    if operation == "train":
+        return run_seed(profile, family=family, scale=scale, variant=variant, seed=int(task["seed"]), stop_after_trained=True)
+    if operation == "evaluate":
+        return run_seed(profile, family=family, scale=scale, variant=variant, seed=int(task["seed"]), evaluate_only=True)
+    return run_seed(profile, family=family, scale=scale, variant=variant, seed=int(task["seed"]))
 
 
 def build_profile(
@@ -62,6 +180,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run scalar/channel-wise Gated DeltaNet experiments")
     parser.add_argument("--mode", choices=("production", "smoke"), default="production")
     parser.add_argument("--output", help="isolated output root; smoke defaults to a unique directory")
+    parser.add_argument(
+        "--study-task-config", help="execute one JSON worker task emitted by run_granularity_init_study.ps1",
+    )
     parser.add_argument("--family", choices=("all", "tinystories", "mqar", "overwrite"), default="all")
     parser.add_argument("--models", help="comma-separated model scales to run, e.g. 10M,30M")
     parser.add_argument("--seeds", help="comma-separated seeds to run, e.g. 42,43")
@@ -121,6 +242,13 @@ def main() -> None:
         help="seed-count plan included in the pilot time estimate, e.g. 10M:5,30M:5,55M:1,100M:1",
     )
     args = parser.parse_args()
+    if args.study_task_config:
+        try:
+            result = _run_study_task(args.study_task_config)
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError, RuntimeError) as exc:
+            parser.error(str(exc))
+        print(result)
+        return
     if args.concurrent_training_runs < 1:
         parser.error("--concurrent-training-runs must be at least 1")
     if args.pilot_require_parallel_workers is not None:

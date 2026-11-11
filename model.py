@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, is_dataclass
+import zlib
 from typing import Any
 
 import torch
@@ -99,12 +100,22 @@ def recurrent_forward(
 class GatedDeltaNetAttention(nn.Module):
     def __init__(
         self, d_model: int, n_head: int, d_head: int, variant: str = "scalar",
-        recurrence_options: RecurrenceOptions = RecurrenceOptions(),
+        recurrence_options: RecurrenceOptions = RecurrenceOptions(), gate_groups: int | None = None,
+        calibrated_initialization: bool = False,
     ):
         super().__init__()
-        if variant not in {"scalar", "channel-wise"}:
+        if variant == "grouped":
+            variant = "grouped-4"
+        if variant not in {"scalar", "channel-wise", "grouped-4"}:
             raise ValueError(f"Unknown Gated DeltaNet variant {variant!r}")
+        if variant == "grouped-4":
+            gate_groups = 4 if gate_groups is None else gate_groups
+            if gate_groups < 1 or d_head % gate_groups:
+                raise ValueError(f"Gate group count must be a positive divisor of head dimension {d_head}")
+        elif gate_groups is not None:
+            raise ValueError("gate_groups is only valid for grouped gate models")
         self.d_model, self.n_head, self.d_head, self.variant = d_model, n_head, d_head, variant
+        self.gate_groups = gate_groups
         projection_dim = n_head * d_head
         self.q_proj = nn.Linear(d_model, projection_dim, bias=False)
         self.k_proj = nn.Linear(d_model, projection_dim, bias=False)
@@ -113,25 +124,29 @@ class GatedDeltaNetAttention(nn.Module):
         self.k_conv = CausalConv1d(projection_dim)
         self.v_conv = CausalConv1d(projection_dim)
         self.beta_proj = nn.Linear(d_model, n_head, bias=False)
-        alpha_dim = n_head if variant == "scalar" else projection_dim
-        self.alpha_proj = nn.Linear(d_model, alpha_dim, bias=False)
+        alpha_dim = n_head if variant == "scalar" else n_head * (gate_groups if variant == "grouped-4" else d_head)
+        self.alpha_proj = nn.Linear(d_model, alpha_dim, bias=calibrated_initialization)
         self.gate_proj = nn.Linear(d_model, projection_dim, bias=False)
         self.out_proj = nn.Linear(projection_dim, d_model, bias=False)
         self.layer_idx = -1
         self._gate_observer: Callable[[torch.Tensor, str, int], None] | None = None
         self._runtime_gate_groups: int | None = None
+        self._runtime_gate_aggregation = "mean_alpha"
         self.recurrence_options = recurrence_options
 
     def set_gate_observer(self, observer: Callable[[torch.Tensor, str, int], None] | None) -> None:
         self._gate_observer = observer
 
-    def set_runtime_gate_groups(self, groups: int | None) -> None:
+    def set_runtime_gate_groups(self, groups: int | None, aggregation: str = "mean_alpha") -> None:
+        if aggregation not in {"mean_alpha", "mean_log_decay"}:
+            raise ValueError("aggregation must be 'mean_alpha' or 'mean_log_decay'")
         if groups is not None:
             if self.variant != "channel-wise":
                 raise ValueError("Post-hoc gate grouping is only valid for channel-wise models")
             if groups < 1 or self.d_head % groups:
                 raise ValueError(f"Gate group count must be a positive divisor of head dimension {self.d_head}")
         self._runtime_gate_groups = groups
+        self._runtime_gate_aggregation = aggregation
 
     def forward(
         self, x: torch.Tensor, cache: Mapping[str, torch.Tensor | str] | None = None, *, use_cache: bool = False
@@ -147,12 +162,19 @@ class GatedDeltaNetAttention(nn.Module):
             q, k, v = self.q_conv(self.q_proj(x)), self.k_conv(self.k_proj(x)), self.v_conv(self.v_proj(x))
         q, k, v = (tensor.view(batch, time, heads, width) for tensor in (q, k, v))
         beta = torch.sigmoid(self.beta_proj(x)).view(batch, time, heads, 1)
-        alpha_width = 1 if self.variant == "scalar" else width
+        alpha_width = 1 if self.variant == "scalar" else (self.gate_groups if self.variant == "grouped-4" else width)
         alpha = torch.sigmoid(self.alpha_proj(x)).view(batch, time, heads, alpha_width)
+        if self.variant == "grouped-4":
+            group_width = width // self.gate_groups
+            alpha = alpha.unsqueeze(-1).expand(batch, time, heads, self.gate_groups, group_width).reshape(batch, time, heads, width)
         if self._runtime_gate_groups is not None:
             groups = self._runtime_gate_groups
             group_width = width // groups
-            alpha = alpha.view(batch, time, heads, groups, group_width).mean(dim=-1, keepdim=True)
+            grouped = alpha.view(batch, time, heads, groups, group_width)
+            if self._runtime_gate_aggregation == "mean_log_decay":
+                alpha = grouped.clamp_min(torch.finfo(grouped.dtype).tiny).log().mean(dim=-1, keepdim=True).exp()
+            else:
+                alpha = grouped.mean(dim=-1, keepdim=True)
             alpha = alpha.expand(batch, time, heads, groups, group_width).reshape(batch, time, heads, width)
         if self._gate_observer is not None:
             self._gate_observer(alpha.detach(), self.variant, self.layer_idx)
@@ -230,6 +252,7 @@ class GatedDeltaNetBlock(nn.Module):
     def __init__(
         self, layer_idx: int, d_model: int, n_head: int, d_head: int, d_ff: int,
         variant: str, attention_layout: str, recurrence_options: RecurrenceOptions,
+        gate_groups: int | None = None, calibrated_initialization: bool = False,
     ):
         super().__init__()
         self.layer_idx = layer_idx
@@ -237,7 +260,9 @@ class GatedDeltaNetBlock(nn.Module):
         is_full_attention = attention_layout == "hybrid" and layer_idx % 4 == 3
         self.attn: GatedDeltaNetAttention | CausalSelfAttention = (
             CausalSelfAttention(d_model, n_head, d_head)
-            if is_full_attention else GatedDeltaNetAttention(d_model, n_head, d_head, variant, recurrence_options)
+            if is_full_attention else GatedDeltaNetAttention(
+                d_model, n_head, d_head, variant, recurrence_options, gate_groups, calibrated_initialization
+            )
         )
         if isinstance(self.attn, GatedDeltaNetAttention):
             self.attn.layer_idx = layer_idx
@@ -271,19 +296,32 @@ def _normalize_config(config_dict: ModelConfig | Mapping[str, Any]) -> ModelConf
 class GatedDeltaNetLM(nn.Module):
     def __init__(
         self, config_dict: ModelConfig | Mapping[str, Any], variant: str = "scalar", vocab_size: int = 50_257,
-        recurrence_options: RecurrenceOptions = RecurrenceOptions(),
+        recurrence_options: RecurrenceOptions = RecurrenceOptions(), gate_groups: int | None = None,
+        gate_initialization: str = "default", study_init_seed: int | None = None,
     ):
         super().__init__()
         if variant == "scalar-matched":
             variant = "scalar"
+        if variant == "grouped":
+            variant = "grouped-4"
+        if variant not in {"scalar", "channel-wise", "grouped-4"}:
+            raise ValueError(f"Unknown Gated DeltaNet variant {variant!r}")
+        if gate_initialization not in {"default", "calibrated-geometric"}:
+            raise ValueError(f"Unknown gate initialization {gate_initialization!r}")
+        if variant == "grouped-4":
+            gate_groups = 4 if gate_groups is None else gate_groups
+        elif gate_groups is not None:
+            raise ValueError("gate_groups is only valid for grouped gate models")
         self.model_config = _normalize_config(config_dict)
         self.variant, self.vocab_size, self.d_model = variant, vocab_size, self.model_config.d_model
+        self.gate_groups, self.gate_initialization = gate_groups, gate_initialization
         self.recurrence_options = recurrence_options
         self.tok_embeddings = nn.Embedding(vocab_size, self.d_model)
         self.blocks = nn.ModuleList([
             GatedDeltaNetBlock(
                 index, self.d_model, self.model_config.n_head, self.model_config.d_head,
                 self.model_config.ffn_widths[index], variant, self.model_config.attention_layout, recurrence_options,
+                gate_groups, gate_initialization == "calibrated-geometric" or study_init_seed is not None,
             )
             for index in range(self.model_config.n_layer)
         ])
@@ -291,6 +329,18 @@ class GatedDeltaNetLM(nn.Module):
         self.output = nn.Linear(self.d_model, vocab_size, bias=False)
         self.output.weight = self.tok_embeddings.weight
         self.apply(self._init_weights)
+        if gate_initialization == "calibrated-geometric":
+            # Matched initial functions within each head; gradients remain independent.
+            with torch.no_grad():
+                for block in self.blocks:
+                    if not isinstance(block.attn, GatedDeltaNetAttention):
+                        continue
+                    gate = block.attn
+                    per_head = gate.alpha_proj.out_features // gate.n_head
+                    weights = gate.alpha_proj.weight.view(gate.n_head, per_head, self.d_model)
+                    weights.copy_(weights[:, :1, :].expand_as(weights))
+        if study_init_seed is not None:
+            self.initialize_study_weights(study_init_seed)
 
     @staticmethod
     def _init_weights(module: nn.Module) -> None:
@@ -299,20 +349,59 @@ class GatedDeltaNetLM(nn.Module):
             if isinstance(module, nn.Linear) and module.bias is not None:
                 nn.init.zeros_(module.bias)
 
+    def initialize_study_weights(self, seed: int) -> None:
+        """Initialize paired-study models identically outside the alpha projections.
+
+        Per-module stable seeds prevent alpha tensor shape from shifting RNG draws
+        for later backbone modules. Alpha rows are also seeded by head/output slot;
+        calibrated models use one shared row per head to preserve matched functions.
+        """
+        def seeded(name: str, suffix: str = "") -> torch.Generator:
+            payload = f"{int(seed)}:{name}:{suffix}".encode("utf-8")
+            value = zlib.crc32(payload) & 0x7FFFFFFF
+            return torch.Generator(device="cpu").manual_seed(value)
+
+        with torch.no_grad():
+            for name, module in self.named_modules():
+                if isinstance(module, (nn.Linear, nn.Embedding)) and not name.endswith("alpha_proj"):
+                    nn.init.normal_(module.weight, mean=0.0, std=0.02, generator=seeded(name, "weight"))
+                    if isinstance(module, nn.Linear) and module.bias is not None:
+                        nn.init.zeros_(module.bias)
+                elif isinstance(module, nn.Conv1d):
+                    # Preserve Conv1d's default reset rule, but isolate its RNG stream.
+                    with torch.random.fork_rng(devices=[]):
+                        torch.manual_seed(seeded(name).initial_seed())
+                        module.reset_parameters()
+            for name, module in self.named_modules():
+                if not isinstance(module, nn.Linear) or not name.endswith("alpha_proj"):
+                    continue
+                layer = self.blocks[int(name.split(".")[1])].attn
+                if not isinstance(layer, GatedDeltaNetAttention):
+                    continue
+                per_head = module.out_features // layer.n_head
+                rows = []
+                for head in range(layer.n_head):
+                    shared = self.gate_initialization == "calibrated-geometric"
+                    for output_slot in range(per_head):
+                        slot = 0 if shared else output_slot
+                        row_gen = seeded(name, f"{head}:{slot}")
+                        rows.append(torch.empty(self.d_model).normal_(mean=0.0, std=0.02, generator=row_gen))
+                module.weight.copy_(torch.stack(rows).to(module.weight))
+
     def set_gate_observer(self, observer: Callable[[torch.Tensor, str, int], None] | None) -> None:
         for block in self.blocks:
             if isinstance(block.attn, GatedDeltaNetAttention):
                 block.attn.set_gate_observer(observer)
 
-    def set_runtime_gate_groups(self, groups: int | None) -> None:
-        """Temporarily share each channel-wise gate across contiguous channel groups."""
+    def set_runtime_gate_groups(self, groups: int | None, aggregation: str = "mean_alpha") -> None:
+        """Temporarily share channel gates, averaging retention or log-retention."""
         recurrent_layers = [
             block.attn for block in self.blocks if isinstance(block.attn, GatedDeltaNetAttention)
         ]
         if not recurrent_layers:
             raise ValueError("This model has no Gated DeltaNet layers")
         for layer in recurrent_layers:
-            layer.set_runtime_gate_groups(groups)
+            layer.set_runtime_gate_groups(groups, aggregation)
 
     def _validate_model_cache(self, cache: Sequence[Mapping[str, torch.Tensor | str]] | None) -> None:
         if cache is not None and len(cache) != len(self.blocks):

@@ -23,13 +23,24 @@ def channel_wise_gate_overhead(model_config: ModelConfig) -> int:
     return gdn_layer_count(model_config) * model_config.d_model * (model_config.d_model - model_config.n_head)
 
 
-def expected_parameter_count(model_config: ModelConfig, variant: str, vocab_size: int) -> int:
+def expected_parameter_count(
+    model_config: ModelConfig, variant: str, vocab_size: int, *, gate_groups: int | None = None,
+    gate_initialization: str = "default", study_init_seed: int | None = None,
+) -> int:
     """Exact trainable-storage count without instantiating a production model."""
 
     if variant == "scalar-matched":
         model_config, variant = matched_scalar_config(model_config), "scalar"
-    if variant not in {"scalar", "channel-wise"}:
+    if variant not in {"scalar", "grouped-4", "channel-wise"}:
         raise ValueError(f"Unknown variant {variant!r}")
+    if variant == "grouped-4":
+        gate_groups = 4 if gate_groups is None else gate_groups
+        if gate_groups < 1 or model_config.d_head % gate_groups:
+            raise ValueError("grouped gate count must divide the head dimension")
+    elif gate_groups is not None:
+        raise ValueError("gate_groups is only valid for grouped-4")
+    if gate_initialization not in {"default", "calibrated-geometric"}:
+        raise ValueError(f"Unknown gate initialization {gate_initialization!r}")
     d_model, heads = model_config.d_model, model_config.n_head
     gdn_layers = gdn_layer_count(model_config)
     attention_layers = model_config.n_layer - gdn_layers
@@ -39,8 +50,10 @@ def expected_parameter_count(model_config: ModelConfig, variant: str, vocab_size
     # Q/K/V, output gate and output projection; three depthwise conv weights
     # plus bias; beta and alpha projections.
     gdn = gdn_layers * (5 * d_model * d_model + 15 * d_model + 2 * d_model * heads)
-    if variant == "channel-wise":
-        gdn += channel_wise_gate_overhead(model_config)
+    gates_per_head = 1 if variant == "scalar" else (gate_groups if variant == "grouped-4" else model_config.d_head)
+    gdn += gdn_layers * d_model * heads * (gates_per_head - 1)
+    if gate_initialization == "calibrated-geometric" or study_init_seed is not None:
+        gdn += gdn_layers * heads * gates_per_head
     full_attention = attention_layers * 4 * d_model * d_model
     return embeddings + norms + ffn + gdn + full_attention
 
@@ -78,17 +91,25 @@ def construct_model(
     vocab_size: int,
     *,
     recurrence_options: RecurrenceOptions = RecurrenceOptions(),
+    gate_groups: int | None = None,
+    gate_initialization: str = "default",
+    study_init_seed: int | None = None,
 ) -> tuple[GatedDeltaNetLM, ModelConfig, dict]:
     """Build a variant and attach the reproducible control-accounting metadata."""
 
     resolved_config = matched_scalar_config(model_config) if variant == "scalar-matched" else model_config
     actual_variant = "scalar" if variant == "scalar-matched" else variant
+    effective_gate_groups = (4 if gate_groups is None else gate_groups) if variant == "grouped-4" else gate_groups
     model = GatedDeltaNetLM(
         resolved_config, variant=actual_variant, vocab_size=vocab_size,
-        recurrence_options=recurrence_options,
+        recurrence_options=recurrence_options, gate_groups=effective_gate_groups,
+        gate_initialization=gate_initialization, study_init_seed=study_init_seed,
     )
     total = sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)
-    expected = expected_parameter_count(model_config, variant, vocab_size)
+    expected = expected_parameter_count(
+        model_config, variant, vocab_size, gate_groups=effective_gate_groups,
+        gate_initialization=gate_initialization, study_init_seed=study_init_seed,
+    )
     if total != expected:
         raise AssertionError(f"Model accounting mismatch: expected {expected}, constructed {total}")
     metadata = {
@@ -100,6 +121,20 @@ def construct_model(
         "parameter_components": parameter_breakdown(model),
         "recurrence": backend_metadata(recurrence_options),
     }
+    if variant == "grouped-4" or gate_initialization != "default" or study_init_seed is not None:
+        gates_per_head = 1 if variant == "scalar" else (effective_gate_groups if variant == "grouped-4" else model_config.d_head)
+        metadata["gate_parameter_overhead"] = (
+            gdn_layer_count(model_config) * model_config.d_model * model_config.n_head * (gates_per_head - 1)
+            + (gdn_layer_count(model_config) * model_config.n_head * gates_per_head
+               if gate_initialization == "calibrated-geometric" or study_init_seed is not None else 0)
+        )
+    if variant == "grouped-4" or gate_groups is not None:
+        metadata["gate_groups"] = effective_gate_groups
+    if gate_initialization != "default":
+        metadata["gate_initialization"] = gate_initialization
+    if study_init_seed is not None:
+        metadata["study_init_seed"] = study_init_seed
+        metadata["alpha_bias_enabled"] = True
     if variant == "scalar-matched":
         channel_model = GatedDeltaNetLM(model_config, variant="channel-wise", vocab_size=vocab_size)
         target = sum(parameter.numel() for parameter in channel_model.parameters() if parameter.requires_grad)

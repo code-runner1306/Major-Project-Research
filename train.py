@@ -5,13 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 import random
 import time
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable
 
 import numpy as np
 import torch
 import torch.optim as optim
 
-from artifacts import save_checkpoint
+from artifacts import atomic_write_json, save_checkpoint
 from config import ExperimentConfig
 from energy import EnergyProvider, normalized_energy
 from model import GatedDeltaNetLM
@@ -97,6 +97,8 @@ def train_fixed_budget(
     run_dir: str,
     energy_provider: EnergyProvider,
     progress_label: str = "training",
+    validation_metrics_fn: Callable[[GatedDeltaNetLM, int], dict[str, Any]] | None = None,
+    curriculum_loaders: list[tuple[int, Iterable[tuple[torch.Tensor, torch.Tensor]]]] | None = None,
 ) -> dict[str, Any]:
     """Train to the exact configured step budget; validation can never stop it."""
 
@@ -114,6 +116,8 @@ def train_fixed_budget(
     )
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
     iterator = iter(train_dataloader)
+    curriculum = sorted(curriculum_loaders or [], key=lambda item: item[0])
+    curriculum_index = 0
     losses: list[float] = []
     unclipped_norms: list[float] = []
     clipped_norms: list[float] = []
@@ -128,6 +132,10 @@ def train_fixed_budget(
     with energy_provider.region("training") as energy_region:
         model.train()
         for step in range(1, max_steps + 1):
+            while curriculum_index < len(curriculum) and step >= curriculum[curriculum_index][0]:
+                train_dataloader = curriculum[curriculum_index][1]
+                iterator = iter(train_dataloader)
+                curriculum_index += 1
             step_started = time.perf_counter()
             optimizer.zero_grad(set_to_none=True)
             loss_sum = 0.0
@@ -168,8 +176,17 @@ def train_fixed_budget(
 
             if step % profile.budget.evaluation_interval == 0 or step == max_steps:
                 validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)
+                if validation_metrics_fn is not None:
+                    validation.update(validation_metrics_fn(model, step))
                 validation["step"] = step
                 validation_history.append(validation)
+                atomic_write_json(f"{run_dir}/validation_history.json", validation_history)
+                print(
+                    f"Validation progress [{progress_label}]: step={step}/{max_steps} "
+                    f"loss={float(validation['loss']):.6f} "
+                    f"perplexity={float(validation['perplexity']):.4f}",
+                    flush=True,
+                )
                 if float(validation["loss"]) < best_validation:
                     best_validation = float(validation["loss"])
                     best_validation_metrics = dict(validation)
@@ -195,6 +212,10 @@ def train_fixed_budget(
             "unclipped_gradient_norms": unclipped_norms,
             "clipped_gradient_norms": clipped_norms,
             "stability_events": events,
+            "curriculum": [
+                {"start_step": start_step, "stage_index": index + 1}
+                for index, (start_step, _) in enumerate(curriculum)
+            ],
         },
         "final_checkpoint": checkpoint,
         "final_validation": primary_validation,

@@ -1,3 +1,17 @@
+# Study update — November 2026
+
+This update supersedes the earlier proposal's claim that gate granularity has not been isolated in a controlled factorial study. A 2026 controlled factorial comparison already evaluates scalar and channel-wise decay with and without delta-rule writes across small and larger model scales. It reports that the granularity effect interacts with the delta rule and varies by dataset and scale ([Das, “Delta-Rule Writes in Linear Attention: A Controlled Factorial Study of Decay Design”](https://tmlr.infinite-conf.org/paper_pages/FdXB4u27LD.html)). The present project therefore does not claim to be the first controlled study of gate granularity.
+
+The revised research question is: **when initial memory timescales are controlled, how much independent decay control is useful, and does its value differ between association retention and overwrite recall?** The core comparison is a six-condition granularity-by-initialization design at 10M parameters: scalar, grouped-4, and channel-wise gates under default and calibrated geometric timescale initialization. A targeted four-condition scalar/channel-wise confirmation runs at 30M. TinyStories, MQAR, and overwrite recall remain the three task families. The main result is the change in the scalar-versus-channel-wise gap between default and calibrated initialization; grouped-4 locates an intermediate granularity.
+
+Initialization is a central factor because recent work reports that initial gate parameters and input activations shape realized retention, and proposes calibrating both across heads and layers ([Feng et al., “DAMI: Dual-Axis Memory Initialization for Enhanced Long-Context Retrieval in Gated Linear Attention”](https://arxiv.org/abs/2610.41994)). This project studies calibrated head timescales while holding its other model and training choices fixed; it does not claim DAMI's initialization contribution as new.
+
+Grouped decay is also an active design direction. Systolic Linear Attention groups decay gates into four 64-channel tiles as part of a TPU-focused hardware and kernel co-design ([Amirkhanyan and Cheng, “Systolic Linear Attention: Co-Designing Tile-Grouped Gated Delta Attention for TPUs”](https://arxiv.org/abs/2611.06828)). The grouped-4 arm here asks a behavioral capacity question within the fixed small-model backbone, not a hardware-performance or kernel-fusion claim.
+
+The full protocol, limits, and implementation status are recorded in [`RESEARCH_IMPLEMENTATION_PLAN.md`](RESEARCH_IMPLEMENTATION_PLAN.md). The earlier proposal sections below are retained as historical background and should be read in light of this revised question and related-work correction.
+
+---
+
 # Does Fine-Grained Gating Generalize Below Scale?
 ### A Controlled, Multi-Scale Study of Scalar vs. Channel-Wise Gating in Gated DeltaNet Language Models
 

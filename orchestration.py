@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from itertools import islice
+import json
 from pathlib import Path
 import time
 from typing import Any, Literal
@@ -13,7 +15,7 @@ from artifacts import (
     SeedManifest, atomic_write_json, fingerprint, initialize_lifecycle, manifest_compatibility,
     read_json, transition_lifecycle, validate_completion, validate_checkpoint, write_manifest,
 )
-from config import ExperimentConfig, ModelConfig
+from config import ExperimentConfig, ModelConfig, RetrievalConfig
 from controls import construct_model
 from dataset import tinystories_dataloader, toy_dataloader
 from diagnostics import collect_gate_diagnostics, static_cost_report
@@ -44,10 +46,18 @@ def recurrence_options_for(profile: ExperimentConfig) -> RecurrenceOptions:
 
 
 def _run_path(profile: ExperimentConfig, family: Family, scale: str, variant: str, seed: int) -> Path:
+    if profile.study_task_run_dir is not None:
+        return profile.study_task_run_dir
     identity = {
         "run_mode": profile.run_mode, "family": family, "scale": scale, "variant": variant,
         "profile": profile.to_manifest_dict(), "seed": seed,
     }
+    if profile.experiment_id is not None:
+        identity["study"] = {
+            "experiment_id": profile.experiment_id,
+            "condition_id": profile.condition_id,
+            "initialization": profile.initialization,
+        }
     return profile.output_dir / family / scale / variant / f"seed_{seed}_{fingerprint(identity)[:12]}"
 
 
@@ -58,39 +68,90 @@ def _resolved_backbone(profile: ExperimentConfig, family: Family, scale: str) ->
 
 def _data_for_run(
     profile: ExperimentConfig, family: Family, seeds: SeedBundle, run_dir: Path
-) -> tuple[Any, Any, dict[str, Any], Any | None]:
+) -> tuple[Any, Any, dict[str, Any], Any | None, Any | None, list[tuple[int, Any]]]:
     if family == "tinystories":
         if profile.run_mode == "smoke":
             data_identity = {
                 "dataset": "toy-language-v1", "data_seed": seeds.data_seed,
                 "train_examples": 12, "validation_examples": 4, "paired_order": "index_order",
             }
-            return toy_dataloader(profile, seed=seeds.data_seed, split="train"), toy_dataloader(profile, seed=seeds.data_seed, split="validation"), data_identity, None
+            if profile.curriculum:
+                raise ValueError("Curriculum is supported only for synthetic retrieval workers")
+            return toy_dataloader(profile, seed=seeds.data_seed, split="train"), toy_dataloader(profile, seed=seeds.data_seed, split="validation"), data_identity, None, None, []
         train = tinystories_dataloader(profile, split="train", data_seed=seeds.data_seed, run_dir=run_dir)
         validation = tinystories_dataloader(profile, split="validation", data_seed=seeds.data_seed, run_dir=run_dir)
         data_identity = read_json(run_dir / "data_identity.json")
         data_identity["paired_order"] = "datasets.Dataset.shuffle(seed=data_seed)"
-        return train, validation, data_identity, None
+        if profile.curriculum:
+            raise ValueError("Curriculum is supported only for synthetic retrieval workers")
+        return train, validation, data_identity, None, None, []
 
     task = "mqar" if family == "mqar" else "overwrite"
     train_set = RetrievalDataset(
         task=task, examples=profile.retrieval.train_examples, config=profile.retrieval,
         seed=seeds.data_seed, split="train",
     )
+    study = profile.experiment_id is not None
+    validation_seed = seeds.evaluation_seed if study else seeds.evaluation_seed
+    test_seed = seeds.evaluation_seed + 1 if study else seeds.evaluation_seed
+    validation_retrieval = RetrievalDataset(
+        task=task, examples=profile.retrieval.validation_examples or profile.retrieval.held_out_examples, config=profile.retrieval,
+        seed=validation_seed, split="validation" if study else "held_out",
+    )
     held_out = RetrievalDataset(
         task=task, examples=profile.retrieval.held_out_examples, config=profile.retrieval,
-        seed=seeds.evaluation_seed, split="held_out",
+        seed=test_seed, split="held_out",
     )
-    train_manifest, held_manifest = train_set.manifest(), held_out.manifest()
+    train_manifest, validation_manifest, held_manifest = train_set.manifest(), validation_retrieval.manifest(), held_out.manifest()
     if train_manifest["hash"] == held_manifest["hash"]:
         raise AssertionError("Retrieval train and held-out generator identities must not overlap")
+    if study and (train_manifest["hash"] == validation_manifest["hash"] or validation_manifest["hash"] == held_manifest["hash"]):
+        raise AssertionError("Study retrieval train, validation, and held-out identities must not overlap")
     atomic_write_json(run_dir / "generator_train.json", train_manifest)
     atomic_write_json(run_dir / "generator_held_out.json", held_manifest)
+    if study:
+        atomic_write_json(run_dir / "generator_validation.json", validation_manifest)
     identity = {
         "generator_version": train_manifest["generator_version"], "train_hash": train_manifest["hash"],
         "held_out_hash": held_manifest["hash"], "paired_order": "indexed_seeded_order",
     }
-    return retrieval_dataloader(train_set, profile.budget.batch_size), retrieval_dataloader(held_out, profile.budget.batch_size), identity, held_out
+    if study:
+        identity.update({"validation_hash": validation_manifest["hash"], "validation_seed": validation_seed, "test_seed": test_seed})
+    curriculum_loaders: list[tuple[int, Any]] = []
+    stage_identities = []
+    # A curriculum may replace the base retrieval profile from optimizer step 1.
+    # Step 0 is the ordering sentinel so the first explicit stage can start at 1.
+    previous_start = 0
+    for stage in profile.curriculum:
+        unknown_stage_keys = sorted(set(stage) - {"start_step", "retrieval_config"})
+        if unknown_stage_keys:
+            raise ValueError("Unknown curriculum stage key(s): " + ", ".join(unknown_stage_keys))
+        start_step = int(stage.get("start_step", 0))
+        if start_step <= previous_start or start_step >= (profile.budget.max_optimizer_steps or 0):
+            raise ValueError("Curriculum start_step values must increase and fall before the final optimizer step")
+        config_values = dict(stage.get("retrieval_config", {}))
+        unknown = sorted(set(config_values) - set(RetrievalConfig.__dataclass_fields__))
+        if unknown:
+            raise ValueError("Unknown curriculum RetrievalConfig key(s): " + ", ".join(unknown))
+        for key in ("sequence_lengths", "key_counts", "query_distances", "overwrite_counts"):
+            if key in config_values:
+                config_values[key] = tuple(config_values[key])
+        stage_config = replace(profile.retrieval, **config_values)
+        stage_set = RetrievalDataset(
+            task=task, examples=stage_config.train_examples, config=stage_config,
+            seed=seeds.data_seed, split="train",
+        )
+        stage_manifest = stage_set.manifest()
+        curriculum_loaders.append((start_step, retrieval_dataloader(stage_set, profile.budget.batch_size)))
+        stage_identities.append({"start_step": start_step, "manifest": stage_manifest})
+        previous_start = start_step
+    if stage_identities:
+        atomic_write_json(run_dir / "curriculum_train.json", {"stages": stage_identities})
+        identity["curriculum"] = [
+            {"start_step": entry["start_step"], "hash": entry["manifest"]["hash"]}
+            for entry in stage_identities
+        ]
+    return retrieval_dataloader(train_set, profile.budget.batch_size), retrieval_dataloader(validation_retrieval, profile.budget.batch_size), identity, held_out, validation_retrieval, curriculum_loaders
 
 
 def _manifest(
@@ -125,7 +186,7 @@ def _manifest(
             "posthoc_gate_group_counts": list(profile.posthoc_gate_group_counts),
             "posthoc_gate_eval_examples": profile.posthoc_gate_eval_examples,
             "energy": profile.enable_energy_collection,
-            "retrieval_version": GENERATOR_VERSION if family != "tinystories" else None,
+            "retrieval_version": profile.retrieval.generator_version if family != "tinystories" else None,
             "natural_language_retrieval": "exploratory_zero_shot" if family == "tinystories" else None,
         },
         expected_artifacts=("manifest.json", "lifecycle.json", "metrics.json", "final_checkpoint.pt"),
@@ -348,32 +409,99 @@ def run_seed(
     run_dir = _run_path(profile, family, scale, variant, seed)
     run_dir.mkdir(parents=True, exist_ok=True)
     seeds = SeedBundle.from_research_seed(seed)
-    train_data, validation_data, data_identity, held_out_retrieval = _data_for_run(profile, family, seeds, run_dir)
+    train_data, validation_data, data_identity, held_out_retrieval, validation_retrieval, curriculum_loaders = _data_for_run(profile, family, seeds, run_dir)
     seed_everything(seeds.model_seed)
     backbone = _resolved_backbone(profile, family, scale)
     vocab_size = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
+    construct_kwargs = {
+        "recurrence_options": recurrence_options_for(profile),
+        "gate_initialization": profile.initialization,
+        "study_init_seed": seeds.model_seed if profile.experiment_id is not None else None,
+    }
+    if variant == "grouped-4":
+        construct_kwargs["gate_groups"] = 4
     model, resolved_model, model_metadata = construct_model(
-        backbone, variant, vocab_size, recurrence_options=recurrence_options_for(profile),
+        backbone, variant, vocab_size, **construct_kwargs,
     )
+    calibration_path = run_dir / "calibration.json"
+    manifest_path = run_dir / "manifest.json"
+    if profile.initialization == "calibrated-geometric":
+        if evaluate_only or manifest_path.exists():
+            if not calibration_path.is_file():
+                raise RuntimeError("Calibrated evaluation requires its saved calibration provenance")
+            calibration_report = read_json(calibration_path)
+        else:
+            from gate_initialization import calibrate_gate_initialization
+            if profile.calibration_min_half_life is None or profile.calibration_max_half_life is None:
+                raise ValueError("Calibrated initialization requires minimum and maximum half-life")
+            calibration_device = torch.device("cuda" if profile.run_mode == "production" else "cpu")
+            model.to(calibration_device)
+            example_limit = max(1, profile.calibration_examples)
+            batch_count = (example_limit + profile.budget.batch_size - 1) // profile.budget.batch_size
+            batches = list(islice(iter(train_data), batch_count))
+            remaining = example_limit
+            bounded_batches = []
+            for batch in batches:
+                tokens, targets = batch
+                take = min(remaining, tokens.shape[0])
+                bounded_batches.append((tokens[:take], targets[:take]))
+                remaining -= take
+                if remaining <= 0:
+                    break
+            calibration_started = time.perf_counter()
+            calibration_report = calibrate_gate_initialization(
+                model, bounded_batches, calibration_device,
+                min_half_life=profile.calibration_min_half_life,
+                max_half_life=profile.calibration_max_half_life,
+            )
+            calibration_report["calibration_examples"] = example_limit - remaining
+            calibration_report["calibration_wall_time_seconds"] = time.perf_counter() - calibration_started
+            atomic_write_json(calibration_path, calibration_report)
+        model_metadata["calibration"] = calibration_report
+    elif calibration_path.exists() and not evaluate_only:
+        raise RuntimeError("Default initialization run directory contains stale calibration provenance")
+    if profile.experiment_id is not None:
+        model_metadata["study_task"] = {
+            "experiment_id": profile.experiment_id,
+            "condition_id": profile.condition_id,
+            "family": family,
+            "scale": scale,
+            "variant": variant,
+            "initialization": profile.initialization,
+            "seed": seed,
+            "budget": {
+                "max_optimizer_steps": profile.budget.max_optimizer_steps,
+                "grad_accum_steps": profile.budget.grad_accum_steps,
+                "batch_size": profile.budget.batch_size,
+                "context_length": profile.budget.context_length,
+                "validation_steps": profile.budget.validation_steps,
+                "evaluation_interval": profile.budget.evaluation_interval,
+            },
+            "learning_rate": profile.learning_rate,
+            "calibration_examples": profile.calibration_examples,
+        }
     manifest = _manifest(
         profile=profile, family=family, scale=scale, variant=variant, resolved_model=resolved_model,
         model_metadata=model_metadata, seeds=seeds, data_identity=data_identity,
     )
-    manifest_path = run_dir / "manifest.json"
     if manifest_path.exists():
         compatible, reason = manifest_compatibility(
-            manifest_path, manifest, allow_source_drift=evaluate_only,
+            manifest_path, manifest,
+            allow_source_drift=evaluate_only or profile.experiment_id is not None,
         )
         if not compatible:
             raise RuntimeError(f"Existing artifact is incompatible and will not be overwritten: {reason}")
     else:
+        if evaluate_only:
+            raise RuntimeError(f"Cannot evaluate missing study manifest at {manifest_path}")
         manifest_data = write_manifest(manifest_path, manifest)
         initialize_lifecycle(run_dir, manifest_data["fingerprint"])
     # Keep the fingerprint already attached to this artifact set. Evaluation may
     # accept source-only drift, but lifecycle transitions must continue using
     # the fingerprint stored with the original manifest/checkpoint.
     manifest_data = read_json(manifest_path)
-    complete, _ = validate_completion(run_dir, manifest, allow_source_drift=evaluate_only)
+    allow_source_drift = evaluate_only or profile.experiment_id is not None
+    complete, _ = validate_completion(run_dir, manifest, allow_source_drift=allow_source_drift)
     if complete:
         return {"status": "skipped_complete", "run_dir": str(run_dir)}
 
@@ -383,6 +511,26 @@ def run_seed(
         raise RuntimeError(
             f"Cannot evaluate {family}/{scale}/{variant}/seed {seed}: run status is {status!r}; "
             "run the matching --train-only command first."
+        )
+    if status == "trained":
+        try:
+            partial = read_json(run_dir / "metrics.json")
+            processed_tokens = int(partial["training"]["processed_tokens"])
+            checkpoint_info = partial["final_checkpoint"]
+            valid, reason, _ = validate_checkpoint(
+                run_dir / str(checkpoint_info["path"]), profile.budget.max_optimizer_steps or -1,
+                processed_tokens,
+            )
+        except (OSError, KeyError, TypeError, ValueError) as exc:
+            raise RuntimeError(f"Trained study artifact is incomplete: {exc}") from exc
+        if not valid:
+            raise RuntimeError(f"Trained study checkpoint is invalid: {reason}")
+        if stop_after_trained:
+            return {"status": "trained", "run_dir": str(run_dir), "checkpoint": checkpoint_info}
+    if status == "training":
+        raise RuntimeError(
+            "Training was interrupted without a resumable optimizer/scheduler/scaler/RNG/data-position checkpoint; "
+            "start a fresh task output directory."
         )
     device = torch.device("cuda" if profile.run_mode == "production" else "cpu")
     energy_provider = EnergyProvider.create(device) if profile.enable_energy_collection else EnergyProvider(False, "energy collection disabled", {"device_type": device.type})
@@ -408,10 +556,30 @@ def run_seed(
             if status == "pending":
                 transition_lifecycle(run_dir, "training", manifest_data["fingerprint"])
             with DeviceResourceCapture(device) as resource_capture:
+                validation_metrics_fn = None
+                if profile.study_validation_answer_accuracy and validation_retrieval is not None:
+                    def validation_metrics_fn(current_model: torch.nn.Module, step: int) -> dict[str, Any]:
+                        indices = _evenly_spaced_indices(
+                            len(validation_retrieval), min(
+                                profile.retrieval.validation_examples or profile.retrieval.held_out_examples,
+                                len(validation_retrieval),
+                            ),
+                        )
+                        answer_metrics = evaluate_retrieval(
+                            current_model, validation_retrieval, device, example_indices=indices,
+                        )
+                        return {
+                            "answer_accuracy": answer_metrics["exact_query_accuracy"],
+                            "answer_examples": answer_metrics["evaluated_examples"],
+                            "answer_validation_seed": seeds.evaluation_seed,
+                            "qualification_scope": profile.study_qualification_scope,
+                        }
                 training = train_fixed_budget(
                     model=model, train_dataloader=train_data, validation_dataloader=validation_data,
                     profile=profile, device=device, run_dir=str(run_dir), energy_provider=energy_provider,
                     progress_label=f"{family}/{scale}/{variant}/seed{seed}",
+                    validation_metrics_fn=validation_metrics_fn,
+                    curriculum_loaders=curriculum_loaders,
                 )
             training_resources = resource_capture.result
             partial_metrics = {

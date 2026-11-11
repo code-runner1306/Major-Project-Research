@@ -1,0 +1,24 @@
+{
+  "experiment_id": "granularity-init-v1",
+  "description": "Main 10M factorial and 30M confirmation; token budgets are planning targets and remain unlocked until E1 validation.",
+  "datasets": ["tinystories", "mqar", "overwrite"],
+  "conditions": [
+    {"id": "C1-scalar-default", "variant": "scalar", "initialization": "default"},
+    {"id": "C2-grouped4-default", "variant": "grouped-4", "initialization": "default", "sizes": ["10M"]},
+    {"id": "C3-channel-default", "variant": "channel-wise", "initialization": "default"},
+    {"id": "C4-scalar-calibrated", "variant": "scalar", "initialization": "calibrated-geometric"},
+    {"id": "C5-grouped4-calibrated", "variant": "grouped-4", "initialization": "calibrated-geometric", "sizes": ["10M"]},
+    {"id": "C6-channel-calibrated", "variant": "channel-wise", "initialization": "calibrated-geometric"}
+  ],
+  "sizes": ["10M", "30M"],
+  "seeds": {"10M": [42, 43, 44, 45, 46], "30M": [42, 43, 44]},
+  "budgets": {
+    "10M": {"max_optimizer_steps": 6104, "batch_size": 8, "grad_accum_steps": 4, "context_length": 512, "validation_steps": 100, "evaluation_interval": 100, "learning_rate": 0.0006},
+    "30M": {"max_optimizer_steps": 18311, "batch_size": 8, "grad_accum_steps": 4, "context_length": 512, "validation_steps": 100, "evaluation_interval": 100, "learning_rate": 0.0006}
+  },
+  "calibration": {"min_half_life": 16, "max_half_life": 128, "examples": 256},
+  "runtime": {"recurrence_backend": "reference", "state_accumulator_dtype": "input", "workers": 1},
+  "retrieval": {"generator_version": "mqar-overwrite-v3", "train_examples": 50000, "validation_examples": 2000, "held_out_examples": 3000, "sequence_lengths": [128, 256, 512], "key_counts": [4, 8, 16], "query_distances": [8, 16, 32], "overwrite_counts": [1, 2]},
+  "evaluation": {"examples": 512, "group_counts": [8, 4, 2, 1], "capacity_threshold": 0.9},
+  "qualification": {"scope": "production", "runtime_sizes": ["10M", "30M"], "easy_task_keys": 4, "easy_task_length": 128, "easy_task_query_distances": [8, 16], "easy_overwrite_counts": [1, 2], "answer_accuracy_threshold": 0.9, "minimum_final_answer_accuracy": 0.5, "consecutive_validations": 2, "learning_rate_candidates": [0.0006, 0.001, 0.003], "extension_learning_rate": 0.01, "qualification_steps": 1000, "validation_interval": 100, "pilot_steps": 200}
+}
