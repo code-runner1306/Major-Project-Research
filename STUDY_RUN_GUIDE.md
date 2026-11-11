@@ -26,6 +26,33 @@ Their default output folders are `output/granularity_48h_exploratory_lr3e-3_mqar
 
 The script checks that PyTorch imports and CUDA is available, writes a master log plus per-task logs, and validates completed checkpoints before reusing them. It stops rather than overwriting a partial or incompatible run directory. If an evaluation failed after training, retry only evaluation on that machine with `-Family mqar -EvaluateOnly` or `-Family overwrite -EvaluateOnly`; interrupted training is not resumable because the pipeline does not save optimizer state. The **9 h 20 min per family** figure is only an old-timing baseline extrapolated from prior 10M TinyStories runs. It covers training only and excludes revised validation every 100 steps, calibration, and evaluation, so finishing within 48 hours is **not guaranteed**. This one-seed, 1,000-step subset is exploratory evidence, **not** the full multi-seed, 100M/300M-token study or its E0/E1 qualification.
 
+### Linux and Kaggle launcher
+
+The Bash launcher runs the same family-specific matrix and writes the same output structure. It requires `--family mqar` or `--family overwrite`; task JSON is created with Python's standard library, so `jq` is not needed. In a Linux checkout with the virtual environment activated:
+
+```bash
+bash ./run_48h_exploratory_study.sh --family mqar --dry-run
+bash ./run_48h_exploratory_study.sh --family mqar --python ./.venv/bin/python
+```
+
+On the other Linux VM, run overwrite recall instead:
+
+```bash
+bash ./run_48h_exploratory_study.sh --family overwrite --dry-run
+bash ./run_48h_exploratory_study.sh --family overwrite --python ./.venv/bin/python
+```
+
+In Kaggle, the notebook input area is read-only. Put the checkout and environment in a writable location when possible, or send output explicitly to `/kaggle/working`:
+
+```bash
+bash /kaggle/working/Major-Project-Research/run_48h_exploratory_study.sh \
+  --family mqar \
+  --python /kaggle/working/Major-Project-Research/.venv/bin/python \
+  --output-root /kaggle/working/granularity_48h_exploratory_lr3e-3_mqar
+```
+
+Use `--family overwrite` and a matching `_overwrite` output path on the other VM. Kaggle sessions can expire or reset, and the training code cannot resume an interrupted optimizer run. Completed checkpoints persist only if they remain in `/kaggle/working` and are downloaded or copied before the session storage is cleared. Preserve the two family-specific output roots when moving both result sets to one analysis machine; they contain matching `run_summary.json`, checkpoint, evaluation, and log structures.
+
 Run a dry run first to inspect the expanded tasks and paths without starting training:
 
 ```powershell
