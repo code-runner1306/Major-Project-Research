@@ -6,21 +6,25 @@ The current study protocol and task matrix live in [`RESEARCH_IMPLEMENTATION_PLA
 
 ### Two-day exploratory subset
 
-If you have only about two days, use the separate exploratory launcher below. It runs **10M only**, on **MQAR and overwrite**, for the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), with **one seed and 1,000 optimizer steps**. All eight training runs use the fixed learning rate **3e-3**, a literature-informed shared choice that is **not tuned on these runs**. For each family, it trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are each capped at **512 examples per run**; training still uses 50,000 examples. Its default output is `output/granularity_48h_exploratory_lr3e-3`, separate from both the full study and historical runs.
+If you have only about two days, run one family on each machine using the separate exploratory launcher. Each run covers **10M**, the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), **one seed**, and **1,000 optimizer steps**. All four runs use fixed learning rate **3e-3**, a literature-informed shared choice that is **not tuned on these runs**. Each family trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are capped at **512 examples per run**; training still uses 50,000 examples. `-Family` is required and restricts each machine to one family. Without `-OutputRoot`, it selects a family-specific default folder.
 
-Preview the eight training/evaluation pairs without starting work:
-
-```powershell
-.\run_48h_exploratory_study.ps1 -DryRun
-```
-
-Run the exploratory subset, explicitly selecting the activated environment if needed:
+Machine A: MQAR
 
 ```powershell
-.\run_48h_exploratory_study.ps1 -Python .\.venv\Scripts\python.exe
+.\run_48h_exploratory_study.ps1 -Family mqar -DryRun
+.\run_48h_exploratory_study.ps1 -Family mqar -Python .\.venv\Scripts\python.exe
 ```
 
-The script checks that PyTorch imports and CUDA is available, writes a master log plus per-task logs, and validates completed checkpoints before reusing them. It stops rather than overwriting a partial or incompatible run directory. If an evaluation failed after training, retry only evaluation with `-EvaluateOnly`; interrupted training is not resumable because the pipeline does not save optimizer state. The **18 h 40 min** training figure is only a baseline extrapolated from old 10M TinyStories timing. It excludes the revised validation every 100 steps, calibration, and evaluation, so the complete run is **not guaranteed to finish within 48 hours**. This one-seed, 1,000-step subset is exploratory evidence, **not** the full multi-seed, 100M/300M-token study or its E0/E1 qualification.
+Machine B: overwrite recall
+
+```powershell
+.\run_48h_exploratory_study.ps1 -Family overwrite -DryRun
+.\run_48h_exploratory_study.ps1 -Family overwrite -Python .\.venv\Scripts\python.exe
+```
+
+Their default output folders are `output/granularity_48h_exploratory_lr3e-3_mqar` and `output/granularity_48h_exploratory_lr3e-3_overwrite`, so the VMs do not write into the same artifacts. After both finish, copy both complete folders to the analysis machine, preserving the folder names and contents. Each has its own `run_summary.json`, run artifacts, evaluations, and logs; keep the family labels when comparing or combining the results. If you pass a custom `-OutputRoot`, use a different one on each VM.
+
+The script checks that PyTorch imports and CUDA is available, writes a master log plus per-task logs, and validates completed checkpoints before reusing them. It stops rather than overwriting a partial or incompatible run directory. If an evaluation failed after training, retry only evaluation on that machine with `-Family mqar -EvaluateOnly` or `-Family overwrite -EvaluateOnly`; interrupted training is not resumable because the pipeline does not save optimizer state. The **9 h 20 min per family** figure is only an old-timing baseline extrapolated from prior 10M TinyStories runs. It covers training only and excludes revised validation every 100 steps, calibration, and evaluation, so finishing within 48 hours is **not guaranteed**. This one-seed, 1,000-step subset is exploratory evidence, **not** the full multi-seed, 100M/300M-token study or its E0/E1 qualification.
 
 Run a dry run first to inspect the expanded tasks and paths without starting training:
 

@@ -1,7 +1,10 @@
 [CmdletBinding()]
 param(
+    [Parameter(Mandatory = $true)]
+    [ValidateSet('mqar', 'overwrite')]
+    [string]$Family,
     [string]$Python = "python",
-    [string]$OutputRoot = "output/granularity_48h_exploratory_lr3e-3",
+    [string]$OutputRoot,
     [switch]$DryRun,
     [switch]$EvaluateOnly,
     [string]$StudyConfig = "study_configs/granularity_init_study.json"
@@ -16,6 +19,9 @@ try {
         throw "Study config not found: $studyConfigPath"
     }
     $study = Get-Content -LiteralPath $studyConfigPath -Raw | ConvertFrom-Json
+    if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
+        $OutputRoot = "output/granularity_48h_exploratory_lr3e-3_$Family"
+    }
     $root = [System.IO.Path]::GetFullPath((Join-Path $repo $OutputRoot))
     $outputBase = [System.IO.Path]::GetFullPath((Join-Path $repo 'output'))
     if (-not $root.StartsWith($outputBase + [System.IO.Path]::DirectorySeparatorChar,
@@ -29,7 +35,7 @@ try {
         [ordered]@{ id = 'C4-scalar-calibrated'; variant = 'scalar'; initialization = 'calibrated-geometric' },
         [ordered]@{ id = 'C6-channel-calibrated'; variant = 'channel-wise'; initialization = 'calibrated-geometric' }
     )
-    $families = @('mqar', 'overwrite')
+    $families = @($Family)
     $scale = '10M'
     $seed = 42
     $stepBudget = 1000
@@ -82,11 +88,11 @@ try {
         }
     }
 
-    Write-Host ("Exploratory study: {0} 10M runs; datasets={1}; conditions={2}; seed={3}; steps={4}; LR={5}; workers=1" -f `
-        $tasks.Count, ($families -join ','), ($conditions.id -join ','), $seed, $stepBudget, $learningRate)
+    Write-Host ("Exploratory study: {0} 10M runs; family={1}; conditions={2}; seed={3}; steps={4}; LR={5}; workers=1" -f `
+        $tasks.Count, $Family, ($conditions.id -join ','), $seed, $stepBudget, $learningRate)
     Write-Host "Output root: $root"
     Write-Host "Each task trains for 1,000 steps and validates every 100 steps. Existing compatible tasks are reused; partial or incompatible task folders stop the script without overwrite."
-    Write-Host "Old-timing baseline: about 18 h 40 min for training only. This excludes the revised 100-step validation overhead, calibration, and evaluation; total runtime is not guaranteed to fit within 48 hours."
+    Write-Host "Old-timing baseline: about 9 h 20 min training only for this family's four runs. This excludes the revised 100-step validation overhead, calibration, and evaluation; total runtime is not guaranteed to fit within 48 hours."
     Write-Host "Synthetic validation and held-out evaluation use 512 examples each per run; the training set remains 50,000 examples."
     Write-Host "Learning rate 3e-3 is fixed for all runs as a literature-informed choice; it is not tuned on these runs."
     Write-Host "This is an exploratory, one-seed, 1,000-step result; it is not the full 5-seed / token-budget study."
@@ -215,7 +221,8 @@ try {
     $summary = [ordered]@{
         experiment_id = 'granularity-init-48h-exploratory-lr3e-3-v1'
         created_at_utc = [DateTime]::UtcNow.ToString('o')
-        datasets = $families
+        family = $Family
+        run_count = $tasks.Count
         scale = $scale
         conditions = @($conditions | ForEach-Object { $_.id })
         seed = $seed
@@ -224,7 +231,7 @@ try {
         status = 'complete'
         records = @($script:Records)
         learning_rate_selection = 'Fixed literature-informed rate; not tuned on these exploratory runs.'
-        interpretation = 'One-seed, 1,000-step exploratory comparison only; not the full planned study.'
+        interpretation = 'One-family, one-seed, 1,000-step exploratory comparison only; not the full planned study.'
     }
     $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8
     Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
