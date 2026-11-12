@@ -110,8 +110,16 @@ def train_fixed_budget(
         model.parameters(), lr=profile.learning_rate, weight_decay=profile.weight_decay,
         betas=(profile.beta1, profile.beta2),
     )
+    # OneCycleLR sets the end of its warmup phase to pct_start * total_steps - 1.
+    # With the usual 5% warmup and a 20-step pilot, that endpoint is exactly 0,
+    # giving the scheduler a zero-width phase and causing division by zero at init.
+    # Keep the normal 5% schedule for real runs, but give short pilot budgets at
+    # least one warmup step where the total budget allows it.
+    pct_start = 0.05
+    if max_steps > 1 and pct_start * max_steps < 2.0:
+        pct_start = min(0.95, 2.0 / max_steps)
     scheduler = optim.lr_scheduler.OneCycleLR(
-        optimizer, max_lr=profile.learning_rate, total_steps=max_steps, pct_start=0.05,
+        optimizer, max_lr=profile.learning_rate, total_steps=max_steps, pct_start=pct_start,
         anneal_strategy="cos", div_factor=10.0, final_div_factor=10.0,
     )
     scaler = torch.amp.GradScaler("cuda", enabled=device.type == "cuda")
@@ -203,6 +211,7 @@ def train_fixed_budget(
     return {
         "training": {
             "fixed_optimizer_steps": max_steps,
+            "lr_scheduler": {"name": "OneCycleLR", "pct_start": pct_start},
             "processed_tokens": processed_tokens,
             "microbatches": microbatches,
             "wall_time_seconds": wall_time,
