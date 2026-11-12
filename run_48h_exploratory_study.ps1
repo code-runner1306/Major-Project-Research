@@ -1,10 +1,15 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet('mqar', 'overwrite')]
+    [ValidateSet('mqar', 'overwrite', 'both')]
     [string]$Family,
     [string]$Python = "python",
     [string]$OutputRoot,
+    [int]$Workers = 1,
+    [int]$QualifyWorkers = 0,
+    [int]$QualificationSteps = 20,
+    [string]$QualificationRoot,
+    [string]$QualificationReport,
     [switch]$DryRun,
     [switch]$EvaluateOnly,
     [string]$StudyConfig = "study_configs/granularity_init_study.json"
@@ -14,20 +19,28 @@ $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $MyInvocation.MyCommand.Path
 Push-Location $repo
 try {
+    if ($Workers -lt 1) { throw "Workers must be at least 1" }
+    if ($QualifyWorkers -lt 0) { throw "QualifyWorkers cannot be negative" }
+    if ($QualifyWorkers -gt 0 -and $EvaluateOnly) { throw "QualifyWorkers cannot be combined with EvaluateOnly" }
+    if ($QualificationSteps -lt 10) { throw "QualificationSteps must be at least 10" }
+    $families = if ($Family -eq 'both') { @('mqar', 'overwrite') } else { @($Family) }
+    $maxWorkers = 4 * $families.Count
+    if ($Workers -gt $maxWorkers) { throw "Workers cannot exceed $maxWorkers for this family selection" }
+    if ($QualifyWorkers -gt $maxWorkers) { throw "QualifyWorkers cannot exceed $maxWorkers for this family selection" }
+    if ($QualifyWorkers -gt 0 -and $QualificationReport) { throw "QualificationReport is for production, not qualification" }
+    if ($Workers -gt 1 -and $QualifyWorkers -eq 0 -and -not $QualificationReport -and -not $DryRun) { throw "Parallel production requires QualificationReport from a successful QualifyWorkers run" }
+
     $studyConfigPath = [System.IO.Path]::GetFullPath((Join-Path $repo $StudyConfig))
-    if (-not (Test-Path -LiteralPath $studyConfigPath -PathType Leaf)) {
-        throw "Study config not found: $studyConfigPath"
-    }
+    if (-not (Test-Path -LiteralPath $studyConfigPath -PathType Leaf)) { throw "Study config not found: $studyConfigPath" }
     $study = Get-Content -LiteralPath $studyConfigPath -Raw | ConvertFrom-Json
-    if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
-        $OutputRoot = "output/granularity_48h_exploratory_lr3e-3_$Family"
-    }
-    $root = [System.IO.Path]::GetFullPath((Join-Path $repo $OutputRoot))
+    if ([string]::IsNullOrWhiteSpace($OutputRoot)) { $OutputRoot = "output/granularity_48h_exploratory_lr3e-3_$Family" }
     $outputBase = [System.IO.Path]::GetFullPath((Join-Path $repo 'output'))
-    if (-not $root.StartsWith($outputBase + [System.IO.Path]::DirectorySeparatorChar,
-            [System.StringComparison]::OrdinalIgnoreCase)) {
-        throw "OutputRoot must be a new or existing subfolder of $outputBase"
-    }
+    if ($QualifyWorkers -gt 0) {
+        if ([string]::IsNullOrWhiteSpace($QualificationRoot)) { $QualificationRoot = "output/granularity_48h_worker_qualification_{0}_{1}" -f $Family, (Get-Date -Format 'yyyyMMdd_HHmmss') }
+        $root = [System.IO.Path]::GetFullPath((Join-Path $repo $QualificationRoot))
+    } else { $root = [System.IO.Path]::GetFullPath((Join-Path $repo $OutputRoot)) }
+    if (-not $root.StartsWith($outputBase + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase)) { throw "OutputRoot and QualificationRoot must be subfolders of $outputBase" }
+    if ($QualifyWorkers -gt 0 -and (Test-Path -LiteralPath $root) -and @(Get-ChildItem -LiteralPath $root -Force).Count -gt 0) { throw "Qualification root must be new or empty: $root" }
 
     $conditions = @(
         [ordered]@{ id = 'C1-scalar-default'; variant = 'scalar'; initialization = 'default' },
@@ -35,206 +48,169 @@ try {
         [ordered]@{ id = 'C4-scalar-calibrated'; variant = 'scalar'; initialization = 'calibrated-geometric' },
         [ordered]@{ id = 'C6-channel-calibrated'; variant = 'channel-wise'; initialization = 'calibrated-geometric' }
     )
-    $families = @($Family)
-    $scale = '10M'
-    $seed = 42
-    $stepBudget = 1000
-    $learningRate = 0.003
-    $sourceBudget = $study.budgets.'10M'
-    $trainingBudget = [ordered]@{
-        max_optimizer_steps = $stepBudget
-        batch_size = [int]$sourceBudget.batch_size
-        grad_accum_steps = [int]$sourceBudget.grad_accum_steps
-        context_length = [int]$sourceBudget.context_length
-        validation_steps = 100
-        evaluation_interval = 100
-        learning_rate = $learningRate
-    }
-    $calibration = $study.calibration
-    $retrievalPilot = $study.retrieval | ConvertTo-Json -Depth 20 | ConvertFrom-Json
-    $retrievalPilot.validation_examples = 512
-    $retrievalPilot.held_out_examples = 512
-    $tasks = @()
-    foreach ($family in $families) {
-        foreach ($condition in $conditions) {
-            $runDir = Join-Path $root ("runs\{0}\{1}\{2}\seed_{3}" -f $family, $scale, $condition.id, $seed)
-            $tasks += [pscustomobject]@{
-                experiment_id = 'granularity-init-48h-exploratory-lr3e-3-v1'
-                condition_id = $condition.id
-                family = $family
-                scale = $scale
-                variant = $condition.variant
-                initialization = $condition.initialization
-                seed = $seed
-                output_dir = [System.IO.Path]::GetFullPath($runDir)
-                max_optimizer_steps = $trainingBudget.max_optimizer_steps
-                batch_size = $trainingBudget.batch_size
-                grad_accum_steps = $trainingBudget.grad_accum_steps
-                context_length = $trainingBudget.context_length
-                validation_steps = $trainingBudget.validation_steps
-                evaluation_interval = $trainingBudget.evaluation_interval
-                learning_rate = $trainingBudget.learning_rate
-                calibration_min_half_life = [int]$calibration.min_half_life
-                calibration_max_half_life = [int]$calibration.max_half_life
-                calibration_examples = [int]$calibration.examples
-                retrieval_config = $retrievalPilot
-                run_mode = 'production'
-                recurrence_backend = 'reference'
-                state_accumulator_dtype = 'input'
-                recurrence_chunk_size = 64
-                validation_answer_accuracy = $true
-                concurrent_training_runs = 1
-            }
-        }
-    }
-
-    Write-Host ("Exploratory study: {0} 10M runs; family={1}; conditions={2}; seed={3}; steps={4}; LR={5}; workers=1" -f `
-        $tasks.Count, $Family, ($conditions.id -join ','), $seed, $stepBudget, $learningRate)
-    Write-Host "Output root: $root"
-    Write-Host "Each task trains for 1,000 steps and validates every 100 steps. Existing compatible tasks are reused; partial or incompatible task folders stop the script without overwrite."
-    Write-Host "Old-timing baseline: about 9 h 20 min training only for this family's four runs. This excludes the revised 100-step validation overhead, calibration, and evaluation; total runtime is not guaranteed to fit within 48 hours."
-    Write-Host "Synthetic validation and held-out evaluation use 512 examples each per run; the training set remains 50,000 examples."
-    Write-Host "Learning rate 3e-3 is fixed for all runs as a literature-informed choice; it is not tuned on these runs."
-    Write-Host "This is an exploratory, one-seed, 1,000-step result; it is not the full 5-seed / token-budget study."
-
-    $master = Join-Path $root ("logs\run_48h_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss'))
-    $script:MasterLog = $master
-    $script:Records = [System.Collections.Generic.List[object]]::new()
+    $scale = '10M'; $productionSeed = 42; $stepBudget = 1000; $learningRate = 0.003
+    $sourceBudget = $study.budgets.'10M'; $calibration = $study.calibration
+    $experimentId = 'granularity-init-48h-exploratory-lr3e-3-v1'; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+    $script:MasterLog = $null
 
     function Write-RunLog([string]$Message) {
         $line = "[{0}] {1}" -f ([DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ')), $Message
         Write-Host $line
-        if ($DryRun) { return }
-        Add-Content -LiteralPath $script:MasterLog -Value $line -Encoding UTF8
+        if ($script:MasterLog -and -not $DryRun) { Add-Content -LiteralPath $script:MasterLog -Value $line -Encoding UTF8 }
+    }
+
+    function New-TaskSpec([string]$TaskFamily, $Condition, [int]$Seed, [int]$Steps, [int]$Examples, [string]$Operation, [string]$OutputBase, [string]$TaskExperimentId, [int]$Concurrency) {
+        $retrieval = $study.retrieval | ConvertTo-Json -Depth 20 | ConvertFrom-Json
+        $retrieval.validation_examples = $Examples; $retrieval.held_out_examples = $Examples
+        $runDir = Join-Path $OutputBase ("runs\{0}\{1}\{2}\seed_{3}" -f $TaskFamily, $scale, $Condition.id, $Seed)
+        return [pscustomobject][ordered]@{
+            operation = $Operation; experiment_id = $TaskExperimentId; condition_id = $Condition.id; family = $TaskFamily; scale = $scale
+            variant = $Condition.variant; initialization = $Condition.initialization; seed = $Seed; output_dir = [System.IO.Path]::GetFullPath($runDir)
+            max_optimizer_steps = $Steps; batch_size = [int]$sourceBudget.batch_size; grad_accum_steps = [int]$sourceBudget.grad_accum_steps
+            context_length = [int]$sourceBudget.context_length; validation_steps = if ($Steps -ge 100) { 100 } else { 4 }
+            evaluation_interval = if ($Steps -ge 100) { 100 } else { [Math]::Max(5, [int]($Steps / 2)) }; learning_rate = $learningRate
+            calibration_min_half_life = [int]$calibration.min_half_life; calibration_max_half_life = [int]$calibration.max_half_life
+            calibration_examples = [int]$calibration.examples; retrieval_config = $retrieval; run_mode = 'production'; recurrence_backend = 'reference'
+            state_accumulator_dtype = 'input'; recurrence_chunk_size = 64; validation_answer_accuracy = $true; concurrent_training_runs = $Concurrency
+        }
+    }
+
+    function Write-TaskConfig($Task, [string]$ConfigRoot, [string]$Prefix = '') {
+        $configDir = Join-Path $ConfigRoot 'task_configs'; New-Item -ItemType Directory -Force -Path $configDir | Out-Null
+        $tag = "{0}{1}_{2}_{3}_seed_{4}_{5}" -f $Prefix, $Task.family, $Task.scale, $Task.condition_id, $Task.seed, $Task.operation
+        $path = Join-Path $configDir ($tag + '.json'); $payload = [ordered]@{}
+        foreach ($property in $Task.PSObject.Properties) { $payload[$property.Name] = $property.Value }
+        if ($Prefix) { $payload.qualification = $true; $payload.qualification_stage = 'worker-capacity-pilot'; $payload.qualification_scope = 'runtime-capacity-only' }
+        $payload | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $path -Encoding UTF8
+        return $path
     }
 
     function Test-TaskComplete($Task, [string]$Operation, [string]$TaskPath) {
         $probe = "import json,sys; from study_runner import task_complete; print('COMPLETE' if task_complete(json.load(open(sys.argv[1], encoding='utf-8-sig')), sys.argv[2]) else 'INCOMPLETE')"
         $result = & $Python -c $probe $TaskPath $Operation 2>&1
-        $code = $LASTEXITCODE
-        if ($code -ne 0) {
-            throw "Could not validate existing study artifacts with Python ($code): $($result -join ' ')"
-        }
-        $lastOutput = @($result | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ } | Select-Object -Last 1)
-        return ($lastOutput.Count -eq 1 -and $lastOutput[0] -eq 'COMPLETE')
+        if ($LASTEXITCODE -ne 0) { throw "Could not validate artifact: $($result -join ' ')" }
+        $last = @($result | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ } | Select-Object -Last 1)
+        return ($last.Count -eq 1 -and $last[0] -eq 'COMPLETE')
     }
 
-    function Invoke-StudyTask($Task, [string]$Operation) {
-        $taskDir = Join-Path $root 'task_configs'
-        $logDir = Join-Path $root 'logs'
-        New-Item -ItemType Directory -Force -Path $taskDir, $logDir | Out-Null
-        $tag = "{0}_{1}_{2}_seed_{3}_{4}" -f $Task.family, $Task.scale, $Task.condition_id, $Task.seed, $Operation
-        $taskPath = Join-Path $taskDir ($tag + '.json')
-        $taskPayload = [ordered]@{}
-        foreach ($property in $Task.PSObject.Properties) { $taskPayload[$property.Name] = $property.Value }
-        $taskPayload.operation = $Operation
-        $taskJson = $taskPayload | ConvertTo-Json -Depth 30
-        if (-not $DryRun) {
-            Set-Content -LiteralPath $taskPath -Value $taskJson -Encoding UTF8
+    function Write-NewTaskOutput($Item) {
+        foreach ($stream in @(
+            [pscustomobject]@{ Path = $Item.Stdout; Label = 'stdout'; Property = 'StdoutLines' },
+            [pscustomobject]@{ Path = $Item.Stderr; Label = 'stderr'; Property = 'StderrLines' }
+        )) {
+            if (-not (Test-Path -LiteralPath $stream.Path -PathType Leaf)) { continue }
+            try { $lines = @(Get-Content -LiteralPath $stream.Path -ErrorAction SilentlyContinue) } catch { continue }
+            $seen = [int]$Item.($stream.Property)
+            if ($lines.Count -le $seen) { continue }
+            for ($lineIndex = $seen; $lineIndex -lt $lines.Count; $lineIndex++) {
+                Write-RunLog "$($Item.Tag) [$($stream.Label)] $($lines[$lineIndex])"
+            }
+            $Item.($stream.Property) = $lines.Count
         }
-        $taskLog = Join-Path $logDir ($tag + '.log')
-        if ($DryRun) {
-            Write-RunLog ("DRY RUN {0} {1}/{2}/{3}/seed{4}; config={5}" -f $Operation, $Task.family, $Task.scale, $Task.condition_id, $Task.seed, $taskPath)
-            return
-        }
-
-        $arguments = @('run_all.py', '--study-task-config', $taskPath)
-        Write-RunLog ("START {0} {1}/{2}/{3}/seed{4}; log={5}" -f $Operation, $Task.family, $Task.scale, $Task.condition_id, $Task.seed, $taskLog)
-        & $Python @arguments 2>&1 | ForEach-Object {
-            $line = $_.ToString()
-            Add-Content -LiteralPath $taskLog -Value $line -Encoding UTF8
-            Add-Content -LiteralPath $script:MasterLog -Value $line -Encoding UTF8
-            Write-Host $line
-        }
-        $exitCode = $LASTEXITCODE
-        if ($exitCode -ne 0) {
-            Write-RunLog "FAILED rc=$exitCode task=$tag"
-            throw "Study task failed: $tag (exit $exitCode). See $taskLog"
-        }
-        if (-not (Test-TaskComplete $Task $Operation $taskPath)) {
-            throw "Task process returned success but its checkpoint/evaluation failed validation: $tag. See $taskLog"
-        }
-        Write-RunLog "COMPLETED $tag"
-        $script:Records.Add([pscustomobject]@{ operation = $Operation; family = $Task.family; condition = $Task.condition_id; seed = $Task.seed; status = 'complete'; log = $taskLog })
     }
 
-    if ($DryRun) {
-        foreach ($family in $families) {
-            Write-Host "PLAN train all conditions, then evaluate all conditions: $family"
-            foreach ($task in ($tasks | Where-Object family -EQ $family)) {
-                Write-Host ("  {0} {1} {2} seed={3} steps={4}" -f $task.variant, $task.initialization, $family, $seed, $stepBudget)
+    function Invoke-Phase([string]$Phase, [array]$Configs, [int]$Limit, [string]$PhaseRoot) {
+        if ($Configs.Count -eq 0) { return [pscustomobject]@{ Success = $true; Tasks = @(); Duration = 0 } }
+        $phaseStart = Get-Date; $records = @(); $hadFailure = $false
+        for ($offset = 0; $offset -lt $Configs.Count; $offset += $Limit) {
+            $batch = @($Configs | Select-Object -Skip $offset -First $Limit); $active = @()
+            foreach ($configPath in $batch) {
+                $task = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json; $tag = [System.IO.Path]::GetFileNameWithoutExtension($configPath)
+                $logDir = Join-Path $PhaseRoot 'logs'; New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+                $stdout = Join-Path $logDir ($tag + '.out.log'); $stderr = Join-Path $logDir ($tag + '.err.log'); Write-RunLog "QUEUED $Phase $tag"
+                $started = Get-Date; $quotedConfigPath = '"{0}"' -f $configPath; $proc = Start-Process -FilePath $Python -ArgumentList @('run_all.py', '--study-task-config', $quotedConfigPath) -WorkingDirectory $repo -PassThru -NoNewWindow -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+                $active += [pscustomobject]@{ Process = $proc; Config = $configPath; Task = $task; Tag = $tag; Started = $started; Stdout = $stdout; Stderr = $stderr; StdoutLines = 0; StderrLines = 0 }
             }
-            foreach ($task in ($tasks | Where-Object family -EQ $family)) {
-                Invoke-StudyTask $task 'train'
+            $running = $true
+            while ($running) {
+                $running = $false
+                foreach ($item in $active) {
+                    Write-NewTaskOutput $item
+                    if (-not $item.Process.HasExited) { $running = $true }
+                }
+                if ($running) { Start-Sleep -Seconds 10 }
             }
-            foreach ($task in ($tasks | Where-Object family -EQ $family)) {
-                Invoke-StudyTask $task 'evaluate'
+            foreach ($item in $active) {
+                $item.Process.WaitForExit(); Write-NewTaskOutput $item; $elapsed = ((Get-Date) - $item.Started).TotalSeconds; $success = ($item.Process.ExitCode -eq 0)
+                if ($success) { $success = Test-TaskComplete $item.Task $Phase $item.Config }
+                if (-not $success) { $hadFailure = $true; Write-RunLog "FAILED $Phase $($item.Tag) rc=$($item.Process.ExitCode)" } else { Write-RunLog "COMPLETED $Phase $($item.Tag)" }
+                $records += [pscustomobject]@{ task = $item.Task; config = $item.Config; success = $success; elapsed_seconds = $elapsed; stdout = $item.Stdout; stderr = $item.Stderr }
             }
+            if ($hadFailure) { break }
         }
-        return
+        return [pscustomobject]@{ Success = (-not $hadFailure); Tasks = @($records); Duration = ((Get-Date) - $phaseStart).TotalSeconds }
     }
 
-    New-Item -ItemType Directory -Force -Path (Join-Path $root 'logs'), (Join-Path $root 'task_configs') | Out-Null
-    New-Item -ItemType File -Force -Path $master | Out-Null
+    function Get-PhaseSummary($PhaseResult, [string]$Phase, [int]$WorkerCount, [string]$SummaryPath) {
+        $resourceKey = if ($Phase -eq 'train') { 'training_resources' } else { 'evaluation_resources' }; $tasks = @(); $hardware = $null; $safe = [bool]$PhaseResult.Success
+        foreach ($record in $PhaseResult.Tasks) {
+            $metricsPath = Join-Path $record.task.output_dir 'metrics.json'; $metrics = if (Test-Path -LiteralPath $metricsPath) { Get-Content -LiteralPath $metricsPath -Raw | ConvertFrom-Json } else { $null }
+            $capture = if ($metrics) { $metrics.PSObject.Properties[$resourceKey].Value } else { $null }; $runtime = if ($capture) { $capture.runtime } else { $null }
+            if (-not $hardware -and $runtime) { $hardware = [ordered]@{ gpu_uuid = $runtime.gpu_uuid; nvml_gpu_name = $runtime.nvml_gpu_name; torch_gpu_name = $runtime.torch_gpu_name; driver_version = $runtime.driver_version; torch_version = $runtime.torch_version; torch_cuda_runtime = $runtime.torch_cuda_runtime } }
+            $samples = if ($capture) { @($capture.activity_samples | Where-Object { $_.available -eq $true }) } else { @() }
+            $vram = @($samples | Where-Object { $_.memory_total_bytes -gt 0 } | ForEach-Object { 100.0 * $_.memory_used_bytes / $_.memory_total_bytes }); $other = @($samples | Where-Object { $_.other_compute_process_count -is [int] } | ForEach-Object { [int]$_.other_compute_process_count })
+            $maxVram = if ($vram.Count) { ($vram | Measure-Object -Maximum).Maximum } else { $null }; $otherMax = if ($other.Count) { ($other | Measure-Object -Maximum).Maximum } else { 0 }
+            $activity = if ($capture) { $capture.activity_summary } else { $null }
+            $gpuUtilization = if ($activity) { $activity.gpu_utilization_percent } else { $null }
+            $processCpu = if ($activity) { $activity.process_cpu_percent } else { $null }
+            $systemCpu = if ($activity) { $activity.system_cpu_percent } else { $null }
+            $processRss = if ($activity) { $activity.process_rss_bytes } else { $null }
+            $systemMemory = if ($activity) { $activity.system_memory_used_bytes } else { $null }
+            $cpuFrequency = if ($activity) { $activity.cpu_frequency_current_mhz } else { $null }
+            $telemetrySafe = ($null -ne $runtime -and $runtime.cuda_available -and $runtime.nvml_available -and $vram.Count -gt 0 -and $maxVram -lt 95 -and $otherMax -le [Math]::Max(0, $WorkerCount - 1)); $safe = $safe -and $record.success -and $telemetrySafe
+            $tasks += [ordered]@{ family = $record.task.family; condition_id = $record.task.condition_id; seed = $record.task.seed; task_complete = $record.success; max_whole_gpu_vram_percent = $maxVram; max_gpu_utilization_percent = if ($gpuUtilization) { $gpuUtilization.max } else { $null }; process_cpu_percent = $processCpu; system_cpu_percent = $systemCpu; process_rss_bytes = $processRss; system_memory_used_bytes = $systemMemory; cpu_frequency_current_mhz = $cpuFrequency; torch_memory = if ($capture) { $capture.torch_memory } else { $null }; nvml_samples = $samples.Count; other_compute_process_count_max = $otherMax; telemetry_safe = $telemetrySafe; task_wall_seconds = $record.elapsed_seconds }
+        }
+        $result = [ordered]@{ phase = $Phase; requested_workers = $WorkerCount; task_count = $tasks.Count; command_success = [bool]$PhaseResult.Success; qualified = $safe; telemetry_safe = $safe; phase_makespan_seconds = $PhaseResult.Duration; hardware = $hardware; tasks = $tasks; gpu_telemetry_limitation = 'GPU utilization and VRAM are whole-device readings; do not sum them.'; cpu_telemetry_limitation = 'CPU observations do not by themselves prove throttling.' }
+        $result | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath $SummaryPath -Encoding UTF8; return [pscustomobject]$result
+    }
+
+    function Get-CurrentGpuUuid {
+        $probe = & $Python -c "import json,torch; from resource_telemetry import DeviceResourceCapture; c=DeviceResourceCapture(torch.device('cuda')); print(json.dumps(c.runtime_metadata()))" 2>$null
+        if ($LASTEXITCODE -ne 0) { return '' }; try { return (($probe | Select-Object -Last 1 | ConvertFrom-Json).gpu_uuid) } catch { return '' }
+    }
+
+    if ($QualifyWorkers -gt 0) { Write-Host "Worker qualification: family=$Family; target=$QualifyWorkers; fallback=$($QualifyWorkers)..1"; Write-Host "Pilot root: $root" }
+    else { Write-Host "Exploratory production: $(4 * $families.Count) 10M runs; family=$Family; workers=$Workers; seed=$productionSeed; steps=$stepBudget; LR=$learningRate"; Write-Host "Output root: $root" }
+    Write-Host 'The optimizer step budget is fixed at 1,000 for this exploratory launcher; it is not a literature-derived convergence budget.'
+    Write-Host 'Production evaluation uses 512 examples; the worker pilot uses 64 examples and short isolated tasks.'
+    if ($DryRun) { if ($QualifyWorkers -gt 0) { for ($n = $QualifyWorkers; $n -ge 1; $n--) { Write-Host "  QUALIFY $n total workers; then evaluate the same tasks" } } else { Write-Host "PLAN: train all selected families before evaluating any family, bounded to $Workers total workers" }; return }
+
+    New-Item -ItemType Directory -Force -Path (Join-Path $root 'logs'), (Join-Path $root 'task_configs') | Out-Null; $script:MasterLog = Join-Path $root ("logs\run_48h_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss')); New-Item -ItemType File -Force -Path $script:MasterLog | Out-Null
+    $cudaCheck = & $Python -c "import sys,torch,torch.nn; print('Python:',sys.executable); print('PyTorch:',torch.__version__); print('CUDA available:',torch.cuda.is_available()); sys.exit(0 if torch.cuda.is_available() else 3)" 2>&1
+    if ($LASTEXITCODE -ne 0) { throw "Python/PyTorch CUDA preflight failed: $($cudaCheck -join ' ')" }; Write-RunLog ($cudaCheck -join ' ')
+    $configSha = (Get-FileHash -LiteralPath $studyConfigPath -Algorithm SHA256).Hash.ToLowerInvariant(); try { $gitRevision = (& git -C $repo rev-parse HEAD 2>$null | Select-Object -Last 1).Trim() } catch { $gitRevision = 'unknown' }
+
+    if ($QualifyWorkers -gt 0) {
+        $attempted = @(); $trainLimit = 0; $evalLimit = 0; $jointLimit = 0; $trialRows = @()
+        for ($count = $QualifyWorkers; $count -ge 1; $count--) {
+            $attempted += $count; $trialRoot = Join-Path $root "workers_$count"; New-Item -ItemType Directory -Force -Path $trialRoot | Out-Null; $trainConfigs = @(); $evalConfigs = @(); $slot = 0
+            foreach ($condition in $conditions) { foreach ($trialFamily in $families) {
+                if ($slot -ge $count) { continue }; $pilotSeed = 81000 + ($count * 10) + $slot
+                $train = New-TaskSpec $trialFamily $condition $pilotSeed $QualificationSteps 64 'train' $trialRoot $qualificationId $count; $evaluate = New-TaskSpec $trialFamily $condition $pilotSeed $QualificationSteps 64 'evaluate' $trialRoot $qualificationId $count
+                $trainConfigs += Write-TaskConfig $train $trialRoot 'pilot_'; $evalConfigs += Write-TaskConfig $evaluate $trialRoot 'pilot_'; $slot++
+            } }
+            Write-RunLog "Qualification trial workers=${count}: training $($trainConfigs.Count) independent tasks"; $trainRun = Invoke-Phase 'train' $trainConfigs $count $trialRoot; $trainSummary = Get-PhaseSummary $trainRun 'train' $count (Join-Path $trialRoot 'training.json'); $evalSummary = $null
+            if ($trainSummary.qualified) { $trainLimit = $count; Write-RunLog "Qualification trial workers=${count}: evaluation begins"; $evalRun = Invoke-Phase 'evaluate' $evalConfigs $count $trialRoot; $evalSummary = Get-PhaseSummary $evalRun 'evaluate' $count (Join-Path $trialRoot 'evaluation.json'); if ($evalSummary.qualified) { $evalLimit = $count; $jointLimit = $count } }
+            $trialRows += [ordered]@{ workers = $count; training = $trainSummary; evaluation = $evalSummary; jointly_qualified = ($null -ne $evalSummary -and $evalSummary.qualified) }; if ($jointLimit -gt 0) { break }
+        }
+        $report = [ordered]@{ schema_version = 1; experiment_id = 'granularity-init-worker-qualification-v1'; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; requested_target_workers = $QualifyWorkers; attempted_worker_counts_in_order = $attempted; qualified_training_workers = $trainLimit; qualified_evaluation_workers = $evalLimit; qualified_workers = $jointLimit; status = if ($jointLimit -gt 0) { 'qualified' } else { 'not_qualified' }; pilot_protocol = [ordered]@{ scale = '10M'; optimizer_steps = $QualificationSteps; validation_examples = 64; held_out_examples = 64; operation = 'separate-process training and evaluation' }; study_config_sha256 = $configSha; git_revision = $gitRevision; trials = $trialRows }
+        $reportPath = Join-Path $root 'qualification_report.json'; $report | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath $reportPath -Encoding UTF8; Write-RunLog "Worker qualification report: $reportPath"; Write-Host "Qualified training workers=$trainLimit; evaluation workers=$evalLimit; joint maximum=$jointLimit"
+        if ($jointLimit -le 0) { throw "No worker count passed both qualification phases. See $reportPath" }; Write-Host "Next production command: .\run_48h_exploratory_study.ps1 -Family $Family -Workers $jointLimit -QualificationReport '$reportPath'"; return
+    }
+
+    if ($Workers -gt 1) {
+        if (-not (Test-Path -LiteralPath $QualificationReport -PathType Leaf)) { throw "Qualification report not found: $QualificationReport" }; $report = Get-Content -LiteralPath $QualificationReport -Raw | ConvertFrom-Json; $currentGpuUuid = Get-CurrentGpuUuid
+        if ($report.status -ne 'qualified' -or ($report.families -join ',') -ne ($families -join ',') -or [int]$report.qualified_workers -lt $Workers -or $report.study_config_sha256 -ne $configSha -or $report.git_revision -ne $gitRevision -or [string]::IsNullOrWhiteSpace($currentGpuUuid) -or $report.hardware.gpu_uuid -ne $currentGpuUuid) { throw 'Qualification report does not authorize this family, worker count, code revision, config, or GPU' }
+    }
+
+    $trainConfigs = @(); $evalConfigs = @()
+    foreach ($condition in $conditions) { foreach ($taskFamily in $families) { $train = New-TaskSpec $taskFamily $condition $productionSeed $stepBudget 512 'train' $root $experimentId $Workers; $evaluate = New-TaskSpec $taskFamily $condition $productionSeed $stepBudget 512 'evaluate' $root $experimentId $Workers; $trainConfigs += Write-TaskConfig $train $root; $evalConfigs += Write-TaskConfig $evaluate $root } }
     if (-not $EvaluateOnly) {
-        $cudaCheck = & $Python -c "import sys, torch, torch.nn; print('Python:', sys.executable); print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); sys.exit(0 if torch.cuda.is_available() else 3)" 2>&1
-        if ($LASTEXITCODE -ne 0) {
-            throw "Python/PyTorch CUDA preflight failed; no model run was started. $($cudaCheck -join ' ')"
-        }
-        Write-RunLog ($cudaCheck -join ' ')
+        $pending = @(); foreach ($config in $trainConfigs) { $task = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json; if (Test-TaskComplete $task 'train' $config) { Write-RunLog "SKIP validated trained run: $($task.output_dir)"; continue }; if ((Test-Path -LiteralPath $task.output_dir -PathType Container) -and @(Get-ChildItem -LiteralPath $task.output_dir -Force).Count -gt 0) { throw "Refusing to overwrite partial/incompatible artifact: $($task.output_dir)" }; $pending += $config }
+        $trainResult = Invoke-Phase 'train' $pending $Workers $root; if (-not $trainResult.Success) { throw 'Training failed; evaluation has not started. See per-task logs.' }
     }
-
-    foreach ($family in $families) {
-        $familyTasks = @($tasks | Where-Object { $_.family -eq $family })
-        if (-not $EvaluateOnly) {
-            Write-RunLog "Training all $($familyTasks.Count) conditions for family=$family"
-            foreach ($task in $familyTasks) {
-                $taskPath = Join-Path (Join-Path $root 'task_configs') ("{0}_{1}_{2}_seed_{3}_train.json" -f $task.family, $task.scale, $task.condition_id, $task.seed)
-                $taskJson = ($task | ConvertTo-Json -Depth 30)
-                Set-Content -LiteralPath $taskPath -Value $taskJson -Encoding UTF8
-                if (Test-TaskComplete $task 'train' $taskPath) {
-                    Write-RunLog "SKIP validated trained run: $($task.output_dir)"
-                    continue
-                }
-                if ((Test-Path -LiteralPath $task.output_dir) -and @(Get-ChildItem -LiteralPath $task.output_dir -Force -ErrorAction SilentlyContinue).Count -gt 0) {
-                    throw "Refusing to overwrite or guess the state of existing artifact: $($task.output_dir). Use -EvaluateOnly for a valid trained checkpoint, or choose a fresh -OutputRoot."
-                }
-                Invoke-StudyTask $task 'train'
-            }
-        }
-
-        Write-RunLog "Evaluating all conditions for family=$family"
-        foreach ($task in $familyTasks) {
-            $taskPath = Join-Path (Join-Path $root 'task_configs') ("{0}_{1}_{2}_seed_{3}_evaluate.json" -f $task.family, $task.scale, $task.condition_id, $task.seed)
-            Set-Content -LiteralPath $taskPath -Value ($task | ConvertTo-Json -Depth 30) -Encoding UTF8
-            if (Test-TaskComplete $task 'evaluate' $taskPath) {
-                Write-RunLog "SKIP validated evaluation: $($task.output_dir)"
-                continue
-            }
-            if (-not $EvaluateOnly -and -not (Test-TaskComplete $task 'train' $taskPath)) {
-                throw "Evaluation requires a validated trained checkpoint: $($task.output_dir)"
-            }
-            Invoke-StudyTask $task 'evaluate'
-        }
-    }
-
-    $summary = [ordered]@{
-        experiment_id = 'granularity-init-48h-exploratory-lr3e-3-v1'
-        created_at_utc = [DateTime]::UtcNow.ToString('o')
-        family = $Family
-        run_count = $tasks.Count
-        scale = $scale
-        conditions = @($conditions | ForEach-Object { $_.id })
-        seed = $seed
-        max_optimizer_steps = $stepBudget
-        learning_rate = $learningRate
-        status = 'complete'
-        records = @($script:Records)
-        learning_rate_selection = 'Fixed literature-informed rate; not tuned on these exploratory runs.'
-        interpretation = 'One-family, one-seed, 1,000-step exploratory comparison only; not the full planned study.'
-    }
-    $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8
-    Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
-} finally {
-    Pop-Location
-}
+    $pendingEval = @(); foreach ($config in $evalConfigs) { $task = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json; if (Test-TaskComplete $task 'evaluate' $config) { Write-RunLog "SKIP validated evaluation: $($task.output_dir)"; continue }; if (-not (Test-TaskComplete $task 'train' $config)) { throw "Evaluation requires a validated trained checkpoint: $($task.output_dir)" }; $pendingEval += $config }
+    $evalResult = Invoke-Phase 'evaluate' $pendingEval $Workers $root; if (-not $evalResult.Success) { throw 'Evaluation failed. See per-task logs.' }
+    $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = 4 * $families.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seed = $productionSeed; max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = 'One seed and 1,000 steps per condition; exploratory comparison only.' }
+    $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8; Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
+} finally { Pop-Location }
