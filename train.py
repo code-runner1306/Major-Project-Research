@@ -145,29 +145,46 @@ def train_fixed_budget(
                 iterator = iter(train_dataloader)
                 curriculum_index += 1
             step_started = time.perf_counter()
-            optimizer.zero_grad(set_to_none=True)
-            loss_sum = 0.0
+            batches = []
             for _ in range(profile.budget.grad_accum_steps):
                 (tokens, targets), iterator = _next_batch(iterator, train_dataloader)
-                tokens, targets = tokens.to(device), targets.to(device)
-                with torch.amp.autocast("cuda", enabled=device.type == "cuda"):
-                    _, loss = model(tokens, targets)
-                    assert loss is not None
-                    if not torch.isfinite(loss):
-                        events.append({"step": step, "kind": "nonfinite_loss"})
-                        raise FloatingPointError(f"Non-finite loss at optimizer step {step}")
-                    scaled_loss = loss / profile.budget.grad_accum_steps
-                scaler.scale(scaled_loss).backward()
-                loss_sum += loss.item()
-                processed_tokens += tokens.numel()
-                microbatches += 1
-            scaler.unscale_(optimizer)
-            unclipped = float(torch.nn.utils.clip_grad_norm_(model.parameters(), profile.grad_clip).item())
+                batches.append((tokens.to(device), targets.to(device)))
+            cpu_rng = torch.get_rng_state()
+            cuda_rng = torch.cuda.get_rng_state(device) if device.type == "cuda" else None
+            for attempt in range(17):
+                if attempt:
+                    torch.set_rng_state(cpu_rng)
+                    if cuda_rng is not None:
+                        torch.cuda.set_rng_state(cuda_rng, device)
+                optimizer.zero_grad(set_to_none=True)
+                loss_sum = 0.0
+                for tokens, targets in batches:
+                    with torch.amp.autocast("cuda", enabled=device.type == "cuda"):
+                        _, loss = model(tokens, targets)
+                        assert loss is not None
+                        if not torch.isfinite(loss):
+                            events.append({"step": step, "kind": "nonfinite_loss"})
+                            raise FloatingPointError(f"Non-finite loss at optimizer step {step}")
+                        scaled_loss = loss / profile.budget.grad_accum_steps
+                    scaler.scale(scaled_loss).backward()
+                    loss_sum += loss.item()
+                scaler.unscale_(optimizer)
+                unclipped = float(torch.nn.utils.clip_grad_norm_(model.parameters(), profile.grad_clip).item())
+                if math_isfinite(unclipped):
+                    break
+                if not scaler.is_enabled() or attempt == 16:
+                    events.append({"step": step, "kind": "nonfinite_gradient"})
+                    raise FloatingPointError(f"Non-finite gradient norm at optimizer step {step}")
+                old_scale = scaler.get_scale()
+                scaler.update()
+                events.append({"step": step, "kind": "amp_overflow_retry", "scale": old_scale,
+                               "new_scale": scaler.get_scale()})
+                if scaler.get_scale() <= 0 or scaler.get_scale() >= old_scale:
+                    raise FloatingPointError(f"Non-finite gradient norm at optimizer step {step}; AMP scale could not be reduced")
+            processed_tokens += sum(tokens.numel() for tokens, _ in batches)
+            microbatches += len(batches)
             unclipped_norms.append(unclipped)
             clipped_norms.append(min(unclipped, profile.grad_clip))
-            if not math_isfinite(unclipped):
-                events.append({"step": step, "kind": "nonfinite_gradient"})
-                raise FloatingPointError(f"Non-finite gradient norm at optimizer step {step}")
             scaler.step(optimizer)
             scaler.update()
             scheduler.step()
@@ -182,7 +199,9 @@ def train_fixed_budget(
                     flush=True,
                 )
 
-            if step % profile.budget.evaluation_interval == 0 or step == max_steps:
+            should_validate = (step in profile.budget.validation_at_steps if profile.budget.validation_at_steps is not None
+                               else step % profile.budget.evaluation_interval == 0 or step == max_steps)
+            if should_validate:
                 validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)
                 if validation_metrics_fn is not None:
                     validation.update(validation_metrics_fn(model, step))

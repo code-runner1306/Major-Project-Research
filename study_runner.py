@@ -146,6 +146,8 @@ def task_complete(task: dict[str, Any], op: str) -> bool:
         for key in ("grad_accum_steps", "batch_size", "context_length", "validation_steps", "evaluation_interval"):
             if int(budget.get(key, -1)) != int(task[key]):
                 return False
+        if budget.get("validation_at_steps") != task.get("validation_at_steps"):
+            return False
         if float(identity.get("learning_rate", -1)) != float(task["learning_rate"]):
             return False
         # Check the checkpoint payload's actual step count; a directory or lifecycle label is insufficient.
@@ -669,7 +671,8 @@ def main() -> int:
             for task in tasks:
                 if (stage == "E3" and task["family"] not in {"mqar", "overwrite"}) or (stage == "E4" and task["variant"] != "channel-wise"):
                     continue
-                print(f"ANALYSIS PLAN {stage} {task['family']} {task['scale']} {task['condition_id']} seed={task['seed']} -> {Path(task['output_dir']) / f'{stage.lower()}_results_{task['scale']}.json'}")
+                result_path = Path(task['output_dir']) / f"{stage.lower()}_results_{task['scale']}.json"
+                print(f"ANALYSIS PLAN {stage} {task['family']} {task['scale']} {task['condition_id']} seed={task['seed']} -> {result_path}")
         print(f"ANALYSIS PLAN E6 -> {root / 'E6_report.json'}")
         print("E0 includes the offline CPU correctness smoke; production E0 additionally measures easy-task answer-level learnability. E1 uses validation-only recipe selection and real training-time pilots.")
         return 0

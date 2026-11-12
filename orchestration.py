@@ -476,6 +476,7 @@ def run_seed(
                 "context_length": profile.budget.context_length,
                 "validation_steps": profile.budget.validation_steps,
                 "evaluation_interval": profile.budget.evaluation_interval,
+                **({"validation_at_steps": list(profile.budget.validation_at_steps)} if profile.budget.validation_at_steps is not None else {}),
             },
             "learning_rate": profile.learning_rate,
             "calibration_examples": profile.calibration_examples,

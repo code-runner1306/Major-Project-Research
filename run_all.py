@@ -57,6 +57,7 @@ def _run_study_task(path: str | Path) -> dict:
         "calibration_max_half_life", "calibration_examples", "retrieval_config",
         "qualification", "qualification_stage", "qualification_scope",
         "validation_answer_accuracy", "concurrent_training_runs", "curriculum",
+        "validation_at_steps",
     }
     unknown = sorted(set(task) - accepted)
     if unknown:
@@ -101,7 +102,13 @@ def _run_study_task(path: str | Path) -> dict:
         validation_steps=int(task["validation_steps"]),
         evaluation_interval=int(task["evaluation_interval"]),
         status="study_locked_budget",
+        validation_at_steps=tuple(task["validation_at_steps"]) if "validation_at_steps" in task else None,
     )
+    if budget.validation_at_steps is not None and (
+        any(type(step) is not int or step < 1 or step > budget.max_optimizer_steps for step in budget.validation_at_steps)
+        or tuple(sorted(set(budget.validation_at_steps))) != budget.validation_at_steps
+    ):
+        raise ValueError("validation_at_steps must be unique, increasing integers within the optimizer budget")
     if min(budget.max_optimizer_steps or 0, budget.grad_accum_steps, budget.batch_size,
            budget.context_length, budget.validation_steps, budget.evaluation_interval) < 1:
         raise ValueError("Study budgets and validation settings must be positive")

@@ -65,6 +65,7 @@ class TrainingBudget:
     validation_steps: int
     evaluation_interval: int
     status: str = "pending_v100_pilot"
+    validation_at_steps: tuple[int, ...] | None = None
 
     def require_ready(self) -> None:
         if self.max_optimizer_steps is None:
