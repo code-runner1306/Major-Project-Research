@@ -131,9 +131,19 @@ try {
                 if ($running) { Start-Sleep -Seconds 10 }
             }
             foreach ($item in $active) {
-                $item.Process.WaitForExit(); Write-NewTaskOutput $item; $elapsed = ((Get-Date) - $item.Started).TotalSeconds; $success = ($item.Process.ExitCode -eq 0)
-                if ($success) { $success = Test-TaskComplete $item.Task $Phase $item.Config }
-                if (-not $success) { $hadFailure = $true; Write-RunLog "FAILED $Phase $($item.Tag) rc=$($item.Process.ExitCode)" } else { Write-RunLog "COMPLETED $Phase $($item.Tag)" }
+                $item.Process.WaitForExit()
+                $item.Process.Refresh()
+                Write-NewTaskOutput $item
+                $elapsed = ((Get-Date) - $item.Started).TotalSeconds
+                $exitCode = $item.Process.ExitCode
+                Write-RunLog "PROCESS EXIT $Phase $($item.Tag) pid=$($item.Process.Id) code=$exitCode elapsed=$([math]::Round($elapsed, 1))s"
+                $success = ($null -ne $exitCode -and $exitCode -eq 0)
+                if ($success) {
+                    $artifactComplete = Test-TaskComplete $item.Task $Phase $item.Config
+                    Write-RunLog "ARTIFACT CHECK $Phase $($item.Tag): $(if ($artifactComplete) { 'COMPLETE' } else { 'INCOMPLETE' })"
+                    $success = $artifactComplete
+                }
+                if (-not $success) { $hadFailure = $true; Write-RunLog "FAILED $Phase $($item.Tag) exit_code=$exitCode" } else { Write-RunLog "COMPLETED $Phase $($item.Tag)" }
                 $records += [pscustomobject]@{ task = $item.Task; config = $item.Config; success = $success; elapsed_seconds = $elapsed; stdout = $item.Stdout; stderr = $item.Stderr }
             }
             if ($hadFailure) { break }
@@ -214,3 +224,4 @@ try {
     $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = 4 * $families.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seed = $productionSeed; max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = 'One seed and 1,000 steps per condition; exploratory comparison only.' }
     $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8; Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
 } finally { Pop-Location }
+
