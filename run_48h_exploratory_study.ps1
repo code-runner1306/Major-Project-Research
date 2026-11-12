@@ -137,12 +137,18 @@ try {
                 $elapsed = ((Get-Date) - $item.Started).TotalSeconds
                 $exitCode = $item.Process.ExitCode
                 Write-RunLog "PROCESS EXIT $Phase $($item.Tag) pid=$($item.Process.Id) code=$exitCode elapsed=$([math]::Round($elapsed, 1))s"
-                $success = ($null -ne $exitCode -and $exitCode -eq 0)
-                if ($success) {
+                $artifactComplete = $false
+                if ($null -eq $exitCode -or $exitCode -eq 0) {
                     $artifactComplete = Test-TaskComplete $item.Task $Phase $item.Config
                     Write-RunLog "ARTIFACT CHECK $Phase $($item.Tag): $(if ($artifactComplete) { 'COMPLETE' } else { 'INCOMPLETE' })"
-                    $success = $artifactComplete
                 }
+                # Some Windows PowerShell/.NET combinations return a Process object
+                # without exposing ExitCode after redirected child output. A complete
+                # artifact is independently verified for task identity, final step,
+                # lifecycle, and checkpoint hash, so use that as the fallback only
+                # when ExitCode is unavailable. A real nonzero exit always fails.
+                $success = ($artifactComplete -and ($null -eq $exitCode -or $exitCode -eq 0))
+                if ($null -eq $exitCode -and $artifactComplete) { Write-RunLog "PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for $($item.Tag)" }
                 if (-not $success) { $hadFailure = $true; Write-RunLog "FAILED $Phase $($item.Tag) exit_code=$exitCode" } else { Write-RunLog "COMPLETED $Phase $($item.Tag)" }
                 $records += [pscustomobject]@{ task = $item.Task; config = $item.Config; success = $success; elapsed_seconds = $elapsed; stdout = $item.Stdout; stderr = $item.Stderr }
             }
