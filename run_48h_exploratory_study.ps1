@@ -5,6 +5,8 @@ param(
     [string]$Family,
     [string]$Python = "python",
     [string]$OutputRoot,
+    [ValidateRange(1, 2147483647)]
+    [int]$OptimizerSteps = 1000,
     [int]$Workers = 1,
     [int]$QualifyWorkers = 0,
     [int]$QualificationSteps = 20,
@@ -33,7 +35,10 @@ try {
     $studyConfigPath = [System.IO.Path]::GetFullPath((Join-Path $repo $StudyConfig))
     if (-not (Test-Path -LiteralPath $studyConfigPath -PathType Leaf)) { throw "Study config not found: $studyConfigPath" }
     $study = Get-Content -LiteralPath $studyConfigPath -Raw | ConvertFrom-Json
-    if ([string]::IsNullOrWhiteSpace($OutputRoot)) { $OutputRoot = "output/granularity_48h_exploratory_lr3e-3_$Family" }
+    if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
+        $stepSuffix = if ($OptimizerSteps -eq 1000) { '' } else { "_steps$OptimizerSteps" }
+        $OutputRoot = "output/granularity_48h_exploratory_lr3e-3${stepSuffix}_$Family"
+    }
     $outputBase = [System.IO.Path]::GetFullPath((Join-Path $repo 'output'))
     if ($QualifyWorkers -gt 0) {
         if ([string]::IsNullOrWhiteSpace($QualificationRoot)) { $QualificationRoot = "output/granularity_48h_worker_qualification_{0}_{1}" -f $Family, (Get-Date -Format 'yyyyMMdd_HHmmss') }
@@ -48,7 +53,7 @@ try {
         [ordered]@{ id = 'C4-scalar-calibrated'; variant = 'scalar'; initialization = 'calibrated-geometric' },
         [ordered]@{ id = 'C6-channel-calibrated'; variant = 'channel-wise'; initialization = 'calibrated-geometric' }
     )
-    $scale = '10M'; $productionSeed = 42; $stepBudget = 1000; $learningRate = 0.003
+    $scale = '10M'; $productionSeed = 42; $stepBudget = $OptimizerSteps; $learningRate = 0.003
     $sourceBudget = $study.budgets.'10M'; $calibration = $study.calibration
     $experimentId = 'granularity-init-48h-exploratory-lr3e-3-v1'; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
     $script:MasterLog = $null
@@ -187,7 +192,7 @@ try {
 
     if ($QualifyWorkers -gt 0) { Write-Host "Worker qualification: family=$Family; target=$QualifyWorkers; fallback=$($QualifyWorkers)..1"; Write-Host "Pilot root: $root" }
     else { Write-Host "Exploratory production: $(4 * $families.Count) 10M runs; family=$Family; workers=$Workers; seed=$productionSeed; steps=$stepBudget; LR=$learningRate"; Write-Host "Output root: $root" }
-    Write-Host 'The optimizer step budget is fixed at 1,000 for this exploratory launcher; it is not a literature-derived convergence budget.'
+    Write-Host "Production optimizer-step budget: $stepBudget (exploratory setting, not a literature-derived convergence budget). Worker qualification uses $QualificationSteps steps per task."
     Write-Host 'Production evaluation uses 512 examples; the worker pilot uses 64 examples and short isolated tasks.'
     if ($DryRun) { if ($QualifyWorkers -gt 0) { for ($n = $QualifyWorkers; $n -ge 1; $n--) { Write-Host "  QUALIFY $n total workers; then evaluate the same tasks" } } else { Write-Host "PLAN: train all selected families before evaluating any family, bounded to $Workers total workers" }; return }
 
@@ -227,7 +232,7 @@ try {
     }
     $pendingEval = @(); foreach ($config in $evalConfigs) { $task = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json; if (Test-TaskComplete $task 'evaluate' $config) { Write-RunLog "SKIP validated evaluation: $($task.output_dir)"; continue }; if (-not (Test-TaskComplete $task 'train' $config)) { throw "Evaluation requires a validated trained checkpoint: $($task.output_dir)" }; $pendingEval += $config }
     $evalResult = Invoke-Phase 'evaluate' $pendingEval $Workers $root; if (-not $evalResult.Success) { throw 'Evaluation failed. See per-task logs.' }
-    $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = 4 * $families.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seed = $productionSeed; max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = 'One seed and 1,000 steps per condition; exploratory comparison only.' }
+    $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = 4 * $families.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seed = $productionSeed; max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = "One seed and $stepBudget steps per condition; exploratory comparison only." }
     $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8; Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
 } finally { Pop-Location }
 
