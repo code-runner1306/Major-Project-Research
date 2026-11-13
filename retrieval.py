@@ -353,24 +353,38 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             for index in range(key_count) if index != target_index
         ]
         latest_write = target_writes[-1]
-        prior_writes: list[tuple[int, int, str]] = []
-        insertion_choices: list[int] = []
-        for _ in range(100):
-            candidate = target_writes[:-1] + unrelated_writes
-            rng.shuffle(candidate)
-            prior_target_indices = [index for index, write in enumerate(candidate) if write[0] == target_key]
-            last_prior_target = max(prior_target_indices, default=-1)
-            choices = [
-                index for index in range(last_prior_target + 1, len(candidate))
-                if any(write[0] != target_key for write in candidate[index:])
-            ]
-            if choices:
-                prior_writes, insertion_choices = candidate, choices
-                break
-        if not insertion_choices:
-            raise ValueError("infeasible overwrite combination: no unrelated write can follow the latest target")
-        latest_index = rng.choice(insertion_choices)
-        writes = [*prior_writes[:latest_index], latest_write, *prior_writes[latest_index:]]
+        prior_target_writes = list(target_writes[:-1])
+        write_count = len(prior_target_writes) + len(unrelated_writes) + 1
+        # The latest target write must be after every prior target write, before
+        # at least one unrelated write, and far enough back that the requested
+        # query distance reaches the end of the memory prefix.  Choose
+        # uniformly from those feasible interior positions instead of
+        # shuffling and rejecting otherwise valid examples.
+        minimum_index = max(
+            len(prior_target_writes),
+            (2 * write_count - distance - 1 + 1) // 2,
+        )
+        maximum_index = min(
+            write_count - 2,
+            (length - distance - 7) // 2,
+        )
+        if minimum_index > maximum_index:
+            raise ValueError(
+                f"infeasible overwrite combination: length={length}, key_count={key_count}, "
+                f"query_distance={distance}, overwrite_count={overwrite_count}; "
+                "no feasible interior latest-write position"
+            )
+        latest_index = rng.randint(minimum_index, maximum_index)
+        rng.shuffle(unrelated_writes)
+        prefix_unrelated_count = latest_index - len(prior_target_writes)
+        prefix_unrelated = unrelated_writes[:prefix_unrelated_count]
+        suffix_unrelated = unrelated_writes[prefix_unrelated_count:]
+        prefix_slots: list[tuple[int, int, str] | None] = [None] * latest_index
+        for slot, write in zip(sorted(rng.sample(range(latest_index), len(prior_target_writes))), prior_target_writes):
+            prefix_slots[slot] = write
+        unrelated_cursor = iter(prefix_unrelated)
+        prefix = [next(unrelated_cursor) if slot is None else slot for slot in prefix_slots]
+        writes = [*prefix, latest_write, *suffix_unrelated]
         post_target_writes = writes[latest_index + 1:]
         if not post_target_writes or any(write[0] == target_key for write in post_target_writes):
             raise AssertionError("keyed overwrite latest target write must be followed only by unrelated writes")
