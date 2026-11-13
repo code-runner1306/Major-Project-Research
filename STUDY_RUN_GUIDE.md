@@ -148,11 +148,11 @@ expand a dry-run plan without starting processes, but it refuses E0 and later
 execution stages until a researcher records an approver and UTC timestamp and
 changes that status to `approved`. Passing a smoke test is not authorization.
 
-After the corrected protocol lock and measured timing exist, the one-seed pilot
-is the only initially authorized research scope. Record held-out retrieval,
-shortcut baselines, symbolic-oracle checks, learning curves, difficulty/error
-strata, and same-checkpoint gate-sharing interventions before making a decision.
-Further seeds, grouped gates, language modeling, and larger scales require a
+The current corrected research plan is a five-seed paired pilot (seeds 42–46),
+subject to recorded compute authorization. Record held-out retrieval, shortcut
+baselines, symbolic-oracle checks, learning curves, difficulty/error strata,
+and same-checkpoint gate-sharing interventions before making a decision.
+Additional seeds, grouped gates, language modeling, and larger scales require a
 new prospective decision and a new budget estimate.
 
 The corrected pilot prespecifies `evaluation.shortcut_baseline_max_accuracy`
