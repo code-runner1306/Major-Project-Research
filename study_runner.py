@@ -351,6 +351,19 @@ def apply_protocol_lock(tasks: list[dict[str, Any]], config: dict[str, Any], con
     if (lock.get("status") != expected_status or lock.get("scope") != expected_scope
             or lock.get("config_sha256") != hashlib.sha256(config_path.read_bytes()).hexdigest()):
         raise ValueError("Protocol lock status/scope/config does not match this study config.")
+    if not smoke_scope:
+        contract = lock.get("protocol_contract")
+        if not isinstance(contract, dict) or contract.get("version") != "granularity-study-protocol-v2":
+            raise ValueError("Protocol lock lacks the current qualification contract.")
+        e0_result = lock.get("e0_result")
+        recipe = lock.get("recipe_selection")
+        timing = lock.get("training_time_estimate")
+        if not isinstance(e0_result, dict) or e0_result.get("status") != "passed":
+            raise ValueError("Protocol lock does not contain a passed E0 learnability result.")
+        if not isinstance(recipe, dict) or recipe.get("status") != "selected" or recipe.get("learnability_status") != "passed":
+            raise ValueError("Protocol lock does not contain a validation-selected learnable recipe.")
+        if not isinstance(timing, dict) or timing.get("status") != "measured":
+            raise ValueError("Protocol lock does not contain measured training timing.")
     rate = lock.get("recipe_selection", {}).get("selected_learning_rate")
     if not smoke_scope and rate is None:
         raise ValueError("Protocol lock does not contain a selected shared learning rate.")
@@ -390,8 +403,14 @@ def command_stage(stage: str, args: argparse.Namespace, root: Path, master: Path
             results = run_qualification_workers(build_e0_worker_configs(config, root, primary_size=primary_size), args, root, master, tolerate_failures=False)
             if results is None:
                 return False
-            result = assess_e0(results, float(config["qualification"]["answer_accuracy_threshold"]),
-                               int(config["qualification"]["consecutive_validations"]))
+            result = assess_e0(
+                results,
+                float(config["qualification"]["answer_accuracy_threshold"]),
+                int(config["qualification"]["consecutive_validations"]),
+                expected_families=(family for family in ("mqar", "overwrite") if family in config.get("datasets", [])),
+                expected_variants=("scalar", "channel-wise"),
+                require_complete=True,
+            )
             write_json(root / "qualification" / "E0_result.json", result)
             return result["status"] == "passed"
         return code == 0

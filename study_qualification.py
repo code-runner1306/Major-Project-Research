@@ -27,7 +27,10 @@ def build_e0_worker_configs(config: dict[str, Any], output_root: Path, *, primar
     budget = config["budgets"][primary_size]
     tasks = []
     conditions = [c for c in config["conditions"] if c["initialization"] == "default" and c["variant"] in {"scalar", "channel-wise"}]
-    for family in ("mqar", "overwrite"):
+    families = tuple(family for family in ("mqar", "overwrite") if family in config.get("datasets", []))
+    if not families:
+        raise ValueError("E0 requires at least one synthetic retrieval family")
+    for family in families:
         for condition in conditions:
             task = {
                 "operation": "train", "experiment_id": config["experiment_id"],
@@ -193,12 +196,31 @@ def read_validation_history(run_dir: Path) -> list[dict[str, Any]]:
     return history
 
 
-def assess_e0(results: Iterable[dict[str, Any]], threshold: float = 0.9, consecutive: int = 2) -> dict[str, Any]:
-    """Require each endpoint/task run to clear the answer threshold consecutively."""
+def assess_e0(
+    results: Iterable[dict[str, Any]], threshold: float = 0.9, consecutive: int = 2,
+    *, expected_families: Iterable[str] | None = None,
+    expected_variants: Iterable[str] = ("scalar", "channel-wise"),
+    require_complete: bool = False,
+) -> dict[str, Any]:
+    """Require each endpoint/task run to clear the answer threshold consecutively.
+
+    The historical helper remains permissive for fixture use. Production E0
+    passes the expected family/endpoint set and ``require_complete=True`` so a
+    partial qualification cannot authorize the study.
+    """
+    if not 0.0 <= float(threshold) <= 1.0:
+        raise ValueError("E0 answer threshold must be between zero and one")
+    if int(consecutive) < 1:
+        raise ValueError("E0 consecutive validation count must be positive")
     result_rows = []
     passed = True
+    seen: set[tuple[str, str]] = set()
     for result in results:
         identity = {key: result.get(key) for key in ("family", "variant", "condition_id", "seed", "qualification_scope")}
+        cell = (str(identity["family"]), str(identity["variant"]))
+        if cell in seen:
+            raise ValueError(f"Duplicate E0 qualification cell: {cell[0]}/{cell[1]}")
+        seen.add(cell)
         history = result.get("validation_history")
         if history is None and result.get("run_dir"):
             history = read_validation_history(Path(result["run_dir"]))
@@ -209,11 +231,28 @@ def assess_e0(results: Iterable[dict[str, Any]], threshold: float = 0.9, consecu
             raise ValueError(f"E0 validation history lacks answer_accuracy: {identity}")
         found = any(all(float(score) >= threshold for score in scores[index:index + consecutive])
                     for index in range(max(0, len(scores) - consecutive + 1)))
-        result_rows.append({**identity, "answer_accuracy": scores, "passed": found})
+        steps = [entry.get("step") for entry in history]
+        if all(step is not None for step in steps):
+            if any(int(current) <= int(previous) for previous, current in zip(steps, steps[1:])):
+                raise ValueError(f"E0 validation steps are not strictly increasing: {identity}")
+        result_rows.append({**identity, "answer_accuracy": scores, "validation_steps": steps, "passed": found})
         passed &= found
-    return {"status": "passed" if passed and result_rows else "failed", "threshold": threshold,
+    expected_cells = {
+        (str(family), str(variant))
+        for family in (expected_families or ())
+        for variant in expected_variants
+    }
+    missing = sorted(expected_cells - seen)
+    unexpected = sorted(seen - expected_cells) if expected_cells else []
+    if require_complete and (missing or unexpected):
+        passed = False
+    return {"status": "passed" if passed and result_rows and not (require_complete and (missing or unexpected)) else "failed", "threshold": threshold,
             "consecutive_validations": consecutive, "runs": result_rows, "completed_at": _now(),
-            "scope": "smoke" if any(row.get("qualification_scope") == "smoke" for row in result_rows) else "production"}
+            "scope": "smoke" if any(row.get("qualification_scope") == "smoke" for row in result_rows) else "production",
+            "criterion": "answer_accuracy >= threshold for consecutive validations",
+            "expected_cells": sorted({f"{family}/{variant}" for family, variant in expected_cells}),
+            "missing_cells": [f"{family}/{variant}" for family, variant in missing],
+            "unexpected_cells": [f"{family}/{variant}" for family, variant in unexpected]}
 
 
 def select_e1_recipe(
@@ -458,11 +497,41 @@ def write_protocol_lock(
     if recipe.get("learnability_status") != "passed":
         raise ValueError("Cannot lock protocol before the E1 learnability floor passes")
     config = json.loads(config_path.read_text(encoding="utf-8"))
+    source_root = Path(__file__).resolve().parent
+    source_hashes = {}
+    for source_name in ("recurrence.py", "model.py", "controls.py", "retrieval.py", "study_qualification.py", "study_runner.py"):
+        source_path = source_root / source_name
+        if source_path.is_file():
+            source_hashes[source_name] = hashlib.sha256(source_path.read_bytes()).hexdigest()
     payload = {
         "status": "locked", "scope": scope, "experiment_id": config["experiment_id"],
         "config_sha256": hashlib.sha256(config_path.read_bytes()).hexdigest(),
         "locked_at": _now(), "e0_result": e0_result, "recipe_selection": recipe,
         "training_time_estimate": timing, "calibration": calibration,
+        "protocol_contract": {
+            "version": "granularity-study-protocol-v2",
+            "qualification": {
+                "e0_threshold": e0_result.get("threshold"),
+                "e0_consecutive_validations": e0_result.get("consecutive_validations"),
+                "e0_expected_cells": e0_result.get("expected_cells", []),
+                "e1_selection": recipe.get("selection_metric"),
+                "final_difficulty_floor": recipe.get("minimum_final_answer_accuracy"),
+            },
+            "training_budget": config.get("budgets", {}),
+            "data_and_generator": {
+                "datasets": config.get("datasets", []),
+                "retrieval": config.get("retrieval", {}),
+                "splits": {"training": "train", "recipe_selection": "validation", "held_out": "held_out"},
+            },
+            "evaluation": config.get("evaluation", {}),
+            "stopping_and_exclusions": {
+                "failed_candidates": "retained and excluded from recipe selection",
+                "incomplete_cells": "cannot authorize a protocol lock",
+                "capacity": "reported only after complete corrected pilot",
+            },
+        },
+        "configuration_snapshot": config,
+        "implementation_sources": source_hashes,
     }
     path = output_root / "protocol_lock.json"
     _write_json(path, payload)
