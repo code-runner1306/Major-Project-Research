@@ -371,6 +371,9 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             raise ValueError("infeasible overwrite combination: no unrelated write can follow the latest target")
         latest_index = rng.choice(insertion_choices)
         writes = [*prior_writes[:latest_index], latest_write, *prior_writes[latest_index:]]
+        post_target_writes = writes[latest_index + 1:]
+        if not post_target_writes or any(write[0] == target_key for write in post_target_writes):
+            raise AssertionError("keyed overwrite latest target write must be followed only by unrelated writes")
 
         memory = [token for key, value, _ in writes for token in (key, value)]
         latest_value_base = 2 * latest_index + 1
