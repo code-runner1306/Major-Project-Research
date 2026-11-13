@@ -319,7 +319,10 @@ def save_checkpoint(
     }
 
 
-def validate_checkpoint(path: str | Path, expected_steps: int, expected_tokens: int) -> tuple[bool, str, dict[str, Any] | None]:
+def validate_checkpoint(
+    path: str | Path, expected_steps: int, expected_tokens: int, *,
+    require_accepted_steps: bool = False,
+) -> tuple[bool, str, dict[str, Any] | None]:
     target = Path(path)
     if not target.is_file():
         return False, "checkpoint is missing", None
@@ -331,6 +334,8 @@ def validate_checkpoint(path: str | Path, expected_steps: int, expected_tokens: 
         return False, "checkpoint lacks model state", None
     if checkpoint.get("completed_steps") != expected_steps:
         return False, "checkpoint completed-step count differs", checkpoint
+    if require_accepted_steps and "accepted_optimizer_steps" not in checkpoint:
+        return False, "checkpoint accepted-step count is missing", checkpoint
     if "accepted_optimizer_steps" in checkpoint and checkpoint.get("accepted_optimizer_steps") != expected_steps:
         return False, "checkpoint accepted-step count differs", checkpoint
     if checkpoint.get("processed_tokens") != expected_tokens:
@@ -390,7 +395,16 @@ def validate_completion(
     expected_tokens = metrics.get("training", {}).get("processed_tokens") if isinstance(metrics.get("training"), Mapping) else None
     if not isinstance(steps, int) or not isinstance(expected_tokens, int):
         return False, "fixed training budget metadata missing"
-    valid, checkpoint_reason, _ = validate_checkpoint(root / str(checkpoint_info.get("path", "")), steps, expected_tokens)
+    corrected = expected.protocol_version != LEGACY_PROTOCOL_VERSION
+    training = metrics.get("training")
+    if corrected and (not isinstance(training, Mapping) or training.get("accepted_optimizer_steps") != steps):
+        return False, "training accepted-step count is missing or differs"
+    if corrected and checkpoint_info.get("accepted_optimizer_steps") != steps:
+        return False, "final checkpoint accepted-step count is missing or differs"
+    valid, checkpoint_reason, _ = validate_checkpoint(
+        root / str(checkpoint_info.get("path", "")), steps, expected_tokens,
+        require_accepted_steps=corrected,
+    )
     if not valid:
         return False, checkpoint_reason
     if checkpoint_info.get("sha256") != checkpoint_sha256(root / str(checkpoint_info["path"])):
