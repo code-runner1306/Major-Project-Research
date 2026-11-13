@@ -18,7 +18,7 @@ from artifacts import (
 )
 from config import ExperimentConfig, ModelConfig, RetrievalConfig
 from controls import construct_model
-from dataset import tinystories_dataloader, toy_dataloader
+from dataset import split_manifest_path, tinystories_dataloader, toy_dataloader
 from diagnostics import collect_gate_diagnostics, static_cost_report
 from energy import EnergyProvider
 from eval import benchmark_inference, evaluate_needle_suite, generation_cache_equivalence, persisted_needle_suite
@@ -77,7 +77,8 @@ def _scientific_config_hash(profile: ExperimentConfig, family: Family, scale: st
 
 
 def _data_for_run(
-    profile: ExperimentConfig, family: Family, seeds: SeedBundle, run_dir: Path
+    profile: ExperimentConfig, family: Family, seeds: SeedBundle, run_dir: Path, *,
+    persist_artifacts: bool = True,
 ) -> tuple[Any, Any, dict[str, Any], Any | None, Any | None, list[tuple[int, Any]]]:
     if family == "tinystories":
         if profile.run_mode == "smoke":
@@ -88,9 +89,20 @@ def _data_for_run(
             if profile.curriculum:
                 raise ValueError("Curriculum is supported only for synthetic retrieval workers")
             return toy_dataloader(profile, seed=seeds.data_seed, split="train"), toy_dataloader(profile, seed=seeds.data_seed, split="validation"), data_identity, None, None, []
-        train = tinystories_dataloader(profile, split="train", data_seed=seeds.data_seed, run_dir=run_dir)
-        validation = tinystories_dataloader(profile, split="validation", data_seed=seeds.data_seed, run_dir=run_dir)
-        data_identity = read_json(run_dir / "data_identity.json")
+        train = tinystories_dataloader(
+            profile, split="train", data_seed=seeds.data_seed,
+            run_dir=run_dir if persist_artifacts else None,
+            persist_manifest=persist_artifacts,
+        )
+        validation = tinystories_dataloader(
+            profile, split="validation", data_seed=seeds.data_seed,
+            run_dir=run_dir if persist_artifacts else None,
+            persist_manifest=persist_artifacts,
+        )
+        identity_path = run_dir / "data_identity.json" if persist_artifacts else split_manifest_path(
+            profile, seed=seeds.data_seed, split="train",
+        )
+        data_identity = read_json(identity_path)
         data_identity["paired_order"] = "datasets.Dataset.shuffle(seed=data_seed)"
         if profile.curriculum:
             raise ValueError("Curriculum is supported only for synthetic retrieval workers")
@@ -117,10 +129,11 @@ def _data_for_run(
         raise AssertionError("Retrieval train and held-out generator identities must not overlap")
     if study and (train_manifest["hash"] == validation_manifest["hash"] or validation_manifest["hash"] == held_manifest["hash"]):
         raise AssertionError("Study retrieval train, validation, and held-out identities must not overlap")
-    atomic_write_json(run_dir / "generator_train.json", train_manifest)
-    atomic_write_json(run_dir / "generator_held_out.json", held_manifest)
-    if study:
-        atomic_write_json(run_dir / "generator_validation.json", validation_manifest)
+    if persist_artifacts:
+        atomic_write_json(run_dir / "generator_train.json", train_manifest)
+        atomic_write_json(run_dir / "generator_held_out.json", held_manifest)
+        if study:
+            atomic_write_json(run_dir / "generator_validation.json", validation_manifest)
     identity = {
         "generator_version": train_manifest["generator_version"], "train_hash": train_manifest["hash"],
         "held_out_hash": held_manifest["hash"], "paired_order": "indexed_seeded_order",
@@ -156,7 +169,8 @@ def _data_for_run(
         stage_identities.append({"start_step": start_step, "manifest": stage_manifest})
         previous_start = start_step
     if stage_identities:
-        atomic_write_json(run_dir / "curriculum_train.json", {"stages": stage_identities})
+        if persist_artifacts:
+            atomic_write_json(run_dir / "curriculum_train.json", {"stages": stage_identities})
         identity["curriculum"] = [
             {"start_step": entry["start_step"], "hash": entry["manifest"]["hash"]}
             for entry in stage_identities
@@ -457,9 +471,9 @@ def run_seed(
                     "Existing artifact scientific settings differ; refusing to write before compatibility is checked. "
                     "Start a fresh corrected output root."
                 )
-            current_source = source_revision_state()
+            current_source = source_revision_state() if not evaluate_only else None
             stored_source = existing_manifest.get("source", {})
-            if stored_source.get("content_hash") != current_source.get("content_hash"):
+            if current_source is not None and stored_source.get("content_hash") != current_source.get("content_hash"):
                 raise RuntimeError(
                     "Existing artifact source content differs; refusing to write before compatibility is checked. "
                     "Start a fresh corrected output root."
@@ -471,7 +485,9 @@ def run_seed(
         )
     run_dir.mkdir(parents=True, exist_ok=True)
     seeds = SeedBundle.from_research_seed(seed)
-    train_data, validation_data, data_identity, held_out_retrieval, validation_retrieval, curriculum_loaders = _data_for_run(profile, family, seeds, run_dir)
+    train_data, validation_data, data_identity, held_out_retrieval, validation_retrieval, curriculum_loaders = _data_for_run(
+        profile, family, seeds, run_dir, persist_artifacts=not evaluate_only,
+    )
     seed_everything(seeds.model_seed)
     backbone = _resolved_backbone(profile, family, scale)
     vocab_size = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
@@ -718,6 +734,18 @@ def run_seed(
             evaluation["evaluation_resources"] = evaluation_capture.result
             energy = {"training": partial_metrics["training_energy"], "device": energy_provider.device_metadata}
             metrics = {**partial_metrics, **evaluation, "energy": energy}
+            if evaluate_only:
+                original_source = manifest_data.get("source", {})
+                evaluation_source = source_revision_state()
+                metrics["evaluation_provenance"] = {
+                    "source_drift_allowed": True,
+                    "source_drift_detected": original_source.get("content_hash") != evaluation_source.get("content_hash"),
+                    "training_source_content_hash": original_source.get("content_hash"),
+                    "evaluation_source_content_hash": evaluation_source.get("content_hash"),
+                    "training_manifest_fingerprint": manifest_data.get("fingerprint"),
+                    "evaluation_source_revision": evaluation_source.get("revision"),
+                    "writes_limited_to": ["metrics.json", "lifecycle.json"],
+                }
             atomic_write_json(run_dir / "metrics.json", metrics)
             transition_lifecycle(run_dir, "complete", manifest_data["fingerprint"])
             return {"status": "complete", "run_dir": str(run_dir)}

@@ -51,7 +51,8 @@ def _dataset_identity(dataset: object) -> str:
 
 
 def load_tinystories_dataset(
-    profile: ExperimentConfig, *, split: str, data_seed: int, run_dir: str | Path | None = None
+    profile: ExperimentConfig, *, split: str, data_seed: int, run_dir: str | Path | None = None,
+    persist_manifest: bool = True,
 ) -> IterableDataset:
     """Load/cache the production corpus with a persisted deterministic order identity."""
 
@@ -82,8 +83,10 @@ def load_tinystories_dataset(
         existing = read_json(target)
         if existing != identity:
             raise RuntimeError("TinyStories split manifest drifted; refusing to change paired data order")
-    else:
+    elif persist_manifest:
         atomic_write_json(target, identity)
+    else:
+        raise RuntimeError("Evaluation requires an existing TinyStories split manifest; refusing to create one")
     if run_dir is not None:
         atomic_write_json(Path(run_dir) / "data_identity.json", identity)
     return TinyStoriesDataset(dataset, tiktoken.get_encoding("gpt2"), profile.budget.context_length)
@@ -109,7 +112,11 @@ class TinyStoriesDataset(IterableDataset[tuple[torch.Tensor, torch.Tensor]]):
 
 
 def tinystories_dataloader(
-    profile: ExperimentConfig, *, split: str, data_seed: int, run_dir: str | Path | None = None
+    profile: ExperimentConfig, *, split: str, data_seed: int, run_dir: str | Path | None = None,
+    persist_manifest: bool = True,
 ) -> DataLoader:
-    dataset = load_tinystories_dataset(profile, split=split, data_seed=data_seed, run_dir=run_dir)
+    dataset = load_tinystories_dataset(
+        profile, split=split, data_seed=data_seed, run_dir=run_dir,
+        persist_manifest=persist_manifest,
+    )
     return DataLoader(dataset, batch_size=profile.budget.batch_size, num_workers=0)
