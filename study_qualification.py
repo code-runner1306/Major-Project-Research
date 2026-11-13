@@ -481,8 +481,22 @@ def corrected_pilot_budget(
         raise ValueError("Corrected pilot budget requires measured timing")
     if not 0.0 <= float(failure_allowance) < 1.0:
         raise ValueError("failure allowance must be in [0, 1)")
+    training_estimates = timing.get("training_plus_periodic_validation_total_hours_by_size_actual_seed_count")
+    if not isinstance(training_estimates, dict):
+        return {
+            "status": "unavailable", "authorization_required": True,
+            "authorization_ready": False, "unavailable_components": ["training"],
+            "decision": "measurement_required_before_authorization",
+        }
+    training_total = sum(float(value) for value in training_estimates.values())
+    if training_total <= 0.0:
+        return {
+            "status": "unavailable", "authorization_required": True,
+            "authorization_ready": False, "unavailable_components": ["training"],
+            "decision": "measurement_required_before_authorization",
+        }
     raw_components = {
-        "training": sum(float(value) for value in timing.get("training_plus_periodic_validation_total_hours_by_size_actual_seed_count", {}).values()),
+        "training": training_total,
         "calibration": calibration_hours,
         "validation": validation_hours,
         "held_out_evaluation": evaluation_hours,
