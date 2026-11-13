@@ -12,7 +12,7 @@ cd "$ROOT"
 
 if [[ "${1:-}" == "--smoke-test" ]]; then
   shift
-  exec "$ROOT/run_kaggle_v4_smoke.sh" "$@"
+  exec bash "$ROOT/run_kaggle_v4_smoke.sh" "$@"
 fi
 
 PYTHON_BIN="${PYTHON_BIN:-python3}"
