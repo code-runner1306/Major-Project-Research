@@ -25,8 +25,8 @@ import torch
 # 4.1: build target identity. The compiled extension must carry an sm_70 path.
 TARGET_ARCH = "sm_70"
 SM_70 = True
-EXTENSION_SEMANTIC_VERSION = "gdn-cuda-v0-scaffold"
-DECODE_BACKEND_VERSION = "decode-v1-fused-stub"
+EXTENSION_SEMANTIC_VERSION = "gdn-cuda-v1-corrected-delta-scaffold"
+DECODE_BACKEND_VERSION = "decode-v2-corrected-delta-stub"
 CHUNK_POLICY = "fixed-checkpoint-chunks"
 COMPILED_MODULE_NAME = "gdn_cuda._fused"
 

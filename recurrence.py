@@ -16,7 +16,7 @@ import torch
 
 RecurrenceBackend = Literal["reference", "cuda-fused"]
 StateAccumulatorDtype = Literal["input", "float32"]
-RECURRENCE_SEMANTIC_VERSION = "gdn-recurrence-v1"
+RECURRENCE_SEMANTIC_VERSION = "gdn-recurrence-v2-corrected-delta"
 
 
 class BackendUnavailableError(RuntimeError):
@@ -90,9 +90,16 @@ def reference_recurrence(
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Canonical sequential update for normalized Q/K inputs.
 
-    Scalar alpha broadcasts as ``[B,H,1,1]`` and channel alpha as
-    ``[B,H,D,1]``.  The returned output follows the input dtype; the state
-    follows the explicitly configured accumulator dtype.
+    The state is stored value-by-key as ``[B,H,D,D]``. Scalar alpha
+    broadcasts as ``[B,H,1,1]``. The published gated delta update decays the
+    previous state before computing the residual:
+
+    ``D = alpha * S; error = v - D @ k; S' = D + beta * error @ k.T``.
+
+    The returned output follows the input dtype; the state follows the
+    explicitly configured accumulator dtype. Channel-wise key-axis decay is
+    qualified separately and must preserve this same decay-before-residual
+    contract.
     """
 
     _validate_options(options)
@@ -113,8 +120,9 @@ def reference_recurrence(
         v_t = v_work[:, step].unsqueeze(-1)
         alpha_t = alpha_work[:, step].unsqueeze(-1)
         beta_t = beta_work[:, step].unsqueeze(-1)
-        error = v_t - state.matmul(k_t)
-        state = alpha_t * state + beta_t * error.matmul(k_t.transpose(-1, -2))
+        decayed_state = alpha_t * state
+        error = v_t - decayed_state.matmul(k_t)
+        state = decayed_state + beta_t * error.matmul(k_t.transpose(-1, -2))
         outputs.append(state.matmul(q_t).squeeze(-1))
     return torch.stack(outputs, dim=1).to(q.dtype), state
 
