@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import random
 import time
+from contextlib import nullcontext
 from typing import Any, Callable, Iterable
 
 import numpy as np
@@ -87,6 +88,21 @@ def _next_batch(
             raise RuntimeError("Training data produced no batches") from exc
 
 
+def _forward_precision_context(device: torch.device, profile: ExperimentConfig):
+    """Return the declared precision context for a training forward pass.
+
+    ``recurrence_input_dtype='float32'`` is an explicit reference contract,
+    not merely a cast inside an active autocast region.  Disable CUDA autocast
+    for the complete model forward so projections, convolutions, recurrence,
+    and the loss are all evaluated through the same FP32 path.
+    """
+
+    use_autocast = device.type == "cuda" and profile.recurrence_input_dtype == "autocast"
+    if device.type == "cuda":
+        return torch.autocast("cuda", enabled=use_autocast)
+    return nullcontext()
+
+
 def train_fixed_budget(
     *,
     model: GatedDeltaNetLM,
@@ -133,7 +149,8 @@ def train_fixed_budget(
     events: list[dict[str, Any]] = []
     validation_history: list[dict[str, Any]] = []
     best_validation_metrics: dict[str, Any] | None = None
-    processed_tokens = microbatches = 0
+    processed_tokens = microbatches = accepted_optimizer_steps = 0
+    rejected_optimizer_attempts = 0
     best_validation = float("inf")
     start = time.perf_counter()
 
@@ -159,7 +176,7 @@ def train_fixed_budget(
                 optimizer.zero_grad(set_to_none=True)
                 loss_sum = 0.0
                 for tokens, targets in batches:
-                    with torch.amp.autocast("cuda", enabled=device.type == "cuda"):
+                    with _forward_precision_context(device, profile):
                         _, loss = model(tokens, targets)
                         assert loss is not None
                         if not torch.isfinite(loss):
@@ -177,6 +194,7 @@ def train_fixed_budget(
                     raise FloatingPointError(f"Non-finite gradient norm at optimizer step {step}")
                 old_scale = scaler.get_scale()
                 scaler.update()
+                rejected_optimizer_attempts += 1
                 events.append({"step": step, "kind": "amp_overflow_retry", "scale": old_scale,
                                "new_scale": scaler.get_scale()})
                 if scaler.get_scale() <= 0 or scaler.get_scale() >= old_scale:
@@ -188,6 +206,7 @@ def train_fixed_budget(
             scaler.step(optimizer)
             scaler.update()
             scheduler.step()
+            accepted_optimizer_steps += 1
             losses.append(loss_sum)
             if len(losses) >= 6 and loss_sum > 5 * (sum(losses[-6:-1]) / 5):
                 events.append({"step": step, "kind": "loss_spike", "loss": loss_sum})
@@ -220,9 +239,14 @@ def train_fixed_budget(
                     torch.save({"model_state": model.state_dict(), "step": step, "validation": validation}, f"{run_dir}/best_validation_checkpoint.pt")
 
     wall_time = time.perf_counter() - start
+    if accepted_optimizer_steps != max_steps:
+        raise RuntimeError(
+            f"Training ended with {accepted_optimizer_steps} accepted optimizer steps; expected {max_steps}"
+        )
     checkpoint = save_checkpoint(
         f"{run_dir}/final_checkpoint.pt", model=model, optimizer=optimizer,
-        completed_steps=max_steps, processed_tokens=processed_tokens,
+        completed_steps=max_steps, accepted_optimizer_steps=accepted_optimizer_steps,
+        processed_tokens=processed_tokens,
     )
     primary_validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)
     assert energy_region.result is not None
@@ -230,9 +254,19 @@ def train_fixed_budget(
     return {
         "training": {
             "fixed_optimizer_steps": max_steps,
+            "accepted_optimizer_steps": accepted_optimizer_steps,
             "lr_scheduler": {"name": "OneCycleLR", "pct_start": pct_start},
             "processed_tokens": processed_tokens,
             "microbatches": microbatches,
+            "accepted_processed_tokens": processed_tokens,
+            "accepted_microbatches": microbatches,
+            "rejected_optimizer_attempts": rejected_optimizer_attempts,
+            "precision_contract": {
+                "model_forward_autocast": bool(device.type == "cuda" and profile.recurrence_input_dtype == "autocast"),
+                "recurrence_input_dtype": profile.recurrence_input_dtype,
+                "state_accumulator_dtype": profile.state_accumulator_dtype,
+                "grad_scaler_enabled": scaler.is_enabled(),
+            },
             "wall_time_seconds": wall_time,
             "optimizer_step_seconds": step_durations,
             "training_tokens_per_second": processed_tokens / wall_time if wall_time else None,

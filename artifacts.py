@@ -259,12 +259,15 @@ def save_checkpoint(
     optimizer: torch.optim.Optimizer | None,
     completed_steps: int,
     processed_tokens: int,
+    accepted_optimizer_steps: int | None = None,
 ) -> dict[str, Any]:
+    accepted_steps = completed_steps if accepted_optimizer_steps is None else accepted_optimizer_steps
     checkpoint = {
         "schema_version": SCHEMA_VERSION,
         "model_state": model.state_dict(),
         "optimizer_state": optimizer.state_dict() if optimizer is not None else None,
         "completed_steps": completed_steps,
+        "accepted_optimizer_steps": accepted_steps,
         "processed_tokens": processed_tokens,
     }
     target = Path(path)
@@ -276,6 +279,7 @@ def save_checkpoint(
         "path": target.name,
         "sha256": checkpoint_sha256(target),
         "completed_steps": completed_steps,
+        "accepted_optimizer_steps": accepted_steps,
         "processed_tokens": processed_tokens,
     }
 
@@ -292,6 +296,8 @@ def validate_checkpoint(path: str | Path, expected_steps: int, expected_tokens: 
         return False, "checkpoint lacks model state", None
     if checkpoint.get("completed_steps") != expected_steps:
         return False, "checkpoint completed-step count differs", checkpoint
+    if "accepted_optimizer_steps" in checkpoint and checkpoint.get("accepted_optimizer_steps") != expected_steps:
+        return False, "checkpoint accepted-step count differs", checkpoint
     if checkpoint.get("processed_tokens") != expected_tokens:
         return False, "checkpoint processed-token total differs", checkpoint
     return True, "valid", checkpoint
