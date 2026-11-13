@@ -323,6 +323,12 @@ def _posthoc_gate_grouping(
             "positive stale-value-error deltas mean worse overwrite recall. These are same-checkpoint, "
             "same-example point differences, not results from separately trained group-gated models."
         ),
+        "aggregation_conventions": {
+            "mean_alpha": "arithmetic mean of effective retention factors alpha within each group",
+            "mean_log_decay": "geometric mean of effective retention factors, implemented as exp(mean(log(alpha)))",
+            "training": "no retraining; same fully channel-wise checkpoint and identical evaluation cases",
+            "runtime_claim": "inference sensitivity only; projection cost and throughput are not measured by this intervention",
+        },
         "interpretation_note": (
             "This measures sensitivity of a fully channel-wise trained checkpoint to sharing its "
             "gate values at inference; it does not estimate how a model trained with fewer groups performs."
@@ -338,10 +344,22 @@ def _evaluate(
     assert isinstance(model, torch.nn.Module)
     gdn_model = model  # dedicated name kept to make timing/diagnostic separation obvious
     vocab_size = profile.vocab_size if family == "tinystories" else profile.retrieval.vocabulary_size
-    if profile.enable_cache_benchmarks:
+    if profile.enable_cache_benchmarks and profile.concurrent_training_runs == 1:
         benchmarks = benchmark_inference(
-            gdn_model, profile, device, energy_provider, vocab_size=vocab_size, seed=evaluation_seed,
+            gdn_model, profile, device, energy_provider, vocab_size=vocab_size,
+            seed=evaluation_seed, measurement_concurrency=1, isolated=True,
         )
+    elif profile.enable_cache_benchmarks:
+        benchmarks = {
+            "disabled": True,
+            "status": "unavailable",
+            "reason": "publishable inference benchmarks require isolated GPU access; evaluation workers were concurrent",
+            "measurement_contract": {
+                "required_concurrency": 1,
+                "observed_concurrency": profile.concurrent_training_runs,
+                "isolated_gpu": False,
+            },
+        }
     else:
         generator = torch.Generator(device=device).manual_seed(evaluation_seed)
         prompt_length = min(profile.equivalence_prompt_length, profile.budget.context_length)
