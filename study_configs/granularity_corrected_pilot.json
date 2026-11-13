@@ -31,7 +31,7 @@
     "query_distances": [8, 16, 32],
     "overwrite_counts": [1, 2]
   },
-  "evaluation": {"examples": 512, "group_counts": [8, 4, 2, 1], "capacity_threshold": 0.9, "history_conditioning": "answer_free"},
+  "evaluation": {"examples": 512, "group_counts": [8, 4, 2, 1], "capacity_threshold": 0.9, "shortcut_baseline_max_accuracy": 0.9, "history_conditioning": "answer_free"},
   "qualification": {
     "scope": "production",
     "runtime_sizes": ["10M"],

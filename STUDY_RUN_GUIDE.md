@@ -155,6 +155,11 @@ strata, and same-checkpoint gate-sharing interventions before making a decision.
 Further seeds, grouped gates, language modeling, and larger scales require a
 new prospective decision and a new budget estimate.
 
+The corrected pilot prespecifies `evaluation.shortcut_baseline_max_accuracy`
+as `0.90`. Key-free recency, position, latest-value, first-value, and
+no-memory baselines must be audited against this engineering threshold before
+training is treated as interpretable; a smoke pass does not waive the audit.
+
 Inspect the corrected plan without starting work with:
 
 ```powershell
