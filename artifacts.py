@@ -17,6 +17,8 @@ import torch
 
 
 SCHEMA_VERSION = 1
+LEGACY_PROTOCOL_VERSION = "legacy-v1"
+CORRECTED_PROTOCOL_VERSION = "corrected-v1"
 LifecycleStatus = Literal["pending", "training", "trained", "evaluating", "complete", "failed"]
 VALID_TRANSITIONS = {
     "pending": {"training", "failed"},
@@ -123,11 +125,17 @@ class SeedManifest:
     expected_artifacts: tuple[str, ...]
     environment: Mapping[str, Any] = field(default_factory=runtime_environment)
     source: Mapping[str, Any] = field(default_factory=source_revision_state)
+    # Legacy manifests predate explicit protocol identities.  Omitting this
+    # field from their serialized payload keeps old artifacts readable while
+    # allowing corrected experiments to require a fresh identity/root.
+    protocol_version: str = LEGACY_PROTOCOL_VERSION
     schema_version: int = SCHEMA_VERSION
 
     def payload(self) -> dict[str, Any]:
         data = asdict(self)
         data["expected_artifacts"] = list(self.expected_artifacts)
+        if self.protocol_version == LEGACY_PROTOCOL_VERSION:
+            data.pop("protocol_version", None)
         return data
 
     def to_dict(self) -> dict[str, Any]:
@@ -183,6 +191,9 @@ def manifest_compatibility(
         return False, "manifest fingerprint does not match manifest contents"
     if actual.get("run_mode") != expected.run_mode:
         return False, f"run mode differs ({actual.get('run_mode')} vs {expected.run_mode})"
+    actual_protocol = actual.get("protocol_version", LEGACY_PROTOCOL_VERSION)
+    if actual_protocol != expected.protocol_version:
+        return False, f"protocol version differs ({actual_protocol} vs {expected.protocol_version})"
     drift = _recurrence_drift(actual, expected)
     if drift is not None:
         return False, drift

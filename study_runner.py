@@ -98,6 +98,9 @@ def expanded(config: dict[str, Any], root: Path, sizes: list[str] | None = None)
                         "calibration_examples": config["calibration"]["examples"],
                         "retrieval_config": config.get("retrieval"),
                         "run_mode": config.get("runtime", {}).get("run_mode", "production"),
+                        # Study configs are corrected-protocol work by default;
+                        # legacy launchers pass their identity explicitly.
+                        "protocol_version": config.get("runtime", {}).get("protocol_version", "corrected-v1"),
                         "recurrence_backend": config["runtime"]["recurrence_backend"],
                         "state_accumulator_dtype": config["runtime"].get("state_accumulator_dtype", "input"),
                         "recurrence_chunk_size": config["runtime"].get("recurrence_chunk_size", 64),
@@ -139,6 +142,10 @@ def task_complete(task: dict[str, Any], op: str) -> bool:
         identity = manifest.get("model", {}).get("study_task", manifest.get("study_task", {}))
         expected_keys = ("experiment_id", "condition_id", "family", "scale", "variant", "initialization", "seed")
         if any(identity.get(key) != task.get(key) for key in expected_keys):
+            return False
+        if manifest.get("protocol_version", "legacy-v1") != task.get("protocol_version", "legacy-v1"):
+            return False
+        if identity.get("protocol_version", "legacy-v1") != task.get("protocol_version", "legacy-v1"):
             return False
         budget = identity.get("budget", identity)
         if int(budget.get("max_optimizer_steps", -1)) != int(task["max_optimizer_steps"]):

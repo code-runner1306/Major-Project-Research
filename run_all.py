@@ -58,6 +58,7 @@ def _run_study_task(path: str | Path) -> dict:
         "qualification", "qualification_stage", "qualification_scope",
         "validation_answer_accuracy", "concurrent_training_runs", "curriculum",
         "validation_at_steps",
+        "protocol_version",
     }
     unknown = sorted(set(task) - accepted)
     if unknown:
@@ -135,6 +136,7 @@ def _run_study_task(path: str | Path) -> dict:
         "study_qualification_stage": task.get("qualification_stage"),
         "study_qualification_scope": task.get("qualification_scope"),
         "study_validation_answer_accuracy": bool(task.get("validation_answer_accuracy", False)),
+        "protocol_version": str(task.get("protocol_version", "legacy-v1")),
     }
     if task.get("retrieval_config"):
         allowed = RetrievalConfig.__dataclass_fields__.keys()

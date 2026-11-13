@@ -38,6 +38,7 @@ def test_smoke_matrix_covers_granularity_and_initialization_cells():
     }
     assert len(tasks) == 12
     assert len({task["output_dir"] for task in tasks}) == len(tasks)
+    assert {task["protocol_version"] for task in tasks} == {"corrected-v1"}
 
 
 def test_curriculum_accepts_step_one_and_increasing_stages(tmp_path: Path):

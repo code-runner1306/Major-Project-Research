@@ -12,7 +12,7 @@ from typing import Any, Literal
 import torch
 
 from artifacts import (
-    SeedManifest, atomic_write_json, fingerprint, initialize_lifecycle, manifest_compatibility,
+    LEGACY_PROTOCOL_VERSION, SeedManifest, atomic_write_json, fingerprint, initialize_lifecycle, manifest_compatibility,
     read_json, transition_lifecycle, validate_completion, validate_checkpoint, write_manifest,
 )
 from config import ExperimentConfig, ModelConfig, RetrievalConfig
@@ -190,6 +190,7 @@ def _manifest(
             "natural_language_retrieval": "exploratory_zero_shot" if family == "tinystories" else None,
         },
         expected_artifacts=("manifest.json", "lifecycle.json", "metrics.json", "final_checkpoint.pt"),
+        protocol_version=profile.protocol_version,
     )
 
 
@@ -407,6 +408,23 @@ def run_seed(
         ensure_backend_available(options, device=torch.device("cuda"))
         profile.budget.require_ready()
     run_dir = _run_path(profile, family, scale, variant, seed)
+    manifest_path = run_dir / "manifest.json"
+    if manifest_path.exists():
+        try:
+            stored_protocol = read_json(manifest_path).get("protocol_version", LEGACY_PROTOCOL_VERSION)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"Existing artifact has an unreadable manifest; refusing to modify {run_dir}") from exc
+        if stored_protocol != profile.protocol_version:
+            raise RuntimeError(
+                "Existing artifact uses protocol "
+                f"{stored_protocol!r}; requested {profile.protocol_version!r}. "
+                "Start the corrected experiment in a fresh output root."
+            )
+    elif run_dir.exists() and any(run_dir.iterdir()):
+        raise RuntimeError(
+            f"Refusing to write into non-empty run directory without a manifest: {run_dir}. "
+            "Use a fresh output root or recover the incomplete artifact explicitly."
+        )
     run_dir.mkdir(parents=True, exist_ok=True)
     seeds = SeedBundle.from_research_seed(seed)
     train_data, validation_data, data_identity, held_out_retrieval, validation_retrieval, curriculum_loaders = _data_for_run(profile, family, seeds, run_dir)
@@ -424,7 +442,6 @@ def run_seed(
         backbone, variant, vocab_size, **construct_kwargs,
     )
     calibration_path = run_dir / "calibration.json"
-    manifest_path = run_dir / "manifest.json"
     if profile.initialization == "calibrated-geometric":
         if evaluate_only or manifest_path.exists():
             if not calibration_path.is_file():
@@ -480,6 +497,7 @@ def run_seed(
             },
             "learning_rate": profile.learning_rate,
             "calibration_examples": profile.calibration_examples,
+            "protocol_version": profile.protocol_version,
         }
     manifest = _manifest(
         profile=profile, family=family, scale=scale, variant=variant, resolved_model=resolved_model,
@@ -488,7 +506,7 @@ def run_seed(
     if manifest_path.exists():
         compatible, reason = manifest_compatibility(
             manifest_path, manifest,
-            allow_source_drift=evaluate_only or profile.experiment_id is not None,
+            allow_source_drift=evaluate_only,
         )
         if not compatible:
             raise RuntimeError(f"Existing artifact is incompatible and will not be overwritten: {reason}")
@@ -501,7 +519,7 @@ def run_seed(
     # accept source-only drift, but lifecycle transitions must continue using
     # the fingerprint stored with the original manifest/checkpoint.
     manifest_data = read_json(manifest_path)
-    allow_source_drift = evaluate_only or profile.experiment_id is not None
+    allow_source_drift = evaluate_only
     complete, _ = validate_completion(run_dir, manifest, allow_source_drift=allow_source_drift)
     if complete:
         return {"status": "skipped_complete", "run_dir": str(run_dir)}

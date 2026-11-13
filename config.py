@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Literal
 import os
 
+from artifacts import LEGACY_PROTOCOL_VERSION
+
 
 Variant = Literal["scalar", "grouped-4", "channel-wise", "scalar-matched"]
 ExperimentFamily = Literal["tinystories", "mqar", "overwrite"]
@@ -141,6 +143,7 @@ class ExperimentConfig:
     study_qualification_scope: str | None = None
     study_validation_answer_accuracy: bool = False
     curriculum: tuple[dict, ...] = ()
+    protocol_version: str = LEGACY_PROTOCOL_VERSION
 
     @property
     def variants(self) -> tuple[Variant, ...]:
@@ -213,6 +216,8 @@ class ExperimentConfig:
             },
             "concurrent_training_runs": self.concurrent_training_runs,
         }
+        if self.protocol_version != LEGACY_PROTOCOL_VERSION:
+            data["protocol_version"] = self.protocol_version
         # Do not perturb historical production/smoke profile fingerprints.
         if self.experiment_id is not None:
             data["study"] = {

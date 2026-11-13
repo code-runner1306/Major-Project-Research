@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import copy
+import dataclasses
+import json
 
 import torch
+import pytest
 
 from artifacts import (
     SeedManifest, atomic_write_json, fingerprint, initialize_lifecycle, manifest_compatibility,
@@ -10,6 +13,7 @@ from artifacts import (
 )
 from config import smoke_profile
 from controls import construct_model
+from orchestration import run_seed
 from recurrence import RecurrenceOptions, backend_metadata
 
 
@@ -29,6 +33,51 @@ def test_smoke_manifest_cannot_resume_as_production(tmp_path, smoke_config):
     production = _manifest(smoke_config, run_mode="production")
     compatible, reason = manifest_compatibility(run_dir / "manifest.json", production)
     assert not compatible and "run mode" in reason
+
+
+def test_corrected_protocol_cannot_reuse_legacy_manifest(tmp_path, smoke_config):
+    run_dir = tmp_path / "legacy-run"
+    legacy = _manifest(smoke_config)
+    write_manifest(run_dir / "manifest.json", legacy)
+    corrected = _manifest(smoke_config)
+    corrected = SeedManifest(
+        family=corrected.family, run_mode=corrected.run_mode, scale=corrected.scale,
+        variant=corrected.variant, model=corrected.model, seeds=corrected.seeds,
+        budget=corrected.budget, data_identity=corrected.data_identity,
+        evaluation_protocol=corrected.evaluation_protocol,
+        expected_artifacts=corrected.expected_artifacts,
+        protocol_version="corrected-v1",
+    )
+    compatible, reason = manifest_compatibility(run_dir / "manifest.json", corrected)
+    assert not compatible
+    assert "protocol" in reason
+
+
+def test_manifests_without_protocol_field_remain_legacy_compatible(tmp_path, smoke_config):
+    run_dir = tmp_path / "old-run"
+    manifest = _manifest(smoke_config)
+    data = write_manifest(run_dir / "manifest.json", manifest)
+    raw = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+    raw.pop("protocol_version", None)
+    raw["fingerprint"] = fingerprint({key: value for key, value in raw.items() if key != "fingerprint"})
+    atomic_write_json(run_dir / "manifest.json", raw)
+    assert manifest_compatibility(run_dir / "manifest.json", manifest) == (True, "compatible")
+
+
+def test_corrected_run_refuses_legacy_directory_before_writing(tmp_path, smoke_config):
+    run_dir = tmp_path / "legacy-run"
+    legacy = _manifest(smoke_config)
+    write_manifest(run_dir / "manifest.json", legacy)
+    before = (run_dir / "manifest.json").read_bytes()
+    corrected = dataclasses.replace(
+        smoke_config,
+        budget=dataclasses.replace(smoke_config.budget, max_optimizer_steps=2),
+        experiment_id="corrected-study", condition_id="scalar", protocol_version="corrected-v1",
+        study_task_run_dir=run_dir,
+    )
+    with pytest.raises(RuntimeError, match="fresh output root"):
+        run_seed(corrected, family="mqar", scale="tiny", variant="scalar", seed=7)
+    assert (run_dir / "manifest.json").read_bytes() == before
 
 
 def test_evaluation_may_allow_source_revision_drift_only(tmp_path, smoke_config):
