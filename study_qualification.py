@@ -8,6 +8,9 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
+from config import RetrievalConfig
+from retrieval import CORRECTED_OVERWRITE_GENERATOR_VERSION, RetrievalDataset, evaluate_retrieval_baselines
+
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -18,6 +21,70 @@ def _write_json(path: Path, value: Any) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     temporary.replace(path)
+
+
+def run_shortcut_baseline_audit(config: dict[str, Any], output_root: Path) -> dict[str, Any]:
+    """Audit corrected synthetic tasks before any E0 optimizer work starts.
+
+    The frequency predictor is fit only from a bounded train split. Held-out
+    cases are generated deterministically from the configured seed and audited
+    through the public dataset/baseline interface. A v3 or otherwise legacy
+    generator cannot authorize corrected E0 training.
+    """
+    def finish(report: dict[str, Any]) -> dict[str, Any]:
+        _write_json(output_root / "qualification" / "E0_shortcut_audit.json", report)
+        return report
+
+    retrieval_values = dict(config.get("retrieval", {}))
+    if retrieval_values.get("generator_version") != CORRECTED_OVERWRITE_GENERATOR_VERSION:
+        return finish({
+            "status": "failed", "reason": "corrected v4 generator is required before E0 training",
+            "expected_generator_version": CORRECTED_OVERWRITE_GENERATOR_VERSION,
+            "configured_generator_version": retrieval_values.get("generator_version"),
+        })
+    evaluation = config.get("evaluation", {})
+    if "shortcut_baseline_max_accuracy" not in evaluation:
+        return finish({"status": "failed", "reason": "evaluation.shortcut_baseline_max_accuracy is not configured"})
+    threshold = float(evaluation["shortcut_baseline_max_accuracy"])
+    qualification = config.get("qualification", {})
+    train_count = int(qualification.get("shortcut_audit_train_examples", 256))
+    held_out_count = int(qualification.get("shortcut_audit_held_out_examples", evaluation.get("examples", 512)))
+    if train_count < 1 or held_out_count < 1:
+        return finish({"status": "failed", "reason": "shortcut audit example counts must be positive"})
+    train_count = min(train_count, int(retrieval_values.get("train_examples", train_count)))
+    held_out_count = min(held_out_count, int(retrieval_values.get("held_out_examples", held_out_count)))
+    seed = int(qualification.get("shortcut_audit_seed", 42))
+    try:
+        retrieval_config = RetrievalConfig(**retrieval_values)
+    except TypeError as exc:
+        return finish({"status": "failed", "reason": f"invalid retrieval configuration: {exc}"})
+    families = tuple(family for family in ("mqar", "overwrite") if family in config.get("datasets", []))
+    if not families:
+        return finish({"status": "failed", "reason": "shortcut audit requires at least one synthetic family"})
+    family_reports: dict[str, Any] = {}
+    for family in families:
+        train = RetrievalDataset(task=family, examples=train_count, config=retrieval_config, seed=seed, split="train")
+        held_out = RetrievalDataset(task=family, examples=held_out_count, config=retrieval_config, seed=seed, split="held_out")
+        family_reports[family] = evaluate_retrieval_baselines(
+            held_out,
+            frequency_dataset=train,
+            shortcut_max_accuracy=threshold,
+        )
+    failed_families = [family for family, report in family_reports.items() if report.get("status") != "complete"]
+    audit = {
+        "status": "complete" if not failed_families else "failed",
+        "generator_version": retrieval_config.generator_version,
+        "seed": seed,
+        "train_examples": train_count,
+        "held_out_examples": held_out_count,
+        "shortcut_baseline_max_accuracy": threshold,
+        "fit_scope": "bounded train split only",
+        "evaluation_scope": "deterministic held_out split",
+        "families": family_reports,
+        "failed_families": failed_families,
+        "gate": "E0 training is authorized only when oracle and all configured shortcut cells pass",
+    }
+    return finish(audit)
 
 
 def build_e0_worker_configs(config: dict[str, Any], output_root: Path, *, primary_size: str = "10M") -> list[dict[str, Any]]:

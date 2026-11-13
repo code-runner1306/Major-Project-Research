@@ -428,8 +428,18 @@ def command_stage(stage: str, args: argparse.Namespace, root: Path, master: Path
                     "completed_at": now(),
                 })
                 return True
-            # Main E0 additionally trains/validates both endpoints on easy tasks below.
-            from study_qualification import build_e0_worker_configs, assess_e0
+            # Main E0 first audits the corrected task distribution. This is an
+            # offline gate: no optimizer process starts if the symbolic oracle
+            # or a key-free shortcut can solve the held-out cases.
+            from study_qualification import build_e0_worker_configs, assess_e0, run_shortcut_baseline_audit
+            shortcut_audit = run_shortcut_baseline_audit(config, root)
+            if shortcut_audit.get("status") != "complete":
+                write_json(root / "qualification" / "E0_result.json", {
+                    "status": "failed", "reason": "shortcut baseline audit failed",
+                    "shortcut_audit": shortcut_audit, "completed_at": now(),
+                })
+                print("E0 shortcut baseline audit failed; refusing to start E0 training.", file=sys.stderr)
+                return False
             primary_size = config["sizes"][0]
             results = run_qualification_workers(build_e0_worker_configs(config, root, primary_size=primary_size), args, root, master, tolerate_failures=False)
             if results is None:
