@@ -130,6 +130,29 @@ Keep the same config and output root when resuming a locked protocol. A change t
 
 The reduced plumbing profile is `study_configs/granularity_init_smoke.json`. It is explicitly marked smoke-only and does not establish synthetic-task learnability or authorize the production grid.
 
+## Corrected pilot and compute authorization
+
+The repaired synthetic protocol is defined in
+`study_configs/granularity_corrected_pilot.json`. It uses a fresh experiment
+identity, `protocol_version=corrected-v1`, and `mqar-overwrite-v4`; it never
+resumes `output/granularity_exp_1` or any other legacy exploratory folder.
+The file starts with `compute_authorization.status=required`. The runner will
+expand a dry-run plan without starting processes, but it refuses E0 and later
+execution stages until a researcher records an approver and UTC timestamp and
+changes that status to `approved`. Passing a smoke test is not authorization.
+
+After the corrected protocol lock and measured timing exist, the one-seed pilot
+is the only initially authorized research scope. Record held-out retrieval,
+shortcut baselines, symbolic-oracle checks, learning curves, difficulty/error
+strata, and same-checkpoint gate-sharing interventions before making a decision.
+Further seeds, grouped gates, language modeling, and larger scales require a
+new prospective decision and a new budget estimate.
+
+The pilot budget must include training, calibration, periodic and final
+validation, held-out evaluation, isolated inference benchmarking, and a failure
+allowance. The resulting report must state `go`, `no-go`, or `revisit` and keep
+legacy seed-42 results labeled as exploratory custom-method evidence.
+
 ## Synthetic data and query distances
 
 The new study selects `mqar-overwrite-v3`; legacy profiles keep `mqar-overwrite-v2` unless they explicitly select another version. V3 uses strict difficulty settings and rejects infeasible length, key, distance, or rewrite combinations instead of clamping them.

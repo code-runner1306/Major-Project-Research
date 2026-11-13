@@ -466,6 +466,45 @@ def render_training_time_estimate_markdown(timing: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def corrected_pilot_budget(
+    timing: dict[str, Any], *, calibration_hours: float = 0.0,
+    validation_hours: float = 0.0, evaluation_hours: float = 0.0,
+    isolated_benchmark_hours: float = 0.0, failure_allowance: float = 0.15,
+) -> dict[str, Any]:
+    """Combine measured pilot components into an authorization record.
+
+    This is a planning artifact only. It refuses missing or negative inputs and
+    never authorizes execution; a human must approve the resulting scope in the
+    study config.
+    """
+    if timing.get("status") != "measured":
+        raise ValueError("Corrected pilot budget requires measured timing")
+    if not 0.0 <= float(failure_allowance) < 1.0:
+        raise ValueError("failure allowance must be in [0, 1)")
+    components = {
+        "training": sum(float(value) for value in timing.get("training_plus_periodic_validation_total_hours_by_size_actual_seed_count", {}).values()),
+        "calibration": float(calibration_hours),
+        "validation": float(validation_hours),
+        "held_out_evaluation": float(evaluation_hours),
+        "isolated_inference_benchmark": float(isolated_benchmark_hours),
+    }
+    if any(value < 0.0 for value in components.values()):
+        raise ValueError("pilot budget components must be non-negative")
+    measured_total = sum(components.values())
+    allowance_hours = measured_total * float(failure_allowance)
+    return {
+        "status": "measured",
+        "authorization_required": True,
+        "components_hours": components,
+        "measured_total_hours": measured_total,
+        "failure_allowance_fraction": float(failure_allowance),
+        "failure_allowance_hours": allowance_hours,
+        "authorized_total_hours": measured_total + allowance_hours,
+        "scope": "one fresh corrected paired seed; no replication or larger scale",
+        "decision": "pending_researcher_authorization",
+    }
+
+
 def validate_e1_learnability(recipe: dict[str, Any], minimum_answer_accuracy: float) -> dict[str, Any]:
     """Apply an explicit engineering floor to selected validation retrieval accuracy."""
     selected = recipe.get("selected_metrics_by_family_endpoint", {})

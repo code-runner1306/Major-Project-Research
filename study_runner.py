@@ -22,6 +22,19 @@ STAGES = [f"E{i}" for i in range(7)]
 FAMILIES = ("tinystories", "mqar", "overwrite")
 
 
+def require_compute_authorization(config: dict[str, Any], *, stage: str) -> None:
+    """Require explicit human approval before corrected research compute."""
+    if config.get("qualification", {}).get("smoke_only"):
+        return
+    authorization = config.get("compute_authorization")
+    if not isinstance(authorization, dict) or authorization.get("status") != "approved":
+        raise RuntimeError(
+            f"Compute authorization is required before stage {stage}. "
+            "Set compute_authorization.status=approved in a reviewed config "
+            "with approver and UTC timestamp; smoke tests do not authorize research compute."
+        )
+
+
 def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -702,6 +715,12 @@ def main() -> int:
         print(f"ANALYSIS PLAN E6 -> {root / 'E6_report.json'}")
         print("E0 includes the offline CPU correctness smoke; production E0 additionally measures easy-task answer-level learnability. E1 uses validation-only recipe selection and real training-time pilots.")
         return 0
+    if config.get("runtime", {}).get("protocol_version") == "corrected-v1":
+        try:
+            require_compute_authorization(config, stage=args.start_at)
+        except RuntimeError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
     smoke_scope = bool(config.get("qualification", {}).get("smoke_only"))
     lock = None
     if args.evaluate_only or STAGES.index(args.start_at) >= STAGES.index("E2"):
