@@ -483,17 +483,17 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         """Generate MQAR with independent memory and query permutations.
 
         The complete causal prefix is constructed before labels are derived.
-        Increasing the requested sequence length adds filler *before* the
-        memory/query region, so a length sweep changes the scored prefix
-        instead of appending irrelevant suffix tokens.
+        Increasing the requested sequence length adds unqueried key/value
+        writes before the queries, so a length sweep increases meaningful
+        memory load rather than appending irrelevant suffix tokens.
         """
         if key_count > (self.config.vocabulary_size // 2 - 2):
             raise ValueError(f"infeasible mqar key_count={key_count} for vocabulary_size={self.config.vocabulary_size}")
         if key_count < 1 or distance < 1:
             raise ValueError("infeasible mqar combination: key_count and query distance must be positive")
 
-        # Five tokens per association/query (two memory tokens and three query
-        # tokens), plus the requested causal gap, are the irreducible prefix.
+        # Five tokens per queried association/query (two memory tokens and
+        # three query tokens), plus the requested end-gap, are irreducible.
         minimum_length = 5 * key_count + distance
         if length < minimum_length:
             raise ValueError(
@@ -506,17 +506,35 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         query_order = list(range(key_count))
         rng.shuffle(memory_order)
         rng.shuffle(query_order)
-        memory = [symbol for index in memory_order for symbol in (keys[index], values[index])]
 
-        # Length changes meaningful context before the first scored query.
-        prefix_tokens = length - minimum_length
-        memory_start = prefix_tokens
+        extra_tokens = length - minimum_length
+        if extra_tokens % 2:
+            raise ValueError(
+                f"infeasible mqar combination: length={length} leaves an odd number of "
+                "tokens for key/value distractor writes"
+            )
+        distractor_count = extra_tokens // 2
+        key_upper = self.config.vocabulary_size // 2
+        distractor_keys = [key for key in range(2, key_upper) if key not in keys]
+        if not distractor_keys and distractor_count:
+            raise ValueError("infeasible mqar combination: no unqueried distractor key is available")
+        distractor_writes = [
+            (rng.choice(distractor_keys), rng.randrange(key_upper, self.config.vocabulary_size))
+            for _ in range(distractor_count)
+        ]
+        writes = [(keys[index], values[index]) for index in memory_order]
+        writes.extend(distractor_writes)
+        rng.shuffle(writes)
+        memory = [symbol for key, value in writes for symbol in (key, value)]
+
+        memory_start = 0
         latest_positions = {
-            keys[item]: memory_start + 2 * position + 1
-            for position, item in enumerate(memory_order)
+            key: memory_start + 2 * position + 1
+            for position, (key, _) in enumerate(writes)
+            if key in keys
         }
         first_query_position = memory_start + len(memory) + distance
-        sequence = ([FILLER_TOKEN] * prefix_tokens) + memory
+        sequence = memory
         sequence += [FILLER_TOKEN] * distance
 
         answers: list[AnswerPosition] = []
@@ -549,7 +567,10 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             "memory_order": memory_order, "query_order": query_order,
             "query_positions": query_positions, "latest_value_positions": value_positions,
             "answer_distances": [answer.distance for answer in answers],
-            "memory_load": key_count, "prefix_filler_tokens": prefix_tokens,
+            "memory_load": len(writes), "distractor_count": distractor_count,
+            "distractor_write_count": distractor_count,
+            "distractor_key_count": len(set(key for key, _ in distractor_writes)),
+            "end_gap_tokens": distance, "prefix_filler_tokens": 0,
             "suffix_padding_tokens": 0, "effective_sequence_tokens": len(tokens),
             "oracle": "causal-last-write-wins-v4",
         })
