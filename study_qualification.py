@@ -65,11 +65,45 @@ def run_shortcut_baseline_audit(config: dict[str, Any], output_root: Path) -> di
     for family in families:
         train = RetrievalDataset(task=family, examples=train_count, config=retrieval_config, seed=seed, split="train")
         held_out = RetrievalDataset(task=family, examples=held_out_count, config=retrieval_config, seed=seed, split="held_out")
+        def content_hash(example: Any) -> str:
+            payload = json.dumps(
+                {"tokens": example.tokens.tolist(), "labels": example.labels.tolist()},
+                sort_keys=True, separators=(",", ":"),
+            ).encode("utf-8")
+            return hashlib.sha256(payload).hexdigest()
+
+        train_hashes = [content_hash(train.example(index)) for index in range(train_count)]
+        held_out_hashes = [content_hash(held_out.example(index)) for index in range(held_out_count)]
+        overlap = sorted(set(train_hashes).intersection(held_out_hashes))
+        if overlap:
+            family_reports[family] = {
+                "status": "failed",
+                "reason": "content overlap between train and held_out cases",
+                "content_split": {
+                    "train_content_hash": hashlib.sha256("".join(train_hashes).encode()).hexdigest(),
+                    "held_out_content_hash": hashlib.sha256("".join(held_out_hashes).encode()).hexdigest(),
+                    "train_case_hashes": train_hashes,
+                    "held_out_case_hashes": held_out_hashes,
+                    "overlap_count": len(overlap),
+                    "overlap_hashes": overlap,
+                    "paired_generator_identity": train.manifest()["hash"],
+                },
+            }
+            continue
         family_reports[family] = evaluate_retrieval_baselines(
             held_out,
             frequency_dataset=train,
             shortcut_max_accuracy=threshold,
         )
+        family_reports[family]["content_split"] = {
+            "train_content_hash": hashlib.sha256("".join(train_hashes).encode()).hexdigest(),
+            "held_out_content_hash": hashlib.sha256("".join(held_out_hashes).encode()).hexdigest(),
+            "train_case_hashes": train_hashes,
+            "held_out_case_hashes": held_out_hashes,
+            "overlap_count": 0,
+            "overlap_hashes": [],
+            "paired_generator_identity": train.manifest()["hash"],
+        }
     failed_families = [family for family, report in family_reports.items() if report.get("status") != "complete"]
     audit = {
         "status": "complete" if not failed_families else "failed",
@@ -82,6 +116,10 @@ def run_shortcut_baseline_audit(config: dict[str, Any], output_root: Path) -> di
         "evaluation_scope": "deterministic held_out split",
         "families": family_reports,
         "failed_families": failed_families,
+        "paired_generator_identity": {
+            family: report.get("content_split", {}).get("paired_generator_identity")
+            for family, report in family_reports.items()
+        },
         "gate": "E0 training is authorized only when oracle and all configured shortcut cells pass",
     }
     return finish(audit)
