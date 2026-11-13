@@ -845,22 +845,38 @@ def evaluate_retrieval_baselines(
 
     value_floor = dataset.config.vocabulary_size // 2
     frequency_counts: dict[int, int] = {}
+    ordinal_counts: dict[int, dict[int, int]] = {}
     if frequency_dataset is not None:
         for index in range(len(frequency_dataset)):
-            tokens = frequency_dataset.example(index).tokens.tolist()
+            training_example = frequency_dataset.example(index)
+            tokens = training_example.tokens.tolist()
             for token in tokens:
                 if token >= value_floor:
                     frequency_counts[token] = frequency_counts.get(token, 0) + 1
+            for ordinal, answer in enumerate(sorted(training_example.answers, key=lambda item: item.label_position)):
+                target = int(training_example.labels[answer.label_position])
+                counts = ordinal_counts.setdefault(ordinal, {})
+                counts[target] = counts.get(target, 0) + 1
     frequency_total = sum(frequency_counts.values())
     frequency_prediction = max(frequency_counts, key=frequency_counts.get) if frequency_counts else None
     frequency_chance = (
         frequency_counts[frequency_prediction] / frequency_total
         if frequency_prediction is not None and frequency_total else None
     )
+    ordinal_prediction = {
+        ordinal: max(counts, key=counts.get)
+        for ordinal, counts in ordinal_counts.items()
+        if counts
+    }
+    ordinal_chance = {
+        ordinal: max(counts.values()) / sum(counts.values())
+        for ordinal, counts in ordinal_counts.items()
+        if counts
+    }
 
     baseline_names = (
         "keyed_last_write_oracle", "first_value", "last_value", "most_recent_value",
-        "final_two_values", "no_memory_frequency",
+        "final_two_values", "no_memory_frequency", "query_ordinal_frequency",
     )
     stats = {
         name: {"correct": 0, "total": 0, "accuracy": None}
@@ -873,6 +889,8 @@ def evaluate_retrieval_baselines(
     incomplete_checks = 0
     counterfactual_by_cell: dict[str, dict[str, int]] = {}
     counterfactual_checks = counterfactual_passes = counterfactual_mismatches = counterfactual_incomplete = 0
+    stale_copy_by_cell: dict[str, dict[str, int]] = {}
+    stale_copy_checks = stale_copy_matches = stale_copy_incomplete = 0
 
     def latest_value_for_key(tokens: list[int], key: int, stop: int) -> int | None:
         writes = [
@@ -942,6 +960,22 @@ def evaluate_retrieval_baselines(
             final_two_prediction = memory_values[-2 + ordinal] if 0 <= ordinal < 2 and len(memory_values) >= 2 else None
             record("final_two_values", final_two_prediction, target, cell)
             record("no_memory_frequency", frequency_prediction, target, cell)
+            record("query_ordinal_frequency", ordinal_prediction.get(ordinal), target, cell)
+
+            if dataset.task == "overwrite" and answer.kind == "latest":
+                stale_copy_checks += 1
+                stale_cell = stale_copy_by_cell.setdefault(
+                    cell, {"checks": 0, "matches_current_latest": 0, "incomplete": 0}
+                )
+                stale_cell["checks"] += 1
+                stale_prediction = writes[-2] if len(writes) >= 2 else None
+                if stale_prediction is None:
+                    stale_copy_incomplete += 1
+                    stale_cell["incomplete"] += 1
+                else:
+                    if stale_prediction == oracle_target:
+                        stale_copy_matches += 1
+                        stale_cell["matches_current_latest"] += 1
 
             # Counterfactual query-key audit: keep the entire causal memory
             # prefix fixed, change only the queried key, and derive the new
@@ -1008,7 +1042,8 @@ def evaluate_retrieval_baselines(
     oracle_pass = oracle_mismatches == 0 and oracle_checks > 0
     all_shortcuts_pass = bool(shortcut_cells) and all(item["pass"] for item in shortcut_cells.values())
     counterfactual_pass = counterfactual_checks > 0 and counterfactual_incomplete == 0 and counterfactual_mismatches == 0
-    if not oracle_pass or incomplete_checks or not counterfactual_pass:
+    stale_incomplete = dataset.task == "overwrite" and stale_copy_incomplete > 0
+    if not oracle_pass or incomplete_checks or not counterfactual_pass or stale_incomplete:
         status = "failed"
     elif not all_shortcuts_pass:
         status = "shortcut_detected"
@@ -1021,6 +1056,7 @@ def evaluate_retrieval_baselines(
         "most_recent_value": "1 / distinct_memory_values",
         "final_two_values": "min(2 / distinct_memory_values, 1)",
         "no_memory_frequency": frequency_chance,
+        "query_ordinal_frequency": ordinal_chance,
     }
     return {
         "status": status,
@@ -1036,6 +1072,8 @@ def evaluate_retrieval_baselines(
             "value_count": len(frequency_counts),
             "observed_value_tokens": frequency_total,
             "prediction": frequency_prediction,
+            "ordinal_prediction": ordinal_prediction,
+            "ordinal_majority_chance": ordinal_chance,
         },
         "oracle_audit": {
             "independent_last_write_oracle": "causal token-prefix scan",
@@ -1053,6 +1091,23 @@ def evaluate_retrieval_baselines(
             "pass": counterfactual_pass,
             "by_difficulty_cell": counterfactual_by_cell,
         },
+        "stale_latest_diagnostic": {
+            "status": "not_applicable" if dataset.task != "overwrite" else (
+                "complete" if stale_copy_checks > 0 and stale_copy_incomplete == 0 else "incomplete"
+            ),
+            "method": "copy the previous value for the queried key from the causal token prefix",
+            "checks": stale_copy_checks,
+            "matches_current_latest": stale_copy_matches,
+            "incomplete": stale_copy_incomplete,
+            "by_difficulty_cell": stale_copy_by_cell,
+        },
+        "overwrite_error_contract": {
+            "latest_value_accuracy_denominator": "latest answers only",
+            "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+            "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+            "unrelated_association_retention_denominator": "unrelated answers only",
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
         "by_difficulty_cell": by_cell,
         "shortcut_criterion": {
             "max_accuracy": shortcut_max_accuracy,
