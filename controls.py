@@ -23,6 +23,61 @@ def channel_wise_gate_overhead(model_config: ModelConfig) -> int:
     return gdn_layer_count(model_config) * model_config.d_model * (model_config.d_model - model_config.n_head)
 
 
+def architecture_contract(model_config: ModelConfig, *, variant: str, gate_initialization: str) -> dict[str, object]:
+    """Describe the implemented token mixer and its reference scope.
+
+    This is deliberately an explicit implementation contract.  The model is a
+    controlled common-backbone ablation, not a claim that every detail of a
+    production GDN/KDA block is reproduced.
+    """
+    if gate_initialization not in {"default", "calibrated-geometric"}:
+        raise ValueError(f"Unknown gate initialization {gate_initialization!r}")
+    return {
+        "model_family": "gated-delta-net-common-backbone-ablation",
+        "attention_layout": model_config.attention_layout,
+        "gated_delta_layers": gdn_layer_count(model_config),
+        "full_attention_layers": model_config.n_layer - gdn_layer_count(model_config),
+        "state_orientation": "value_by_key",
+        "qkv_projection": "bias-free linear projections",
+        "qkv_convolution": "depthwise causal Conv1d, kernel_size=4, bias=True",
+        "qkv_convolution_activation": "none",
+        "query_key_normalization": "L2 normalization before recurrence",
+        "decay_parameterization": "sigmoid(alpha projection); scalar, grouped, or channel-wise",
+        "write_parameterization": "sigmoid(beta projection), one value per head",
+        "output_gate": "SiLU(gate projection)",
+        "normalization": "pre-attention RMSNorm and pre-MLP RMSNorm; final RMSNorm",
+        "mlp": "bias-free SwiGLU",
+        "embedding_output": "tied token embedding and output projection",
+        "default_gate_bias": "no alpha bias; sigmoid(0)=0.5 before input effects",
+        "calibrated_gate_bias": "trainable alpha bias fitted from training batches; calibration is a package treatment",
+        "initialization_treatment": gate_initialization,
+        "reference_scope": "simplified common-backbone ablation; not a full production KDA/GDN reproduction",
+        "variant": variant,
+    }
+
+
+def gate_capacity_delta(model_config: ModelConfig, variant: str, *, gate_groups: int | None = None,
+                        gate_initialization: str = "default") -> int:
+    """Extra trainable gate storage relative to a scalar, no-bias baseline."""
+    if variant == "scalar-matched":
+        return 0
+    if variant not in {"scalar", "grouped-4", "channel-wise"}:
+        raise ValueError(f"Unknown variant {variant!r}")
+    gates_per_head = 1 if variant == "scalar" else (
+        gate_groups if variant == "grouped-4" else model_config.d_head
+    )
+    if variant == "grouped-4":
+        gate_groups = 4 if gate_groups is None else gate_groups
+        if gate_groups < 1 or model_config.d_head % gate_groups:
+            raise ValueError("grouped gate count must divide the head dimension")
+    extra_alpha_rows = gdn_layer_count(model_config) * model_config.d_model * model_config.n_head * (gates_per_head - 1)
+    bias_rows = (
+        gdn_layer_count(model_config) * model_config.n_head * gates_per_head
+        if gate_initialization == "calibrated-geometric" else 0
+    )
+    return extra_alpha_rows + bias_rows
+
+
 def expected_parameter_count(
     model_config: ModelConfig, variant: str, vocab_size: int, *, gate_groups: int | None = None,
     gate_initialization: str = "default", study_init_seed: int | None = None,
@@ -116,18 +171,26 @@ def construct_model(
         "variant": variant,
         "control_strategy": "expanded_scalar_ffn_exact_match" if variant == "scalar-matched" else "same_backbone",
         "parameter_count": total,
-        "gate_parameter_overhead": channel_wise_gate_overhead(model_config),
+        "gate_parameter_overhead": gate_capacity_delta(
+            model_config, variant, gate_groups=effective_gate_groups,
+            gate_initialization=("calibrated-geometric" if gate_initialization == "calibrated-geometric" or study_init_seed is not None else "default"),
+        ),
         "per_layer_ffn_widths": list(resolved_config.ffn_widths),
         "parameter_components": parameter_breakdown(model),
+        "architecture_contract": architecture_contract(
+            resolved_config, variant=variant, gate_initialization=gate_initialization,
+        ),
         "recurrence": backend_metadata(recurrence_options),
     }
-    if variant == "grouped-4" or gate_initialization != "default" or study_init_seed is not None:
-        gates_per_head = 1 if variant == "scalar" else (effective_gate_groups if variant == "grouped-4" else model_config.d_head)
-        metadata["gate_parameter_overhead"] = (
-            gdn_layer_count(model_config) * model_config.d_model * model_config.n_head * (gates_per_head - 1)
-            + (gdn_layer_count(model_config) * model_config.n_head * gates_per_head
-               if gate_initialization == "calibrated-geometric" or study_init_seed is not None else 0)
-        )
+    components = metadata["parameter_components"]
+    if isinstance(components, dict):
+        metadata["trainable_parameter_count"] = int(components["total"])
+        metadata["tied_output_parameter_count"] = int(components.get("tied_output_head", 0))
+    metadata["capacity_comparison"] = {
+        "same_backbone": variant != "scalar-matched",
+        "exact_useful_parameter_match": bool(variant == "scalar-matched"),
+        "gate_parameter_overhead_definition": "trainable alpha/beta/gate projection storage included in parameter_components.gates",
+    }
     if variant == "grouped-4" or gate_groups is not None:
         metadata["gate_groups"] = effective_gate_groups
     if gate_initialization != "default":

@@ -8,7 +8,7 @@ from typing import Any, Iterable
 
 import torch
 
-from controls import channel_wise_gate_overhead, gdn_layer_count
+from controls import architecture_contract, channel_wise_gate_overhead, gate_capacity_delta, gdn_layer_count
 from model import GatedDeltaNetLM, parameter_breakdown
 
 
@@ -99,7 +99,15 @@ def static_cost_report(model: GatedDeltaNetLM, *, batch_size: int, context_lengt
     kv_cache_bytes = attention_layers * 2 * batch_size * cfg.n_head * context_length * width * element_bytes
     return {
         "parameter_components": parameter_breakdown(model),
-        "gate_parameter_overhead": channel_wise_gate_overhead(cfg),
+        "trainable_parameter_count": sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad),
+        "tied_output_parameter_count": 0,
+        "architecture_contract": architecture_contract(
+            cfg, variant=model.variant, gate_initialization=model.gate_initialization,
+        ),
+        "gate_parameter_overhead": gate_capacity_delta(
+            cfg, model.variant, gate_groups=model.gate_groups,
+            gate_initialization=model.gate_initialization,
+        ),
         "theoretical_gate_projection_ops_per_token": channel_wise_gate_overhead(cfg) // max(gdn_layer_count(cfg), 1),
         "recurrent_state_bytes": recurrent_state_bytes,
         "recurrent_convolution_cache_bytes": recurrent_conv_bytes,
