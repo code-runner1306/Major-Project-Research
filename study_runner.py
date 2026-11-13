@@ -326,6 +326,7 @@ def run_e6(tasks: list[dict[str, Any]], args: argparse.Namespace, root: Path, ma
     for task in tasks:
         directory = Path(task["output_dir"])
         rows.append({**{key: task[key] for key in ("experiment_id", "condition_id", "family", "scale", "variant", "initialization", "seed")},
+                     "protocol_version": task.get("protocol_version", "legacy-v1"),
                      "experiment": task["experiment_id"], "condition": task["condition_id"], "granularity": task["variant"],
                      "output_dir": task["output_dir"], "metrics_path": str(directory / "metrics.json"),
                      "manifest_path": str(directory / "manifest.json"), "checkpoint_path": str(directory / "final_checkpoint.pt"),
@@ -335,7 +336,8 @@ def run_e6(tasks: list[dict[str, Any]], args: argparse.Namespace, root: Path, ma
                                         "e4": str(directory / f"e4_results_{task['scale']}.json"),
                                         f"E3_{task['scale']}": str(directory / f"e3_results_{task['scale']}.json"),
                                         f"E4_{task['scale']}": str(directory / f"e4_results_{task['scale']}.json")}})
-    payload = {"stage": "E6", "tasks": rows, "output_path": str(root / "E6_report.json")}
+    payload = {"stage": "E6", "tasks": rows, "planned_tasks": rows,
+               "output_path": str(root / "E6_report.json")}
     task_file = root / "task_configs" / "E6_analysis.json"
     write_json(task_file, payload)
     return run_logged([args.python, "study_analysis.py", "--task-json", str(task_file)], root / "logs" / "E6.log", master, args.dry_run) == 0

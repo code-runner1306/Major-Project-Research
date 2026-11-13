@@ -97,7 +97,7 @@ def summarize_capacity(
                       "capacity_key_count": max(qualifying) if qualifying else None,
                       "threshold_met": bool(qualifying), "capacity_metric": metric,
                       "protocol_version": identity[4], "status": row.get("status", "complete"),
-                      "eligible_for_primary": _row_is_complete(row)}
+                      "eligible_for_primary": _row_is_complete(row) and _retrieval_artifact_is_valid(retrieval)}
         if not retrieval:
             seed_entry["capacity_unavailable_reason"] = "missing or incomplete retrieval evaluation artifact"
         if fixed_distance is not None:
@@ -151,6 +151,15 @@ def _row_is_complete(row: Mapping[str, Any]) -> bool:
     """Whether a row is eligible for a primary model-level estimate."""
     status = str(row.get("status", "complete"))
     return status in {"complete", "evaluated"} and row.get("eligible_for_primary") is not False
+
+
+def _retrieval_artifact_is_valid(retrieval: Mapping[str, Any] | None) -> bool:
+    """Whether a retrieval payload contains the breakdowns needed for E3."""
+    if not isinstance(retrieval, Mapping):
+        return False
+    return isinstance(retrieval.get("breakdowns"), Mapping) or isinstance(
+        retrieval.get("key_count_by_query_distance"), Mapping
+    )
 
 
 def summarize_paired_interventions(tasks: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
@@ -271,6 +280,7 @@ def paired_interaction(
 
 def build_e6_report(
     tasks: Iterable[Mapping[str, Any]], *, output_path: str | Path | None = None,
+    planned_tasks: Iterable[Mapping[str, Any]] | None = None,
     metrics: tuple[str, ...] = ("retrieval.exact_query_accuracy", "retrieval.latest_value_accuracy",
                                 "retrieval.stale_value_error_rate", "final_validation.loss",
                                 "training.processed_tokens", "training.fixed_optimizer_steps",
@@ -357,6 +367,23 @@ def build_e6_report(
     if not rows:
         exclusions.append({"identity": {}, "missing_or_incomplete": ["no task records were supplied"]})
     protocols = sorted({_protocol_version(row) for row in rows})
+    planned_missing: list[dict[str, Any]] = []
+    if planned_tasks is not None:
+        observed_identities = {
+            (str(row.get("family", "unknown")), str(row.get("scale", "unknown")),
+             str(row.get("seed")), str(row.get("granularity", row.get("condition", row.get("variant", "unknown")))),
+             str(row.get("initialization", "unknown")), _protocol_version(row))
+            for row in rows
+        }
+        for planned in planned_tasks:
+            planned_identity = (str(planned.get("family", "unknown")), str(planned.get("scale", "unknown")),
+                                str(planned.get("seed")), str(planned.get("granularity", planned.get("condition", planned.get("variant", "unknown")))),
+                                str(planned.get("initialization", "unknown")), _protocol_version(planned))
+            if planned_identity not in observed_identities:
+                planned_missing.append({"family": planned_identity[0], "scale": planned_identity[1],
+                                        "seed": planned.get("seed"), "granularity": planned_identity[3],
+                                        "initialization": planned_identity[4], "protocol_version": planned_identity[5],
+                                        "reason": "planned task cell is absent from E6 records"})
     cohort_cells: dict[tuple[str, str, str], set[tuple[str, str]]] = defaultdict(set)
     cohort_seeds: dict[tuple[str, str, str], set[Any]] = defaultdict(set)
     for row in rows:
@@ -379,6 +406,8 @@ def build_e6_report(
                                  "seed": seed, "expected_cells": sorted(expected_cells),
                                  "missing_cells": missing_cells, "paired_complete": not missing_cells})
     incomplete_cohort = any(not row["paired_complete"] for row in cohort_audit)
+    if planned_missing:
+        exclusions.extend({"identity": item, "missing_or_incomplete": [item["reason"]]} for item in planned_missing)
     complete = bool(rows) and not exclusions and not incomplete_cohort and len(protocols) <= 1
     report = {"report_version": 1, "analysis": "E6", "status": "complete" if complete else "incomplete",
               "primary_comparison":
@@ -386,7 +415,7 @@ def build_e6_report(
               "uncertainty_note": "All aggregate uncertainty is computed over paired training seeds. Example-level counts are descriptive evaluation precision and are not independent model replicates.",
               "task_count": len(rows), "status_counts": _status_counts(per_seed),
               "protocol_versions": protocols, "mixed_protocols": len(protocols) > 1,
-              "cohort_audit": cohort_audit,
+              "cohort_audit": cohort_audit, "planned_missing_cells": planned_missing,
               "exclusions": exclusions,
               "seed_records": per_seed, "summary": summaries,
               "primary_summary": primary_summaries,
@@ -712,7 +741,7 @@ def run_study_task(task: Mapping[str, Any]) -> dict[str, Any]:
     if not task.get("output_path", task.get("stage_output_path")):
         raise ValueError("Study analysis task requires output_path")
     if stage == "E6":
-        result = build_e6_report(task.get("tasks", ()), output_path=output_path)
+        result = build_e6_report(task.get("tasks", ()), planned_tasks=task.get("planned_tasks"), output_path=output_path)
         if result.get("status") != "complete":
             raise RuntimeError(f"E6 analysis incomplete; missing/incomplete artifacts are listed in {output_path}")
         return result
