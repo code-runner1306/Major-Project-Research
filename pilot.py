@@ -339,7 +339,11 @@ def _run_parallel_qualification(
                                 ready_workers.add(int(message["worker_index"]))
 
                         _pilot_progress(f"parallel {trial_label}: all processes warmed up; starting measured steps", started_at=started_at)
-                        with DeviceResourceCapture(device) as capture:
+                        with DeviceResourceCapture(
+                            device,
+                            phase_name="parallel_training_capacity_pilot",
+                            measurement_concurrency=worker_count,
+                        ) as capture:
                             start_event.set()
                             while len(worker_results) < worker_count:
                                 message = result_queue.get(timeout=300)

@@ -24,9 +24,12 @@ class DeviceResourceCapture:
 
     def __init__(
         self, device: torch.device, *, activity_interval_seconds: float = 1.0,
-        capture_energy: bool = False,
+        capture_energy: bool = False, phase_name: str = "unspecified",
+        measurement_concurrency: int = 1,
     ):
         self.device = device
+        self.phase_name = phase_name
+        self.measurement_concurrency = measurement_concurrency
         self.activity_interval_seconds = activity_interval_seconds
         self.energy_provider = (
             EnergyProvider.create(device)
@@ -265,6 +268,9 @@ class DeviceResourceCapture:
                 "reason": "NVML did not expose the device compute-process list",
             }
         self.result = {
+            "measurement_phase": self.phase_name,
+            "measurement_concurrency": self.measurement_concurrency,
+            "memory_measurement_scope": "per-context peak; allocated and reserved CUDA allocator values",
             "started_utc": self.started_utc,
             "finished_utc": self.finished_utc,
             "duration_wall_seconds": time.perf_counter() - self._start_time,

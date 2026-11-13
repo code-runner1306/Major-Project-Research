@@ -31,6 +31,13 @@ def _peak_memory_mb(device: torch.device) -> float:
         return 0.0
 
 
+def _reset_peak_memory(device: torch.device) -> None:
+    """Start an independent memory measurement phase."""
+    if device.type == "cuda":
+        torch.cuda.synchronize(device)
+        torch.cuda.reset_peak_memory_stats(device)
+
+
 @torch.no_grad()
 def cache_equivalence_error(model: GatedDeltaNetLM, tokens: torch.Tensor) -> float:
     """Maximum full-vs-cached logit difference for the supplied deterministic case."""
@@ -104,8 +111,28 @@ def benchmark_inference(
     generated_tokens: int | None = None,
     vocab_size: int | None = None,
     seed: int = 0,
+    measurement_concurrency: int = 1,
+    isolated: bool = True,
 ) -> dict[str, Any]:
-    """Measure optional full-prefix generation, prefill, and cached decode separately."""
+    """Measure full-prefix, prefill, and cached decode in isolated phases.
+
+    Inference efficiency numbers are only publishable when the GPU is isolated
+    from sibling training/evaluation workers.  A caller that cannot provide
+    that contract receives an explicit unavailable artifact instead of a
+    contaminated timing result.
+    """
+
+    if measurement_concurrency != 1 or not isolated:
+        return {
+            "disabled": True,
+            "status": "unavailable",
+            "reason": "isolated inference benchmarking requires one measurement worker",
+            "measurement_contract": {
+                "required_concurrency": 1,
+                "observed_concurrency": measurement_concurrency,
+                "isolated_gpu": bool(isolated and measurement_concurrency == 1),
+            },
+        }
 
     model.eval()
     model.set_gate_observer(None)  # Diagnostics must never pollute timed regions.
@@ -120,9 +147,7 @@ def benchmark_inference(
         for _ in range(profile.benchmark_warmup):
             logits, cache = model.prefill(prompt)
             model.decode(logits[:, -1:].argmax(dim=-1), cache)
-        _sync(device)
-        if device.type == "cuda":
-            torch.cuda.reset_peak_memory_stats(device)
+        _reset_peak_memory(device)
 
         full_prefix_result: dict[str, Any]
         if profile.enable_full_prefix_benchmark:
@@ -156,6 +181,7 @@ def benchmark_inference(
 
         prefill_times: list[float] = []
         prefill_cache_bytes: list[int] = []
+        _reset_peak_memory(device)
         with energy_provider.region("prefill") as prefill_energy:
             for _ in range(profile.benchmark_repeats):
                 _sync(device)
@@ -166,6 +192,7 @@ def benchmark_inference(
                 prefill_cache_bytes.append(cache_num_bytes(cache))
 
         decode_times: list[float] = []
+        _reset_peak_memory(device)
         with energy_provider.region("cached_decode") as decode_energy:
             for _ in range(profile.benchmark_repeats):
                 logits, cache = model.prefill(prompt)
@@ -187,6 +214,8 @@ def benchmark_inference(
                 "prompt_length": prompt_length, "generated_tokens": generated_tokens, "batch_size": 1,
                 "dtype": str(next(model.parameters()).dtype), "warmup": profile.benchmark_warmup,
                 "repetitions": profile.benchmark_repeats, "synchronized": device.type == "cuda",
+                "measurement_concurrency": 1, "isolated_gpu": True,
+                "measurement_scope": "isolated inference phases; no concurrent training or evaluation workers",
             },
             "full_prefix_generation": full_prefix_result,
             "prefill": {
