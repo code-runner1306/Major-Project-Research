@@ -57,14 +57,12 @@ def summarize_capacity(
     ``evaluate_retrieval`` shape. If a fixed distance is requested, rows are
     filtered using realized query distance when available.
     """
-    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     seed_rows: list[dict[str, Any]] = []
     for row in tasks:
         retrieval = _retrieval_payload(row)
-        if not retrieval:
-            continue
-        breakdowns = retrieval.get("breakdowns", {})
-        joint = retrieval.get("key_count_by_query_distance", breakdowns.get("key_count_by_query_distance", breakdowns.get("key_count_query_distance", {})))
+        breakdowns = retrieval.get("breakdowns", {}) if retrieval else {}
+        joint = (retrieval or {}).get("key_count_by_query_distance", breakdowns.get("key_count_by_query_distance", breakdowns.get("key_count_query_distance", {})))
         key_counts = breakdowns.get("key_count", {})
         distances = breakdowns.get("query_distance", {})
         observed: list[dict[str, Any]] = []
@@ -92,12 +90,16 @@ def summarize_capacity(
         qualifying = [item["key_count"] for item in observed if item["accuracy"] >= accuracy_threshold]
         identity = (str(row.get("family", "unknown")), str(row.get("scale", "unknown")),
                     str(row.get("condition", row.get("variant", "unknown"))),
-                    str(row.get("initialization", "unknown")))
+                    str(row.get("initialization", "unknown")), _protocol_version(row))
         seed = row.get("seed")
         seed_entry = {"family": identity[0], "scale": identity[1], "condition": identity[2],
                       "initialization": identity[3], "seed": seed, "observed": observed,
                       "capacity_key_count": max(qualifying) if qualifying else None,
-                      "threshold_met": bool(qualifying), "capacity_metric": metric}
+                      "threshold_met": bool(qualifying), "capacity_metric": metric,
+                      "protocol_version": identity[4], "status": row.get("status", "complete"),
+                      "eligible_for_primary": _row_is_complete(row)}
+        if not retrieval:
+            seed_entry["capacity_unavailable_reason"] = "missing or incomplete retrieval evaluation artifact"
         if fixed_distance is not None:
             seed_entry["fixed_distance_requested"] = fixed_distance
             seed_entry["fixed_distance_present"] = any(
@@ -112,28 +114,48 @@ def summarize_capacity(
 
     summaries = []
     for identity, rows in sorted(grouped.items()):
-        capacities = [r["capacity_key_count"] for r in rows if r["capacity_key_count"] is not None]
+        eligible_rows = [r for r in rows if r["eligible_for_primary"]]
+        capacities = [r["capacity_key_count"] for r in eligible_rows if r["capacity_key_count"] is not None]
         summaries.append({
             "family": identity[0], "scale": identity[1], "condition": identity[2],
-            "initialization": identity[3], "seed_count": len(rows),
+            "initialization": identity[3], "protocol_version": identity[4],
+            "seed_count": len(rows), "eligible_seed_count": len(eligible_rows),
             "capacity_by_seed": [{"seed": r["seed"], "key_count": r["capacity_key_count"]} for r in sorted(rows, key=lambda x: str(x["seed"]))],
             "mean_capacity_key_count": mean(capacities) if capacities else None,
             "std_capacity_key_count": stdev(capacities) if len(capacities) > 1 else (0.0 if capacities else None),
+            "conditional_mean_capacity_key_count": mean(capacities) if capacities else None,
             "seeds_meeting_threshold": len(capacities), "seeds_without_threshold_point": len(rows) - len(capacities),
+            "capacity_estimate_scope": "conditional_on_complete_evaluation_and_threshold_point",
         })
+    protocols = sorted({row["protocol_version"] for row in seed_rows})
     return {"analysis": "E3_observed_capacity", "accuracy_threshold": accuracy_threshold,
             "fixed_distance": fixed_distance, "metric": metric, "summaries": summaries,
             "seed_results": seed_rows,
-            "interpretation": "Capacity is the largest tested key count meeting threshold; no interpolation or extrapolation is performed."}
+            "protocol_versions": protocols,
+            "interpretation": "Capacity is the largest tested key count meeting threshold; no interpolation or extrapolation is performed. Aggregate capacity is conditional on complete evaluation and a threshold point; failed or missing seeds remain visible and are not treated as zero capacity."}
 
 
 def _field(row: Mapping[str, Any], name: str, default: Any = "unknown") -> Any:
     return row.get(name, default)
 
 
+def _protocol_version(row: Mapping[str, Any]) -> str:
+    """Return the scientific protocol identity carried by an analysis row."""
+    value = row.get("protocol_version")
+    if value is None and isinstance(row.get("manifest"), Mapping):
+        value = row["manifest"].get("protocol_version")
+    return str(value or "legacy-v1")
+
+
+def _row_is_complete(row: Mapping[str, Any]) -> bool:
+    """Whether a row is eligible for a primary model-level estimate."""
+    status = str(row.get("status", "complete"))
+    return status in {"complete", "evaluated"} and row.get("eligible_for_primary") is not False
+
+
 def summarize_paired_interventions(tasks: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
     """Summarize E4 effects relative to each same-checkpoint unmodified result."""
-    grouped: dict[tuple[str, str, str, int], dict[int, Mapping[str, Any]]] = defaultdict(dict)
+    grouped: dict[tuple[str, str, str, int, str], dict[int, Mapping[str, Any]]] = defaultdict(dict)
     for row in tasks:
         family = str(_field(row, "family"))
         scale = str(_field(row, "scale"))
@@ -148,10 +170,10 @@ def summarize_paired_interventions(tasks: Iterable[Mapping[str, Any]]) -> dict[s
         result = _load_payload(row.get("result_path", row.get("result")))
         if result is None:
             continue
-        grouped[(family, scale, condition, seed)][int(intervention)] = result
+        grouped[(family, scale, condition, seed, _protocol_version(row))][int(intervention)] = result
     metrics = ("exact_query_accuracy", "latest_value_accuracy", "stale_value_error_rate",
                "unrelated_association_retention")
-    deltas: dict[tuple[str, str, str, int], list[dict[str, Any]]] = defaultdict(list)
+    deltas: dict[tuple[str, str, str, int, str], list[dict[str, Any]]] = defaultdict(list)
     for identity, by_group in grouped.items():
         if -1 not in by_group:
             continue
@@ -172,13 +194,14 @@ def summarize_paired_interventions(tasks: Iterable[Mapping[str, Any]]) -> dict[s
             for metric in metrics:
                 value = _finite(entry.get(metric + "_delta"))
                 if value is not None:
-                    metric_groups[(*identity[:3], entry["group_count"], metric)].append((identity[3], value))
+                    metric_groups[(identity[0], identity[1], identity[2], identity[4], entry["group_count"], metric)].append((identity[3], value))
             seed_effects.append({"family": identity[0], "scale": identity[1], "condition": identity[2],
-                                 "seed": identity[3], "effects": entries})
+                                 "seed": identity[3], "protocol_version": identity[4], "effects": entries})
     aggregate = []
-    for (family, scale, condition, groups, metric), values in sorted(metric_groups.items()):
+    for (family, scale, condition, protocol, groups, metric), values in sorted(metric_groups.items()):
         vals = [v for _, v in values]
         aggregate.append({"family": family, "scale": scale, "condition": condition,
+                          "protocol_version": protocol,
                           "group_count": groups, "metric": metric,
                           "paired_seed_deltas": [{"seed": s, "delta": v} for s, v in values],
                           "mean_delta": mean(vals), "std_across_seeds": stdev(vals) if len(vals) > 1 else 0.0,
@@ -214,33 +237,35 @@ def paired_interaction(
     default_init: str = "default", calibrated_init: str = "calibrated",
 ) -> dict[str, Any]:
     """Compute per-seed difference-in-differences for the primary E2/E6 contrast."""
-    cells: dict[tuple[str, str, int, str, str], float] = {}
+    cells: dict[tuple[str, str, int, str, str, str], float] = {}
     for row in records:
         value = _finite(row.get(metric))
         if value is None:
             continue
         cells[(str(_field(row, "family")), str(_field(row, "scale")), int(_field(row, "seed", -1)),
                str(_field(row, "granularity", _field(row, "condition"))),
-               str(_field(row, "initialization")))] = value
-    identities = {(f, s, seed) for f, s, seed, _, _ in cells}
+               str(_field(row, "initialization")), _protocol_version(row))] = value
+    identities = {(f, s, seed, protocol) for f, s, seed, _, _, protocol in cells}
     effects = []
-    by_family: dict[tuple[str, str], list[float]] = defaultdict(list)
-    for family, scale, seed in sorted(identities):
+    by_family: dict[tuple[str, str, str], list[float]] = defaultdict(list)
+    for family, scale, seed, protocol in sorted(identities):
         try:
-            dflt = cells[(family, scale, seed, granularity, default_init)] - cells[(family, scale, seed, control, default_init)]
-            calib = cells[(family, scale, seed, granularity, calibrated_init)] - cells[(family, scale, seed, control, calibrated_init)]
+            dflt = cells[(family, scale, seed, granularity, default_init, protocol)] - cells[(family, scale, seed, control, default_init, protocol)]
+            calib = cells[(family, scale, seed, granularity, calibrated_init, protocol)] - cells[(family, scale, seed, control, calibrated_init, protocol)]
         except KeyError:
             continue
         interaction = calib - dflt
-        by_family[(family, scale)].append(interaction)
-        effects.append({"family": family, "scale": scale, "seed": seed,
+        by_family[(family, scale, protocol)].append(interaction)
+        effects.append({"family": family, "scale": scale, "seed": seed, "protocol_version": protocol,
                         "granularity_minus_control_default": dflt,
                         "granularity_minus_control_calibrated": calib,
                         "difference_in_differences": interaction})
-    summaries = [{"family": family, "scale": scale, **_mean_sd_ci(values)}
-                 for (family, scale), values in sorted(by_family.items())]
+    summaries = [{"family": family, "scale": scale, "protocol_version": protocol, **_mean_sd_ci(values)}
+                 for (family, scale, protocol), values in sorted(by_family.items())]
+    protocols = sorted({identity[3] for identity in identities})
     return {"metric": metric, "contrast": f"({granularity}-{control})[{calibrated_init}] - ({granularity}-{control})[{default_init}]",
             "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models",
+            "protocol_versions": protocols, "mixed_protocols": len(protocols) > 1,
             "per_seed_effects": effects, "summary": summaries}
 
 
@@ -254,13 +279,16 @@ def build_e6_report(
     """Create compact top-level report referencing raw artifacts by path."""
     rows = list(tasks)
     per_seed = []
-    grouped: dict[tuple[str, str, str, str, str], list[float]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str, str, str, str], list[float]] = defaultdict(list)
+    primary_grouped: dict[tuple[str, str, str, str, str, str], list[float]] = defaultdict(list)
     interaction_rows: list[dict[str, Any]] = []
+    primary_interaction_rows: list[dict[str, Any]] = []
     exclusions: list[dict[str, Any]] = []
     for row in rows:
         refs = row.get("artifact_paths", {}) if isinstance(row.get("artifact_paths"), Mapping) else {}
         metrics_data = _load_payload(row.get("metrics")) or _load_payload(row.get("metrics_path")) or _load_payload(refs.get("metrics")) or {}
-        identity = {key: row.get(key) for key in ("experiment", "family", "scale", "condition", "granularity", "initialization", "recipe", "seed", "status")}
+        identity = {key: row.get(key) for key in ("experiment", "family", "scale", "condition", "granularity", "initialization", "recipe", "seed", "status", "protocol_version")}
+        identity["protocol_version"] = _protocol_version(row)
         identity["granularity"] = identity.get("granularity") or row.get("variant")
         artifact_refs = {key: str(row[key]) for key in ("manifest_path", "metrics_path", "checkpoint_path", "evaluation_path") if row.get(key)}
         artifact_refs.update({key: str(value) for key, value in refs.items() if value})
@@ -298,30 +326,70 @@ def build_e6_report(
             if seed_metrics[metric] is not None:
                 group = (str(row.get("family", "unknown")), str(row.get("scale", "unknown")),
                          str(row.get("condition", row.get("granularity", "unknown"))),
-                         str(row.get("initialization", "unknown")), metric)
+                         str(row.get("initialization", "unknown")), _protocol_version(row), metric)
                 grouped[group].append(seed_metrics[metric])
+        eligible_for_primary = not missing and _row_is_complete({**row, **identity})
+        identity["eligible_for_primary"] = eligible_for_primary
+        if eligible_for_primary:
+            for metric, value in seed_metrics.items():
+                if value is not None:
+                    primary_grouped[(str(row.get("family", "unknown")), str(row.get("scale", "unknown")),
+                                     str(row.get("condition", row.get("granularity", "unknown"))),
+                                     str(row.get("initialization", "unknown")), _protocol_version(row), metric)].append(value)
         per_seed.append({**identity, "metrics": seed_metrics, "artifacts": artifact_refs})
-        interaction_rows.append({**identity, **seed_metrics})
+        interaction_row = {**identity, **seed_metrics}
+        interaction_rows.append(interaction_row)
+        if eligible_for_primary:
+            primary_interaction_rows.append(interaction_row)
     summaries = [{"family": key[0], "scale": key[1], "condition": key[2],
-                  "initialization": key[3], "metric": key[4], **_mean_sd_ci(vals)}
+                  "initialization": key[3], "protocol_version": key[4], "metric": key[5], **_mean_sd_ci(vals)}
                  for key, vals in sorted(grouped.items())]
+    primary_summaries = [{"family": key[0], "scale": key[1], "condition": key[2],
+                          "initialization": key[3], "protocol_version": key[4], "metric": key[5], **_mean_sd_ci(vals)}
+                         for key, vals in sorted(primary_grouped.items())]
     primary_interactions = {
         metric: paired_interaction(
-            interaction_rows, metric=metric,
-            calibrated_init="calibrated-geometric" if any(r.get("initialization") == "calibrated-geometric" for r in interaction_rows) else "calibrated",
+            primary_interaction_rows, metric=metric,
+            calibrated_init="calibrated-geometric" if any(r.get("initialization") == "calibrated-geometric" for r in primary_interaction_rows) else "calibrated",
         )
         for metric in metrics
     }
     if not rows:
         exclusions.append({"identity": {}, "missing_or_incomplete": ["no task records were supplied"]})
-    complete = bool(rows) and not exclusions
+    protocols = sorted({_protocol_version(row) for row in rows})
+    cohort_cells: dict[tuple[str, str, str], set[tuple[str, str]]] = defaultdict(set)
+    cohort_seeds: dict[tuple[str, str, str], set[Any]] = defaultdict(set)
+    for row in rows:
+        cohort = (str(row.get("family", "unknown")), str(row.get("scale", "unknown")), _protocol_version(row))
+        granularity = str(row.get("granularity", row.get("condition", row.get("variant", "unknown"))))
+        initialization = str(row.get("initialization", "unknown"))
+        cohort_cells[cohort].add((granularity, initialization))
+        cohort_seeds[cohort].add(row.get("seed"))
+    cohort_audit = []
+    for cohort, seeds in sorted(cohort_seeds.items()):
+        expected_cells = cohort_cells[cohort]
+        for seed in sorted(seeds, key=str):
+            present = {
+                (str(row.get("granularity", row.get("condition", row.get("variant", "unknown")))),
+                 str(row.get("initialization", "unknown")))
+                for row in rows if (str(row.get("family", "unknown")), str(row.get("scale", "unknown")), _protocol_version(row)) == cohort and row.get("seed") == seed and _row_is_complete(row)
+            }
+            missing_cells = sorted(expected_cells - present)
+            cohort_audit.append({"family": cohort[0], "scale": cohort[1], "protocol_version": cohort[2],
+                                 "seed": seed, "expected_cells": sorted(expected_cells),
+                                 "missing_cells": missing_cells, "paired_complete": not missing_cells})
+    incomplete_cohort = any(not row["paired_complete"] for row in cohort_audit)
+    complete = bool(rows) and not exclusions and not incomplete_cohort and len(protocols) <= 1
     report = {"report_version": 1, "analysis": "E6", "status": "complete" if complete else "incomplete",
               "primary_comparison":
               "paired granularity × initialization difference-in-differences across training seeds",
               "uncertainty_note": "All aggregate uncertainty is computed over paired training seeds. Example-level counts are descriptive evaluation precision and are not independent model replicates.",
               "task_count": len(rows), "status_counts": _status_counts(per_seed),
+              "protocol_versions": protocols, "mixed_protocols": len(protocols) > 1,
+              "cohort_audit": cohort_audit,
               "exclusions": exclusions,
               "seed_records": per_seed, "summary": summaries,
+              "primary_summary": primary_summaries,
               "primary_interactions": primary_interactions}
     if output_path is not None:
         atomic_write_json(output_path, report)

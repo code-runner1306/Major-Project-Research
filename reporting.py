@@ -24,12 +24,13 @@ def _metric_value(metrics: dict[str, Any], metric: str) -> float | None:
 
 def descriptive_summary(records: Iterable[dict[str, Any]], metric_paths: tuple[str, ...]) -> dict[str, Any]:
     rows = list(records)
-    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    grouped: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in rows:
-        grouped[(row["family"], row["scale"], row["variant"])].append(row)
+        grouped[(row["family"], row["scale"], row["variant"], str(row.get("protocol_version", "legacy-v1")))].append(row)
     summary: dict[str, Any] = {}
-    for (family, scale, variant), values in sorted(grouped.items()):
-        entry: dict[str, Any] = {"family": family, "scale": scale, "variant": variant, "seeds": []}
+    for (family, scale, variant, protocol_version), values in sorted(grouped.items()):
+        entry: dict[str, Any] = {"family": family, "scale": scale, "variant": variant,
+                                 "protocol_version": protocol_version, "seeds": []}
         for record in sorted(values, key=lambda item: item["seed"]):
             entry["seeds"].append({"seed": record["seed"], "metrics": {metric: _metric_value(record["metrics"], metric) for metric in metric_paths}})
         entry["descriptive"] = {}
@@ -40,13 +41,13 @@ def descriptive_summary(records: Iterable[dict[str, Any]], metric_paths: tuple[s
                 "std": stdev(observed) if len(observed) > 1 else 0.0 if observed else None,
                 "n": len(observed),
             }
-        summary[f"{family}/{scale}/{variant}"] = entry
+        summary[f"{family}/{scale}/{variant}/{protocol_version}"] = entry
     # Explicit pairwise differences, not p-values/significance stars.
-    for family_scale in {(record["family"], record["scale"]) for record in rows}:
-        family, scale = family_scale
-        scalar = {item["seed"]: item for item in grouped.get((family, scale, "scalar"), [])}
+    for family_scale in {(record["family"], record["scale"], str(record.get("protocol_version", "legacy-v1"))) for record in rows}:
+        family, scale, protocol_version = family_scale
+        scalar = {item["seed"]: item for item in grouped.get((family, scale, "scalar", protocol_version), [])}
         for comparison in ("channel-wise", "scalar-matched"):
-            other = {item["seed"]: item for item in grouped.get((family, scale, comparison), [])}
+            other = {item["seed"]: item for item in grouped.get((family, scale, comparison, protocol_version), [])}
             pairs = []
             for seed in sorted(scalar.keys() & other.keys()):
                 differences = {}
@@ -56,7 +57,8 @@ def descriptive_summary(records: Iterable[dict[str, Any]], metric_paths: tuple[s
                 pairs.append({"seed": seed, "difference": differences})
             if pairs:
                 summary[f"{family}/{scale}/{comparison}_minus_scalar"] = {
-                    "family": family, "scale": scale, "comparison": f"{comparison}_minus_scalar", "paired_seed_differences": pairs,
+                    "family": family, "scale": scale, "protocol_version": protocol_version,
+                    "comparison": f"{comparison}_minus_scalar", "paired_seed_differences": pairs,
                 }
     return summary
 
@@ -77,7 +79,9 @@ def rebuild_validated_records(
                 family=raw["family"], run_mode=raw["run_mode"], scale=raw["scale"], variant=raw["variant"],
                 model=raw["model"], seeds=raw["seeds"], budget=raw["budget"], data_identity=raw["data_identity"],
                 evaluation_protocol=raw["evaluation_protocol"], expected_artifacts=tuple(raw["expected_artifacts"]),
-                environment=raw["environment"], source=raw["source"], schema_version=raw["schema_version"],
+                environment=raw["environment"], source=raw["source"],
+                protocol_version=raw.get("protocol_version", "legacy-v1"),
+                schema_version=raw["schema_version"],
             )
             valid, reason = validate_completion(run_dir, expected)
             if not valid:
@@ -87,6 +91,7 @@ def rebuild_validated_records(
             records.append({
                 "family": raw["family"], "scale": raw["scale"], "variant": raw["variant"],
                 "seed": raw["seeds"]["research_seed"], "metrics": metrics, "path": str(run_dir),
+                "protocol_version": raw.get("protocol_version", "legacy-v1"),
             })
         except (KeyError, OSError, ValueError, json.JSONDecodeError) as exc:
             exclusions.append({"path": str(run_dir), "reason": f"corrupt or legacy artifact: {exc}"})
