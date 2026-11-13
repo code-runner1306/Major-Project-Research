@@ -921,9 +921,7 @@ def evaluate_retrieval_baselines(
                 "sequence_length": example.metadata.get("sequence_length"),
                 "key_count": example.metadata.get("key_count"),
                 "requested_query_distance": example.metadata.get("requested_query_distance"),
-                "actual_query_distance": answer.distance,
                 "overwrite_count": answer.overwrite_count,
-                "query_ordinal": ordinal,
             })
             record("keyed_last_write_oracle", oracle_target, target, cell)
             record("first_value", memory_values[0], target, cell)
@@ -958,7 +956,13 @@ def evaluate_retrieval_baselines(
             "incomplete_checks": checks["incomplete"],
         })
     oracle_pass = oracle_mismatches == 0 and oracle_checks > 0
-    status = "complete" if oracle_pass and incomplete_checks == 0 else "failed"
+    all_shortcuts_pass = bool(shortcut_cells) and all(item["pass"] for item in shortcut_cells.values())
+    if not oracle_pass or incomplete_checks:
+        status = "failed"
+    elif not all_shortcuts_pass:
+        status = "shortcut_detected"
+    else:
+        status = "complete"
     chance = {
         "keyed_last_write_oracle": 1.0,
         "first_value": "1 / distinct_memory_values",
@@ -993,7 +997,7 @@ def evaluate_retrieval_baselines(
             "max_accuracy": shortcut_max_accuracy,
             "baseline_names": list(shortcut_names),
             "by_cell": shortcut_cells,
-            "all_cells_pass": bool(shortcut_cells) and all(item["pass"] for item in shortcut_cells.values()),
+            "all_cells_pass": all_shortcuts_pass,
             "scope": "shortcut_audit_only; does not qualify a trained model or research protocol",
         },
         "completeness": {
