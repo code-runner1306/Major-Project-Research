@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
+from hashlib import sha256
 from typing import Any
 
 import torch
@@ -25,6 +26,17 @@ def _tokens(batch: Any) -> torch.Tensor:
     return value
 
 
+def _calibration_mask(batch: Any, tokens: torch.Tensor) -> torch.Tensor | None:
+    """Return an explicit non-padding mask when the caller supplies one."""
+    if isinstance(batch, Mapping):
+        value = batch.get("padding_mask", batch.get("attention_mask", batch.get("mask")))
+        if isinstance(value, torch.Tensor):
+            if value.shape != tokens.shape:
+                raise ValueError("Calibration padding masks must match token shape")
+            return value.to(dtype=torch.bool)
+    return None
+
+
 @torch.no_grad()
 def calibrate_gate_initialization(
     model: GatedDeltaNetLM,
@@ -45,12 +57,21 @@ def calibrate_gate_initialization(
     layers = [b.attn for b in model.blocks if isinstance(b.attn, GatedDeltaNetAttention)]
     if not layers:
         raise ValueError("Model has no recurrent gate layers")
-    token_batches = [_tokens(batch).to(device) for batch in batches]
+    raw_batches = list(batches)
+    token_batches = [_tokens(batch).to(device) for batch in raw_batches]
     if not token_batches:
         raise ValueError("At least one calibration token is required")
     was_training = model.training
     model.eval()
-    count = sum(batch.size(0) * batch.size(1) for batch in token_batches)
+    explicit_masks = [_calibration_mask(batch, tokens) for batch, tokens in zip(raw_batches, token_batches)]
+    if any(mask is not None for mask in explicit_masks) and any(mask is None for mask in explicit_masks):
+        raise ValueError("Calibration requires a padding mask for every batch or none")
+    if explicit_masks and explicit_masks[0] is not None:
+        calibration_masks = [mask.to(device) for mask in explicit_masks if mask is not None]
+        count = sum(int(mask.sum().item()) for mask in calibration_masks)
+    else:
+        calibration_masks = None
+        count = sum(batch.size(0) * batch.size(1) for batch in token_batches)
     if count == 0:
         raise ValueError("At least one calibration token is required")
 
@@ -69,11 +90,14 @@ def calibrate_gate_initialization(
         handle = layer.alpha_proj.register_forward_pre_hook(capture)
         try:
             # Recompute fresh activations after calibrating each preceding layer.
-            for token_batch in token_batches:
+            for batch_index, token_batch in enumerate(token_batches):
                 model(token_batch)
         finally:
             handle.remove()
         inputs = torch.cat(collected, dim=0).to(layer.alpha_proj.weight)
+        if calibration_masks is not None:
+            flat_mask = torch.cat([mask.reshape(-1) for mask in calibration_masks])
+            inputs = inputs[flat_mask]
         logits = F_linear_no_bias(layer.alpha_proj, inputs)
         n_gate = layer.alpha_proj.out_features // head_count
         logits = logits.view(-1, head_count, n_gate)
@@ -110,13 +134,30 @@ def calibrate_gate_initialization(
         })
     finally:
         model.train(was_training)
+    token_digest = sha256()
+    for token_batch in token_batches:
+        token_digest.update(token_batch.detach().cpu().numpy().tobytes())
     return {
-        "method": "calibrated-geometric",
+        "method": "calibrated-geometric-package",
+        "treatment_components": {
+            "alpha_bias_fitting": True,
+            "within_head_projection_row_matching": True,
+            "causal_claim": "package effect; not timescale-only",
+        },
+        "data_provenance": {
+            "split": "train",
+            "selection": "first configured calibration batches",
+            "weighting": "uniform over explicitly included tokens",
+            "padding_mask": "explicit mask supplied" if calibration_masks is not None else "none supplied; all input positions included",
+            "masking_limit": "write/query/filler categories are not inferred without phase masks",
+            "token_batches_sha256": token_digest.hexdigest(),
+        },
         "calibration_tokens": count,
         "min_half_life": float(min_half_life),
         "max_half_life": float(max_half_life),
         "target_half_life_by_head": targets.cpu().tolist(),
         "layers": report_layers,
+        "half_life_interpretation": "decay diagnostic derived from mean alpha; not a measured full-state memory lifetime",
     }
 
 

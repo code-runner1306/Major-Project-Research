@@ -187,9 +187,10 @@ def summarize_paired_interventions(tasks: Iterable[Mapping[str, Any]]) -> dict[s
             "reference_label": "unmodified channel-wise gates", "seed_effects": seed_effects,
             "aggregate": aggregate,
             "intervention": {"primary": "arithmetic_mean_of_effective_retention_factors_alpha",
-                             "alternative": "arithmetic_mean_of_log_decay_values_log(1-alpha), then exponentiate",
+                             "alternative": "geometric_mean_of_effective_retention_factors_exp(mean(log(alpha)))",
                              "model_implementation": "The existing runtime grouping averages alpha (effective retention factors) within each group, then broadcasts it.",
-                             "warning": "These are inference interventions on channel-wise trained checkpoints; they do not measure separately trained grouped models or runtime savings."}}
+                             "warning": "These are inference interventions on channel-wise trained checkpoints; they do not measure separately trained grouped models or runtime savings.",
+                             "causal_scope": "inference-time sensitivity only"}}
 
 
 def _mean_sd_ci(values: list[float]) -> dict[str, Any]:
@@ -763,9 +764,10 @@ def run_study_task(task: Mapping[str, Any]) -> dict[str, Any]:
                                          "gate_diagnostics": diagnostics_resources,
                                          "interventions": intervention_resources},
                   "intervention": {"primary": "arithmetic_mean_of_effective_retention_factors_alpha",
-                                   "alternative": "geometric_mean_of_effective_retention_factors_via_mean_log_alpha",
+                                   "alternative": "geometric_mean_of_effective_retention_factors_exp(mean(log(alpha)))",
                                    "existing_convention": "The original post-hoc grouping implementation averages alpha values within each group, then broadcasts.",
-                                   "alpha_note": "alpha is the effective retention factor in the recurrence; log(alpha) aggregation is included as a bounded sensitivity check."},
+                                   "alpha_note": "alpha is the effective retention factor in the recurrence; log(alpha) aggregation is included as a bounded sensitivity check.",
+                                   "causal_scope": "inference-time sensitivity only; no separately trained grouped models or runtime savings"},
                   "metrics_by_group": sensitivity_results["mean_alpha"],
                   "sensitivity_by_alternative_convention": sensitivity_results["mean_log_decay"],
                   "paired_deltas": {"mean_alpha": _group_result_deltas({**group_results, **sensitivity_results["mean_alpha"]}),
