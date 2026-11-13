@@ -11,7 +11,7 @@
   "sizes": ["10M"],
   "seeds": {"10M": [42, 43, 44, 45, 46]},
   "budgets": {
-    "10M": {"max_optimizer_steps": 1000, "batch_size": 8, "grad_accum_steps": 4, "context_length": 512, "validation_steps": 100, "evaluation_interval": 100, "learning_rate": 0.0006}
+    "10M": {"max_optimizer_steps": 1000, "batch_size": 8, "grad_accum_steps": 4, "context_length": 512, "validation_steps": 100, "evaluation_interval": 100, "learning_rate": 0.001}
   },
   "calibration": {"min_half_life": 16, "max_half_life": 128, "examples": 256},
   "runtime": {

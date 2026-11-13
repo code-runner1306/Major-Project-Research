@@ -3,24 +3,57 @@
 # In a Kaggle notebook, enable a GPU, then run:
 #   !git clone --branch maink https://github.com/code-runner1306/Major-Project-Research.git
 #   %cd /kaggle/working/Major-Project-Research
+#   !bash run_kaggle_12h_replication.sh --smoke-test
 #   !bash run_kaggle_12h_replication.sh
 set -Eeuo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
+if [[ "${1:-}" == "--smoke-test" ]]; then
+  shift
+  exec "$ROOT/run_kaggle_v4_smoke.sh" "$@"
+fi
+
 PYTHON_BIN="${PYTHON_BIN:-python3}"
 HOURS="${HOURS:-12}"
 PILOT_STEPS="${PILOT_STEPS:-20}"
-TRAIN_STEPS="${TRAIN_STEPS:-650}"
+TRAIN_STEPS="${TRAIN_STEPS:-}"
 SAFETY_MINUTES="${SAFETY_MINUTES:-20}"
 SEEDS_TEXT="${SEEDS:-47 48 49}"
 read -r -a SEEDS_ARRAY <<< "$SEEDS_TEXT"
 
-STUDY_CONFIG="$ROOT/study_configs/granularity_corrected_pilot.json"
+STUDY_CONFIG="${STUDY_CONFIG:-$ROOT/study_configs/granularity_corrected_pilot.json}"
 if [[ ! -f "$ROOT/run_all.py" || ! -f "$STUDY_CONFIG" ]]; then
   echo "ERROR: Run this script from the Major-Project-Research checkout." >&2
   exit 2
+fi
+GENERATOR_VERSION="$("$PYTHON_BIN" - "$STUDY_CONFIG" <<'PY'
+import json, sys
+from pathlib import Path
+study = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8-sig"))
+print(study.get("retrieval", {}).get("generator_version", ""))
+PY
+)" || { echo "ERROR: Could not read retrieval generator version from $STUDY_CONFIG" >&2; exit 2; }
+if [[ "$GENERATOR_VERSION" != "mqar-overwrite-v4" ]]; then
+  echo "ERROR: Kaggle corrected runs require generator mqar-overwrite-v4; config selects '$GENERATOR_VERSION'." >&2
+  exit 2
+fi
+LEARNING_RATE="$("$PYTHON_BIN" - "$STUDY_CONFIG" <<'PY'
+import json, sys
+from pathlib import Path
+study = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8-sig"))
+print(study["budgets"]["10M"]["learning_rate"])
+PY
+)" || { echo "ERROR: Could not read the configured learning rate from $STUDY_CONFIG" >&2; exit 2; }
+if [[ -z "$TRAIN_STEPS" ]]; then
+  TRAIN_STEPS="$("$PYTHON_BIN" - "$STUDY_CONFIG" <<'PY'
+import json, sys
+from pathlib import Path
+study = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8-sig"))
+print(study["budgets"]["10M"]["max_optimizer_steps"])
+PY
+)" || { echo "ERROR: Could not read the configured step budget from $STUDY_CONFIG" >&2; exit 2; }
 fi
 if [[ ! "$HOURS" =~ ^[0-9]+([.][0-9]+)?$ ]] || [[ ! "$PILOT_STEPS" =~ ^[0-9]+$ ]] || [[ ! "$TRAIN_STEPS" =~ ^[0-9]+$ ]]; then
   echo "ERROR: HOURS, PILOT_STEPS, and TRAIN_STEPS must be positive numbers." >&2
@@ -130,7 +163,7 @@ task = {
     "context_length": int(budget["context_length"]),
     "validation_steps": validation_steps,
     "evaluation_interval": interval,
-    "learning_rate": 0.003,
+    "learning_rate": float(budget["learning_rate"]),
     "calibration_min_half_life": int(study["calibration"]["min_half_life"]),
     "calibration_max_half_life": int(study["calibration"]["max_half_life"]),
     "calibration_examples": int(study["calibration"]["examples"]),
@@ -283,7 +316,7 @@ done
 cat > "$OUT/README.txt" <<EOF
 Kaggle 12-hour MQAR granularity replication
 Comparison: scalar-calibrated C4 vs channel-wise-calibrated C6
-Scale: 10M; optimizer steps: $TRAIN_STEPS; learning rate: 0.003
+Scale: 10M; optimizer steps: $TRAIN_STEPS; learning rate: $LEARNING_RATE
 Requested seeds: $SEEDS_TEXT
 Completed paired seeds: $completed
 Timing estimate: $OUT/timing_estimate.json

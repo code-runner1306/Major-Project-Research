@@ -65,9 +65,9 @@ try {
         [ordered]@{ id = 'C4-scalar-calibrated'; variant = 'scalar'; initialization = 'calibrated-geometric' },
         [ordered]@{ id = 'C6-channel-calibrated'; variant = 'channel-wise'; initialization = 'calibrated-geometric' }
     )
-    $scale = '10M'; $stepBudget = $OptimizerSteps; $learningRate = 0.003
-    $sourceBudget = $study.budgets.'10M'; $calibration = $study.calibration
-    $experimentId = if ($corrected) { 'granularity-corrected-48h-exploratory-lr3e-3-v1' } else { 'granularity-init-48h-exploratory-lr3e-3-v1' }; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+    $scale = '10M'; $sourceBudget = $study.budgets.'10M'; $stepBudget = $OptimizerSteps
+    $learningRate = [double]$sourceBudget.learning_rate; $calibration = $study.calibration
+    $experimentId = if ($corrected) { 'granularity-corrected-48h-exploratory-lr1e-3-v1' } else { 'granularity-init-48h-exploratory-lr1e-3-v1' }; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
     if ($SmokeTest) { $scale = 'tiny'; $stepBudget = 2; $sourceBudget = $study.budgets.tiny; $learningRate = [double]$sourceBudget.learning_rate; $experimentId = 'granularity-init-48h-launcher-smoke-v1'; $Seeds = @(42) }
     $script:MasterLog = $null
 
