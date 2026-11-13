@@ -819,6 +819,7 @@ def evaluate_retrieval_baselines(
     *,
     example_indices: Sequence[int] | None = None,
     frequency_dataset: RetrievalDataset | None = None,
+    shortcut_max_accuracy: float = 0.90,
 ) -> dict[str, Any]:
     """Evaluate key-free retrieval baselines without using placement metadata.
 
@@ -829,8 +830,13 @@ def evaluate_retrieval_baselines(
     the evaluated cases.
     """
 
-    if frequency_dataset is not None and frequency_dataset.split != "train":
-        raise ValueError("frequency_dataset must be a training split")
+    if not 0.0 <= shortcut_max_accuracy <= 1.0:
+        raise ValueError("shortcut_max_accuracy must be between 0 and 1")
+    if frequency_dataset is not None:
+        if frequency_dataset.split != "train":
+            raise ValueError("frequency_dataset must be a training split")
+        if frequency_dataset.task != dataset.task:
+            raise ValueError("frequency_dataset must use the same retrieval task")
     indices = tuple(range(len(dataset))) if example_indices is None else tuple(example_indices)
     if not indices:
         raise ValueError("Baseline evaluation requires at least one example index")
@@ -861,10 +867,18 @@ def evaluate_retrieval_baselines(
         for name in baseline_names
     }
     by_cell: dict[str, dict[str, dict[str, int | float | None]]] = {}
+    cell_checks: dict[str, dict[str, int]] = {}
     oracle_mismatches = 0
+    oracle_checks = 0
+    incomplete_checks = 0
 
     def record(name: str, prediction: int | None, target: int, cell: str) -> None:
+        checks = cell_checks.setdefault(cell, {"expected": 0, "incomplete": 0})
+        checks["expected"] += 1
         if prediction is None:
+            nonlocal incomplete_checks
+            incomplete_checks += 1
+            checks["incomplete"] += 1
             return
         entry = stats[name]
         entry["total"] += 1
@@ -900,6 +914,7 @@ def evaluate_retrieval_baselines(
             ]
             oracle_target = writes[-1] if writes else None
             target = int(example.labels[answer.label_position])
+            oracle_checks += 1
             if oracle_target != target:
                 oracle_mismatches += 1
             cell = canonical_json({
@@ -921,9 +936,29 @@ def evaluate_retrieval_baselines(
     for entry in stats.values():
         if entry["total"]:
             entry["accuracy"] = entry["correct"] / entry["total"]
-    for cells in by_cell.values():
+    shortcut_names = tuple(name for name in baseline_names if name != "keyed_last_write_oracle")
+    shortcut_cells: dict[str, dict[str, Any]] = {}
+    for cell, cells in by_cell.items():
         for entry in cells.values():
             entry["accuracy"] = entry["correct"] / entry["total"] if entry["total"] else None
+        available = [cells[name]["accuracy"] for name in shortcut_names if name in cells and cells[name]["accuracy"] is not None]
+        maximum = max(available) if available else None
+        checks = cell_checks.get(cell, {"expected": 0, "incomplete": 0})
+        shortcut_cells[cell] = {
+            "max_key_free_accuracy": maximum,
+            "threshold": shortcut_max_accuracy,
+            "pass": maximum is not None and maximum <= shortcut_max_accuracy and checks["incomplete"] == 0,
+            "incomplete_checks": checks["incomplete"],
+        }
+    for cell, checks in cell_checks.items():
+        shortcut_cells.setdefault(cell, {
+            "max_key_free_accuracy": None,
+            "threshold": shortcut_max_accuracy,
+            "pass": False,
+            "incomplete_checks": checks["incomplete"],
+        })
+    oracle_pass = oracle_mismatches == 0 and oracle_checks > 0
+    status = "complete" if oracle_pass and incomplete_checks == 0 else "failed"
     chance = {
         "keyed_last_write_oracle": 1.0,
         "first_value": "1 / distinct_memory_values",
@@ -933,7 +968,7 @@ def evaluate_retrieval_baselines(
         "no_memory_frequency": frequency_chance,
     }
     return {
-        "status": "complete",
+        "status": status,
         "task": dataset.task,
         "generator_manifest": dataset.manifest(),
         "evaluated_examples": len(indices),
@@ -950,7 +985,20 @@ def evaluate_retrieval_baselines(
         "oracle_audit": {
             "independent_last_write_oracle": "causal token-prefix scan",
             "target_mismatches": oracle_mismatches,
-            "target_checks": stats["keyed_last_write_oracle"]["total"],
+            "target_checks": oracle_checks,
+            "pass": oracle_pass,
         },
         "by_difficulty_cell": by_cell,
+        "shortcut_criterion": {
+            "max_accuracy": shortcut_max_accuracy,
+            "baseline_names": list(shortcut_names),
+            "by_cell": shortcut_cells,
+            "all_cells_pass": bool(shortcut_cells) and all(item["pass"] for item in shortcut_cells.values()),
+            "scope": "shortcut_audit_only; does not qualify a trained model or research protocol",
+        },
+        "completeness": {
+            "incomplete_checks": incomplete_checks,
+            "oracle_checks": oracle_checks,
+            "oracle_mismatches": oracle_mismatches,
+        },
     }
