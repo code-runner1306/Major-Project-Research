@@ -37,6 +37,23 @@ def _calibration_mask(batch: Any, tokens: torch.Tensor) -> torch.Tensor | None:
     return None
 
 
+def _phase_masks(batch: Any, tokens: torch.Tensor) -> dict[str, torch.Tensor] | None:
+    if not isinstance(batch, Mapping):
+        return None
+    value = batch.get("phase_masks")
+    if value is None:
+        return None
+    if not isinstance(value, Mapping):
+        raise ValueError("Calibration phase_masks must be a mapping")
+    result: dict[str, torch.Tensor] = {}
+    for name in ("write", "query", "filler"):
+        mask = value.get(name)
+        if not isinstance(mask, torch.Tensor) or mask.shape != tokens.shape:
+            raise ValueError("Calibration phase masks must match token shape")
+        result[name] = mask.to(dtype=torch.bool)
+    return result
+
+
 @torch.no_grad()
 def calibrate_gate_initialization(
     model: GatedDeltaNetLM,
@@ -64,6 +81,9 @@ def calibrate_gate_initialization(
     was_training = model.training
     model.eval()
     explicit_masks = [_calibration_mask(batch, tokens) for batch, tokens in zip(raw_batches, token_batches)]
+    phase_batches = [_phase_masks(batch, tokens) for batch, tokens in zip(raw_batches, token_batches)]
+    if any(phases is not None for phases in phase_batches) and any(phases is None for phases in phase_batches):
+        raise ValueError("Calibration requires phase masks for every batch or none")
     if any(mask is not None for mask in explicit_masks) and any(mask is None for mask in explicit_masks):
         raise ValueError("Calibration requires a padding mask for every batch or none")
     if explicit_masks and explicit_masks[0] is not None:
@@ -72,6 +92,10 @@ def calibrate_gate_initialization(
     else:
         calibration_masks = None
         count = sum(batch.size(0) * batch.size(1) for batch in token_batches)
+    phase_masks = None if phase_batches and phase_batches[0] is None else {
+        name: [phases[name].to(device) for phases in phase_batches if phases is not None]
+        for name in ("write", "query", "filler")
+    }
     if count == 0:
         raise ValueError("At least one calibration token is required")
 
@@ -98,6 +122,16 @@ def calibrate_gate_initialization(
         if calibration_masks is not None:
             flat_mask = torch.cat([mask.reshape(-1) for mask in calibration_masks])
             inputs = inputs[flat_mask]
+        flat_phase_masks = None
+        if phase_masks is not None:
+            flat_phase_masks = {
+                name: torch.cat([mask.reshape(-1) for mask in masks])
+                for name, masks in phase_masks.items()
+            }
+            if calibration_masks is not None:
+                flat_phase_masks = {
+                    name: mask[flat_mask] for name, mask in flat_phase_masks.items()
+                }
         logits = F_linear_no_bias(layer.alpha_proj, inputs)
         n_gate = layer.alpha_proj.out_features // head_count
         logits = logits.view(-1, head_count, n_gate)
@@ -121,6 +155,16 @@ def calibrate_gate_initialization(
         realized_by_head = realized.mean(-1).clamp(1e-8, 1 - 1e-8)
         realized_half_life = -torch.log(torch.tensor(2.0, device=realized.device, dtype=realized.dtype)) / realized_by_head.log()
         realized_gate = torch.sigmoid(logits + biases.view(1, head_count, n_gate))
+        phase_statistics: dict[str, Any] = {}
+        if flat_phase_masks is not None:
+            for phase, phase_mask in flat_phase_masks.items():
+                values = realized_gate[phase_mask]
+                phase_statistics[phase] = {
+                    "count": int(values.shape[0]),
+                    "mean_retention": float(values.mean().item()) if values.numel() else None,
+                    "std_retention": float(values.std(unbiased=False).item()) if values.numel() else None,
+                    "mean_abs_dretention_dlogit": float((values * (1 - values)).mean().item()) if values.numel() else None,
+                }
         report_layers.append({
             "layer": layer.layer_idx,
             "target_half_life": targets.cpu().tolist(),
@@ -131,6 +175,7 @@ def calibrate_gate_initialization(
             "pre_bias_logit_std": logits.std(dim=0, unbiased=False).view(head_count, n_gate)[:, 0].cpu().tolist(),
             "realized_gate_std": realized_gate.std(dim=0, unbiased=False).mean(-1).cpu().tolist(),
             "mean_abs_dretention_dlogit": (realized_gate * (1 - realized_gate)).mean(dim=0).mean(-1).cpu().tolist(),
+            "phase_gate_statistics": phase_statistics,
         })
     finally:
         model.train(was_training)
@@ -149,7 +194,8 @@ def calibrate_gate_initialization(
             "selection": "first configured calibration batches",
             "weighting": "uniform over explicitly included tokens",
             "padding_mask": "explicit mask supplied" if calibration_masks is not None else "none supplied; all input positions included",
-            "masking_limit": "write/query/filler categories are not inferred without phase masks",
+            "phase_masks": "write/query/filler masks supplied" if phase_masks is not None else "unavailable",
+            "masking_limit": "generic language-model calibration has no write/query/filler phase labels" if phase_masks is None else None,
             "token_batches_sha256": token_digest.hexdigest(),
         },
         "calibration_tokens": count,

@@ -25,7 +25,7 @@ from eval import benchmark_inference, evaluate_needle_suite, generation_cache_eq
 from preflight import require_production_cuda
 from recurrence import RecurrenceOptions, backend_metadata, ensure_backend_available, qualification_hash
 from reporting import write_first_submission_reports
-from retrieval import GENERATOR_VERSION, RetrievalDataset, evaluate_retrieval, retrieval_dataloader
+from retrieval import FILLER_TOKEN, GENERATOR_VERSION, RetrievalDataset, evaluate_retrieval, retrieval_dataloader
 from resource_telemetry import DeviceResourceCapture
 from train import SeedBundle, evaluate_model, seed_everything, train_fixed_budget
 
@@ -526,23 +526,39 @@ def run_seed(
                 take = min(remaining, tokens.shape[0])
                 if hasattr(dataset, "example"):
                     valid_masks = []
+                    phase_masks_by_name = {"write": [], "query": [], "filler": []}
                     for row in range(take):
                         example = dataset.example(dataset_offset + row)
                         valid_length = min(int(example.tokens.numel()), int(tokens.shape[1]))
                         mask = torch.zeros(tokens.shape[1], dtype=torch.bool)
                         mask[:valid_length] = True
                         valid_masks.append(mask)
+                        query_mask = torch.zeros(tokens.shape[1], dtype=torch.bool)
+                        for query_position in example.metadata.get("query_positions", []):
+                            start = int(query_position)
+                            if start < query_mask.numel():
+                                query_mask[start:min(start + 3, query_mask.numel())] = True
+                        filler_mask = (tokens[row] == FILLER_TOKEN) & mask & ~query_mask
+                        write_mask = mask & ~query_mask & ~filler_mask
+                        phase_masks_by_name["write"].append(write_mask)
+                        phase_masks_by_name["query"].append(query_mask & mask)
+                        phase_masks_by_name["filler"].append(filler_mask)
                     padding_mask = torch.stack(valid_masks, dim=0)
+                    phase_masks = {name: torch.stack(values, dim=0) for name, values in phase_masks_by_name.items()}
                 else:
                     # Language-model loaders expose fixed-length examples but
                     # no sequence-length metadata; retain the explicit policy
                     # rather than guessing from supervised labels.
                     padding_mask = torch.ones_like(tokens[:take], dtype=torch.bool)
                     calibration_mask_policy = "all_positions_no_dataset_length_metadata"
-                bounded_batches.append({
+                    phase_masks = None
+                calibration_batch = {
                     "tokens": tokens[:take], "targets": targets[:take],
                     "padding_mask": padding_mask,
-                })
+                }
+                if phase_masks is not None:
+                    calibration_batch["phase_masks"] = phase_masks
+                bounded_batches.append(calibration_batch)
                 dataset_offset += take
                 remaining -= take
                 if remaining <= 0:
