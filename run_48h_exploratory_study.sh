@@ -9,7 +9,7 @@ Usage: bash run_48h_exploratory_study.sh --family mqar|overwrite|both [options]
 Options:
   --python PATH         Python executable (default: python3)
   --output-root PATH    Production output directory (family-specific default)
-  --study-config PATH   Study config (default: study_configs/granularity_init_study.json)
+  --study-config PATH   Study config (default: study_configs/granularity_corrected_pilot.json)
   --workers N           Production concurrency; default 1 (parallel requires a matching report)
   --qualify-workers N   Run isolated training+evaluation pilot sweep from 1 through N, then exit
   --qualification-steps N  Pilot optimizer steps per task (default: 20)
@@ -27,7 +27,7 @@ REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 FAMILY=""
 PYTHON_BIN="${PYTHON:-python3}"
 OUTPUT_ROOT=""
-STUDY_CONFIG="study_configs/granularity_init_study.json"
+STUDY_CONFIG="study_configs/granularity_corrected_pilot.json"
 WORKERS=1
 QUALIFY_WORKERS=""
 QUALIFICATION_STEPS=20
@@ -102,12 +102,33 @@ cd -- "$REPO_DIR"
 if ! command -v "$PYTHON_BIN" >/dev/null 2>&1 && [[ ! -x "$PYTHON_BIN" ]]; then
   die "Python executable not found or not executable: $PYTHON_BIN"
 fi
+if [[ "$STUDY_CONFIG" = /* ]]; then
+  STUDY_CONFIG_PATH="$STUDY_CONFIG"
+else
+  STUDY_CONFIG_PATH="$REPO_DIR/$STUDY_CONFIG"
+fi
+[[ -f "$STUDY_CONFIG_PATH" ]] || die "Study config not found: $STUDY_CONFIG_PATH"
+# The corrected protocol (mqar-overwrite-v4, float32 state accumulation,
+# authorization gate) is selected by the config, not by this script.
+PROTOCOL_VERSION="$("$PYTHON_BIN" - "$STUDY_CONFIG_PATH" <<'PY'
+import json, sys
+from pathlib import Path
+study = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8-sig"))
+print(study.get("runtime", {}).get("protocol_version", ""))
+PY
+)" || die "Could not read study config: $STUDY_CONFIG_PATH"
+if [[ "$PROTOCOL_VERSION" == "corrected-v1" ]]; then
+  CORRECTED=1; ROOT_PREFIX="granularity_48h_corrected_lr3e-3"
+else
+  CORRECTED=0; ROOT_PREFIX="granularity_48h_exploratory_lr3e-3"
+fi
+DEFAULT_OUTPUT_ROOT="output/${ROOT_PREFIX}_${FAMILY}"
 if [[ -z "$OUTPUT_ROOT" ]]; then
-  OUTPUT_ROOT="output/granularity_48h_exploratory_lr3e-3_${FAMILY}"
+  OUTPUT_ROOT="$DEFAULT_OUTPUT_ROOT"
 fi
 if [[ -n "$QUALIFY_WORKERS" ]]; then
   ((WORKERS == 1)) || die "Use --qualify-workers as the target count; do not also set --workers"
-  [[ -z "$OUTPUT_ROOT" || "$OUTPUT_ROOT" == "output/granularity_48h_exploratory_lr3e-3_${FAMILY}" ]] || die "--output-root is for production; use --qualification-root for pilot artifacts"
+  [[ -z "$OUTPUT_ROOT" || "$OUTPUT_ROOT" == "$DEFAULT_OUTPUT_ROOT" ]] || die "--output-root is for production; use --qualification-root for pilot artifacts"
   if [[ -z "$QUALIFICATION_ROOT" ]]; then
     QUALIFICATION_ROOT="output/granularity_48h_worker_qualification_${FAMILY}_$(date -u '+%Y%m%d_%H%M%S')_$$"
   fi
@@ -118,12 +139,6 @@ else
   [[ -z "$QUALIFICATION_ROOT" ]] || die "--qualification-root is only used with --qualify-workers"
   if [[ "$OUTPUT_ROOT" = /* ]]; then ROOT="$OUTPUT_ROOT"; else ROOT="$REPO_DIR/$OUTPUT_ROOT"; fi
 fi
-if [[ "$STUDY_CONFIG" = /* ]]; then
-  STUDY_CONFIG_PATH="$STUDY_CONFIG"
-else
-  STUDY_CONFIG_PATH="$REPO_DIR/$STUDY_CONFIG"
-fi
-[[ -f "$STUDY_CONFIG_PATH" ]] || die "Study config not found: $STUDY_CONFIG_PATH"
 
 CONDITIONS=(
   'C1-scalar-default|scalar|default'
@@ -135,7 +150,7 @@ SCALE="10M"
 PRODUCTION_SEED=42
 STEP_BUDGET=1000
 LEARNING_RATE="0.003"
-EXPERIMENT_ID="granularity-init-48h-exploratory-lr3e-3-v1"
+if ((CORRECTED)); then EXPERIMENT_ID="granularity-corrected-48h-exploratory-lr3e-3-v1"; else EXPERIMENT_ID="granularity-init-48h-exploratory-lr3e-3-v1"; fi
 QUALIFICATION_RUN_ID="granularity-init-worker-pilot-${FAMILY}-$(date -u '+%Y%m%d_%H%M%S')-$$"
 ACTIVE_PIDS=()
 cleanup_parallel() {
@@ -206,11 +221,13 @@ task = {
     "retrieval_config": retrieval,
     "run_mode": "production",
     "recurrence_backend": "reference",
-    "state_accumulator_dtype": "input",
+    "state_accumulator_dtype": study.get("runtime", {}).get("state_accumulator_dtype", "input"),
     "recurrence_chunk_size": 64,
     "validation_answer_accuracy": True,
     "concurrent_training_runs": int(os.environ["CONCURRENCY"]),
 }
+if study.get("runtime", {}).get("protocol_version") == "corrected-v1":
+    task["protocol_version"] = "corrected-v1"
 if os.environ["QUALIFICATION"] == "true":
     task.update({"qualification": True, "qualification_stage": "worker-capacity-pilot",
                  "qualification_scope": "runtime-capacity-only"})
@@ -505,6 +522,15 @@ if ((DRY_RUN)); then
   exit 0
 fi
 
+if ((CORRECTED)) && [[ -z "$QUALIFY_WORKERS" ]]; then
+  # Corrected research compute needs recorded human approval (same gate as study_runner).
+  auth_output="$("$PYTHON_BIN" - "$STUDY_CONFIG_PATH" 2>&1 <<'PY'
+import json, sys
+from study_runner import require_compute_authorization
+require_compute_authorization(json.load(open(sys.argv[1], encoding="utf-8-sig")), stage="48h-production")
+PY
+)" || die "Compute authorization check failed for $STUDY_CONFIG: $auth_output"
+fi
 mkdir -p -- "$ROOT/logs" "$ROOT/task_configs"
 MASTER_LOG="$ROOT/logs/run_48h_$(date -u '+%Y%m%d_%H%M%S').log"
 : > "$MASTER_LOG"
@@ -633,14 +659,14 @@ else
   log "All selected evaluations are already complete"
 fi
 
-SUMMARY_PATH="$ROOT/run_summary.json" FAMILY="$FAMILY" FAMILIES_CSV="$(IFS=,; echo "${FAMILIES[*]}")" \
+SUMMARY_PATH="$ROOT/run_summary.json" EXPERIMENT_ID="$EXPERIMENT_ID" FAMILY="$FAMILY" FAMILIES_CSV="$(IFS=,; echo "${FAMILIES[*]}")" \
   "$PYTHON_BIN" - <<'PY'
 import json, os
 from datetime import datetime, timezone
 from pathlib import Path
 families=os.environ["FAMILIES_CSV"].split(",")
 summary = {
-    "experiment_id": "granularity-init-48h-exploratory-lr3e-3-v1",
+    "experiment_id": os.environ["EXPERIMENT_ID"],
     "created_at_utc": datetime.now(timezone.utc).isoformat(),
     "family_selection": os.environ["FAMILY"], "families": families,
     "run_count": 4*len(families), "scale": "10M",

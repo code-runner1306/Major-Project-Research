@@ -16,7 +16,7 @@ param(
     [switch]$DryRun,
     [switch]$EvaluateOnly,
     [switch]$SmokeTest,
-    [string]$StudyConfig = "study_configs/granularity_init_study.json"
+    [string]$StudyConfig = "study_configs/granularity_corrected_pilot.json"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -40,9 +40,15 @@ try {
     $studyConfigPath = [System.IO.Path]::GetFullPath((Join-Path $repo $StudyConfig))
     if (-not (Test-Path -LiteralPath $studyConfigPath -PathType Leaf)) { throw "Study config not found: $studyConfigPath" }
     $study = Get-Content -LiteralPath $studyConfigPath -Raw | ConvertFrom-Json
+    # The corrected protocol (mqar-overwrite-v4, float32 state accumulation,
+    # authorization gate) is selected by the config, not by this script.
+    $protocolVersion = if ($study.runtime -and $study.runtime.protocol_version) { [string]$study.runtime.protocol_version } else { '' }
+    $corrected = ($protocolVersion -eq 'corrected-v1')
+    $accumulatorDtype = if ($study.runtime -and $study.runtime.state_accumulator_dtype) { [string]$study.runtime.state_accumulator_dtype } else { 'input' }
     if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
         $stepSuffix = if ($OptimizerSteps -eq 1000) { '' } else { "_steps$OptimizerSteps" }
-        $OutputRoot = "output/granularity_48h_exploratory_lr3e-3${stepSuffix}_$Family"
+        $rootPrefix = if ($corrected) { 'granularity_48h_corrected_lr3e-3' } else { 'granularity_48h_exploratory_lr3e-3' }
+        $OutputRoot = "output/${rootPrefix}${stepSuffix}_$Family"
         if ($SmokeTest) { $OutputRoot = "output/granularity_48h_launcher_smoke_$Family" }
     }
     $outputBase = [System.IO.Path]::GetFullPath((Join-Path $repo 'output'))
@@ -61,7 +67,7 @@ try {
     )
     $scale = '10M'; $stepBudget = $OptimizerSteps; $learningRate = 0.003
     $sourceBudget = $study.budgets.'10M'; $calibration = $study.calibration
-    $experimentId = 'granularity-init-48h-exploratory-lr3e-3-v1'; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+    $experimentId = if ($corrected) { 'granularity-corrected-48h-exploratory-lr3e-3-v1' } else { 'granularity-init-48h-exploratory-lr3e-3-v1' }; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
     if ($SmokeTest) { $scale = 'tiny'; $stepBudget = 2; $sourceBudget = $study.budgets.tiny; $learningRate = [double]$sourceBudget.learning_rate; $experimentId = 'granularity-init-48h-launcher-smoke-v1'; $Seeds = @(42) }
     $script:MasterLog = $null
 
@@ -84,8 +90,9 @@ try {
             evaluation_interval = if ($Steps -ge 100) { 100 } else { [Math]::Max(5, [int]($Steps / 2)) }; learning_rate = $learningRate
             calibration_min_half_life = [int]$calibration.min_half_life; calibration_max_half_life = [int]$calibration.max_half_life
             calibration_examples = [int]$calibration.examples; retrieval_config = $retrieval; run_mode = if ($SmokeTest) { 'smoke' } else { 'production' }; recurrence_backend = 'reference'
-            state_accumulator_dtype = 'input'; recurrence_chunk_size = 64; validation_answer_accuracy = $true; concurrent_training_runs = $Concurrency
+            state_accumulator_dtype = $accumulatorDtype; recurrence_chunk_size = 64; validation_answer_accuracy = $true; concurrent_training_runs = $Concurrency
         }
+        if ($corrected) { $task.protocol_version = $protocolVersion }
         if ($Steps -eq 1000 -and $TaskExperimentId -eq $experimentId) { $task.validation_at_steps = @(300, 650) }
         return [pscustomobject]$task
     }
@@ -209,6 +216,11 @@ try {
     }
     if ($DryRun) { if ($QualifyWorkers -gt 0) { for ($n = $QualifyWorkers; $n -ge 1; $n--) { Write-Host "  QUALIFY $n total workers; then evaluate the same tasks" } } else { Write-Host "PLAN: train all selected families and seeds before evaluating any family, bounded to $Workers total workers" }; return }
 
+    if ($corrected -and $QualifyWorkers -eq 0) {
+        # Corrected research compute needs recorded human approval (same gate as study_runner).
+        $authOutput = & $Python -c "import json,sys; from study_runner import require_compute_authorization; require_compute_authorization(json.load(open(sys.argv[1], encoding='utf-8-sig')), stage='48h-production')" $studyConfigPath 2>&1
+        if ($LASTEXITCODE -ne 0) { throw "Compute authorization check failed for ${StudyConfig}: $($authOutput -join ' ')" }
+    }
     New-Item -ItemType Directory -Force -Path (Join-Path $root 'logs'), (Join-Path $root 'task_configs') | Out-Null; $script:MasterLog = Join-Path $root ("logs\run_48h_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss')); New-Item -ItemType File -Force -Path $script:MasterLog | Out-Null
     $cudaCheck = & $Python -c "import sys,torch,torch.nn; print('Python:',sys.executable); print('PyTorch:',torch.__version__); print('CUDA available:',torch.cuda.is_available()); sys.exit(0 if torch.cuda.is_available() or $([int][bool]$SmokeTest) else 3)" 2>&1
     if ($LASTEXITCODE -ne 0) { throw "Python/PyTorch CUDA preflight failed: $($cudaCheck -join ' ')" }; Write-RunLog ($cudaCheck -join ' ')
