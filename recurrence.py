@@ -16,7 +16,7 @@ import torch
 
 RecurrenceBackend = Literal["reference", "cuda-fused"]
 StateAccumulatorDtype = Literal["input", "float32"]
-RECURRENCE_SEMANTIC_VERSION = "gdn-recurrence-v2-corrected-delta"
+RECURRENCE_SEMANTIC_VERSION = "gdn-recurrence-v3-key-axis-decay"
 
 
 class BackendUnavailableError(RuntimeError):
@@ -91,15 +91,15 @@ def reference_recurrence(
     """Canonical sequential update for normalized Q/K inputs.
 
     The state is stored value-by-key as ``[B,H,D,D]``. Scalar alpha
-    broadcasts as ``[B,H,1,1]``. The published gated delta update decays the
-    previous state before computing the residual:
+    broadcasts as ``[B,H,1,1]``; channel alpha is applied as ``[B,H,1,D]``
+    so each value-by-key column receives its own decay. The published gated
+    delta update decays the previous state before computing the residual:
 
     ``D = alpha * S; error = v - D @ k; S' = D + beta * error @ k.T``.
 
     The returned output follows the input dtype; the state follows the
-    explicitly configured accumulator dtype. Channel-wise key-axis decay is
-    qualified separately and must preserve this same decay-before-residual
-    contract.
+    explicitly configured accumulator dtype. Channel-wise alpha therefore
+    scales key columns rather than value rows before the residual is formed.
     """
 
     _validate_options(options)
@@ -118,7 +118,11 @@ def reference_recurrence(
         q_t = q_work[:, step].unsqueeze(-1)
         k_t = k_work[:, step].unsqueeze(-1)
         v_t = v_work[:, step].unsqueeze(-1)
-        alpha_t = alpha_work[:, step].unsqueeze(-1)
+        # State is value-by-key [B,H,value,key].  A per-channel alpha is a
+        # key-axis gate and must broadcast over the value rows.  Unsqueezing
+        # the penultimate axis yields [B,H,1,D], while scalar alpha remains
+        # [B,H,1,1].
+        alpha_t = alpha_work[:, step].unsqueeze(-2)
         beta_t = beta_work[:, step].unsqueeze(-1)
         decayed_state = alpha_t * state
         error = v_t - decayed_state.matmul(k_t)
