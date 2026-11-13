@@ -7,6 +7,7 @@ param(
     [string]$OutputRoot,
     [ValidateRange(1, 2147483647)]
     [int]$OptimizerSteps = 1000,
+    [int[]]$Seeds = @(42, 43, 44, 45, 46),
     [int]$Workers = 1,
     [int]$QualifyWorkers = 0,
     [int]$QualificationSteps = 20,
@@ -23,6 +24,7 @@ $repo = Split-Path -Parent $MyInvocation.MyCommand.Path
 Push-Location $repo
 try {
     if ($Workers -lt 1) { throw "Workers must be at least 1" }
+    if ($Seeds.Count -lt 1 -or @($Seeds | Select-Object -Unique).Count -ne $Seeds.Count -or @($Seeds | Where-Object { $_ -lt 0 }).Count -gt 0) { throw 'Seeds must be a non-empty list of unique non-negative integers' }
     if ($SmokeTest -and ($QualifyWorkers -gt 0 -or $EvaluateOnly -or $Workers -ne 1)) { throw 'SmokeTest requires one worker and cannot be combined with qualification or EvaluateOnly' }
     if ($SmokeTest) { $StudyConfig = 'study_configs/granularity_init_smoke.json' }
     if ($QualifyWorkers -lt 0) { throw "QualifyWorkers cannot be negative" }
@@ -57,10 +59,10 @@ try {
         [ordered]@{ id = 'C4-scalar-calibrated'; variant = 'scalar'; initialization = 'calibrated-geometric' },
         [ordered]@{ id = 'C6-channel-calibrated'; variant = 'channel-wise'; initialization = 'calibrated-geometric' }
     )
-    $scale = '10M'; $productionSeed = 42; $stepBudget = $OptimizerSteps; $learningRate = 0.003
+    $scale = '10M'; $stepBudget = $OptimizerSteps; $learningRate = 0.003
     $sourceBudget = $study.budgets.'10M'; $calibration = $study.calibration
     $experimentId = 'granularity-init-48h-exploratory-lr3e-3-v1'; $qualificationId = "granularity-init-worker-pilot-$Family-$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-    if ($SmokeTest) { $scale = 'tiny'; $stepBudget = 2; $sourceBudget = $study.budgets.tiny; $learningRate = [double]$sourceBudget.learning_rate; $experimentId = 'granularity-init-48h-launcher-smoke-v1' }
+    if ($SmokeTest) { $scale = 'tiny'; $stepBudget = 2; $sourceBudget = $study.budgets.tiny; $learningRate = [double]$sourceBudget.learning_rate; $experimentId = 'granularity-init-48h-launcher-smoke-v1'; $Seeds = @(42) }
     $script:MasterLog = $null
 
     function Write-RunLog([string]$Message) {
@@ -200,12 +202,12 @@ try {
 
     if ($SmokeTest) { Write-Host "Launcher CPU smoke: $(4 * $families.Count) tiny runs; family=$Family; steps=$stepBudget; evaluation examples=4"; Write-Host "Output root: $root" }
     elseif ($QualifyWorkers -gt 0) { Write-Host "Worker qualification: family=$Family; target=$QualifyWorkers; fallback=$($QualifyWorkers)..1"; Write-Host "Pilot root: $root" }
-    else { Write-Host "Exploratory production: $(4 * $families.Count) 10M runs; family=$Family; workers=$Workers; seed=$productionSeed; steps=$stepBudget; LR=$learningRate"; Write-Host "Output root: $root" }
+    else { Write-Host "Exploratory production: $((4 * $families.Count) * $Seeds.Count) 10M runs; family=$Family; workers=$Workers; seeds=$($Seeds -join ','); steps=$stepBudget; LR=$learningRate"; Write-Host "Output root: $root" }
     if (-not $SmokeTest) {
         Write-Host "Production optimizer-step budget: $stepBudget (exploratory setting, not a literature-derived convergence budget). Worker qualification uses $QualificationSteps steps per task."
         Write-Host 'Production evaluation uses 512 examples; the worker pilot uses 64 examples and short isolated tasks.'
     }
-    if ($DryRun) { if ($QualifyWorkers -gt 0) { for ($n = $QualifyWorkers; $n -ge 1; $n--) { Write-Host "  QUALIFY $n total workers; then evaluate the same tasks" } } else { Write-Host "PLAN: train all selected families before evaluating any family, bounded to $Workers total workers" }; return }
+    if ($DryRun) { if ($QualifyWorkers -gt 0) { for ($n = $QualifyWorkers; $n -ge 1; $n--) { Write-Host "  QUALIFY $n total workers; then evaluate the same tasks" } } else { Write-Host "PLAN: train all selected families and seeds before evaluating any family, bounded to $Workers total workers" }; return }
 
     New-Item -ItemType Directory -Force -Path (Join-Path $root 'logs'), (Join-Path $root 'task_configs') | Out-Null; $script:MasterLog = Join-Path $root ("logs\run_48h_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss')); New-Item -ItemType File -Force -Path $script:MasterLog | Out-Null
     $cudaCheck = & $Python -c "import sys,torch,torch.nn; print('Python:',sys.executable); print('PyTorch:',torch.__version__); print('CUDA available:',torch.cuda.is_available()); sys.exit(0 if torch.cuda.is_available() or $([int][bool]$SmokeTest) else 3)" 2>&1
@@ -237,13 +239,13 @@ try {
 
     $trainConfigs = @(); $evalConfigs = @()
     $examples = if ($SmokeTest) { 4 } else { 512 }
-    foreach ($condition in $conditions) { foreach ($taskFamily in $families) { $train = New-TaskSpec $taskFamily $condition $productionSeed $stepBudget $examples 'train' $root $experimentId $Workers; $evaluate = New-TaskSpec $taskFamily $condition $productionSeed $stepBudget $examples 'evaluate' $root $experimentId $Workers; $trainConfigs += Write-TaskConfig $train $root; $evalConfigs += Write-TaskConfig $evaluate $root } }
+    foreach ($seed in $Seeds) { foreach ($condition in $conditions) { foreach ($taskFamily in $families) { $train = New-TaskSpec $taskFamily $condition $seed $stepBudget $examples 'train' $root $experimentId $Workers; $evaluate = New-TaskSpec $taskFamily $condition $seed $stepBudget $examples 'evaluate' $root $experimentId $Workers; $trainConfigs += Write-TaskConfig $train $root; $evalConfigs += Write-TaskConfig $evaluate $root } } }
     if (-not $EvaluateOnly) {
         $pending = @(); foreach ($config in $trainConfigs) { $task = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json; if (Test-TaskComplete $task 'train' $config) { Write-RunLog "SKIP validated trained run: $($task.output_dir)"; continue }; if ((Test-Path -LiteralPath $task.output_dir -PathType Container) -and @(Get-ChildItem -LiteralPath $task.output_dir -Force).Count -gt 0) { throw "Refusing to overwrite partial/incompatible artifact: $($task.output_dir)" }; $pending += $config }
         $trainResult = Invoke-Phase 'train' $pending $Workers $root; if (-not $trainResult.Success) { throw 'Training failed; evaluation has not started. See per-task logs.' }
     }
     $pendingEval = @(); foreach ($config in $evalConfigs) { $task = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json; if (Test-TaskComplete $task 'evaluate' $config) { Write-RunLog "SKIP validated evaluation: $($task.output_dir)"; continue }; if (-not (Test-TaskComplete $task 'train' $config)) { throw "Evaluation requires a validated trained checkpoint: $($task.output_dir)" }; $pendingEval += $config }
     $evalResult = Invoke-Phase 'evaluate' $pendingEval $Workers $root; if (-not $evalResult.Success) { throw 'Evaluation failed. See per-task logs.' }
-    $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = 4 * $families.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seed = $productionSeed; max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = if ($SmokeTest) { 'CPU launcher smoke only; not research results or CUDA qualification.' } else { "One seed and $stepBudget steps per condition; exploratory comparison only." } }
+    $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = (4 * $families.Count) * $Seeds.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seeds = @($Seeds); max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = if ($SmokeTest) { 'CPU launcher smoke only; not research results or CUDA qualification.' } else { "$($Seeds.Count) paired seeds and $stepBudget steps per condition; exploratory comparison only." } }
     $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8; Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
 } finally { Pop-Location }
