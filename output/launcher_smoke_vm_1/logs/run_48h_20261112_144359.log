@@ -1,0 +1,114 @@
+﻿[2026-11-12T09:14:02Z] Python: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Scripts\python.exe PyTorch: 2.11.0+cu128 CUDA available: True
+[2026-11-12T09:14:05Z] QUEUED train mqar_tiny_C1-scalar-default_seed_42_train
+[2026-11-12T09:14:10Z] mqar_tiny_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/tiny/scalar/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:10Z] mqar_tiny_C1-scalar-default_seed_42_train [stdout] Validation progress [mqar/tiny/scalar/seed42]: step=2/2 loss=4.812353 perplexity=123.0208
+[2026-11-12T09:14:10Z] mqar_tiny_C1-scalar-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C1-scalar-default\\seed_42'}
+[2026-11-12T09:14:10Z] PROCESS EXIT train mqar_tiny_C1-scalar-default_seed_42_train pid=23560 code= elapsed=5.1s
+[2026-11-12T09:14:13Z] ARTIFACT CHECK train mqar_tiny_C1-scalar-default_seed_42_train: COMPLETE
+[2026-11-12T09:14:13Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C1-scalar-default_seed_42_train
+[2026-11-12T09:14:13Z] COMPLETED train mqar_tiny_C1-scalar-default_seed_42_train
+[2026-11-12T09:14:13Z] QUEUED train overwrite_tiny_C1-scalar-default_seed_42_train
+[2026-11-12T09:14:17Z] overwrite_tiny_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/tiny/scalar/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:17Z] overwrite_tiny_C1-scalar-default_seed_42_train [stdout] Validation progress [overwrite/tiny/scalar/seed42]: step=2/2 loss=4.913742 perplexity=136.1479
+[2026-11-12T09:14:17Z] overwrite_tiny_C1-scalar-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C1-scalar-default\\seed_42'}
+[2026-11-12T09:14:18Z] PROCESS EXIT train overwrite_tiny_C1-scalar-default_seed_42_train pid=19816 code= elapsed=5.3s
+[2026-11-12T09:14:21Z] ARTIFACT CHECK train overwrite_tiny_C1-scalar-default_seed_42_train: COMPLETE
+[2026-11-12T09:14:21Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C1-scalar-default_seed_42_train
+[2026-11-12T09:14:21Z] COMPLETED train overwrite_tiny_C1-scalar-default_seed_42_train
+[2026-11-12T09:14:21Z] QUEUED train mqar_tiny_C3-channel-default_seed_42_train
+[2026-11-12T09:14:25Z] mqar_tiny_C3-channel-default_seed_42_train [stdout] Training progress [mqar/tiny/channel-wise/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:25Z] mqar_tiny_C3-channel-default_seed_42_train [stdout] Validation progress [mqar/tiny/channel-wise/seed42]: step=2/2 loss=4.812281 perplexity=123.0120
+[2026-11-12T09:14:25Z] mqar_tiny_C3-channel-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C3-channel-default\\seed_42'}
+[2026-11-12T09:14:26Z] PROCESS EXIT train mqar_tiny_C3-channel-default_seed_42_train pid=5052 code= elapsed=5s
+[2026-11-12T09:14:29Z] ARTIFACT CHECK train mqar_tiny_C3-channel-default_seed_42_train: COMPLETE
+[2026-11-12T09:14:29Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C3-channel-default_seed_42_train
+[2026-11-12T09:14:29Z] COMPLETED train mqar_tiny_C3-channel-default_seed_42_train
+[2026-11-12T09:14:29Z] QUEUED train overwrite_tiny_C3-channel-default_seed_42_train
+[2026-11-12T09:14:34Z] overwrite_tiny_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/tiny/channel-wise/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:34Z] overwrite_tiny_C3-channel-default_seed_42_train [stdout] Validation progress [overwrite/tiny/channel-wise/seed42]: step=2/2 loss=4.913663 perplexity=136.1372
+[2026-11-12T09:14:34Z] overwrite_tiny_C3-channel-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C3-channel-default\\seed_42'}
+[2026-11-12T09:14:34Z] PROCESS EXIT train overwrite_tiny_C3-channel-default_seed_42_train pid=27736 code= elapsed=5s
+[2026-11-12T09:14:37Z] ARTIFACT CHECK train overwrite_tiny_C3-channel-default_seed_42_train: COMPLETE
+[2026-11-12T09:14:37Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C3-channel-default_seed_42_train
+[2026-11-12T09:14:37Z] COMPLETED train overwrite_tiny_C3-channel-default_seed_42_train
+[2026-11-12T09:14:37Z] QUEUED train mqar_tiny_C4-scalar-calibrated_seed_42_train
+[2026-11-12T09:14:41Z] mqar_tiny_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/tiny/scalar/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:41Z] mqar_tiny_C4-scalar-calibrated_seed_42_train [stdout] Validation progress [mqar/tiny/scalar/seed42]: step=2/2 loss=4.813100 perplexity=123.1127
+[2026-11-12T09:14:41Z] mqar_tiny_C4-scalar-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C4-scalar-calibrated\\seed_42'}
+[2026-11-12T09:14:42Z] PROCESS EXIT train mqar_tiny_C4-scalar-calibrated_seed_42_train pid=25632 code= elapsed=5.2s
+[2026-11-12T09:14:45Z] ARTIFACT CHECK train mqar_tiny_C4-scalar-calibrated_seed_42_train: COMPLETE
+[2026-11-12T09:14:45Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C4-scalar-calibrated_seed_42_train
+[2026-11-12T09:14:45Z] COMPLETED train mqar_tiny_C4-scalar-calibrated_seed_42_train
+[2026-11-12T09:14:45Z] QUEUED train overwrite_tiny_C4-scalar-calibrated_seed_42_train
+[2026-11-12T09:14:49Z] overwrite_tiny_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/tiny/scalar/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:49Z] overwrite_tiny_C4-scalar-calibrated_seed_42_train [stdout] Validation progress [overwrite/tiny/scalar/seed42]: step=2/2 loss=4.913614 perplexity=136.1305
+[2026-11-12T09:14:49Z] overwrite_tiny_C4-scalar-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C4-scalar-calibrated\\seed_42'}
+[2026-11-12T09:14:50Z] PROCESS EXIT train overwrite_tiny_C4-scalar-calibrated_seed_42_train pid=31260 code= elapsed=5.1s
+[2026-11-12T09:14:53Z] ARTIFACT CHECK train overwrite_tiny_C4-scalar-calibrated_seed_42_train: COMPLETE
+[2026-11-12T09:14:53Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C4-scalar-calibrated_seed_42_train
+[2026-11-12T09:14:53Z] COMPLETED train overwrite_tiny_C4-scalar-calibrated_seed_42_train
+[2026-11-12T09:14:53Z] QUEUED train mqar_tiny_C6-channel-calibrated_seed_42_train
+[2026-11-12T09:14:58Z] mqar_tiny_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/tiny/channel-wise/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:14:58Z] mqar_tiny_C6-channel-calibrated_seed_42_train [stdout] Validation progress [mqar/tiny/channel-wise/seed42]: step=2/2 loss=4.813100 perplexity=123.1127
+[2026-11-12T09:14:58Z] mqar_tiny_C6-channel-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C6-channel-calibrated\\seed_42'}
+[2026-11-12T09:14:58Z] PROCESS EXIT train mqar_tiny_C6-channel-calibrated_seed_42_train pid=18020 code= elapsed=5s
+[2026-11-12T09:15:02Z] ARTIFACT CHECK train mqar_tiny_C6-channel-calibrated_seed_42_train: COMPLETE
+[2026-11-12T09:15:02Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C6-channel-calibrated_seed_42_train
+[2026-11-12T09:15:02Z] COMPLETED train mqar_tiny_C6-channel-calibrated_seed_42_train
+[2026-11-12T09:15:02Z] QUEUED train overwrite_tiny_C6-channel-calibrated_seed_42_train
+[2026-11-12T09:15:07Z] overwrite_tiny_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/tiny/channel-wise/seed42]: 2/2 optimizer steps completed
+[2026-11-12T09:15:07Z] overwrite_tiny_C6-channel-calibrated_seed_42_train [stdout] Validation progress [overwrite/tiny/channel-wise/seed42]: step=2/2 loss=4.913614 perplexity=136.1305
+[2026-11-12T09:15:07Z] overwrite_tiny_C6-channel-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C6-channel-calibrated\\seed_42'}
+[2026-11-12T09:15:07Z] PROCESS EXIT train overwrite_tiny_C6-channel-calibrated_seed_42_train pid=20756 code= elapsed=5s
+[2026-11-12T09:15:09Z] ARTIFACT CHECK train overwrite_tiny_C6-channel-calibrated_seed_42_train: COMPLETE
+[2026-11-12T09:15:09Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C6-channel-calibrated_seed_42_train
+[2026-11-12T09:15:09Z] COMPLETED train overwrite_tiny_C6-channel-calibrated_seed_42_train
+[2026-11-12T09:15:53Z] QUEUED evaluate mqar_tiny_C1-scalar-default_seed_42_evaluate
+[2026-11-12T09:15:56Z] mqar_tiny_C1-scalar-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C1-scalar-default\\seed_42'}
+[2026-11-12T09:15:57Z] PROCESS EXIT evaluate mqar_tiny_C1-scalar-default_seed_42_evaluate pid=16952 code= elapsed=4.1s
+[2026-11-12T09:16:00Z] ARTIFACT CHECK evaluate mqar_tiny_C1-scalar-default_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:00Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C1-scalar-default_seed_42_evaluate
+[2026-11-12T09:16:00Z] COMPLETED evaluate mqar_tiny_C1-scalar-default_seed_42_evaluate
+[2026-11-12T09:16:00Z] QUEUED evaluate overwrite_tiny_C1-scalar-default_seed_42_evaluate
+[2026-11-12T09:16:03Z] overwrite_tiny_C1-scalar-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C1-scalar-default\\seed_42'}
+[2026-11-12T09:16:03Z] PROCESS EXIT evaluate overwrite_tiny_C1-scalar-default_seed_42_evaluate pid=29988 code= elapsed=3s
+[2026-11-12T09:16:06Z] ARTIFACT CHECK evaluate overwrite_tiny_C1-scalar-default_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:06Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C1-scalar-default_seed_42_evaluate
+[2026-11-12T09:16:06Z] COMPLETED evaluate overwrite_tiny_C1-scalar-default_seed_42_evaluate
+[2026-11-12T09:16:06Z] QUEUED evaluate mqar_tiny_C3-channel-default_seed_42_evaluate
+[2026-11-12T09:16:09Z] mqar_tiny_C3-channel-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C3-channel-default\\seed_42'}
+[2026-11-12T09:16:09Z] PROCESS EXIT evaluate mqar_tiny_C3-channel-default_seed_42_evaluate pid=18332 code= elapsed=3s
+[2026-11-12T09:16:11Z] ARTIFACT CHECK evaluate mqar_tiny_C3-channel-default_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:11Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C3-channel-default_seed_42_evaluate
+[2026-11-12T09:16:11Z] COMPLETED evaluate mqar_tiny_C3-channel-default_seed_42_evaluate
+[2026-11-12T09:16:11Z] QUEUED evaluate overwrite_tiny_C3-channel-default_seed_42_evaluate
+[2026-11-12T09:16:18Z] overwrite_tiny_C3-channel-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C3-channel-default\\seed_42'}
+[2026-11-12T09:16:18Z] PROCESS EXIT evaluate overwrite_tiny_C3-channel-default_seed_42_evaluate pid=30304 code= elapsed=6.8s
+[2026-11-12T09:16:21Z] ARTIFACT CHECK evaluate overwrite_tiny_C3-channel-default_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:21Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C3-channel-default_seed_42_evaluate
+[2026-11-12T09:16:21Z] COMPLETED evaluate overwrite_tiny_C3-channel-default_seed_42_evaluate
+[2026-11-12T09:16:21Z] QUEUED evaluate mqar_tiny_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-12T09:16:24Z] mqar_tiny_C4-scalar-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C4-scalar-calibrated\\seed_42'}
+[2026-11-12T09:16:24Z] PROCESS EXIT evaluate mqar_tiny_C4-scalar-calibrated_seed_42_evaluate pid=30820 code= elapsed=3s
+[2026-11-12T09:16:26Z] ARTIFACT CHECK evaluate mqar_tiny_C4-scalar-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:26Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-12T09:16:26Z] COMPLETED evaluate mqar_tiny_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-12T09:16:26Z] QUEUED evaluate overwrite_tiny_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-12T09:16:29Z] overwrite_tiny_C4-scalar-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C4-scalar-calibrated\\seed_42'}
+[2026-11-12T09:16:29Z] PROCESS EXIT evaluate overwrite_tiny_C4-scalar-calibrated_seed_42_evaluate pid=16096 code= elapsed=3s
+[2026-11-12T09:16:32Z] ARTIFACT CHECK evaluate overwrite_tiny_C4-scalar-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:32Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-12T09:16:32Z] COMPLETED evaluate overwrite_tiny_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-12T09:16:32Z] QUEUED evaluate mqar_tiny_C6-channel-calibrated_seed_42_evaluate
+[2026-11-12T09:16:35Z] mqar_tiny_C6-channel-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C6-channel-calibrated\\seed_42'}
+[2026-11-12T09:16:36Z] PROCESS EXIT evaluate mqar_tiny_C6-channel-calibrated_seed_42_evaluate pid=18328 code= elapsed=4.1s
+[2026-11-12T09:16:39Z] ARTIFACT CHECK evaluate mqar_tiny_C6-channel-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:39Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_tiny_C6-channel-calibrated_seed_42_evaluate
+[2026-11-12T09:16:39Z] COMPLETED evaluate mqar_tiny_C6-channel-calibrated_seed_42_evaluate
+[2026-11-12T09:16:39Z] QUEUED evaluate overwrite_tiny_C6-channel-calibrated_seed_42_evaluate
+[2026-11-12T09:16:42Z] overwrite_tiny_C6-channel-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C6-channel-calibrated\\seed_42'}
+[2026-11-12T09:16:42Z] PROCESS EXIT evaluate overwrite_tiny_C6-channel-calibrated_seed_42_evaluate pid=30228 code= elapsed=3s
+[2026-11-12T09:16:45Z] ARTIFACT CHECK evaluate overwrite_tiny_C6-channel-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-12T09:16:45Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_tiny_C6-channel-calibrated_seed_42_evaluate
+[2026-11-12T09:16:45Z] COMPLETED evaluate overwrite_tiny_C6-channel-calibrated_seed_42_evaluate
+[2026-11-12T09:16:45Z] All requested training and evaluation tasks completed. Summary: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\output\launcher_smoke_vm_1\run_summary.json

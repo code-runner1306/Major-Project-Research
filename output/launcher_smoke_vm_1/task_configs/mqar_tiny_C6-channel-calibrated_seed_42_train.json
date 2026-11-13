@@ -1,0 +1,46 @@
+﻿{
+    "operation":  "train",
+    "experiment_id":  "granularity-init-48h-launcher-smoke-v1",
+    "condition_id":  "C6-channel-calibrated",
+    "family":  "mqar",
+    "scale":  "tiny",
+    "variant":  "channel-wise",
+    "initialization":  "calibrated-geometric",
+    "seed":  42,
+    "output_dir":  "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C6-channel-calibrated\\seed_42",
+    "max_optimizer_steps":  2,
+    "batch_size":  2,
+    "grad_accum_steps":  1,
+    "context_length":  64,
+    "validation_steps":  4,
+    "evaluation_interval":  5,
+    "learning_rate":  0.0006,
+    "calibration_min_half_life":  4,
+    "calibration_max_half_life":  16,
+    "calibration_examples":  4,
+    "retrieval_config":  {
+                             "generator_version":  "mqar-overwrite-v3",
+                             "train_examples":  8,
+                             "validation_examples":  4,
+                             "held_out_examples":  4,
+                             "sequence_lengths":  [
+                                                      32
+                                                  ],
+                             "key_counts":  [
+                                                2
+                                            ],
+                             "query_distances":  [
+                                                     1
+                                                 ],
+                             "overwrite_counts":  [
+                                                      1
+                                                  ],
+                             "vocabulary_size":  128
+                         },
+    "run_mode":  "smoke",
+    "recurrence_backend":  "reference",
+    "state_accumulator_dtype":  "input",
+    "recurrence_chunk_size":  64,
+    "validation_answer_accuracy":  true,
+    "concurrent_training_runs":  1
+}

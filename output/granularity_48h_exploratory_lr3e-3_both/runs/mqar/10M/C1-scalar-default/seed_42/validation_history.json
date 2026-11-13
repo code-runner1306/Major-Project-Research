@@ -1,0 +1,102 @@
+[
+  {
+    "answer_accuracy": 0.0,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.628571406006813,
+    "perplexity": 5589.08837890625,
+    "qualification_scope": null,
+    "step": 100,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.00020955574182732607,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.416141271591187,
+    "perplexity": 4519.431640625,
+    "qualification_scope": null,
+    "step": 200,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.0006286672254819782,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.363607451319695,
+    "perplexity": 4288.1357421875,
+    "qualification_scope": null,
+    "step": 300,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.0,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.34914354979992,
+    "perplexity": 4226.56103515625,
+    "qualification_scope": null,
+    "step": 400,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.00020955574182732607,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.338555589318275,
+    "perplexity": 4182.0439453125,
+    "qualification_scope": null,
+    "step": 500,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.00041911148365465214,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.33259479701519,
+    "perplexity": 4157.19091796875,
+    "qualification_scope": null,
+    "step": 600,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.00041911148365465214,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.331285178661346,
+    "perplexity": 4151.7509765625,
+    "qualification_scope": null,
+    "step": 700,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.00020955574182732607,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.328811913728714,
+    "perplexity": 4141.4931640625,
+    "qualification_scope": null,
+    "step": 800,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.0,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.32697680592537,
+    "perplexity": 4133.90087890625,
+    "qualification_scope": null,
+    "step": 900,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.0,
+    "answer_examples": 512,
+    "answer_validation_seed": 200042,
+    "loss": 8.326307818293571,
+    "perplexity": 4131.13818359375,
+    "qualification_scope": null,
+    "step": 1000,
+    "steps": 64
+  }
+]

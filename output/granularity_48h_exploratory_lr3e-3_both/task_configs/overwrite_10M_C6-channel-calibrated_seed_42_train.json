@@ -1,0 +1,52 @@
+﻿{
+    "operation":  "train",
+    "experiment_id":  "granularity-init-48h-exploratory-lr3e-3-v1",
+    "condition_id":  "C6-channel-calibrated",
+    "family":  "overwrite",
+    "scale":  "10M",
+    "variant":  "channel-wise",
+    "initialization":  "calibrated-geometric",
+    "seed":  42,
+    "output_dir":  "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_48h_exploratory_lr3e-3_both\\runs\\overwrite\\10M\\C6-channel-calibrated\\seed_42",
+    "max_optimizer_steps":  1000,
+    "batch_size":  8,
+    "grad_accum_steps":  4,
+    "context_length":  512,
+    "validation_steps":  100,
+    "evaluation_interval":  100,
+    "learning_rate":  0.003,
+    "calibration_min_half_life":  16,
+    "calibration_max_half_life":  128,
+    "calibration_examples":  256,
+    "retrieval_config":  {
+                             "generator_version":  "mqar-overwrite-v3",
+                             "train_examples":  50000,
+                             "validation_examples":  512,
+                             "held_out_examples":  512,
+                             "sequence_lengths":  [
+                                                      128,
+                                                      256,
+                                                      512
+                                                  ],
+                             "key_counts":  [
+                                                4,
+                                                8,
+                                                16
+                                            ],
+                             "query_distances":  [
+                                                     8,
+                                                     16,
+                                                     32
+                                                 ],
+                             "overwrite_counts":  [
+                                                      1,
+                                                      2
+                                                  ]
+                         },
+    "run_mode":  "production",
+    "recurrence_backend":  "reference",
+    "state_accumulator_dtype":  "input",
+    "recurrence_chunk_size":  64,
+    "validation_answer_accuracy":  true,
+    "concurrent_training_runs":  1
+}

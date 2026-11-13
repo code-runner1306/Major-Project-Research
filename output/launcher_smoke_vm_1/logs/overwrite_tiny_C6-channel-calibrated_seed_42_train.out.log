@@ -1,0 +1,3 @@
+Training progress [overwrite/tiny/channel-wise/seed42]: 2/2 optimizer steps completed
+Validation progress [overwrite/tiny/channel-wise/seed42]: step=2/2 loss=4.913614 perplexity=136.1305
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\overwrite\\tiny\\C6-channel-calibrated\\seed_42'}

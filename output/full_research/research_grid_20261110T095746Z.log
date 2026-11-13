@@ -21,3 +21,47 @@ SerializationVersion: 1.1.0.1
 [2026-11-10T09:57:49Z] Skipping run with completed training artifacts; will evaluate after training stage: dataset=tinystories model=30M variant=scalar seed=42
 [2026-11-10T09:57:49Z] Training task dataset=tinystories model=30M variant=scalar seed=43
 [2026-11-10T09:57:49Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 43 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-10T13:53:08Z] Training task dataset=tinystories model=30M variant=channel-wise seed=43
+[2026-11-10T13:53:08Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 43 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-10T17:51:42Z] Training task dataset=tinystories model=30M variant=scalar seed=44
+[2026-11-10T17:51:42Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 44 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-10T21:48:30Z] Training task dataset=tinystories model=30M variant=channel-wise seed=44
+[2026-11-10T21:48:30Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 44 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-11T01:41:47Z] Training task dataset=tinystories model=30M variant=scalar seed=45
+[2026-11-11T01:41:47Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 45 --variant scalar --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+
+[2026-11-11T05:31:17Z] Training task dataset=tinystories model=30M variant=channel-wise seed=45
+[2026-11-11T05:31:17Z] +run_all.py --mode production --recurrence-backend reference --family tinystories --models 30M --seeds 45 --variant channel-wise --max-optimizer-steps 1000 --output output/full_research --concurrent-training-runs 1 --train-only --skip-report
+        stop_after_trained=stop_after_trained, evaluate_only=evaluate_only,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ))
+    ^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\orchestration.py", line
+ 411, in run_seed
+    training = train_fixed_budget(
+        model=model, train_dataloader=train_data, validation_dataloader=validation_da
+ta,
+        profile=profile, device=device, run_dir=str(run_dir), energy_provider=energy_
+provider,
+        progress_label=f"{family}/{scale}/{variant}/seed{seed}",
+    )
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\train.py", line 137, in
+ train_fixed_budget
+    with torch.amp.autocast("cuda", enabled=device.type == "cuda"):
+         ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\.venv\Lib\site-packages
+\torch\amp\autocast_mode.py", line 355, in __exit__
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any):  # type: ignore[ove
+rride]
+
+KeyboardInterrupt
+PS>TerminatingError(): "The pipeline has been stopped."
+>> TerminatingError(): "The pipeline has been stopped."
+**********************
+Windows PowerShell transcript end
+End time: 20261111111305
+**********************

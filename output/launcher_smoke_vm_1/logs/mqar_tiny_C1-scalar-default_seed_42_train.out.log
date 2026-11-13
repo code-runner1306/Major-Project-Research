@@ -1,0 +1,3 @@
+Training progress [mqar/tiny/scalar/seed42]: 2/2 optimizer steps completed
+Validation progress [mqar/tiny/scalar/seed42]: step=2/2 loss=4.812353 perplexity=123.0208
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\launcher_smoke_vm_1\\runs\\mqar\\tiny\\C1-scalar-default\\seed_42'}

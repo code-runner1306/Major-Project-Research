@@ -1,0 +1,168 @@
+{
+  "budget": {
+    "batch_size": 8,
+    "concurrent_training_runs": 1,
+    "context_length": 512,
+    "grad_accum_steps": 4,
+    "max_optimizer_steps": 1000,
+    "status": "study_locked_budget"
+  },
+  "data_identity": {
+    "generator_version": "mqar-overwrite-v3",
+    "held_out_hash": "1aeca4d1977703611c92690d1f5bec2fd172879914ae860284dc6e6ca5e3613c",
+    "paired_order": "indexed_seeded_order",
+    "test_seed": 200043,
+    "train_hash": "07e6a8c57bc9067d56d52f245bcb6714244d78f5c8df991b12ed4beb8408a2cb",
+    "validation_hash": "f707f42792f5d53a3ea041c238636f2ed61c0792d4c93c891a06afacf2965329",
+    "validation_seed": 200042
+  },
+  "environment": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "python": "3.13.14",
+    "torch": "2.11.0+cu128"
+  },
+  "evaluation_protocol": {
+    "benchmark_generated_tokens": 256,
+    "benchmark_prompt_lengths": [
+      64,
+      256,
+      512
+    ],
+    "benchmark_repeats": 5,
+    "benchmark_warmup": 2,
+    "cache_benchmarks": true,
+    "energy": true,
+    "equivalence_generated_tokens": 256,
+    "equivalence_prompt_length": 64,
+    "gate_diagnostics": true,
+    "natural_language_retrieval": null,
+    "posthoc_gate_eval_examples": 512,
+    "posthoc_gate_group_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "posthoc_gate_grouping": true,
+    "resource_capture_version": 1,
+    "resource_sample_interval_seconds": 1.0,
+    "retrieval_version": "mqar-overwrite-v3",
+    "version": 2
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "mqar",
+  "fingerprint": "d4e9c700a70690e020051144a2a529adfb23952b0a2dfc9a7e59e50990c52a72",
+  "model": {
+    "alpha_bias_enabled": true,
+    "attention_layout": "pure_gdn",
+    "control_strategy": "same_backbone",
+    "d_ff": [
+      426,
+      426,
+      426,
+      426,
+      426,
+      426
+    ],
+    "d_head": 40,
+    "d_model": 160,
+    "gate_parameter_overhead": 24,
+    "n_head": 4,
+    "n_layer": 6,
+    "name": "10M",
+    "parameter_components": {
+      "convolutions": 14400,
+      "embeddings": 1310720,
+      "ffns": 1226880,
+      "gates": 161304,
+      "norms": 160,
+      "other": 1920,
+      "output_head": 0,
+      "projections": 614400,
+      "tied_output_head": 0,
+      "total": 3329784
+    },
+    "parameter_count": 3329784,
+    "per_layer_ffn_widths": [
+      426,
+      426,
+      426,
+      426,
+      426,
+      426
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "decode_backend_version": "decode-v1-fused-stub",
+      "extension_build_identity": "sha256:8dee73b3b9d26426eb9ed8eec45c04d1edfc55b0856745ede2df89cdd77668c6",
+      "extension_semantic_version": "gdn-cuda-v0-scaffold",
+      "implementation_source_hash": "24f5a1f82b55560af7f02b4ebca034a6803d7ba9fac735557e68fa0a33418fcc",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ],
+      "target_architecture": "sm_70"
+    },
+    "study_init_seed": 42,
+    "study_task": {
+      "budget": {
+        "batch_size": 8,
+        "context_length": 512,
+        "evaluation_interval": 100,
+        "grad_accum_steps": 4,
+        "max_optimizer_steps": 1000,
+        "validation_at_steps": [
+          300,
+          650
+        ],
+        "validation_steps": 100
+      },
+      "calibration_examples": 256,
+      "condition_id": "C1-scalar-default",
+      "experiment_id": "granularity-init-48h-exploratory-lr3e-3-v1",
+      "family": "mqar",
+      "initialization": "default",
+      "learning_rate": 0.003,
+      "scale": "10M",
+      "seed": 42,
+      "variant": "scalar"
+    },
+    "variant": "scalar"
+  },
+  "run_mode": "production",
+  "scale": "10M",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 100042,
+    "evaluation_seed": 200042,
+    "model_seed": 42,
+    "research_seed": 42
+  },
+  "source": {
+    "dirty": true,
+    "revision": "ebe9df7371d91254ed8d8a914ac7b4d0e6a24621"
+  },
+  "variant": "scalar"
+}

@@ -1,0 +1,157 @@
+{
+  "budget": {
+    "batch_size": 2,
+    "concurrent_training_runs": 1,
+    "context_length": 64,
+    "grad_accum_steps": 1,
+    "max_optimizer_steps": 2,
+    "status": "study_locked_budget"
+  },
+  "data_identity": {
+    "generator_version": "mqar-overwrite-v3",
+    "held_out_hash": "697c5b5e98c7497d2f0178ee7b6d79cb21997bd16c72681091ae4e627f4dfc96",
+    "paired_order": "indexed_seeded_order",
+    "test_seed": 200043,
+    "train_hash": "48fc5c2801c50e625c4de57721e9f50c66e79ba03c05369e0cb470f635ea8392",
+    "validation_hash": "2b71508ddf0f3276e980fe409773d1c931368467e0020dc6c3a0160c7db3d598",
+    "validation_seed": 200042
+  },
+  "environment": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "python": "3.13.14",
+    "torch": "2.11.0+cu128"
+  },
+  "evaluation_protocol": {
+    "benchmark_generated_tokens": 2,
+    "benchmark_prompt_lengths": [
+      4,
+      8
+    ],
+    "benchmark_repeats": 1,
+    "benchmark_warmup": 1,
+    "cache_benchmarks": true,
+    "energy": true,
+    "equivalence_generated_tokens": 2,
+    "equivalence_prompt_length": 8,
+    "gate_diagnostics": true,
+    "natural_language_retrieval": null,
+    "posthoc_gate_eval_examples": 512,
+    "posthoc_gate_group_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "posthoc_gate_grouping": false,
+    "resource_capture_version": 1,
+    "resource_sample_interval_seconds": 1.0,
+    "retrieval_version": "mqar-overwrite-v3",
+    "version": 2
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "overwrite",
+  "fingerprint": "968ef6a7f7c7e413a89d34f5e758f89ba59e4e94501fd0f02aeccc28d6870beb",
+  "model": {
+    "alpha_bias_enabled": true,
+    "attention_layout": "pure_gdn",
+    "control_strategy": "same_backbone",
+    "d_ff": [
+      64,
+      64,
+      64
+    ],
+    "d_head": 8,
+    "d_model": 32,
+    "gate_parameter_overhead": 2784,
+    "n_head": 4,
+    "n_layer": 3,
+    "name": "tiny",
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 6624,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 43104
+    },
+    "parameter_count": 43104,
+    "per_layer_ffn_widths": [
+      64,
+      64,
+      64
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "decode_backend_version": "decode-v1-fused-stub",
+      "extension_build_identity": "sha256:8dee73b3b9d26426eb9ed8eec45c04d1edfc55b0856745ede2df89cdd77668c6",
+      "extension_semantic_version": "gdn-cuda-v0-scaffold",
+      "implementation_source_hash": "24f5a1f82b55560af7f02b4ebca034a6803d7ba9fac735557e68fa0a33418fcc",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v1",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ],
+      "target_architecture": "sm_70"
+    },
+    "study_init_seed": 42,
+    "study_task": {
+      "budget": {
+        "batch_size": 2,
+        "context_length": 64,
+        "evaluation_interval": 5,
+        "grad_accum_steps": 1,
+        "max_optimizer_steps": 2,
+        "validation_steps": 4
+      },
+      "calibration_examples": 4,
+      "condition_id": "C3-channel-default",
+      "experiment_id": "granularity-init-48h-launcher-smoke-v1",
+      "family": "overwrite",
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "scale": "tiny",
+      "seed": 42,
+      "variant": "channel-wise"
+    },
+    "variant": "channel-wise"
+  },
+  "run_mode": "smoke",
+  "scale": "tiny",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 100042,
+    "evaluation_seed": 200042,
+    "model_seed": 42,
+    "research_seed": 42
+  },
+  "source": {
+    "dirty": true,
+    "revision": "ebe9df7371d91254ed8d8a914ac7b4d0e6a24621"
+  },
+  "variant": "channel-wise"
+}

@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 380, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 247, in main
+    result = _run_study_task(args.study_task_config)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 151, in _run_study_task
+    return run_seed(profile, family=family, scale=scale, variant=variant, seed=int(task["seed"]), stop_after_trained=True)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\orchestration.py", line 577, in run_seed
+    training = train_fixed_budget(
+        model=model, train_dataloader=train_data, validation_dataloader=validation_data,
+    ...<3 lines>...
+        curriculum_loaders=curriculum_loaders,
+    )
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\train.py", line 170, in train_fixed_budget
+    raise FloatingPointError(f"Non-finite gradient norm at optimizer step {step}")
+FloatingPointError: Non-finite gradient norm at optimizer step 61
