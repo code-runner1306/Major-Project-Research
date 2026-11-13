@@ -63,13 +63,13 @@ def gate_capacity_delta(model_config: ModelConfig, variant: str, *, gate_groups:
         return 0
     if variant not in {"scalar", "grouped-4", "channel-wise"}:
         raise ValueError(f"Unknown variant {variant!r}")
-    gates_per_head = 1 if variant == "scalar" else (
-        gate_groups if variant == "grouped-4" else model_config.d_head
-    )
     if variant == "grouped-4":
         gate_groups = 4 if gate_groups is None else gate_groups
         if gate_groups < 1 or model_config.d_head % gate_groups:
             raise ValueError("grouped gate count must divide the head dimension")
+    gates_per_head = 1 if variant == "scalar" else (
+        gate_groups if variant == "grouped-4" else model_config.d_head
+    )
     extra_alpha_rows = gdn_layer_count(model_config) * model_config.d_model * model_config.n_head * (gates_per_head - 1)
     bias_rows = (
         gdn_layer_count(model_config) * model_config.n_head * gates_per_head
