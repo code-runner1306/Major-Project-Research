@@ -8,6 +8,11 @@ not pooled with the corrected pilot. The executable follow-up is the
 authorization-gated `study_configs/granularity_corrected_pilot.json`, which
 uses the corrected recurrence identity and `mqar-overwrite-v4` task identity.
 
+The older multi-scale and multi-seed expansion described below is a
+prospective option, not an active launch instruction. It remains blocked until
+the corrected pilot has a valid protocol lock, measured cost, and an explicit
+go/no-go decision.
+
 The revised research question is: **when initial memory timescales are controlled, how much independent decay control is useful, and does its value differ between association retention and overwrite recall?** The core comparison is a six-condition granularity-by-initialization design at 10M parameters: scalar, grouped-4, and channel-wise gates under default and calibrated geometric timescale initialization. A targeted four-condition scalar/channel-wise confirmation runs at 30M. TinyStories, MQAR, and overwrite recall remain the three task families. The main result is the change in the scalar-versus-channel-wise gap between default and calibrated initialization; grouped-4 locates an intermediate granularity.
 
 Initialization is a central factor because recent work reports that initial gate parameters and input activations shape realized retention, and proposes calibrating both across heads and layers ([Feng et al., “DAMI: Dual-Axis Memory Initialization for Enhanced Long-Context Retrieval in Gated Linear Attention”](https://arxiv.org/abs/2610.41994)). This project studies calibrated head timescales while holding its other model and training choices fixed; it does not claim DAMI's initialization contribution as new.

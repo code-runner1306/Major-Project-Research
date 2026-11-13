@@ -10,6 +10,18 @@ Use 10M as the main experimental scale. Use 30M for confirmation of the central 
 
 This document is an implementation plan. The new grouped training and initialization options do not yet exist in the current CLI. The PowerShell launcher described below is a deliverable of implementation, rather than a command that can already run the new experiments.
 
+## Operational status after the methodology repair
+
+The matrix and commands below describe the superseded pre-repair plan. They
+must not be used to launch the old 126-run expansion or to continue
+`granularity_exp_1`. The completed exploratory run is archived legacy evidence.
+The executable corrected scope is one fresh 10M seed-42 paired pilot using
+`study_configs/granularity_corrected_pilot.json`, `mqar-overwrite-v4`, and a
+new output root. Its runner requires explicit compute authorization after the
+qualification and timing gates are reviewed. Further seeds, grouped-4, other
+datasets, and larger scales require a new prospective budget and go/no-go
+decision.
+
 ## 2. Shared experimental rules
 
 - Primary seeds: 42, 43, 44, 45, 46, paired across conditions.

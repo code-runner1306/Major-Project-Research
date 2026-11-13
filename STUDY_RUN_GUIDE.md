@@ -1,14 +1,20 @@
 # Running the granularity and initialization study
 
-The current study protocol and task matrix live in [`RESEARCH_IMPLEMENTATION_PLAN.md`](RESEARCH_IMPLEMENTATION_PLAN.md) and [`study_configs/granularity_init_study.json`](study_configs/granularity_init_study.json). The launcher writes to `output/granularity_init_study` by default, keeping the historical `output/full_research` runs separate.
+The corrected pilot protocol lives in [`study_configs/granularity_corrected_pilot.json`](study_configs/granularity_corrected_pilot.json) and writes to a fresh root such as `output/granularity_corrected_pilot_v1`. The older [`study_configs/granularity_init_study.json`](study_configs/granularity_init_study.json) and `output/granularity_exp_1` artifacts remain archived historical material.
 
 ## Commands
 
-### Two-day exploratory subset
+### Archived two-day exploratory subset
 
-The PowerShell launcher defaults to paired seeds 42 through 46. To extend the
-completed seed-42 experiment, keep `-OutputRoot output\granularity_exp_1`;
-validated seed-42 tasks are skipped and only missing seeds are run.
+Everything in this subsection is retained only for inspecting or reproducing
+the legacy custom-method run. Do not extend `output\granularity_exp_1` or use
+these commands to authorize corrected research. Corrected work uses the fresh,
+authorization-gated `study_configs/granularity_corrected_pilot.json` and a new
+output root below.
+
+The PowerShell launcher historically defaulted to paired seeds 42 through 46.
+That continuation path is closed for research purposes; preserve
+`output\granularity_exp_1` as exploratory evidence and do not add seeds there.
 
 For a two-worker CPU plumbing smoke, use `-Family both -SmokeTest -Workers 2`
 with a fresh output folder. To check two workers on the VM's actual GPU and
@@ -28,9 +34,10 @@ checks capacity and execution, not long-run stability or a guaranteed speedup.
 Use a new qualification root for each attempt. A longer pilot can be requested
 with `-QualificationSteps 100`.
 
-If the report qualifies two workers, continue the experiment with:
+If the report qualifies two workers, the historical continuation command was:
 
 ```powershell
+# Historical command only; do not run for the corrected pilot.
 powershell.exe .\run_48h_exploratory_study.ps1 -Family both -Workers 2 -QualificationReport output\workers2_pilot_1\qualification_report.json -OutputRoot output\granularity_exp_1 -Python .\venv\Scripts\python.exe
 ```
 
@@ -148,6 +155,15 @@ strata, and same-checkpoint gate-sharing interventions before making a decision.
 Further seeds, grouped gates, language modeling, and larger scales require a
 new prospective decision and a new budget estimate.
 
+Inspect the corrected plan without starting work with:
+
+```powershell
+.\run_granularity_init_study.ps1 -StudyConfig study_configs\granularity_corrected_pilot.json -OutputRoot output\granularity_corrected_pilot_v1 -DryRun
+```
+
+After the recorded authorization and protocol gates pass, use that same config
+and fresh root for execution. Do not substitute `granularity_exp_1`.
+
 The pilot budget must include training, calibration, periodic and final
 validation, held-out evaluation, isolated inference benchmarking, and a failure
 allowance. The resulting report must state `go`, `no-go`, or `revisit` and keep
@@ -155,10 +171,14 @@ legacy seed-42 results labeled as exploratory custom-method evidence.
 
 ## Synthetic data and query distances
 
-The new study selects `mqar-overwrite-v3`; legacy profiles keep `mqar-overwrite-v2` unless they explicitly select another version. V3 uses strict difficulty settings and rejects infeasible length, key, distance, or rewrite combinations instead of clamping them.
+The corrected pilot selects `mqar-overwrite-v4`; legacy profiles keep
+`mqar-overwrite-v2` or `mqar-overwrite-v3` only when explicitly labeled as
+historical. V4 uses corrected keyed tasks, rejects infeasible length/key/
+distance/rewrite combinations, and cannot resume legacy artifacts.
 
 The configured `query_distances` value is an anchor. For MQAR it is the token-position gap from the anchor key's latest value to the first query marker. The generator answers every key in a randomized query order; each answer records its own query marker position, latest relevant value position, and measured distance. Later answers can have different distances, so report accuracy using the per-answer distance buckets and the joint key-count-by-distance table. For overwrite, the configured distance anchors the latest-value query; the example also asks for an unrelated association, whose measured distance is recorded separately. For distances of at least three tokens, an unrelated write follows the latest target write before the anchor query, so the target cannot be answered by copying the globally newest value.
 
 For the current V3 layout, the minimum sequence length is `5 * key_count + query_distance - 1` for MQAR. For overwrite with more than one key and distance at least three, it is `2 * (key_count + overwrite_count) + query_distance + 3`. The shipped difficulty grid fits within its shortest 128-token sequence. Recheck feasibility before changing the grid; the generator reports any impossible combination.
 
-V2 and V3 runs have different generator identities and answer structures. Keep them labeled separately when comparing historical results with the new study.
+V2, V3, and V4 runs have different generator identities and answer structures.
+Keep V2/V3 historical results separate from the corrected V4 pilot.
