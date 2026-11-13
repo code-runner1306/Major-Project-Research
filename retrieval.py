@@ -17,6 +17,7 @@ from model import GatedDeltaNetLM
 
 GENERATOR_VERSION = "mqar-overwrite-v2"
 AUDITED_GENERATOR_VERSION = "mqar-overwrite-v3"
+CORRECTED_OVERWRITE_GENERATOR_VERSION = "overwrite-keyed-v4"
 QUERY_MARKER = 0
 FILLER_TOKEN = 1
 
@@ -53,7 +54,9 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         self.task, self.examples, self.config, self.seed, self.split = task, examples, config, seed, split
         self.sequence_length = sequence_length
         self.generator_version = getattr(config, "generator_version", GENERATOR_VERSION)
-        if self.generator_version not in {GENERATOR_VERSION, AUDITED_GENERATOR_VERSION}:
+        if self.generator_version not in {
+            GENERATOR_VERSION, AUDITED_GENERATOR_VERSION, CORRECTED_OVERWRITE_GENERATOR_VERSION,
+        }:
             raise ValueError(f"unsupported retrieval generator version {self.generator_version!r}")
 
     def __len__(self) -> int:
@@ -64,7 +67,7 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         return random.Random((self.seed << 24) ^ (domain << 20) ^ index)
 
     def _difficulty(self, index: int) -> tuple[int, int, int, int]:
-        if self.generator_version == AUDITED_GENERATOR_VERSION:
+        if self.generator_version in {AUDITED_GENERATOR_VERSION, CORRECTED_OVERWRITE_GENERATOR_VERSION}:
             lengths, keys, distances, overwrites = (
                 self.config.sequence_lengths, self.config.key_counts,
                 self.config.query_distances, self.config.overwrite_counts,
@@ -92,12 +95,16 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     def example(self, index: int) -> RetrievalExample:
         rng = self._rng(index)
         length, key_count, distance, overwrite_count = self._difficulty(index)
-        if self.generator_version == AUDITED_GENERATOR_VERSION:
+        if self.generator_version in {AUDITED_GENERATOR_VERSION, CORRECTED_OVERWRITE_GENERATOR_VERSION}:
             if length <= 0 or key_count <= 0 or distance < 1 or overwrite_count < 0:
                 raise ValueError("audited retrieval difficulty values are outside their valid ranges")
-            return self._mqar_v3(rng, length, key_count, distance) if self.task == "mqar" else self._overwrite_v3(
-                rng, length, key_count, distance, overwrite_count
-            )
+            if self.task == "mqar":
+                # MQAR has its own corrected generator ticket. Keep the
+                # audited implementation here until that version is enabled.
+                return self._mqar_v3(rng, length, key_count, distance)
+            if self.generator_version == CORRECTED_OVERWRITE_GENERATOR_VERSION:
+                return self._overwrite_v4(rng, length, key_count, distance, overwrite_count)
+            return self._overwrite_v3(rng, length, key_count, distance, overwrite_count)
         if self.task == "mqar":
             return self._mqar(rng, length, key_count, distance)
         return self._overwrite(rng, length, key_count, distance, overwrite_count)
@@ -298,6 +305,158 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             "write_values": write_values,
             "write_key_positions": write_key_positions,
             "obsolete_write_positions": write_positions[:-1],
+        })
+
+    def _overwrite_v4(
+        self, rng: random.Random, length: int, key_count: int, distance: int, overwrite_count: int,
+    ) -> RetrievalExample:
+        """Generate keyed overwrite cases without fixed-position solutions.
+
+        The target's latest write is placed at a random position in an
+        interleaved write stream, with at least one unrelated write after it.
+        The target and unrelated queries are randomly ordered whenever the
+        requested distance leaves enough causal prefix for either order.  The
+        complete sequence is used: there is no suffix padding after the last
+        scored answer.
+        """
+        if key_count < 2:
+            raise ValueError("infeasible overwrite combination: keyed v4 requires at least two keys")
+        if overwrite_count < 1:
+            raise ValueError("infeasible overwrite combination: keyed v4 requires at least one rewrite")
+        if distance < 1:
+            raise ValueError("infeasible overwrite combination: keyed v4 query distance must be positive")
+        if key_count > (self.config.vocabulary_size // 2 - 2):
+            raise ValueError(f"infeasible overwrite key_count={key_count} for vocabulary_size={self.config.vocabulary_size}")
+
+        keys, values = self._symbols(rng, key_count)
+        target_index = rng.randrange(key_count)
+        target_key = keys[target_index]
+        initial_values = set(values)
+        value_pool = [
+            value for value in range(self.config.vocabulary_size // 2, self.config.vocabulary_size)
+            if value not in initial_values
+        ]
+        if overwrite_count > len(value_pool):
+            raise ValueError(
+                f"infeasible overwrite combination: {overwrite_count} rewrites need distinct values, "
+                f"but only {len(value_pool)} are available"
+            )
+        rewrites = rng.sample(value_pool, overwrite_count)
+        target_writes = [(target_key, values[target_index], "target-initial")]
+        target_writes.extend((target_key, value, "target-rewrite") for value in rewrites)
+        stale_values = tuple(value for _, value, _ in target_writes[:-1])
+        unrelated_writes = [
+            (keys[index], values[index], "unrelated")
+            for index in range(key_count) if index != target_index
+        ]
+        latest_write = target_writes[-1]
+        prior_writes: list[tuple[int, int, str]] = []
+        insertion_choices: list[int] = []
+        for _ in range(100):
+            candidate = target_writes[:-1] + unrelated_writes
+            rng.shuffle(candidate)
+            prior_target_indices = [index for index, write in enumerate(candidate) if write[0] == target_key]
+            last_prior_target = max(prior_target_indices, default=-1)
+            choices = [
+                index for index in range(last_prior_target + 1, len(candidate))
+                if any(write[0] != target_key for write in candidate[index:])
+            ]
+            if choices:
+                prior_writes, insertion_choices = candidate, choices
+                break
+        if not insertion_choices:
+            raise ValueError("infeasible overwrite combination: no unrelated write can follow the latest target")
+        latest_index = rng.choice(insertion_choices)
+        writes = [*prior_writes[:latest_index], latest_write, *prior_writes[latest_index:]]
+
+        memory = [token for key, value, _ in writes for token in (key, value)]
+        latest_value_base = 2 * latest_index + 1
+        memory_length = len(memory)
+        if latest_value_base >= memory_length - 2:
+            raise AssertionError("keyed overwrite must retain an unrelated write after the target")
+
+        # A target-first query has an unrelated query after it; target-second
+        # has the unrelated query immediately before it.  Keep only orders
+        # whose markers remain after the complete memory prefix.
+        order_options: list[tuple[bool, int]] = []
+        for target_first, tail_tokens in ((True, 6), (False, 3)):
+            target_query_base = latest_value_base + distance
+            unrelated_query_base = target_query_base + (3 if target_first else -3)
+            if target_query_base < memory_length or unrelated_query_base < memory_length:
+                continue
+            prefix_tokens = length - (target_query_base + tail_tokens)
+            if prefix_tokens >= 0:
+                order_options.append((target_first, prefix_tokens))
+        if not order_options:
+            raise ValueError(
+                f"infeasible overwrite combination: length={length}, key_count={key_count}, "
+                f"query_distance={distance}, overwrite_count={overwrite_count}; "
+                "requested distance cannot fit randomized keyed queries after the memory prefix"
+            )
+        target_first, prefix_tokens = rng.choice(order_options)
+        target_query_position = prefix_tokens + latest_value_base + distance
+        unrelated_index = next(index for index in range(key_count) if index != target_index)
+        unrelated_key = keys[unrelated_index]
+        unrelated_value_position = next(
+            2 * index + 1 for index, (key, _, _) in enumerate(writes)
+            if key == unrelated_key
+        ) + prefix_tokens
+        unrelated_query_position = target_query_position + (3 if target_first else -3)
+        prefix = [FILLER_TOKEN] * prefix_tokens
+        first_query_position = target_query_position if target_first else unrelated_query_position
+        gap = [FILLER_TOKEN] * (first_query_position - (prefix_tokens + memory_length))
+        target_query = [QUERY_MARKER, target_key, target_writes[-1][1]]
+        unrelated_query = [QUERY_MARKER, unrelated_key, values[unrelated_index]]
+        queries = target_query + unrelated_query if target_first else unrelated_query + target_query
+        sequence = prefix + memory + gap + queries
+        if len(sequence) != length:
+            raise AssertionError(f"keyed overwrite generator produced {len(sequence)} tokens for requested length {length}")
+        oracle_target = self._audit_oracle(
+            sequence, target_key, prefix_tokens + latest_value_base,
+            target_query_position, self.config.vocabulary_size,
+        )
+        if oracle_target != target_writes[-1][1]:
+            raise AssertionError("keyed overwrite oracle disagrees with latest target write")
+        oracle_unrelated = self._audit_oracle(
+            sequence, unrelated_key, unrelated_value_position,
+            unrelated_query_position, self.config.vocabulary_size,
+        )
+        if oracle_unrelated != values[unrelated_index]:
+            raise AssertionError("keyed overwrite oracle disagrees with unrelated write")
+        target_answer = AnswerPosition(
+            target_query_position + 1, oracle_target, stale_values, "latest", overwrite_count,
+            distance, target_query_position, prefix_tokens + latest_value_base,
+        )
+        unrelated_answer = AnswerPosition(
+            unrelated_query_position + 1, oracle_unrelated, (), "unrelated", 0,
+            unrelated_query_position - unrelated_value_position,
+            unrelated_query_position, unrelated_value_position,
+        )
+        answers = (target_answer, unrelated_answer)
+        tokens, labels = self._labels(sequence, list(answers))
+        target_write_positions = [
+            prefix_tokens + 2 * index + 1 for index, (key, _, _) in enumerate(writes) if key == target_key
+        ]
+        return RetrievalExample(tokens, labels, answers, {
+            "task": "overwrite", "sequence_length": length, "key_count": key_count,
+            "query_count": len(answers), "query_distance": distance,
+            "requested_query_distance": distance,
+            "query_distance_definition": "target query marker minus target latest value position",
+            "memory_load": len(writes), "overwrite_count": overwrite_count,
+            "target_key": target_key, "target_first": target_first,
+            "query_order": ["target", "unrelated"] if target_first else ["unrelated", "target"],
+            "query_positions": [answer.query_position for answer in answers],
+            "latest_value_positions": [answer.latest_value_position for answer in answers],
+            "answer_distances": [answer.distance for answer in answers],
+            "write_positions": target_write_positions,
+            "all_write_positions": [prefix_tokens + 2 * index + 1 for index in range(len(writes))],
+            "write_values": [value for key, value, _ in writes if key == target_key],
+            "write_key_positions": [prefix_tokens + 2 * index for index, (key, _, _) in enumerate(writes) if key == target_key],
+            "post_target_write_count": len(writes) - latest_index - 1,
+            "prefix_filler_tokens": prefix_tokens,
+            "suffix_padding_tokens": 0,
+            "effective_sequence_tokens": len(sequence),
+            "oracle": "causal-last-write-wins-v4",
         })
 
     def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
