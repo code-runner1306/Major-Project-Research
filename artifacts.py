@@ -84,8 +84,15 @@ def read_json(path: str | Path) -> dict[str, Any]:
     return value
 
 
-def source_revision_state(workspace: str | Path = ".") -> dict[str, str | bool]:
-    """Record enough revision information to reject artifacts from changed code."""
+def source_revision_state(workspace: str | Path = ".") -> dict[str, Any]:
+    """Record revision and content identity for the scientific implementation.
+
+    A dirty bit is useful for diagnostics but cannot identify which source was
+    used to produce an artifact.  Corrected manifests therefore retain hashes
+    for tracked implementation/configuration files and a deterministic digest
+    over that map.  Legacy payloads strip these additive fields in ``payload``
+    so existing manifests remain byte-compatible.
+    """
 
     root = Path(workspace)
     try:
@@ -97,7 +104,32 @@ def source_revision_state(workspace: str | Path = ".") -> dict[str, str | bool]:
             ["git", "status", "--porcelain"], cwd=root, text=True, check=True,
             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
         ).stdout.strip())
-        return {"revision": revision, "dirty": dirty}
+        listed = subprocess.run(
+            ["git", "ls-files", "-z", "--", "*.py", "*.ps1", "*.json"],
+            cwd=root, check=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        ).stdout.decode("utf-8", errors="strict")
+        source_hashes: dict[str, str] = {}
+        for raw_path in listed.split("\0"):
+            if not raw_path or raw_path.startswith(("tests/", "figures/", "research_notes/")):
+                continue
+            path = root / raw_path
+            if path.is_file():
+                source_hashes[raw_path] = sha256(path.read_bytes()).hexdigest()
+        content_hash = sha256(canonical_json(source_hashes).encode("utf-8")).hexdigest()
+        dirty_patch = ""
+        if dirty and source_hashes:
+            patch = subprocess.run(
+                ["git", "diff", "--binary", revision, "--", *source_hashes.keys()],
+                cwd=root, check=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            ).stdout
+            dirty_patch = patch.decode("utf-8", errors="replace")
+        return {
+            "revision": revision,
+            "dirty": dirty,
+            "content_hash": content_hash,
+            "source_hashes": source_hashes,
+            "dirty_patch": dirty_patch,
+        }
     except (FileNotFoundError, subprocess.CalledProcessError):
         return {"revision": "unavailable", "dirty": True}
 
@@ -136,6 +168,9 @@ class SeedManifest:
         data["expected_artifacts"] = list(self.expected_artifacts)
         if self.protocol_version == LEGACY_PROTOCOL_VERSION:
             data.pop("protocol_version", None)
+            source = data.get("source")
+            if isinstance(source, Mapping):
+                data["source"] = {key: source[key] for key in ("revision", "dirty") if key in source}
         return data
 
     def to_dict(self) -> dict[str, Any]:

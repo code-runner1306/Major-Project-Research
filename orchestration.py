@@ -13,6 +13,7 @@ import torch
 
 from artifacts import (
     LEGACY_PROTOCOL_VERSION, SeedManifest, atomic_write_json, fingerprint, initialize_lifecycle, manifest_compatibility,
+    source_revision_state,
     read_json, transition_lifecycle, validate_completion, validate_checkpoint, write_manifest,
 )
 from config import ExperimentConfig, ModelConfig, RetrievalConfig
@@ -64,6 +65,15 @@ def _run_path(profile: ExperimentConfig, family: Family, scale: str, variant: st
 def _resolved_backbone(profile: ExperimentConfig, family: Family, scale: str) -> ModelConfig:
     backbone = profile.model_for(scale)
     return replace(backbone, attention_layout="pure_gdn") if family in {"mqar", "overwrite"} else backbone
+
+
+def _scientific_config_hash(profile: ExperimentConfig, family: Family, scale: str, variant: str) -> str:
+    """Hash settings that must match before an existing run is touched."""
+
+    payload = profile.to_manifest_dict()
+    payload.pop("output_dir", None)
+    payload.update({"family": family, "scale": scale, "variant": variant})
+    return fingerprint(payload)
 
 
 def _data_for_run(
@@ -429,7 +439,8 @@ def run_seed(
     manifest_path = run_dir / "manifest.json"
     if manifest_path.exists():
         try:
-            stored_protocol = read_json(manifest_path).get("protocol_version", LEGACY_PROTOCOL_VERSION)
+            existing_manifest = read_json(manifest_path)
+            stored_protocol = existing_manifest.get("protocol_version", LEGACY_PROTOCOL_VERSION)
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             raise RuntimeError(f"Existing artifact has an unreadable manifest; refusing to modify {run_dir}") from exc
         if stored_protocol != profile.protocol_version:
@@ -438,6 +449,21 @@ def run_seed(
                 f"{stored_protocol!r}; requested {profile.protocol_version!r}. "
                 "Start the corrected experiment in a fresh output root."
             )
+        if stored_protocol != LEGACY_PROTOCOL_VERSION:
+            expected_config_hash = _scientific_config_hash(profile, family, scale, variant)
+            stored_task = existing_manifest.get("model", {}).get("study_task", {})
+            if stored_task.get("scientific_config_hash") != expected_config_hash:
+                raise RuntimeError(
+                    "Existing artifact scientific settings differ; refusing to write before compatibility is checked. "
+                    "Start a fresh corrected output root."
+                )
+            current_source = source_revision_state()
+            stored_source = existing_manifest.get("source", {})
+            if stored_source.get("content_hash") != current_source.get("content_hash"):
+                raise RuntimeError(
+                    "Existing artifact source content differs; refusing to write before compatibility is checked. "
+                    "Start a fresh corrected output root."
+                )
     elif run_dir.exists() and any(run_dir.iterdir()):
         raise RuntimeError(
             f"Refusing to write into non-empty run directory without a manifest: {run_dir}. "
@@ -539,6 +565,7 @@ def run_seed(
             "learning_rate": profile.learning_rate,
             "calibration_examples": profile.calibration_examples,
             "protocol_version": profile.protocol_version,
+            "scientific_config_hash": _scientific_config_hash(profile, family, scale, variant),
         }
     manifest = _manifest(
         profile=profile, family=family, scale=scale, variant=variant, resolved_model=resolved_model,
