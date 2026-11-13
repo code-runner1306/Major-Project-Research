@@ -812,3 +812,145 @@ def evaluate_retrieval(
             "unrelated_association_retention": unrelated_correct / unrelated_total if unrelated_total else None,
         })
     return result
+
+
+def evaluate_retrieval_baselines(
+    dataset: RetrievalDataset,
+    *,
+    example_indices: Sequence[int] | None = None,
+    frequency_dataset: RetrievalDataset | None = None,
+) -> dict[str, Any]:
+    """Evaluate key-free retrieval baselines without using placement metadata.
+
+    The evaluator reconstructs each causal memory prefix from emitted tokens.
+    It never uses ``latest_value_position`` or any generator placement field.
+    ``frequency_dataset`` must be a training split when supplied; validation
+    and held-out baselines therefore cannot fit their no-memory prediction on
+    the evaluated cases.
+    """
+
+    if frequency_dataset is not None and frequency_dataset.split != "train":
+        raise ValueError("frequency_dataset must be a training split")
+    indices = tuple(range(len(dataset))) if example_indices is None else tuple(example_indices)
+    if not indices:
+        raise ValueError("Baseline evaluation requires at least one example index")
+    if len(set(indices)) != len(indices) or any(index < 0 or index >= len(dataset) for index in indices):
+        raise ValueError("Baseline evaluation indices must be unique and within the dataset")
+
+    value_floor = dataset.config.vocabulary_size // 2
+    frequency_counts: dict[int, int] = {}
+    if frequency_dataset is not None:
+        for index in range(len(frequency_dataset)):
+            tokens = frequency_dataset.example(index).tokens.tolist()
+            for token in tokens:
+                if token >= value_floor:
+                    frequency_counts[token] = frequency_counts.get(token, 0) + 1
+    frequency_total = sum(frequency_counts.values())
+    frequency_prediction = max(frequency_counts, key=frequency_counts.get) if frequency_counts else None
+    frequency_chance = (
+        frequency_counts[frequency_prediction] / frequency_total
+        if frequency_prediction is not None and frequency_total else None
+    )
+
+    baseline_names = (
+        "keyed_last_write_oracle", "first_value", "last_value", "most_recent_value",
+        "final_two_values", "no_memory_frequency",
+    )
+    stats = {
+        name: {"correct": 0, "total": 0, "accuracy": None}
+        for name in baseline_names
+    }
+    by_cell: dict[str, dict[str, dict[str, int | float | None]]] = {}
+    oracle_mismatches = 0
+
+    def record(name: str, prediction: int | None, target: int, cell: str) -> None:
+        if prediction is None:
+            return
+        entry = stats[name]
+        entry["total"] += 1
+        entry["correct"] += int(prediction == target)
+        cell_entry = by_cell.setdefault(cell, {}).setdefault(name, {"correct": 0, "total": 0})
+        cell_entry["total"] += 1
+        cell_entry["correct"] += int(prediction == target)
+
+    for index in indices:
+        example = dataset.example(index)
+        tokens = example.tokens.tolist()
+        markers = [position for position, token in enumerate(tokens) if token == QUERY_MARKER]
+        if not markers:
+            raise ValueError(f"example {index} has no query marker")
+        first_query_marker = markers[0]
+        memory_prefix = tokens[:first_query_marker]
+        memory_values = [token for token in memory_prefix if token >= value_floor]
+        if not memory_values:
+            raise ValueError(f"example {index} has no value tokens in its causal memory prefix")
+        distinct_values = max(1, len(set(memory_values)))
+        answer_order = tuple(sorted(example.answers, key=lambda answer: answer.label_position))
+        for ordinal, answer in enumerate(answer_order):
+            query_marker = answer.label_position - 1
+            if query_marker < 0 or query_marker >= len(tokens) or tokens[query_marker] != QUERY_MARKER:
+                raise ValueError(f"example {index} has an answer without a causal query marker")
+            query_key = tokens[answer.label_position]
+            writes = [
+                tokens[position + 1]
+                for position in range(first_query_marker)
+                if tokens[position] == query_key
+                and position + 1 < first_query_marker
+                and tokens[position + 1] >= value_floor
+            ]
+            oracle_target = writes[-1] if writes else None
+            target = int(example.labels[answer.label_position])
+            if oracle_target != target:
+                oracle_mismatches += 1
+            cell = canonical_json({
+                "sequence_length": example.metadata.get("sequence_length"),
+                "key_count": example.metadata.get("key_count"),
+                "requested_query_distance": example.metadata.get("requested_query_distance"),
+                "actual_query_distance": answer.distance,
+                "overwrite_count": answer.overwrite_count,
+                "query_ordinal": ordinal,
+            })
+            record("keyed_last_write_oracle", oracle_target, target, cell)
+            record("first_value", memory_values[0], target, cell)
+            record("last_value", memory_values[-1], target, cell)
+            record("most_recent_value", memory_values[-1], target, cell)
+            final_two_prediction = memory_values[-2 + ordinal] if 0 <= ordinal < 2 and len(memory_values) >= 2 else None
+            record("final_two_values", final_two_prediction, target, cell)
+            record("no_memory_frequency", frequency_prediction, target, cell)
+
+    for entry in stats.values():
+        if entry["total"]:
+            entry["accuracy"] = entry["correct"] / entry["total"]
+    for cells in by_cell.values():
+        for entry in cells.values():
+            entry["accuracy"] = entry["correct"] / entry["total"] if entry["total"] else None
+    chance = {
+        "keyed_last_write_oracle": 1.0,
+        "first_value": "1 / distinct_memory_values",
+        "last_value": "1 / distinct_memory_values",
+        "most_recent_value": "1 / distinct_memory_values",
+        "final_two_values": "min(2 / distinct_memory_values, 1)",
+        "no_memory_frequency": frequency_chance,
+    }
+    return {
+        "status": "complete",
+        "task": dataset.task,
+        "generator_manifest": dataset.manifest(),
+        "evaluated_examples": len(indices),
+        "example_indices_sha256": sha256(",".join(map(str, indices)).encode()).hexdigest(),
+        "baselines": stats,
+        "chance_expectation": chance,
+        "frequency_fit": {
+            "source_split": frequency_dataset.split if frequency_dataset is not None else None,
+            "source_examples": len(frequency_dataset) if frequency_dataset is not None else 0,
+            "value_count": len(frequency_counts),
+            "observed_value_tokens": frequency_total,
+            "prediction": frequency_prediction,
+        },
+        "oracle_audit": {
+            "independent_last_write_oracle": "causal token-prefix scan",
+            "target_mismatches": oracle_mismatches,
+            "target_checks": stats["keyed_last_write_oracle"]["total"],
+        },
+        "by_difficulty_cell": by_cell,
+    }
