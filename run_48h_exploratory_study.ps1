@@ -25,7 +25,7 @@ Push-Location $repo
 try {
     if ($Workers -lt 1) { throw "Workers must be at least 1" }
     if ($Seeds.Count -lt 1 -or @($Seeds | Select-Object -Unique).Count -ne $Seeds.Count -or @($Seeds | Where-Object { $_ -lt 0 }).Count -gt 0) { throw 'Seeds must be a non-empty list of unique non-negative integers' }
-    if ($SmokeTest -and ($QualifyWorkers -gt 0 -or $EvaluateOnly -or $Workers -ne 1)) { throw 'SmokeTest requires one worker and cannot be combined with qualification or EvaluateOnly' }
+    if ($SmokeTest -and ($QualifyWorkers -gt 0 -or $EvaluateOnly)) { throw 'SmokeTest cannot be combined with qualification or EvaluateOnly' }
     if ($SmokeTest) { $StudyConfig = 'study_configs/granularity_init_smoke.json' }
     if ($QualifyWorkers -lt 0) { throw "QualifyWorkers cannot be negative" }
     if ($QualifyWorkers -gt 0 -and $EvaluateOnly) { throw "QualifyWorkers cannot be combined with EvaluateOnly" }
@@ -35,7 +35,7 @@ try {
     if ($Workers -gt $maxWorkers) { throw "Workers cannot exceed $maxWorkers for this family selection" }
     if ($QualifyWorkers -gt $maxWorkers) { throw "QualifyWorkers cannot exceed $maxWorkers for this family selection" }
     if ($QualifyWorkers -gt 0 -and $QualificationReport) { throw "QualificationReport is for production, not qualification" }
-    if ($Workers -gt 1 -and $QualifyWorkers -eq 0 -and -not $QualificationReport -and -not $DryRun) { throw "Parallel production requires QualificationReport from a successful QualifyWorkers run" }
+    if ($Workers -gt 1 -and -not $SmokeTest -and $QualifyWorkers -eq 0 -and -not $QualificationReport -and -not $DryRun) { throw "Parallel production requires QualificationReport from a successful QualifyWorkers run" }
 
     $studyConfigPath = [System.IO.Path]::GetFullPath((Join-Path $repo $StudyConfig))
     if (-not (Test-Path -LiteralPath $studyConfigPath -PathType Leaf)) { throw "Study config not found: $studyConfigPath" }
@@ -200,7 +200,7 @@ try {
         if ($LASTEXITCODE -ne 0) { return '' }; try { return (($probe | Select-Object -Last 1 | ConvertFrom-Json).gpu_uuid) } catch { return '' }
     }
 
-    if ($SmokeTest) { Write-Host "Launcher CPU smoke: $(4 * $families.Count) tiny runs; family=$Family; steps=$stepBudget; evaluation examples=4"; Write-Host "Output root: $root" }
+    if ($SmokeTest) { Write-Host "Launcher CPU smoke: $(4 * $families.Count) tiny runs; family=$Family; workers=$Workers; steps=$stepBudget; evaluation examples=4"; Write-Host "Output root: $root" }
     elseif ($QualifyWorkers -gt 0) { Write-Host "Worker qualification: family=$Family; target=$QualifyWorkers; fallback=$($QualifyWorkers)..1"; Write-Host "Pilot root: $root" }
     else { Write-Host "Exploratory production: $((4 * $families.Count) * $Seeds.Count) 10M runs; family=$Family; workers=$Workers; seeds=$($Seeds -join ','); steps=$stepBudget; LR=$learningRate"; Write-Host "Output root: $root" }
     if (-not $SmokeTest) {
@@ -219,7 +219,9 @@ try {
         for ($count = $QualifyWorkers; $count -ge 1; $count--) {
             $attempted += $count; $trialRoot = Join-Path $root "workers_$count"; New-Item -ItemType Directory -Force -Path $trialRoot | Out-Null; $trainConfigs = @(); $evalConfigs = @(); $slot = 0
             foreach ($condition in $conditions) { foreach ($trialFamily in $families) {
-                if ($slot -ge $count) { continue }; $pilotSeed = 81000 + ($count * 10) + $slot
+                # Cover every granularity/initialization and family in bounded
+                # waves; testing only the first slots misses channel-wise arms.
+                $pilotSeed = 81000 + ($count * 100) + $slot
                 $train = New-TaskSpec $trialFamily $condition $pilotSeed $QualificationSteps 64 'train' $trialRoot $qualificationId $count; $evaluate = New-TaskSpec $trialFamily $condition $pilotSeed $QualificationSteps 64 'evaluate' $trialRoot $qualificationId $count
                 $trainConfigs += Write-TaskConfig $train $trialRoot 'pilot_'; $evalConfigs += Write-TaskConfig $evaluate $trialRoot 'pilot_'; $slot++
             } }
@@ -228,11 +230,14 @@ try {
             $trialRows += [ordered]@{ workers = $count; training = $trainSummary; evaluation = $evalSummary; jointly_qualified = ($null -ne $evalSummary -and $evalSummary.qualified) }; if ($jointLimit -gt 0) { break }
         }
         $report = [ordered]@{ schema_version = 1; experiment_id = 'granularity-init-worker-qualification-v1'; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; requested_target_workers = $QualifyWorkers; attempted_worker_counts_in_order = $attempted; qualified_training_workers = $trainLimit; qualified_evaluation_workers = $evalLimit; qualified_workers = $jointLimit; status = if ($jointLimit -gt 0) { 'qualified' } else { 'not_qualified' }; pilot_protocol = [ordered]@{ scale = '10M'; optimizer_steps = $QualificationSteps; validation_examples = 64; held_out_examples = 64; operation = 'separate-process training and evaluation' }; study_config_sha256 = $configSha; git_revision = $gitRevision; trials = $trialRows }
+        $report.hardware = if ($jointLimit -gt 0) { $trainSummary.hardware } else { $null }
+        $report.pilot_protocol.condition_ids = @($conditions | ForEach-Object { $_.id })
+        $report.pilot_protocol.tasks_per_trial = 4 * $families.Count
         $reportPath = Join-Path $root 'qualification_report.json'; $report | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath $reportPath -Encoding UTF8; Write-RunLog "Worker qualification report: $reportPath"; Write-Host "Qualified training workers=$trainLimit; evaluation workers=$evalLimit; joint maximum=$jointLimit"
         if ($jointLimit -le 0) { throw "No worker count passed both qualification phases. See $reportPath" }; Write-Host "Next production command: .\run_48h_exploratory_study.ps1 -Family $Family -Workers $jointLimit -QualificationReport '$reportPath'"; return
     }
 
-    if ($Workers -gt 1) {
+    if ($Workers -gt 1 -and -not $SmokeTest) {
         if (-not (Test-Path -LiteralPath $QualificationReport -PathType Leaf)) { throw "Qualification report not found: $QualificationReport" }; $report = Get-Content -LiteralPath $QualificationReport -Raw | ConvertFrom-Json; $currentGpuUuid = Get-CurrentGpuUuid
         if ($report.status -ne 'qualified' -or ($report.families -join ',') -ne ($families -join ',') -or [int]$report.qualified_workers -lt $Workers -or $report.study_config_sha256 -ne $configSha -or $report.git_revision -ne $gitRevision -or [string]::IsNullOrWhiteSpace($currentGpuUuid) -or $report.hardware.gpu_uuid -ne $currentGpuUuid) { throw 'Qualification report does not authorize this family, worker count, code revision, config, or GPU' }
     }
@@ -247,5 +252,6 @@ try {
     $pendingEval = @(); foreach ($config in $evalConfigs) { $task = Get-Content -LiteralPath $config -Raw | ConvertFrom-Json; if (Test-TaskComplete $task 'evaluate' $config) { Write-RunLog "SKIP validated evaluation: $($task.output_dir)"; continue }; if (-not (Test-TaskComplete $task 'train' $config)) { throw "Evaluation requires a validated trained checkpoint: $($task.output_dir)" }; $pendingEval += $config }
     $evalResult = Invoke-Phase 'evaluate' $pendingEval $Workers $root; if (-not $evalResult.Success) { throw 'Evaluation failed. See per-task logs.' }
     $summary = [ordered]@{ experiment_id = $experimentId; created_at_utc = [DateTime]::UtcNow.ToString('o'); family_selection = $Family; families = $families; run_count = (4 * $families.Count) * $Seeds.Count; scale = $scale; conditions = @($conditions | ForEach-Object { $_.id }); seeds = @($Seeds); max_optimizer_steps = $stepBudget; learning_rate = $learningRate; status = 'complete'; training_barrier_before_evaluation = $true; interpretation = if ($SmokeTest) { 'CPU launcher smoke only; not research results or CUDA qualification.' } else { "$($Seeds.Count) paired seeds and $stepBudget steps per condition; exploratory comparison only." } }
+    $summary.workers = $Workers
     $summary | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $root 'run_summary.json') -Encoding UTF8; Write-RunLog "All requested training and evaluation tasks completed. Summary: $(Join-Path $root 'run_summary.json')"
 } finally { Pop-Location }

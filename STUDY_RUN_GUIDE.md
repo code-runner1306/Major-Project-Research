@@ -6,7 +6,35 @@ The current study protocol and task matrix live in [`RESEARCH_IMPLEMENTATION_PLA
 
 ### Two-day exploratory subset
 
-If you have only about two days, run one family on each machine using the separate exploratory launcher. Each run covers **10M**, the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), **one seed**, and **1,000 optimizer steps**. All four runs use fixed learning rate **3e-3**, a literature-informed shared choice that is **not tuned on these runs**. Each family trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are capped at **512 examples per run**; training still uses 50,000 examples. `-Family` is required and restricts each machine to one family. Without `-OutputRoot`, it selects a family-specific default folder.
+The PowerShell launcher defaults to paired seeds 42 through 46. To extend the
+completed seed-42 experiment, keep `-OutputRoot output\granularity_exp_1`;
+validated seed-42 tasks are skipped and only missing seeds are run.
+
+For a two-worker CPU plumbing smoke, use `-Family both -SmokeTest -Workers 2`
+with a fresh output folder. To check two workers on the VM's actual GPU and
+production backbone, use the capacity pilot instead:
+
+```powershell
+powershell.exe .\run_48h_exploratory_study.ps1 -Family both -QualifyWorkers 2 -QualificationSteps 20 -QualificationRoot output\workers2_pilot_1 -Python .\venv\Scripts\python.exe
+```
+
+This runs all eight family/condition combinations in waves of up to two workers,
+then evaluates those pilot checkpoints. It uses separate pilot seeds, 20 optimizer
+steps per task, and 64 validation/evaluation examples, keeping research artifacts
+separate. It records runtime, VRAM, utilization, and competing GPU processes. If
+two workers fail qualification, it tries one worker and reports the qualified
+limit; inspect `qualified_workers` in `qualification_report.json`. A short pilot
+checks capacity and execution, not long-run stability or a guaranteed speedup.
+Use a new qualification root for each attempt. A longer pilot can be requested
+with `-QualificationSteps 100`.
+
+If the report qualifies two workers, continue the experiment with:
+
+```powershell
+powershell.exe .\run_48h_exploratory_study.ps1 -Family both -Workers 2 -QualificationReport output\workers2_pilot_1\qualification_report.json -OutputRoot output\granularity_exp_1 -Python .\venv\Scripts\python.exe
+```
+
+If you have only about two days, run one family on each machine using the separate exploratory launcher. Each run covers **10M**, the four endpoint conditions (scalar/channel-wise crossed with default/calibrated initialization), **five paired seeds by default**, and **1,000 optimizer steps per seed**. All four runs use fixed learning rate **3e-3**, a literature-informed shared choice that is **not tuned on these runs**. Each family trains all four conditions before evaluating them. Synthetic validation and held-out evaluation are capped at **512 examples per run**; training still uses 50,000 examples. `-Family` is required and restricts each machine to one family. Without `-OutputRoot`, it selects a family-specific default folder.
 
 Machine A: MQAR
 

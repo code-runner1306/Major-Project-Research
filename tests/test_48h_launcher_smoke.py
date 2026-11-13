@@ -12,7 +12,8 @@ import pytest
 
 @pytest.mark.skipif(sys.platform != 'win32' or os.environ.get('RUN_48H_LAUNCHER_SMOKE') != '1',
                     reason='Set RUN_48H_LAUNCHER_SMOKE=1 on Windows to run the full launcher smoke')
-def test_full_launcher_smoke():
+@pytest.mark.parametrize('workers', [1, 2])
+def test_full_launcher_smoke(workers):
     repo = Path(__file__).resolve().parents[1]
     relative_root = Path('output') / ('launcher_test_' + uuid4().hex)
     root = repo / relative_root
@@ -21,6 +22,7 @@ def test_full_launcher_smoke():
         result = subprocess.run(
             ['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
              str(repo / 'run_48h_exploratory_study.ps1'), '-Family', 'both', '-SmokeTest',
+             '-Workers', str(workers),
              '-Python', sys.executable, '-OutputRoot', str(relative_root)],
             cwd=repo, env=env, capture_output=True, text=True, timeout=900,
         )
@@ -29,6 +31,13 @@ def test_full_launcher_smoke():
         assert summary['status'] == 'complete' and summary['run_count'] == 8
         assert summary['training_barrier_before_evaluation'] is True
         assert len(list((root / 'runs').rglob('metrics.json'))) == 8
+        if workers == 2:
+            for phase in ('train', 'evaluate'):
+                # Both children must launch before either completion is logged.
+                queued = [i for i, line in enumerate(result.stdout.splitlines()) if 'QUEUED ' + phase + ' ' in line]
+                completed = [i for i, line in enumerate(result.stdout.splitlines()) if 'COMPLETED ' + phase + ' ' in line]
+                assert len(queued) == len(completed) == 8
+                assert queued[1] < completed[0]
     finally:
         if root.exists():
             shutil.rmtree(root)

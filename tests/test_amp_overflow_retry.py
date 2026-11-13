@@ -10,15 +10,16 @@ from train import train_fixed_budget
 @pytest.mark.parametrize('always_overflow', [False, True])
 def test_scaled_gradient_overflow_retries_same_optimizer_step(monkeypatch, smoke_config, tmp_path, always_overflow):
     class Model(torch.nn.Module):
-        def __init__(self):
+        def __init__(self, inject_overflow=True):
             super().__init__()
             self.weight = torch.nn.Parameter(torch.tensor(1.0))
             self.calls = 0
+            self.inject_overflow = inject_overflow
 
         def forward(self, tokens, targets):
             self.calls += 1
             loss = (self.weight * tokens.float() - targets.float()).square().mean()
-            if always_overflow or self.calls == 1:
+            if self.inject_overflow and (always_overflow or self.calls == 1):
                 loss.register_hook(lambda gradient: gradient * float('inf'))
             return None, loss
 
@@ -40,3 +41,10 @@ def test_scaled_gradient_overflow_retries_same_optimizer_step(monkeypatch, smoke
         assert result['training']['stability_events'] == [
             {'step': 1, 'kind': 'amp_overflow_retry', 'scale': 65536.0, 'new_scale': 32768.0}
         ]
+        baseline_model = Model(inject_overflow=False)
+        baseline_dir = tmp_path / 'baseline'
+        baseline_dir.mkdir()
+        baseline = train_fixed_budget(**{**args, 'model': baseline_model, 'run_dir': str(baseline_dir)})
+        torch.testing.assert_close(model.weight, baseline_model.weight, rtol=0, atol=0)
+        assert result['training']['train_losses'] == baseline['training']['train_losses']
+        assert len(result['training']['unclipped_gradient_norms']) == 2
