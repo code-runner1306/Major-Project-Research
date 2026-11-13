@@ -17,7 +17,7 @@ SAFETY_MINUTES="${SAFETY_MINUTES:-20}"
 SEEDS_TEXT="${SEEDS:-47 48 49}"
 read -r -a SEEDS_ARRAY <<< "$SEEDS_TEXT"
 
-STUDY_CONFIG="$ROOT/study_configs/granularity_init_study.json"
+STUDY_CONFIG="$ROOT/study_configs/granularity_corrected_pilot.json"
 if [[ ! -f "$ROOT/run_all.py" || ! -f "$STUDY_CONFIG" ]]; then
   echo "ERROR: Run this script from the Major-Project-Research checkout." >&2
   exit 2
@@ -57,6 +57,17 @@ else:
     }))
 PY
 )"
+# Corrected research compute needs recorded human approval in the committed config
+# (same gate as study_runner). Fails before any GPU time is spent.
+if ! AUTH_OUTPUT="$("$PYTHON_BIN" - "$STUDY_CONFIG" 2>&1 <<'PY'
+import json, sys
+from study_runner import require_compute_authorization
+require_compute_authorization(json.load(open(sys.argv[1], encoding="utf-8-sig")), stage="kaggle-12h-replication")
+PY
+)"; then
+  echo "ERROR: Compute authorization check failed for $STUDY_CONFIG: $AUTH_OUTPUT" >&2
+  exit 2
+fi
 echo "Kaggle GPU: $GPU_INFO"
 GPU_OK="$(printf '%s' "$GPU_INFO" | "$PYTHON_BIN" -c 'import json,sys; print("yes" if json.load(sys.stdin).get("ok") else "no")')"
 if [[ "$GPU_OK" != "yes" ]]; then
@@ -78,7 +89,7 @@ exec > >(tee -a "$MASTER_LOG") 2>&1
 MAX_SECONDS="$("$PYTHON_BIN" -c 'import sys; print(int(float(sys.argv[1])*3600))' "$HOURS")"
 RESERVE_SECONDS=$((SAFETY_MINUTES * 60))
 WORKERS=2
-EXPERIMENT_ID="kaggle-12h-calibrated-granularity-mqar-v1"
+EXPERIMENT_ID="kaggle-12h-corrected-calibrated-granularity-mqar-v1"
 CONDITIONS=(
   "C4-scalar-calibrated|scalar|calibrated-geometric"
   "C6-channel-calibrated|channel-wise|calibrated-geometric"
@@ -126,11 +137,11 @@ task = {
     "retrieval_config": retrieval,
     "run_mode": "production",
     "recurrence_backend": "reference",
-    "state_accumulator_dtype": "input",
+    "state_accumulator_dtype": study.get("runtime", {}).get("state_accumulator_dtype", "input"),
     "recurrence_chunk_size": 64,
     "validation_answer_accuracy": True,
     "concurrent_training_runs": int(os.environ["TASK_WORKERS"]),
-    "protocol_version": "kaggle-12h-paired-replication-v1",
+    "protocol_version": study.get("runtime", {}).get("protocol_version", "corrected-v1"),
 }
 path = Path(os.environ["TASK_PATH"])
 path.parent.mkdir(parents=True, exist_ok=True)
