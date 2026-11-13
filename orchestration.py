@@ -476,10 +476,32 @@ def run_seed(
             batches = list(islice(iter(train_data), batch_count))
             remaining = example_limit
             bounded_batches = []
+            dataset = getattr(train_data, "dataset", None)
+            dataset_offset = 0
+            calibration_mask_policy = "explicit_dataset_sequence_lengths"
             for batch in batches:
                 tokens, targets = batch
                 take = min(remaining, tokens.shape[0])
-                bounded_batches.append((tokens[:take], targets[:take]))
+                if hasattr(dataset, "example"):
+                    valid_masks = []
+                    for row in range(take):
+                        example = dataset.example(dataset_offset + row)
+                        valid_length = min(int(example.tokens.numel()), int(tokens.shape[1]))
+                        mask = torch.zeros(tokens.shape[1], dtype=torch.bool)
+                        mask[:valid_length] = True
+                        valid_masks.append(mask)
+                    padding_mask = torch.stack(valid_masks, dim=0)
+                else:
+                    # Language-model loaders expose fixed-length examples but
+                    # no sequence-length metadata; retain the explicit policy
+                    # rather than guessing from supervised labels.
+                    padding_mask = torch.ones_like(tokens[:take], dtype=torch.bool)
+                    calibration_mask_policy = "all_positions_no_dataset_length_metadata"
+                bounded_batches.append({
+                    "tokens": tokens[:take], "targets": targets[:take],
+                    "padding_mask": padding_mask,
+                })
+                dataset_offset += take
                 remaining -= take
                 if remaining <= 0:
                     break
@@ -490,6 +512,7 @@ def run_seed(
                 max_half_life=profile.calibration_max_half_life,
             )
             calibration_report["calibration_examples"] = example_limit - remaining
+            calibration_report.setdefault("data_provenance", {})["masking_policy"] = calibration_mask_policy
             calibration_report["calibration_wall_time_seconds"] = time.perf_counter() - calibration_started
             atomic_write_json(calibration_path, calibration_report)
         model_metadata["calibration"] = calibration_report
