@@ -653,7 +653,10 @@ def retrieval_dataloader(dataset: RetrievalDataset, batch_size: int) -> DataLoad
 def evaluate_retrieval(
     model: GatedDeltaNetLM, dataset: RetrievalDataset, device: torch.device,
     *, example_indices: Sequence[int] | None = None,
+    history_conditioning: Literal["answer_free", "teacher_forced"] = "answer_free",
 ) -> dict[str, Any]:
+    if history_conditioning not in {"answer_free", "teacher_forced"}:
+        raise ValueError("history_conditioning must be 'answer_free' or 'teacher_forced'")
     model_was_training = model.training
     model.eval()
     indices = tuple(range(len(dataset))) if example_indices is None else tuple(example_indices)
@@ -662,6 +665,9 @@ def evaluate_retrieval(
     if len(set(indices)) != len(indices) or any(index < 0 or index >= len(dataset) for index in indices):
         raise ValueError("Retrieval evaluation indices must be unique and within the dataset")
     total = correct = latest_total = latest_correct = stale_errors = other_latest_errors = unrelated_total = unrelated_correct = 0
+    complete_examples = 0
+    first_query_total = first_query_correct = later_query_total = later_query_correct = 0
+    supervised_tokens = effective_tokens = 0
     joint_key_distance: dict[str, dict[str, list[int]]] = {}
     breakdown: dict[str, dict[str, list[int]]] = {
         key: {} for key in (
@@ -671,13 +677,33 @@ def evaluate_retrieval(
     }
     for index in indices:
         example = dataset.example(index)
-        logits, _ = model(example.tokens.unsqueeze(0).to(device))
+        supervised_tokens += int((example.labels != -100).sum().item())
+        effective_tokens += int(example.tokens.numel())
+        model_tokens = example.tokens.clone()
+        if history_conditioning == "answer_free":
+            # The label is scored at the key position; replace the answer
+            # token one position later so later queries cannot receive an
+            # earlier gold answer through the teacher-forced history.
+            for answer in example.answers:
+                answer_token_position = answer.label_position + 1
+                if answer_token_position < model_tokens.numel():
+                    model_tokens[answer_token_position] = FILLER_TOKEN
+        logits, _ = model(model_tokens.unsqueeze(0).to(device))
         predictions = logits[0].argmax(dim=-1).cpu()
-        for answer in example.answers:
+        example_correct = 0
+        ordered_answers = tuple(sorted(example.answers, key=lambda answer: answer.label_position))
+        for ordinal, answer in enumerate(ordered_answers):
             predicted = int(predictions[answer.label_position])
             is_correct = predicted == answer.target
             total += 1
             correct += is_correct
+            example_correct += int(is_correct)
+            if ordinal == 0:
+                first_query_total += 1
+                first_query_correct += int(is_correct)
+            else:
+                later_query_total += 1
+                later_query_correct += int(is_correct)
             if answer.kind == "latest":
                 latest_total += 1
                 latest_correct += is_correct
@@ -701,10 +727,32 @@ def evaluate_retrieval(
             joint = key_bucket.setdefault(str(answer.distance), [0, 0])
             joint[0] += int(is_correct)
             joint[1] += 1
+        complete_examples += int(example_correct == len(ordered_answers))
     model.train(model_was_training)
     formatted = {key: {group: {"correct": values[0], "total": values[1], "accuracy": values[0] / values[1]} for group, values in groups.items()} for key, groups in breakdown.items()}
     result: dict[str, Any] = {
         "generator_manifest": dataset.manifest(), "exact_query_accuracy": correct / total if total else None,
+        "query_accuracy": correct / total if total else None,
+        "example_accuracy": complete_examples / len(indices),
+        "all_queries_correct": complete_examples,
+        "example_total": len(indices),
+        "macro_example_accuracy": complete_examples / len(indices),
+        "supervised_answer_tokens": supervised_tokens,
+        "effective_input_tokens": effective_tokens,
+        "first_query_accuracy": first_query_correct / first_query_total if first_query_total else None,
+        "later_query_accuracy": later_query_correct / later_query_total if later_query_total else None,
+        "history_conditioning": history_conditioning,
+        "metric_contract": {
+            "primary_weighting": "micro_query",
+            "query_accuracy_denominator": "all_scored_queries",
+            "example_accuracy_denominator": "examples_with_all_scored_queries_correct",
+            "difficulty_distance": "actual_answer_query_marker_minus_latest_value_position",
+            "requested_distance_field": "generator_manifest.parameters.query_distances",
+            "history_conditioning": history_conditioning,
+            "query_format": "query_marker_key_then_answer_token_label",
+            "answer_free_primary": history_conditioning == "answer_free",
+            "causal_prediction": "logit_at_key_position_predicts_following_answer",
+        },
         "correct": correct, "total": total, "breakdowns": formatted,
         "evaluated_examples": len(indices),
         "example_indices_sha256": sha256(",".join(map(str, indices)).encode()).hexdigest(),
