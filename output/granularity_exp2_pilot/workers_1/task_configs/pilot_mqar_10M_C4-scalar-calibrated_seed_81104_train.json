@@ -1,0 +1,55 @@
+﻿{
+    "operation":  "train",
+    "experiment_id":  "granularity-init-worker-pilot-both-20261113_162524",
+    "condition_id":  "C4-scalar-calibrated",
+    "family":  "mqar",
+    "scale":  "10M",
+    "variant":  "scalar",
+    "initialization":  "calibrated-geometric",
+    "seed":  81104,
+    "output_dir":  "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_1\\runs\\mqar\\10M\\C4-scalar-calibrated\\seed_81104",
+    "max_optimizer_steps":  20,
+    "batch_size":  8,
+    "grad_accum_steps":  4,
+    "context_length":  512,
+    "validation_steps":  4,
+    "evaluation_interval":  10,
+    "learning_rate":  0.003,
+    "calibration_min_half_life":  16,
+    "calibration_max_half_life":  128,
+    "calibration_examples":  256,
+    "retrieval_config":  {
+                             "generator_version":  "mqar-overwrite-v3",
+                             "train_examples":  50000,
+                             "validation_examples":  64,
+                             "held_out_examples":  64,
+                             "sequence_lengths":  [
+                                                      128,
+                                                      256,
+                                                      512
+                                                  ],
+                             "key_counts":  [
+                                                4,
+                                                8,
+                                                16
+                                            ],
+                             "query_distances":  [
+                                                     8,
+                                                     16,
+                                                     32
+                                                 ],
+                             "overwrite_counts":  [
+                                                      1,
+                                                      2
+                                                  ]
+                         },
+    "run_mode":  "production",
+    "recurrence_backend":  "reference",
+    "state_accumulator_dtype":  "input",
+    "recurrence_chunk_size":  64,
+    "validation_answer_accuracy":  true,
+    "concurrent_training_runs":  1,
+    "qualification":  true,
+    "qualification_stage":  "worker-capacity-pilot",
+    "qualification_scope":  "runtime-capacity-only"
+}

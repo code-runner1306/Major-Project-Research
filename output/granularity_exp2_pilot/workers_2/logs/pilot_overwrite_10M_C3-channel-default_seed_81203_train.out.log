@@ -1,0 +1,4 @@
+Validation progress [overwrite/10M/channel-wise/seed81203]: step=10/20 loss=9.042509 perplexity=8454.9648
+Training progress [overwrite/10M/channel-wise/seed81203]: 20/20 optimizer steps completed
+Validation progress [overwrite/10M/channel-wise/seed81203]: step=20/20 loss=9.060026 perplexity=8604.3760
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\overwrite\\10M\\C3-channel-default\\seed_81203'}

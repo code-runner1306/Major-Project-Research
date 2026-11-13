@@ -1,0 +1,4 @@
+Validation progress [mqar/10M/channel-wise/seed81202]: step=10/20 loss=9.041012 perplexity=8442.3145
+Training progress [mqar/10M/channel-wise/seed81202]: 20/20 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed81202]: step=20/20 loss=9.048414 perplexity=8505.0400
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\mqar\\10M\\C3-channel-default\\seed_81202'}

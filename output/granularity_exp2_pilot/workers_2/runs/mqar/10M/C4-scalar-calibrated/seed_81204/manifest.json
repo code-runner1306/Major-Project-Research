@@ -1,0 +1,654 @@
+{
+  "budget": {
+    "batch_size": 8,
+    "concurrent_training_runs": 2,
+    "context_length": 512,
+    "grad_accum_steps": 4,
+    "max_optimizer_steps": 20,
+    "status": "study_locked_budget"
+  },
+  "data_identity": {
+    "generator_version": "mqar-overwrite-v3",
+    "held_out_hash": "1861fdc053be89c74e62535a6f5f3ea786c1970651c7c961a03586f1ef44f33f",
+    "paired_order": "indexed_seeded_order",
+    "test_seed": 281205,
+    "train_hash": "aa87162593d464c633b49d075ad938fa72bd5b6aa2c496f60c2dec062f671ddb",
+    "validation_hash": "231d4ec5207eb059f9c77e6d984bd692cccd2e8f2ac37e6134ac5b72d6bec100",
+    "validation_seed": 281204
+  },
+  "environment": {
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "python": "3.13.14",
+    "torch": "2.11.0+cu128"
+  },
+  "evaluation_protocol": {
+    "benchmark_generated_tokens": 256,
+    "benchmark_prompt_lengths": [
+      64,
+      256,
+      512
+    ],
+    "benchmark_repeats": 5,
+    "benchmark_warmup": 2,
+    "cache_benchmarks": true,
+    "energy": true,
+    "equivalence_generated_tokens": 256,
+    "equivalence_prompt_length": 64,
+    "gate_diagnostics": true,
+    "natural_language_retrieval": null,
+    "posthoc_gate_eval_examples": 512,
+    "posthoc_gate_group_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "posthoc_gate_grouping": true,
+    "resource_capture_version": 1,
+    "resource_sample_interval_seconds": 1.0,
+    "retrieval_version": "mqar-overwrite-v3",
+    "version": 2
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "mqar",
+  "fingerprint": "89283822ba4474ea40cd960b91823a2bffb38a5d8c86ce74e16886f5a7ee78c3",
+  "model": {
+    "alpha_bias_enabled": true,
+    "architecture_contract": {
+      "attention_layout": "pure_gdn",
+      "calibrated_gate_bias": "trainable alpha bias fitted from training batches; calibration is a package treatment",
+      "decay_parameterization": "sigmoid(alpha projection); scalar, grouped, or channel-wise",
+      "default_gate_bias": "no alpha bias; sigmoid(0)=0.5 before input effects",
+      "embedding_output": "tied token embedding and output projection",
+      "full_attention_layers": 0,
+      "gated_delta_layers": 6,
+      "initialization_treatment": "calibrated-geometric",
+      "mlp": "bias-free SwiGLU",
+      "model_family": "gated-delta-net-common-backbone-ablation",
+      "normalization": "pre-attention RMSNorm and pre-MLP RMSNorm; final RMSNorm",
+      "output_gate": "SiLU(gate projection)",
+      "qkv_convolution": "depthwise causal Conv1d, kernel_size=4, bias=True",
+      "qkv_convolution_activation": "none",
+      "qkv_projection": "bias-free linear projections",
+      "query_key_normalization": "L2 normalization before recurrence",
+      "reference_scope": "simplified common-backbone ablation; not a full production KDA/GDN reproduction",
+      "state_orientation": "value_by_key",
+      "variant": "scalar",
+      "write_parameterization": "sigmoid(beta projection), one value per head"
+    },
+    "attention_layout": "pure_gdn",
+    "calibration": {
+      "calibration_examples": 256,
+      "calibration_tokens": 76032,
+      "calibration_wall_time_seconds": 78.74504549999256,
+      "data_provenance": {
+        "masking_limit": null,
+        "masking_policy": "explicit_dataset_sequence_lengths",
+        "padding_mask": "explicit mask supplied",
+        "phase_masks": "write/query/filler masks supplied",
+        "selection": "first configured calibration batches",
+        "split": "train",
+        "token_batches_sha256": "bf825c1a0a1c4cbd551451b9d78668d31f7c37373fc7f66dc5f62f246fa4687d",
+        "weighting": "uniform over explicitly included tokens"
+      },
+      "half_life_interpretation": "decay diagnostic derived from mean alpha; not a measured full-state memory lifetime",
+      "layers": [
+        {
+          "layer": 0,
+          "mean_abs_dretention_dlogit": [
+            0.04058753699064255,
+            0.020962800830602646,
+            0.010654856450855732,
+            0.005370272323489189
+          ],
+          "phase_gate_statistics": {
+            "filler": {
+              "count": 64172,
+              "mean_abs_dretention_dlogit": 0.01942264474928379,
+              "mean_retention": 0.9799641370773315,
+              "std_retention": 0.014554684050381184
+            },
+            "query": {
+              "count": 7116,
+              "mean_abs_dretention_dlogit": 0.019303306937217712,
+              "mean_retention": 0.9801352620124817,
+              "std_retention": 0.012916906736791134
+            },
+            "write": {
+              "count": 4744,
+              "mean_abs_dretention_dlogit": 0.019140416756272316,
+              "mean_retention": 0.9802941083908081,
+              "std_retention": 0.013307477347552776
+            }
+          },
+          "pre_bias_logit_std": [
+            0.09565634280443192,
+            0.09921768307685852,
+            0.10628289729356766,
+            0.17140693962574005
+          ],
+          "realized_gate_std": [
+            0.0034253813792020082,
+            0.00241111870855093,
+            0.0009796918602660298,
+            0.001190848182886839
+          ],
+          "realized_half_life": [
+            15.999999046325684,
+            32.00010299682617,
+            63.99998474121094,
+            127.98674011230469
+          ],
+          "realized_mean_retention": [
+            0.9576032757759094,
+            0.9785721302032471,
+            0.9892280101776123,
+            0.9945988655090332
+          ],
+          "retention_residual": [
+            -5.960464477539063e-08,
+            5.960464477539063e-08,
+            -5.960464477539063e-08,
+            -5.960464477539062e-07
+          ],
+          "target_half_life": [
+            16.000001907348633,
+            31.999998092651367,
+            64.00000762939453,
+            127.99998474121094
+          ],
+          "target_mean_retention": [
+            0.9576033353805542,
+            0.9785720705986023,
+            0.9892280697822571,
+            0.994599461555481
+          ]
+        },
+        {
+          "layer": 1,
+          "mean_abs_dretention_dlogit": [
+            0.04058336839079857,
+            0.020961299538612366,
+            0.01065453328192234,
+            0.0053710415959358215
+          ],
+          "phase_gate_statistics": {
+            "filler": {
+              "count": 64172,
+              "mean_abs_dretention_dlogit": 0.01975528709590435,
+              "mean_retention": 0.9796173572540283,
+              "std_retention": 0.014557105489075184
+            },
+            "query": {
+              "count": 7116,
+              "mean_abs_dretention_dlogit": 0.01740613393485546,
+              "mean_retention": 0.9821062088012695,
+              "std_retention": 0.012940454296767712
+            },
+            "write": {
+              "count": 4744,
+              "mean_abs_dretention_dlogit": 0.01746559515595436,
+              "mean_retention": 0.9820287227630615,
+              "std_retention": 0.013519017025828362
+            }
+          },
+          "pre_bias_logit_std": [
+            0.10831275582313538,
+            0.16270095109939575,
+            0.09297896921634674,
+            0.09216907620429993
+          ],
+          "realized_gate_std": [
+            0.003979452885687351,
+            0.002737279050052166,
+            0.0011329433182254434,
+            0.0005811717128381133
+          ],
+          "realized_half_life": [
+            15.999999046325684,
+            32.00010299682617,
+            64.00033569335938,
+            128.0023193359375
+          ],
+          "realized_mean_retention": [
+            0.9576032757759094,
+            0.9785721302032471,
+            0.9892280697822571,
+            0.9945995211601257
+          ],
+          "retention_residual": [
+            -5.960464477539063e-08,
+            5.960464477539063e-08,
+            0.0,
+            5.960464477539063e-08
+          ],
+          "target_half_life": [
+            16.000001907348633,
+            31.999998092651367,
+            64.00000762939453,
+            127.99998474121094
+          ],
+          "target_mean_retention": [
+            0.9576033353805542,
+            0.9785720705986023,
+            0.9892280697822571,
+            0.994599461555481
+          ]
+        },
+        {
+          "layer": 2,
+          "mean_abs_dretention_dlogit": [
+            0.04056921228766441,
+            0.020939083769917488,
+            0.010647505521774292,
+            0.005370900966227055
+          ],
+          "phase_gate_statistics": {
+            "filler": {
+              "count": 64172,
+              "mean_abs_dretention_dlogit": 0.018412325531244278,
+              "mean_retention": 0.9810358881950378,
+              "std_retention": 0.013861306942999363
+            },
+            "query": {
+              "count": 7116,
+              "mean_abs_dretention_dlogit": 0.024976462125778198,
+              "mean_retention": 0.9740078449249268,
+              "std_retention": 0.018442148342728615
+            },
+            "write": {
+              "count": 4744,
+              "mean_abs_dretention_dlogit": 0.024101853370666504,
+              "mean_retention": 0.9749875664710999,
+              "std_retention": 0.01688241772353649
+            }
+          },
+          "pre_bias_logit_std": [
+            0.11814802885055542,
+            0.19215984642505646,
+            0.20835259556770325,
+            0.11028124392032623
+          ],
+          "realized_gate_std": [
+            0.005474133417010307,
+            0.005449883174151182,
+            0.002898608101531863,
+            0.0006613238365389407
+          ],
+          "realized_half_life": [
+            16.00002098083496,
+            32.00010299682617,
+            64.00033569335938,
+            128.0023193359375
+          ],
+          "realized_mean_retention": [
+            0.9576033353805542,
+            0.9785721302032471,
+            0.9892280697822571,
+            0.9945995211601257
+          ],
+          "retention_residual": [
+            0.0,
+            5.960464477539063e-08,
+            0.0,
+            5.960464477539063e-08
+          ],
+          "target_half_life": [
+            16.000001907348633,
+            31.999998092651367,
+            64.00000762939453,
+            127.99998474121094
+          ],
+          "target_mean_retention": [
+            0.9576033353805542,
+            0.9785720705986023,
+            0.9892280697822571,
+            0.994599461555481
+          ]
+        },
+        {
+          "layer": 3,
+          "mean_abs_dretention_dlogit": [
+            0.040576621890068054,
+            0.020963521674275398,
+            0.010654276236891747,
+            0.0053707873448729515
+          ],
+          "phase_gate_statistics": {
+            "filler": {
+              "count": 64172,
+              "mean_abs_dretention_dlogit": 0.019795164465904236,
+              "mean_retention": 0.9795708060264587,
+              "std_retention": 0.014719190075993538
+            },
+            "query": {
+              "count": 7116,
+              "mean_abs_dretention_dlogit": 0.01714365929365158,
+              "mean_retention": 0.982394278049469,
+              "std_retention": 0.012331552803516388
+            },
+            "write": {
+              "count": 4744,
+              "mean_abs_dretention_dlogit": 0.017299724742770195,
+              "mean_retention": 0.9822258949279785,
+              "std_retention": 0.012592255137860775
+            }
+          },
+          "pre_bias_logit_std": [
+            0.14094199240207672,
+            0.10279501974582672,
+            0.15012530982494354,
+            0.1264609545469284
+          ],
+          "realized_gate_std": [
+            0.004745496436953545,
+            0.0022840851452201605,
+            0.0012862466974183917,
+            0.0007785232737660408
+          ],
+          "realized_half_life": [
+            16.00002098083496,
+            31.999923706054688,
+            64.00033569335938,
+            127.99949645996094
+          ],
+          "realized_mean_retention": [
+            0.9576033353805542,
+            0.9785720109939575,
+            0.9892280697822571,
+            0.9945994019508362
+          ],
+          "retention_residual": [
+            0.0,
+            -5.960464477539063e-08,
+            0.0,
+            -5.960464477539063e-08
+          ],
+          "target_half_life": [
+            16.000001907348633,
+            31.999998092651367,
+            64.00000762939453,
+            127.99998474121094
+          ],
+          "target_mean_retention": [
+            0.9576033353805542,
+            0.9785720705986023,
+            0.9892280697822571,
+            0.994599461555481
+          ]
+        },
+        {
+          "layer": 4,
+          "mean_abs_dretention_dlogit": [
+            0.04058143496513367,
+            0.02096293866634369,
+            0.010654921643435955,
+            0.005371152888983488
+          ],
+          "phase_gate_statistics": {
+            "filler": {
+              "count": 64172,
+              "mean_abs_dretention_dlogit": 0.019716888666152954,
+              "mean_retention": 0.9796646237373352,
+              "std_retention": 0.014314573258161545
+            },
+            "query": {
+              "count": 7116,
+              "mean_abs_dretention_dlogit": 0.017298247665166855,
+              "mean_retention": 0.9821920990943909,
+              "std_retention": 0.0138727817684412
+            },
+            "write": {
+              "count": 4744,
+              "mean_abs_dretention_dlogit": 0.01814768835902214,
+              "mean_retention": 0.9812597632408142,
+              "std_retention": 0.015535162761807442
+            }
+          },
+          "pre_bias_logit_std": [
+            0.1076442077755928,
+            0.1403496414422989,
+            0.09686559438705444,
+            0.08683392405509949
+          ],
+          "realized_gate_std": [
+            0.0042138178832829,
+            0.0024110779631882906,
+            0.0009538460290059447,
+            0.00044905144022777677
+          ],
+          "realized_half_life": [
+            16.00002098083496,
+            32.00010299682617,
+            64.00033569335938,
+            127.99949645996094
+          ],
+          "realized_mean_retention": [
+            0.9576033353805542,
+            0.9785721302032471,
+            0.9892280697822571,
+            0.9945994019508362
+          ],
+          "retention_residual": [
+            0.0,
+            5.960464477539063e-08,
+            0.0,
+            -5.960464477539063e-08
+          ],
+          "target_half_life": [
+            16.000001907348633,
+            31.999998092651367,
+            64.00000762939453,
+            127.99998474121094
+          ],
+          "target_mean_retention": [
+            0.9576033353805542,
+            0.9785720705986023,
+            0.9892280697822571,
+            0.994599461555481
+          ]
+        },
+        {
+          "layer": 5,
+          "mean_abs_dretention_dlogit": [
+            0.040580928325653076,
+            0.020959487184882164,
+            0.010653968900442123,
+            0.005371010396629572
+          ],
+          "phase_gate_statistics": {
+            "filler": {
+              "count": 64172,
+              "mean_abs_dretention_dlogit": 0.01915784738957882,
+              "mean_retention": 0.9802605509757996,
+              "std_retention": 0.013853918761014938
+            },
+            "query": {
+              "count": 7116,
+              "mean_abs_dretention_dlogit": 0.020606810227036476,
+              "mean_retention": 0.9786592721939087,
+              "std_retention": 0.016688261181116104
+            },
+            "write": {
+              "count": 4744,
+              "mean_abs_dretention_dlogit": 0.020726755261421204,
+              "mean_retention": 0.9784982204437256,
+              "std_retention": 0.017683157697319984
+            }
+          },
+          "pre_bias_logit_std": [
+            0.09312915802001953,
+            0.1219065859913826,
+            0.1570250242948532,
+            0.10314823687076569
+          ],
+          "realized_gate_std": [
+            0.00427572475746274,
+            0.0030463929288089275,
+            0.0013750186190009117,
+            0.0005746691022068262
+          ],
+          "realized_half_life": [
+            15.999999046325684,
+            32.00010299682617,
+            63.99998474121094,
+            127.99949645996094
+          ],
+          "realized_mean_retention": [
+            0.9576032757759094,
+            0.9785721302032471,
+            0.9892280101776123,
+            0.9945994019508362
+          ],
+          "retention_residual": [
+            -5.960464477539063e-08,
+            5.960464477539063e-08,
+            -5.960464477539063e-08,
+            -5.960464477539063e-08
+          ],
+          "target_half_life": [
+            16.000001907348633,
+            31.999998092651367,
+            64.00000762939453,
+            127.99998474121094
+          ],
+          "target_mean_retention": [
+            0.9576033353805542,
+            0.9785720705986023,
+            0.9892280697822571,
+            0.994599461555481
+          ]
+        }
+      ],
+      "max_half_life": 128.0,
+      "method": "calibrated-geometric-package",
+      "min_half_life": 16.0,
+      "target_half_life_by_head": [
+        16.000001907348633,
+        31.999998092651367,
+        64.00000762939453,
+        127.99998474121094
+      ],
+      "treatment_components": {
+        "alpha_bias_fitting": true,
+        "causal_claim": "package effect; not timescale-only",
+        "within_head_projection_row_matching": true
+      }
+    },
+    "capacity_comparison": {
+      "exact_useful_parameter_match": false,
+      "gate_parameter_overhead_definition": "trainable alpha/beta/gate projection storage included in parameter_components.gates",
+      "same_backbone": true
+    },
+    "control_strategy": "same_backbone",
+    "d_ff": [
+      426,
+      426,
+      426,
+      426,
+      426,
+      426
+    ],
+    "d_head": 40,
+    "d_model": 160,
+    "gate_initialization": "calibrated-geometric",
+    "gate_parameter_overhead": 24,
+    "n_head": 4,
+    "n_layer": 6,
+    "name": "10M",
+    "parameter_components": {
+      "convolutions": 14400,
+      "embeddings": 1310720,
+      "ffns": 1226880,
+      "gates": 161304,
+      "norms": 160,
+      "other": 1920,
+      "output_head": 0,
+      "projections": 614400,
+      "tied_output_head": 0,
+      "total": 3329784
+    },
+    "parameter_count": 3329784,
+    "per_layer_ffn_widths": [
+      426,
+      426,
+      426,
+      426,
+      426,
+      426
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "decode_backend_version": "decode-v3-key-axis-decay-stub",
+      "extension_build_identity": "sha256:2d6753d4468c351e6c4592dd1aa9d673539598d9d42551f8a166077628502832",
+      "extension_semantic_version": "gdn-cuda-v2-key-axis-decay-scaffold",
+      "implementation_source_hash": "3ec05b3308a7aee7ce3ac8239b38c487bad8eb10ddb147007a741e37c03e1ede",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v3-key-axis-decay",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ],
+      "target_architecture": "sm_70"
+    },
+    "study_init_seed": 81204,
+    "study_task": {
+      "budget": {
+        "batch_size": 8,
+        "context_length": 512,
+        "evaluation_interval": 10,
+        "grad_accum_steps": 4,
+        "max_optimizer_steps": 20,
+        "validation_steps": 4
+      },
+      "calibration_examples": 256,
+      "condition_id": "C4-scalar-calibrated",
+      "experiment_id": "granularity-init-worker-pilot-both-20261113_162524",
+      "family": "mqar",
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.003,
+      "protocol_version": "legacy-v1",
+      "scale": "10M",
+      "scientific_config_hash": "0bbe7e903f5ab8608e9d17e5b6beb0ce9455ce638436bf5f1828c3f35bf76d55",
+      "seed": 81204,
+      "variant": "scalar"
+    },
+    "tied_output_parameter_count": 0,
+    "trainable_parameter_count": 3329784,
+    "variant": "scalar"
+  },
+  "run_mode": "production",
+  "scale": "10M",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 181204,
+    "evaluation_seed": 281204,
+    "model_seed": 81204,
+    "research_seed": 81204
+  },
+  "source": {
+    "dirty": true,
+    "revision": "12a2e9e70c08a66bf0073445cb39273f560c0d59"
+  },
+  "variant": "scalar"
+}

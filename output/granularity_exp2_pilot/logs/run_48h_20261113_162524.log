@@ -1,0 +1,85 @@
+﻿[2026-11-13T10:55:27Z] Python: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Scripts\python.exe PyTorch: 2.11.0+cu128 CUDA available: True
+[2026-11-13T10:55:27Z] Qualification trial workers=2: training 8 independent tasks
+[2026-11-13T10:55:27Z] QUEUED train pilot_mqar_10M_C1-scalar-default_seed_81200_train
+[2026-11-13T10:55:27Z] QUEUED train pilot_overwrite_10M_C1-scalar-default_seed_81201_train
+[2026-11-13T10:57:48Z] pilot_mqar_10M_C1-scalar-default_seed_81200_train [stdout] Validation progress [mqar/10M/scalar/seed81200]: step=10/20 loss=9.038777 perplexity=8423.4717
+[2026-11-13T10:57:48Z] pilot_overwrite_10M_C1-scalar-default_seed_81201_train [stdout] Validation progress [overwrite/10M/scalar/seed81201]: step=10/20 loss=9.022028 perplexity=8283.5586
+[2026-11-13T10:59:38Z] pilot_mqar_10M_C1-scalar-default_seed_81200_train [stdout] Training progress [mqar/10M/scalar/seed81200]: 20/20 optimizer steps completed
+[2026-11-13T10:59:38Z] pilot_overwrite_10M_C1-scalar-default_seed_81201_train [stdout] Training progress [overwrite/10M/scalar/seed81201]: 20/20 optimizer steps completed
+[2026-11-13T10:59:58Z] pilot_mqar_10M_C1-scalar-default_seed_81200_train [stdout] Validation progress [mqar/10M/scalar/seed81200]: step=20/20 loss=9.053701 perplexity=8550.1270
+[2026-11-13T10:59:58Z] pilot_mqar_10M_C1-scalar-default_seed_81200_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\mqar\\10M\\C1-scalar-default\\seed_81200'}
+[2026-11-13T10:59:58Z] pilot_overwrite_10M_C1-scalar-default_seed_81201_train [stdout] Validation progress [overwrite/10M/scalar/seed81201]: step=20/20 loss=9.036684 perplexity=8405.8574
+[2026-11-13T10:59:58Z] pilot_overwrite_10M_C1-scalar-default_seed_81201_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\overwrite\\10M\\C1-scalar-default\\seed_81201'}
+[2026-11-13T10:59:58Z] PROCESS EXIT train pilot_mqar_10M_C1-scalar-default_seed_81200_train pid=17280 code= elapsed=270.7s
+[2026-11-13T11:00:01Z] ARTIFACT CHECK train pilot_mqar_10M_C1-scalar-default_seed_81200_train: COMPLETE
+[2026-11-13T11:00:01Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_mqar_10M_C1-scalar-default_seed_81200_train
+[2026-11-13T11:00:01Z] COMPLETED train pilot_mqar_10M_C1-scalar-default_seed_81200_train
+[2026-11-13T11:00:01Z] PROCESS EXIT train pilot_overwrite_10M_C1-scalar-default_seed_81201_train pid=22608 code= elapsed=273.7s
+[2026-11-13T11:00:04Z] ARTIFACT CHECK train pilot_overwrite_10M_C1-scalar-default_seed_81201_train: COMPLETE
+[2026-11-13T11:00:04Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_overwrite_10M_C1-scalar-default_seed_81201_train
+[2026-11-13T11:00:04Z] COMPLETED train pilot_overwrite_10M_C1-scalar-default_seed_81201_train
+[2026-11-13T11:00:04Z] QUEUED train pilot_mqar_10M_C3-channel-default_seed_81202_train
+[2026-11-13T11:00:04Z] QUEUED train pilot_overwrite_10M_C3-channel-default_seed_81203_train
+[2026-11-13T11:02:24Z] pilot_mqar_10M_C3-channel-default_seed_81202_train [stdout] Validation progress [mqar/10M/channel-wise/seed81202]: step=10/20 loss=9.041012 perplexity=8442.3145
+[2026-11-13T11:02:25Z] pilot_overwrite_10M_C3-channel-default_seed_81203_train [stdout] Validation progress [overwrite/10M/channel-wise/seed81203]: step=10/20 loss=9.042509 perplexity=8454.9648
+[2026-11-13T11:04:15Z] pilot_mqar_10M_C3-channel-default_seed_81202_train [stdout] Training progress [mqar/10M/channel-wise/seed81202]: 20/20 optimizer steps completed
+[2026-11-13T11:04:15Z] pilot_overwrite_10M_C3-channel-default_seed_81203_train [stdout] Training progress [overwrite/10M/channel-wise/seed81203]: 20/20 optimizer steps completed
+[2026-11-13T11:04:35Z] pilot_mqar_10M_C3-channel-default_seed_81202_train [stdout] Validation progress [mqar/10M/channel-wise/seed81202]: step=20/20 loss=9.048414 perplexity=8505.0400
+[2026-11-13T11:04:35Z] pilot_mqar_10M_C3-channel-default_seed_81202_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\mqar\\10M\\C3-channel-default\\seed_81202'}
+[2026-11-13T11:04:35Z] pilot_overwrite_10M_C3-channel-default_seed_81203_train [stdout] Validation progress [overwrite/10M/channel-wise/seed81203]: step=20/20 loss=9.060026 perplexity=8604.3760
+[2026-11-13T11:04:35Z] pilot_overwrite_10M_C3-channel-default_seed_81203_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\overwrite\\10M\\C3-channel-default\\seed_81203'}
+[2026-11-13T11:04:35Z] PROCESS EXIT train pilot_mqar_10M_C3-channel-default_seed_81202_train pid=14484 code= elapsed=270.5s
+[2026-11-13T11:04:37Z] ARTIFACT CHECK train pilot_mqar_10M_C3-channel-default_seed_81202_train: COMPLETE
+[2026-11-13T11:04:37Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_mqar_10M_C3-channel-default_seed_81202_train
+[2026-11-13T11:04:37Z] COMPLETED train pilot_mqar_10M_C3-channel-default_seed_81202_train
+[2026-11-13T11:04:37Z] PROCESS EXIT train pilot_overwrite_10M_C3-channel-default_seed_81203_train pid=9368 code= elapsed=273.2s
+[2026-11-13T11:04:40Z] ARTIFACT CHECK train pilot_overwrite_10M_C3-channel-default_seed_81203_train: COMPLETE
+[2026-11-13T11:04:40Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_overwrite_10M_C3-channel-default_seed_81203_train
+[2026-11-13T11:04:40Z] COMPLETED train pilot_overwrite_10M_C3-channel-default_seed_81203_train
+[2026-11-13T11:04:40Z] QUEUED train pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train
+[2026-11-13T11:04:40Z] QUEUED train pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train
+[2026-11-13T11:08:20Z] pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train [stdout] Validation progress [mqar/10M/scalar/seed81204]: step=10/20 loss=9.033314 perplexity=8377.5752
+[2026-11-13T11:08:20Z] pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train [stdout] Validation progress [overwrite/10M/scalar/seed81205]: step=10/20 loss=9.057462 perplexity=8582.3389
+[2026-11-13T11:10:01Z] pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train [stdout] Training progress [mqar/10M/scalar/seed81204]: 20/20 optimizer steps completed
+[2026-11-13T11:10:11Z] pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train [stdout] Training progress [overwrite/10M/scalar/seed81205]: 20/20 optimizer steps completed
+[2026-11-13T11:10:21Z] pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train [stdout] Validation progress [mqar/10M/scalar/seed81204]: step=20/20 loss=9.039405 perplexity=8428.7676
+[2026-11-13T11:10:21Z] pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\mqar\\10M\\C4-scalar-calibrated\\seed_81204'}
+[2026-11-13T11:10:31Z] pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train [stdout] Validation progress [overwrite/10M/scalar/seed81205]: step=20/20 loss=9.048370 perplexity=8504.6670
+[2026-11-13T11:10:31Z] pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\overwrite\\10M\\C4-scalar-calibrated\\seed_81205'}
+[2026-11-13T11:10:31Z] PROCESS EXIT train pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train pid=23540 code= elapsed=350.5s
+[2026-11-13T11:10:33Z] ARTIFACT CHECK train pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train: COMPLETE
+[2026-11-13T11:10:33Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train
+[2026-11-13T11:10:33Z] COMPLETED train pilot_mqar_10M_C4-scalar-calibrated_seed_81204_train
+[2026-11-13T11:10:33Z] PROCESS EXIT train pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train pid=25060 code= elapsed=353.1s
+[2026-11-13T11:10:36Z] ARTIFACT CHECK train pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train: COMPLETE
+[2026-11-13T11:10:36Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train
+[2026-11-13T11:10:36Z] COMPLETED train pilot_overwrite_10M_C4-scalar-calibrated_seed_81205_train
+[2026-11-13T11:10:36Z] QUEUED train pilot_mqar_10M_C6-channel-calibrated_seed_81206_train
+[2026-11-13T11:10:36Z] QUEUED train pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train
+[2026-11-13T11:14:36Z] pilot_mqar_10M_C6-channel-calibrated_seed_81206_train [stdout] Validation progress [mqar/10M/channel-wise/seed81206]: step=10/20 loss=9.037942 perplexity=8416.4375
+[2026-11-13T11:14:37Z] pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train [stdout] Validation progress [overwrite/10M/channel-wise/seed81207]: step=10/20 loss=9.053346 perplexity=8547.0859
+[2026-11-13T11:16:27Z] pilot_mqar_10M_C6-channel-calibrated_seed_81206_train [stdout] Training progress [mqar/10M/channel-wise/seed81206]: 20/20 optimizer steps completed
+[2026-11-13T11:16:27Z] pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train [stdout] Training progress [overwrite/10M/channel-wise/seed81207]: 20/20 optimizer steps completed
+[2026-11-13T11:16:37Z] pilot_mqar_10M_C6-channel-calibrated_seed_81206_train [stdout] Validation progress [mqar/10M/channel-wise/seed81206]: step=20/20 loss=9.034173 perplexity=8384.7842
+[2026-11-13T11:16:47Z] pilot_mqar_10M_C6-channel-calibrated_seed_81206_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\mqar\\10M\\C6-channel-calibrated\\seed_81206'}
+[2026-11-13T11:16:47Z] pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train [stdout] Validation progress [overwrite/10M/channel-wise/seed81207]: step=20/20 loss=9.063006 perplexity=8630.0488
+[2026-11-13T11:16:47Z] pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_2\\runs\\overwrite\\10M\\C6-channel-calibrated\\seed_81207'}
+[2026-11-13T11:16:47Z] PROCESS EXIT train pilot_mqar_10M_C6-channel-calibrated_seed_81206_train pid=11988 code= elapsed=370.8s
+[2026-11-13T11:16:50Z] ARTIFACT CHECK train pilot_mqar_10M_C6-channel-calibrated_seed_81206_train: COMPLETE
+[2026-11-13T11:16:50Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_mqar_10M_C6-channel-calibrated_seed_81206_train
+[2026-11-13T11:16:50Z] COMPLETED train pilot_mqar_10M_C6-channel-calibrated_seed_81206_train
+[2026-11-13T11:16:50Z] PROCESS EXIT train pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train pid=22840 code= elapsed=373.5s
+[2026-11-13T11:16:52Z] ARTIFACT CHECK train pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train: COMPLETE
+[2026-11-13T11:16:52Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train
+[2026-11-13T11:16:52Z] COMPLETED train pilot_overwrite_10M_C6-channel-calibrated_seed_81207_train
+[2026-11-13T11:16:53Z] Qualification trial workers=1: training 8 independent tasks
+[2026-11-13T11:16:53Z] QUEUED train pilot_mqar_10M_C1-scalar-default_seed_81100_train
+[2026-11-13T11:19:03Z] pilot_mqar_10M_C1-scalar-default_seed_81100_train [stdout] Validation progress [mqar/10M/scalar/seed81100]: step=10/20 loss=9.064865 perplexity=8646.1133
+[2026-11-13T11:20:43Z] pilot_mqar_10M_C1-scalar-default_seed_81100_train [stdout] Training progress [mqar/10M/scalar/seed81100]: 20/20 optimizer steps completed
+[2026-11-13T11:20:53Z] pilot_mqar_10M_C1-scalar-default_seed_81100_train [stdout] Validation progress [mqar/10M/scalar/seed81100]: step=20/20 loss=9.051383 perplexity=8530.3359
+[2026-11-13T11:21:03Z] pilot_mqar_10M_C1-scalar-default_seed_81100_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp2_pilot\\workers_1\\runs\\mqar\\10M\\C1-scalar-default\\seed_81100'}
+[2026-11-13T11:21:03Z] PROCESS EXIT train pilot_mqar_10M_C1-scalar-default_seed_81100_train pid=12364 code= elapsed=250.2s
+[2026-11-13T11:21:05Z] ARTIFACT CHECK train pilot_mqar_10M_C1-scalar-default_seed_81100_train: COMPLETE
+[2026-11-13T11:21:05Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for pilot_mqar_10M_C1-scalar-default_seed_81100_train
+[2026-11-13T11:21:05Z] COMPLETED train pilot_mqar_10M_C1-scalar-default_seed_81100_train
+[2026-11-13T11:21:06Z] QUEUED train pilot_overwrite_10M_C1-scalar-default_seed_81101_train

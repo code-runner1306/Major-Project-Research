@@ -1,0 +1,437 @@
+﻿{
+    "phase":  "train",
+    "requested_workers":  2,
+    "task_count":  8,
+    "command_success":  true,
+    "qualified":  false,
+    "telemetry_safe":  false,
+    "phase_makespan_seconds":  1284.8500344,
+    "hardware":  {
+                     "gpu_uuid":  "GPU-60d0260b-d814-11f1-a82d-82319e233ee8",
+                     "nvml_gpu_name":  "NVIDIA RTXA6000-12Q",
+                     "torch_gpu_name":  "NVIDIA RTXA6000-12Q",
+                     "driver_version":  "581.80",
+                     "torch_version":  "2.11.0+cu128",
+                     "torch_cuda_runtime":  "12.8"
+                 },
+    "tasks":  [
+                  {
+                      "family":  "mqar",
+                      "condition_id":  "C1-scalar-default",
+                      "seed":  81200,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  62.312698364257813,
+                      "max_gpu_utilization_percent":  75.0,
+                      "process_cpu_percent":  {
+                                                  "max":  4032.3,
+                                                  "mean":  104.56015325670498,
+                                                  "min":  12.0,
+                                                  "samples":  261
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  100.0,
+                                                 "mean":  72.70459770114942,
+                                                 "min":  0.0,
+                                                 "samples":  261
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2001248256.0,
+                                                "mean":  1898183307.2796936,
+                                                "min":  570068992.0,
+                                                "samples":  261
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18355982336.0,
+                                                       "mean":  18119433988.904213,
+                                                       "min":  15699013632.0,
+                                                       "samples":  261
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  261
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  44765184,
+                                           "allocated_before_bytes":  0,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2386280448,
+                                           "peak_reserved_bytes":  2522873856,
+                                           "reserved_after_bytes":  2522873856,
+                                           "reserved_before_bytes":  0,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  261,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  270.7238006
+                  },
+                  {
+                      "family":  "overwrite",
+                      "condition_id":  "C1-scalar-default",
+                      "seed":  81201,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  62.315241495768227,
+                      "max_gpu_utilization_percent":  75.0,
+                      "process_cpu_percent":  {
+                                                  "max":  102.5,
+                                                  "mean":  90.04069767441861,
+                                                  "min":  0.0,
+                                                  "samples":  258
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  100.0,
+                                                 "mean":  72.91821705426356,
+                                                 "min":  0.0,
+                                                 "samples":  258
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2002604032.0,
+                                                "mean":  1896464447.503876,
+                                                "min":  570187776.0,
+                                                "samples":  258
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18376318976.0,
+                                                       "mean":  18147098052.465115,
+                                                       "min":  15699013632.0,
+                                                       "samples":  258
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  258
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  44765184,
+                                           "allocated_before_bytes":  0,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2386280448,
+                                           "peak_reserved_bytes":  2522873856,
+                                           "reserved_after_bytes":  2522873856,
+                                           "reserved_before_bytes":  0,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  258,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  273.727734
+                  },
+                  {
+                      "family":  "mqar",
+                      "condition_id":  "C3-channel-default",
+                      "seed":  81202,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  62.675221761067711,
+                      "max_gpu_utilization_percent":  74.0,
+                      "process_cpu_percent":  {
+                                                  "max":  102.5,
+                                                  "mean":  89.01119691119692,
+                                                  "min":  0.0,
+                                                  "samples":  259
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  100.0,
+                                                 "mean":  72.93011583011584,
+                                                 "min":  0.0,
+                                                 "samples":  259
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  1994432512.0,
+                                                "mean":  1889630326.6100385,
+                                                "min":  570118144.0,
+                                                "samples":  259
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18324897792.0,
+                                                       "mean":  18084580332.23166,
+                                                       "min":  15690797056.0,
+                                                       "samples":  259
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  259
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  45969408,
+                                           "allocated_before_bytes":  0,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2410692096,
+                                           "peak_reserved_bytes":  2545942528,
+                                           "reserved_after_bytes":  2545942528,
+                                           "reserved_before_bytes":  0,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  259,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  270.5357012
+                  },
+                  {
+                      "family":  "overwrite",
+                      "condition_id":  "C3-channel-default",
+                      "seed":  81203,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  62.714385986328125,
+                      "max_gpu_utilization_percent":  74.0,
+                      "process_cpu_percent":  {
+                                                  "max":  103.2,
+                                                  "mean":  89.637109375,
+                                                  "min":  0.0,
+                                                  "samples":  256
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  100.0,
+                                                 "mean":  73.07265625,
+                                                 "min":  0.0,
+                                                 "samples":  256
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2001879040.0,
+                                                "mean":  1895151552.0,
+                                                "min":  570589184.0,
+                                                "samples":  256
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18322984960.0,
+                                                       "mean":  18099460320.0,
+                                                       "min":  15691624448.0,
+                                                       "samples":  256
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  256
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  45969408,
+                                           "allocated_before_bytes":  0,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2410692096,
+                                           "peak_reserved_bytes":  2545942528,
+                                           "reserved_after_bytes":  2545942528,
+                                           "reserved_before_bytes":  0,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  256,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  273.194798
+                  },
+                  {
+                      "family":  "mqar",
+                      "condition_id":  "C4-scalar-calibrated",
+                      "seed":  81204,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  62.131436665852867,
+                      "max_gpu_utilization_percent":  74.0,
+                      "process_cpu_percent":  {
+                                                  "max":  101.1,
+                                                  "mean":  90.16190476190476,
+                                                  "min":  0.0,
+                                                  "samples":  252
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  98.0,
+                                                 "mean":  72.3,
+                                                 "min":  0.0,
+                                                 "samples":  252
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2033082368.0,
+                                                "mean":  1964591380.3174603,
+                                                "min":  1101631488.0,
+                                                "samples":  252
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18382872576.0,
+                                                       "mean":  18207198565.587303,
+                                                       "min":  16460234752.0,
+                                                       "samples":  252
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  252
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  44765184,
+                                           "allocated_before_bytes":  22906880,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2382965248,
+                                           "peak_reserved_bytes":  2518679552,
+                                           "reserved_after_bytes":  2518679552,
+                                           "reserved_before_bytes":  348127232,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  252,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  350.45713889999996
+                  },
+                  {
+                      "family":  "overwrite",
+                      "condition_id":  "C4-scalar-calibrated",
+                      "seed":  81205,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  62.131436665852867,
+                      "max_gpu_utilization_percent":  74.0,
+                      "process_cpu_percent":  {
+                                                  "max":  100.6,
+                                                  "mean":  89.70235294117647,
+                                                  "min":  0.0,
+                                                  "samples":  255
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  98.0,
+                                                 "mean":  72.00901960784313,
+                                                 "min":  0.0,
+                                                 "samples":  255
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2051018752.0,
+                                                "mean":  1980608624.4392157,
+                                                "min":  1100562432.0,
+                                                "samples":  255
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18382741504.0,
+                                                       "mean":  18185617729.2549,
+                                                       "min":  16448086016.0,
+                                                       "samples":  255
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  255
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  44765184,
+                                           "allocated_before_bytes":  22906880,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2382965248,
+                                           "peak_reserved_bytes":  2518679552,
+                                           "reserved_after_bytes":  2518679552,
+                                           "reserved_before_bytes":  348127232,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  255,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  353.13404859999997
+                  },
+                  {
+                      "family":  "mqar",
+                      "condition_id":  "C6-channel-calibrated",
+                      "seed":  81206,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  63.559659322102867,
+                      "max_gpu_utilization_percent":  74.0,
+                      "process_cpu_percent":  {
+                                                  "max":  102.5,
+                                                  "mean":  90.22885375494072,
+                                                  "min":  0.0,
+                                                  "samples":  253
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  99.3,
+                                                 "mean":  74.13438735177866,
+                                                 "min":  0.0,
+                                                 "samples":  253
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2038837248.0,
+                                                "mean":  1969126177.3913043,
+                                                "min":  1101656064.0,
+                                                "samples":  253
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18367369216.0,
+                                                       "mean":  18194426317.407116,
+                                                       "min":  16537665536.0,
+                                                       "samples":  253
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  253
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  45969408,
+                                           "allocated_before_bytes":  23508992,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2408962048,
+                                           "peak_reserved_bytes":  2675965952,
+                                           "reserved_after_bytes":  2675965952,
+                                           "reserved_before_bytes":  771751936,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  253,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  370.7526937
+                  },
+                  {
+                      "family":  "overwrite",
+                      "condition_id":  "C6-channel-calibrated",
+                      "seed":  81207,
+                      "task_complete":  true,
+                      "max_whole_gpu_vram_percent":  63.559659322102867,
+                      "max_gpu_utilization_percent":  74.0,
+                      "process_cpu_percent":  {
+                                                  "max":  102.2,
+                                                  "mean":  89.8421875,
+                                                  "min":  0.0,
+                                                  "samples":  256
+                                              },
+                      "system_cpu_percent":  {
+                                                 "max":  99.7,
+                                                 "mean":  73.9859375,
+                                                 "min":  0.0,
+                                                 "samples":  256
+                                             },
+                      "process_rss_bytes":  {
+                                                "max":  2042630144.0,
+                                                "mean":  1974797536.0,
+                                                "min":  1101025280.0,
+                                                "samples":  256
+                                            },
+                      "system_memory_used_bytes":  {
+                                                       "max":  18367369216.0,
+                                                       "mean":  18170981920.0,
+                                                       "min":  16496721920.0,
+                                                       "samples":  256
+                                                   },
+                      "cpu_frequency_current_mhz":  {
+                                                        "max":  4200.0,
+                                                        "mean":  4200.0,
+                                                        "min":  4200.0,
+                                                        "samples":  256
+                                                    },
+                      "torch_memory":  {
+                                           "allocated_after_bytes":  45969408,
+                                           "allocated_before_bytes":  23508992,
+                                           "available":  true,
+                                           "peak_allocated_bytes":  2406983168,
+                                           "peak_reserved_bytes":  2545942528,
+                                           "reserved_after_bytes":  2545942528,
+                                           "reserved_before_bytes":  775946240,
+                                           "scope":  "current process PyTorch CUDA allocator"
+                                       },
+                      "nvml_samples":  256,
+                      "other_compute_process_count_max":  21,
+                      "telemetry_safe":  false,
+                      "task_wall_seconds":  373.45174219999996
+                  }
+              ],
+    "gpu_telemetry_limitation":  "GPU utilization and VRAM are whole-device readings; do not sum them.",
+    "cpu_telemetry_limitation":  "CPU observations do not by themselves prove throttling."
+}

@@ -1,0 +1,60 @@
+Traceback (most recent call last):
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 389, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 256, in main
+    result = _run_study_task(args.study_task_config)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\run_all.py", line 160, in _run_study_task
+    return run_seed(profile, family=family, scale=scale, variant=variant, seed=int(task["seed"]), stop_after_trained=True)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\orchestration.py", line 696, in run_seed
+    training = train_fixed_budget(
+        model=model, train_dataloader=train_data, validation_dataloader=validation_data,
+    ...<3 lines>...
+        curriculum_loaders=curriculum_loaders,
+    )
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\train.py", line 226, in train_fixed_budget
+    validation.update(validation_metrics_fn(model, step))
+                      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\orchestration.py", line 687, in validation_metrics_fn
+    answer_metrics = evaluate_retrieval(
+        current_model, validation_retrieval, device, example_indices=indices,
+    )
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\utils\_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\retrieval.py", line 725, in evaluate_retrieval
+    logits, _ = model(model_tokens.unsqueeze(0).to(device))
+                ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\model.py", line 420, in forward
+    result = block(hidden, None if cache is None else cache[index], use_cache=use_cache)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\model.py", line 274, in forward
+    attn_result = self.attn(self.attn_norm(x), cache, use_cache=use_cache)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\nn\modules\module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Lib\site-packages\torch\nn\modules\module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\model.py", line 182, in forward
+    output, state = run_recurrence(
+                    ~~~~~~~~~~~~~~^
+        F.normalize(q, p=2, dim=-1), F.normalize(k, p=2, dim=-1), v, alpha, beta,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        cache.get("state"), options=self.recurrence_options,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\recurrence.py", line 232, in run_recurrence
+    return reference_recurrence(q, k, v, alpha, beta, initial_state, options=options)
+  File "C:\Users\Intern\Desktop\Mayank\Major-Project-Research\recurrence.py", line 130, in reference_recurrence
+    outputs.append(state.matmul(q_t).squeeze(-1))
+                   ~~~~~~~~~~~~^^^^^
+KeyboardInterrupt
