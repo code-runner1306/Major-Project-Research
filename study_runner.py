@@ -27,11 +27,27 @@ def require_compute_authorization(config: dict[str, Any], *, stage: str) -> None
     if config.get("qualification", {}).get("smoke_only"):
         return
     authorization = config.get("compute_authorization")
-    if not isinstance(authorization, dict) or authorization.get("status") != "approved":
+    approved_by = authorization.get("approved_by") if isinstance(authorization, dict) else None
+    approved_at = authorization.get("approved_at_utc") if isinstance(authorization, dict) else None
+    valid_timestamp = False
+    if isinstance(approved_at, str) and approved_at.endswith("Z"):
+        try:
+            parsed = datetime.fromisoformat(approved_at[:-1] + "+00:00")
+            valid_timestamp = parsed.tzinfo is not None and parsed.utcoffset() == timezone.utc.utcoffset(parsed)
+        except ValueError:
+            valid_timestamp = False
+    if (
+        not isinstance(authorization, dict)
+        or authorization.get("status") != "approved"
+        or not isinstance(approved_by, str)
+        or not approved_by.strip()
+        or not valid_timestamp
+    ):
         raise RuntimeError(
             f"Compute authorization is required before stage {stage}. "
-            "Set compute_authorization.status=approved in a reviewed config "
-            "with approver and UTC timestamp; smoke tests do not authorize research compute."
+            "Set status=approved with a nonblank approved_by and explicit UTC "
+            "approved_at_utc (for example 2026-11-13T12:00:00Z); smoke tests "
+            "do not authorize research compute."
         )
 
 

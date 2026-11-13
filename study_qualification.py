@@ -467,9 +467,9 @@ def render_training_time_estimate_markdown(timing: dict[str, Any]) -> str:
 
 
 def corrected_pilot_budget(
-    timing: dict[str, Any], *, calibration_hours: float = 0.0,
-    validation_hours: float = 0.0, evaluation_hours: float = 0.0,
-    isolated_benchmark_hours: float = 0.0, failure_allowance: float = 0.15,
+    timing: dict[str, Any], *, calibration_hours: float | None = None,
+    validation_hours: float | None = None, evaluation_hours: float | None = None,
+    isolated_benchmark_hours: float | None = None, failure_allowance: float = 0.15,
 ) -> dict[str, Any]:
     """Combine measured pilot components into an authorization record.
 
@@ -481,13 +481,23 @@ def corrected_pilot_budget(
         raise ValueError("Corrected pilot budget requires measured timing")
     if not 0.0 <= float(failure_allowance) < 1.0:
         raise ValueError("failure allowance must be in [0, 1)")
-    components = {
+    raw_components = {
         "training": sum(float(value) for value in timing.get("training_plus_periodic_validation_total_hours_by_size_actual_seed_count", {}).values()),
-        "calibration": float(calibration_hours),
-        "validation": float(validation_hours),
-        "held_out_evaluation": float(evaluation_hours),
-        "isolated_inference_benchmark": float(isolated_benchmark_hours),
+        "calibration": calibration_hours,
+        "validation": validation_hours,
+        "held_out_evaluation": evaluation_hours,
+        "isolated_inference_benchmark": isolated_benchmark_hours,
     }
+    unavailable = [name for name, value in raw_components.items() if value is None]
+    if unavailable:
+        return {
+            "status": "unavailable",
+            "authorization_required": True,
+            "authorization_ready": False,
+            "unavailable_components": unavailable,
+            "decision": "measurement_required_before_authorization",
+        }
+    components = {name: float(value) for name, value in raw_components.items()}
     if any(value < 0.0 for value in components.values()):
         raise ValueError("pilot budget components must be non-negative")
     measured_total = sum(components.values())
@@ -495,6 +505,7 @@ def corrected_pilot_budget(
     return {
         "status": "measured",
         "authorization_required": True,
+        "authorization_ready": False,
         "components_hours": components,
         "measured_total_hours": measured_total,
         "failure_allowance_fraction": float(failure_allowance),
