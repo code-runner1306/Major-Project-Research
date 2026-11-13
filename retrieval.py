@@ -871,6 +871,18 @@ def evaluate_retrieval_baselines(
     oracle_mismatches = 0
     oracle_checks = 0
     incomplete_checks = 0
+    counterfactual_by_cell: dict[str, dict[str, int]] = {}
+    counterfactual_checks = counterfactual_passes = counterfactual_mismatches = counterfactual_incomplete = 0
+
+    def latest_value_for_key(tokens: list[int], key: int, stop: int) -> int | None:
+        writes = [
+            tokens[position + 1]
+            for position in range(stop)
+            if tokens[position] == key
+            and position + 1 < stop
+            and tokens[position + 1] >= value_floor
+        ]
+        return writes[-1] if writes else None
 
     def record(name: str, prediction: int | None, target: int, cell: str) -> None:
         checks = cell_checks.setdefault(cell, {"expected": 0, "incomplete": 0})
@@ -931,6 +943,44 @@ def evaluate_retrieval_baselines(
             record("final_two_values", final_two_prediction, target, cell)
             record("no_memory_frequency", frequency_prediction, target, cell)
 
+            # Counterfactual query-key audit: keep the entire causal memory
+            # prefix fixed, change only the queried key, and derive the new
+            # target by an independent token-prefix scan.
+            key_values = {
+                key: latest_value_for_key(tokens, key, first_query_marker)
+                for key in set(memory_prefix)
+                if 2 <= key < value_floor
+            }
+            alternatives = sorted(
+                key for key, value in key_values.items()
+                if key != query_key and value is not None and value != oracle_target
+            )
+            counterfactual_checks += 1
+            cell_counterfactual = counterfactual_by_cell.setdefault(
+                cell, {"checks": 0, "passes": 0, "mismatches": 0, "incomplete": 0}
+            )
+            cell_counterfactual["checks"] += 1
+            if not alternatives or oracle_target is None:
+                counterfactual_incomplete += 1
+                cell_counterfactual["incomplete"] += 1
+            else:
+                counterfactual_tokens = list(tokens)
+                counterfactual_tokens[answer.label_position] = alternatives[0]
+                counterfactual_target = latest_value_for_key(
+                    counterfactual_tokens, alternatives[0], first_query_marker
+                )
+                if (
+                    counterfactual_tokens[answer.label_position] != query_key
+                    and counterfactual_target is not None
+                    and counterfactual_target != oracle_target
+                    and counterfactual_target == key_values[alternatives[0]]
+                ):
+                    counterfactual_passes += 1
+                    cell_counterfactual["passes"] += 1
+                else:
+                    counterfactual_mismatches += 1
+                    cell_counterfactual["mismatches"] += 1
+
     for entry in stats.values():
         if entry["total"]:
             entry["accuracy"] = entry["correct"] / entry["total"]
@@ -957,7 +1007,8 @@ def evaluate_retrieval_baselines(
         })
     oracle_pass = oracle_mismatches == 0 and oracle_checks > 0
     all_shortcuts_pass = bool(shortcut_cells) and all(item["pass"] for item in shortcut_cells.values())
-    if not oracle_pass or incomplete_checks:
+    counterfactual_pass = counterfactual_checks > 0 and counterfactual_incomplete == 0 and counterfactual_mismatches == 0
+    if not oracle_pass or incomplete_checks or not counterfactual_pass:
         status = "failed"
     elif not all_shortcuts_pass:
         status = "shortcut_detected"
@@ -991,6 +1042,16 @@ def evaluate_retrieval_baselines(
             "target_mismatches": oracle_mismatches,
             "target_checks": oracle_checks,
             "pass": oracle_pass,
+        },
+        "counterfactual_query_key_audit": {
+            "method": "replace query key while preserving the causal memory prefix",
+            "target_source": "independent last-write token-prefix scan",
+            "checks": counterfactual_checks,
+            "passes": counterfactual_passes,
+            "mismatches": counterfactual_mismatches,
+            "incomplete": counterfactual_incomplete,
+            "pass": counterfactual_pass,
+            "by_difficulty_cell": counterfactual_by_cell,
         },
         "by_difficulty_cell": by_cell,
         "shortcut_criterion": {
