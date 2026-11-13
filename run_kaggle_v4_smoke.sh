@@ -223,9 +223,9 @@ def phase_run(phase, assignments):
 solo = {}
 for family in families:
     print(f"Solo baseline: {family}", flush=True)
-    solo[family] = phase_run(f"solo_{family}", {family: 0})
+    solo[family] = phase_run("solo", {family: 0})
     if solo[family]["exit_codes"][family] != 0:
-        raise SystemExit(f"Solo run failed ({family}); see {root}/logs/solo_{family}_{family}.log")
+        raise SystemExit(f"Solo run failed ({family}); see {root}/logs/solo_{family}.log")
 print("Parallel trial: MQAR on GPU 0, overwrite on GPU 1", flush=True)
 parallel = phase_run("parallel", {"mqar": 0, "overwrite": 1})
 if any(code != 0 for code in parallel["exit_codes"].values()):
