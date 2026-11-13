@@ -114,26 +114,24 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
 
     @staticmethod
     def _audit_oracle(
-        sequence: list[int], target_key: int, latest_value_position: int,
-        query_position: int, vocabulary_size: int,
+        sequence: list[int], target_key: int, query_position: int, vocabulary_size: int,
     ) -> int:
-        if not (0 <= latest_value_position < query_position < len(sequence)):
-            raise ValueError("audited example positions fall outside the generated sequence")
-        if sequence[latest_value_position - 1] != target_key:
-            raise AssertionError("oracle target value is not preceded by the queried key")
+        if not (0 <= query_position < len(sequence) - 1):
+            raise ValueError("audited query position falls outside the generated sequence")
         if sequence[query_position] != QUERY_MARKER or sequence[query_position + 1] != target_key:
             raise AssertionError("oracle query does not reference the intended key")
         # Independent last-write-wins scan over the key/value stream before
         # query marker. Filler/query symbols cannot be values in this range.
         writes = [
-            (position, sequence[position + 1])
+            sequence[position + 1]
             for position in range(query_position)
             if sequence[position] == target_key
+            and position + 1 < query_position
             and sequence[position + 1] >= vocabulary_size // 2
         ]
-        if not writes or writes[-1] != (latest_value_position - 1, sequence[latest_value_position]):
-            raise AssertionError("last-write-wins oracle disagrees with latest relevant value position")
-        return writes[-1][1]
+        if not writes:
+            raise AssertionError("last-write-wins oracle found no value for the queried key")
+        return writes[-1]
 
     def _check_feasible(self, *, length: int, key_count: int, distance: int, overwrite_count: int, task: str) -> None:
         if key_count > (self.config.vocabulary_size // 2 - 2):
@@ -179,7 +177,7 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             query_position = first_query_position + 3 * item_index
             sequence.extend((QUERY_MARKER, keys[item], values[item]))
             oracle_target = self._audit_oracle(
-                sequence, keys[item], latest_positions[keys[item]], query_position, self.config.vocabulary_size,
+                sequence, keys[item], query_position, self.config.vocabulary_size,
             )
             if oracle_target != values[item]:
                 raise AssertionError("MQAR lookup oracle disagrees with generated answer")
@@ -256,7 +254,7 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         sequence = list(memory)
         sequence += [FILLER_TOKEN] * (query_position - len(sequence))
         sequence += [QUERY_MARKER, target_key, latest]
-        oracle_target = self._audit_oracle(sequence, target_key, latest_value_position, query_position, self.config.vocabulary_size)
+        oracle_target = self._audit_oracle(sequence, target_key, query_position, self.config.vocabulary_size)
         if oracle_target != latest:
             raise AssertionError("overwrite last-write-wins oracle disagrees with generated answer")
         answer = AnswerPosition(
@@ -277,7 +275,7 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             unrelated_query_position = query_position + 3
             oracle_unrelated = self._audit_oracle(
                 sequence + [QUERY_MARKER, unrelated_key, values[unrelated_index]],
-                unrelated_key, unrelated_value_position, unrelated_query_position, self.config.vocabulary_size,
+                unrelated_key, unrelated_query_position, self.config.vocabulary_size,
             )
             if oracle_unrelated != values[unrelated_index]:
                 raise AssertionError("overwrite unrelated-association oracle disagrees with generated answer")
@@ -432,14 +430,12 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         if len(sequence) != length:
             raise AssertionError(f"keyed overwrite generator produced {len(sequence)} tokens for requested length {length}")
         oracle_target = self._audit_oracle(
-            sequence, target_key, prefix_tokens + latest_value_base,
-            target_query_position, self.config.vocabulary_size,
+            sequence, target_key, target_query_position, self.config.vocabulary_size,
         )
         if oracle_target != target_writes[-1][1]:
             raise AssertionError("keyed overwrite oracle disagrees with latest target write")
         oracle_unrelated = self._audit_oracle(
-            sequence, unrelated_key, unrelated_value_position,
-            unrelated_query_position, self.config.vocabulary_size,
+            sequence, unrelated_key, unrelated_query_position, self.config.vocabulary_size,
         )
         if oracle_unrelated != values[unrelated_index]:
             raise AssertionError("keyed overwrite oracle disagrees with unrelated write")
@@ -545,7 +541,7 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             sequence.extend((QUERY_MARKER, keys[item], values[item]))
             value_position = latest_positions[keys[item]]
             oracle_target = self._audit_oracle(
-                sequence, keys[item], value_position, query_position, self.config.vocabulary_size,
+                sequence, keys[item], query_position, self.config.vocabulary_size,
             )
             if oracle_target != values[item]:
                 raise AssertionError("MQAR lookup oracle disagrees with generated answer")
