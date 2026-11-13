@@ -17,7 +17,10 @@ from model import GatedDeltaNetLM
 
 GENERATOR_VERSION = "mqar-overwrite-v2"
 AUDITED_GENERATOR_VERSION = "mqar-overwrite-v3"
-CORRECTED_OVERWRITE_GENERATOR_VERSION = "overwrite-keyed-v4"
+# Shared corrected identity: both synthetic families use the same protocol
+# version so a corrected study cannot accidentally pair a repaired overwrite
+# generator with the legacy MQAR semantics.
+CORRECTED_OVERWRITE_GENERATOR_VERSION = "mqar-overwrite-v4"
 QUERY_MARKER = 0
 FILLER_TOKEN = 1
 
@@ -99,8 +102,8 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             if length <= 0 or key_count <= 0 or distance < 1 or overwrite_count < 0:
                 raise ValueError("audited retrieval difficulty values are outside their valid ranges")
             if self.task == "mqar":
-                # MQAR has its own corrected generator ticket. Keep the
-                # audited implementation here until that version is enabled.
+                if self.generator_version == CORRECTED_OVERWRITE_GENERATOR_VERSION:
+                    return self._mqar_v4(rng, length, key_count, distance)
                 return self._mqar_v3(rng, length, key_count, distance)
             if self.generator_version == CORRECTED_OVERWRITE_GENERATOR_VERSION:
                 return self._overwrite_v4(rng, length, key_count, distance, overwrite_count)
@@ -456,6 +459,81 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
             "prefix_filler_tokens": prefix_tokens,
             "suffix_padding_tokens": 0,
             "effective_sequence_tokens": len(sequence),
+            "oracle": "causal-last-write-wins-v4",
+        })
+
+    def _mqar_v4(self, rng: random.Random, length: int, key_count: int, distance: int) -> RetrievalExample:
+        """Generate MQAR with independent memory and query permutations.
+
+        The complete causal prefix is constructed before labels are derived.
+        Increasing the requested sequence length adds filler *before* the
+        memory/query region, so a length sweep changes the scored prefix
+        instead of appending irrelevant suffix tokens.
+        """
+        if key_count > (self.config.vocabulary_size // 2 - 2):
+            raise ValueError(f"infeasible mqar key_count={key_count} for vocabulary_size={self.config.vocabulary_size}")
+        if key_count < 1 or distance < 1:
+            raise ValueError("infeasible mqar combination: key_count and query distance must be positive")
+
+        # Five tokens per association/query (two memory tokens and three query
+        # tokens), plus the requested causal gap, are the irreducible prefix.
+        minimum_length = 5 * key_count + distance
+        if length < minimum_length:
+            raise ValueError(
+                f"infeasible mqar combination: length={length}, key_count={key_count}, "
+                f"query_distance={distance}; minimum length is {minimum_length}"
+            )
+
+        keys, values = self._symbols(rng, key_count)
+        memory_order = list(range(key_count))
+        query_order = list(range(key_count))
+        rng.shuffle(memory_order)
+        rng.shuffle(query_order)
+        memory = [symbol for index in memory_order for symbol in (keys[index], values[index])]
+
+        # Length changes meaningful context before the first scored query.
+        prefix_tokens = length - minimum_length
+        memory_start = prefix_tokens
+        latest_positions = {
+            keys[item]: memory_start + 2 * position + 1
+            for position, item in enumerate(memory_order)
+        }
+        first_query_position = memory_start + len(memory) + distance
+        sequence = ([FILLER_TOKEN] * prefix_tokens) + memory
+        sequence += [FILLER_TOKEN] * distance
+
+        answers: list[AnswerPosition] = []
+        query_positions: list[int] = []
+        value_positions: list[int] = []
+        for item_index, item in enumerate(query_order):
+            query_position = first_query_position + 3 * item_index
+            sequence.extend((QUERY_MARKER, keys[item], values[item]))
+            value_position = latest_positions[keys[item]]
+            oracle_target = self._audit_oracle(
+                sequence, keys[item], value_position, query_position, self.config.vocabulary_size,
+            )
+            if oracle_target != values[item]:
+                raise AssertionError("MQAR lookup oracle disagrees with generated answer")
+            query_positions.append(query_position)
+            value_positions.append(value_position)
+            answers.append(AnswerPosition(
+                query_position + 1, oracle_target, (), "mqar", 0,
+                query_position - value_position, query_position, value_position,
+            ))
+        if len(sequence) != length:
+            raise AssertionError(f"corrected MQAR generator produced {len(sequence)} tokens for requested length {length}")
+
+        tokens, labels = self._labels(sequence, answers)
+        return RetrievalExample(tokens, labels, tuple(answers), {
+            "task": "mqar", "sequence_length": length, "key_count": key_count,
+            "query_count": key_count, "query_distance": distance,
+            "requested_query_distance": distance,
+            "query_distance_definition": "query marker minus that key's latest value position",
+            "memory_order": memory_order, "query_order": query_order,
+            "query_positions": query_positions, "latest_value_positions": value_positions,
+            "answer_distances": [answer.distance for answer in answers],
+            "memory_load": key_count, "prefix_filler_tokens": prefix_tokens,
+            "suffix_padding_tokens": 0, "effective_sequence_tokens": len(tokens),
             "oracle": "causal-last-write-wins-v4",
         })
 
