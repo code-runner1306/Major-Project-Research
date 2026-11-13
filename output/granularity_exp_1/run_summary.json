@@ -1,0 +1,23 @@
+﻿{
+    "experiment_id":  "granularity-init-48h-exploratory-lr3e-3-v1",
+    "created_at_utc":  "2026-11-13T09:17:14.7960257Z",
+    "family_selection":  "both",
+    "families":  [
+                     "mqar",
+                     "overwrite"
+                 ],
+    "run_count":  8,
+    "scale":  "10M",
+    "conditions":  [
+                       "C1-scalar-default",
+                       "C3-channel-default",
+                       "C4-scalar-calibrated",
+                       "C6-channel-calibrated"
+                   ],
+    "seed":  42,
+    "max_optimizer_steps":  1000,
+    "learning_rate":  0.003,
+    "status":  "complete",
+    "training_barrier_before_evaluation":  true,
+    "interpretation":  "One seed and 1000 steps per condition; exploratory comparison only."
+}

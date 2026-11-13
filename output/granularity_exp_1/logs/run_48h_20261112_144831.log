@@ -173,3 +173,102 @@
 [2026-11-13T02:50:57Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
 [2026-11-13T02:59:17Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
 [2026-11-13T03:07:37Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T03:16:18Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T03:18:48Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [mqar/10M/channel-wise/seed42]: step=300/1000 loss=7.225383 perplexity=1373.8651
+[2026-11-13T03:27:08Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+[2026-11-13T03:35:28Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+[2026-11-13T03:43:48Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+[2026-11-13T03:52:09Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+[2026-11-13T04:00:39Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+[2026-11-13T04:09:10Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+[2026-11-13T04:17:30Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+[2026-11-13T04:20:00Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [mqar/10M/channel-wise/seed42]: step=650/1000 loss=1.760008 perplexity=5.8125
+[2026-11-13T04:28:10Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+[2026-11-13T04:36:31Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+[2026-11-13T04:44:51Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+[2026-11-13T04:53:11Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+[2026-11-13T05:01:51Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+[2026-11-13T05:10:12Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+[2026-11-13T05:18:32Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+[2026-11-13T05:19:02Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\mqar\\10M\\C6-channel-calibrated\\seed_42'}
+[2026-11-13T05:19:02Z] PROCESS EXIT train mqar_10M_C6-channel-calibrated_seed_42_train pid=18704 code= elapsed=10469.2s
+[2026-11-13T05:19:05Z] ARTIFACT CHECK train mqar_10M_C6-channel-calibrated_seed_42_train: COMPLETE
+[2026-11-13T05:19:05Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C6-channel-calibrated_seed_42_train
+[2026-11-13T05:19:05Z] COMPLETED train mqar_10M_C6-channel-calibrated_seed_42_train
+[2026-11-13T05:19:05Z] QUEUED train overwrite_10M_C6-channel-calibrated_seed_42_train
+[2026-11-13T05:28:57Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 50/1000 optimizer steps completed
+[2026-11-13T05:36:57Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 100/1000 optimizer steps completed
+[2026-11-13T05:45:07Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
+[2026-11-13T05:53:28Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
+[2026-11-13T06:01:48Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T06:09:58Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T06:12:18Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [overwrite/10M/channel-wise/seed42]: step=300/1000 loss=7.541440 perplexity=1884.5419
+[2026-11-13T06:20:28Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+[2026-11-13T06:29:09Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+[2026-11-13T06:37:19Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+[2026-11-13T06:45:29Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+[2026-11-13T06:53:40Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+[2026-11-13T07:02:00Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+[2026-11-13T07:10:10Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+[2026-11-13T07:12:30Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [overwrite/10M/channel-wise/seed42]: step=650/1000 loss=5.502022 perplexity=245.1873
+[2026-11-13T07:20:41Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+[2026-11-13T07:28:51Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+[2026-11-13T07:37:01Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+[2026-11-13T07:45:32Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+[2026-11-13T07:53:52Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+[2026-11-13T08:02:02Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+[2026-11-13T08:10:22Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+[2026-11-13T08:10:43Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\overwrite\\10M\\C6-channel-calibrated\\seed_42'}
+[2026-11-13T08:10:43Z] PROCESS EXIT train overwrite_10M_C6-channel-calibrated_seed_42_train pid=29992 code= elapsed=10297.1s
+[2026-11-13T08:10:46Z] ARTIFACT CHECK train overwrite_10M_C6-channel-calibrated_seed_42_train: COMPLETE
+[2026-11-13T08:10:46Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C6-channel-calibrated_seed_42_train
+[2026-11-13T08:10:46Z] COMPLETED train overwrite_10M_C6-channel-calibrated_seed_42_train
+[2026-11-13T08:11:30Z] QUEUED evaluate mqar_10M_C1-scalar-default_seed_42_evaluate
+[2026-11-13T08:14:40Z] mqar_10M_C1-scalar-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\mqar\\10M\\C1-scalar-default\\seed_42'}
+[2026-11-13T08:14:40Z] PROCESS EXIT evaluate mqar_10M_C1-scalar-default_seed_42_evaluate pid=15864 code= elapsed=190.1s
+[2026-11-13T08:14:43Z] ARTIFACT CHECK evaluate mqar_10M_C1-scalar-default_seed_42_evaluate: COMPLETE
+[2026-11-13T08:14:43Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C1-scalar-default_seed_42_evaluate
+[2026-11-13T08:14:43Z] COMPLETED evaluate mqar_10M_C1-scalar-default_seed_42_evaluate
+[2026-11-13T08:14:43Z] QUEUED evaluate overwrite_10M_C1-scalar-default_seed_42_evaluate
+[2026-11-13T08:17:53Z] overwrite_10M_C1-scalar-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\overwrite\\10M\\C1-scalar-default\\seed_42'}
+[2026-11-13T08:17:53Z] PROCESS EXIT evaluate overwrite_10M_C1-scalar-default_seed_42_evaluate pid=26376 code= elapsed=190.1s
+[2026-11-13T08:17:56Z] ARTIFACT CHECK evaluate overwrite_10M_C1-scalar-default_seed_42_evaluate: COMPLETE
+[2026-11-13T08:17:56Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C1-scalar-default_seed_42_evaluate
+[2026-11-13T08:17:56Z] COMPLETED evaluate overwrite_10M_C1-scalar-default_seed_42_evaluate
+[2026-11-13T08:17:56Z] QUEUED evaluate mqar_10M_C3-channel-default_seed_42_evaluate
+[2026-11-13T08:30:47Z] mqar_10M_C3-channel-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\mqar\\10M\\C3-channel-default\\seed_42'}
+[2026-11-13T08:30:47Z] PROCESS EXIT evaluate mqar_10M_C3-channel-default_seed_42_evaluate pid=27384 code= elapsed=770.9s
+[2026-11-13T08:30:50Z] ARTIFACT CHECK evaluate mqar_10M_C3-channel-default_seed_42_evaluate: COMPLETE
+[2026-11-13T08:30:50Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C3-channel-default_seed_42_evaluate
+[2026-11-13T08:30:50Z] COMPLETED evaluate mqar_10M_C3-channel-default_seed_42_evaluate
+[2026-11-13T08:30:50Z] QUEUED evaluate overwrite_10M_C3-channel-default_seed_42_evaluate
+[2026-11-13T08:43:40Z] overwrite_10M_C3-channel-default_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\overwrite\\10M\\C3-channel-default\\seed_42'}
+[2026-11-13T08:43:40Z] PROCESS EXIT evaluate overwrite_10M_C3-channel-default_seed_42_evaluate pid=31496 code= elapsed=770.2s
+[2026-11-13T08:43:42Z] ARTIFACT CHECK evaluate overwrite_10M_C3-channel-default_seed_42_evaluate: COMPLETE
+[2026-11-13T08:43:42Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C3-channel-default_seed_42_evaluate
+[2026-11-13T08:43:42Z] COMPLETED evaluate overwrite_10M_C3-channel-default_seed_42_evaluate
+[2026-11-13T08:43:42Z] QUEUED evaluate mqar_10M_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-13T08:46:52Z] mqar_10M_C4-scalar-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\mqar\\10M\\C4-scalar-calibrated\\seed_42'}
+[2026-11-13T08:46:52Z] PROCESS EXIT evaluate mqar_10M_C4-scalar-calibrated_seed_42_evaluate pid=7912 code= elapsed=190.1s
+[2026-11-13T08:46:55Z] ARTIFACT CHECK evaluate mqar_10M_C4-scalar-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-13T08:46:55Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-13T08:46:55Z] COMPLETED evaluate mqar_10M_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-13T08:46:55Z] QUEUED evaluate overwrite_10M_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-13T08:50:05Z] overwrite_10M_C4-scalar-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\overwrite\\10M\\C4-scalar-calibrated\\seed_42'}
+[2026-11-13T08:50:05Z] PROCESS EXIT evaluate overwrite_10M_C4-scalar-calibrated_seed_42_evaluate pid=18168 code= elapsed=190.1s
+[2026-11-13T08:50:08Z] ARTIFACT CHECK evaluate overwrite_10M_C4-scalar-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-13T08:50:08Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-13T08:50:08Z] COMPLETED evaluate overwrite_10M_C4-scalar-calibrated_seed_42_evaluate
+[2026-11-13T08:50:08Z] QUEUED evaluate mqar_10M_C6-channel-calibrated_seed_42_evaluate
+[2026-11-13T09:03:08Z] mqar_10M_C6-channel-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\mqar\\10M\\C6-channel-calibrated\\seed_42'}
+[2026-11-13T09:03:18Z] PROCESS EXIT evaluate mqar_10M_C6-channel-calibrated_seed_42_evaluate pid=30292 code= elapsed=790.3s
+[2026-11-13T09:03:21Z] ARTIFACT CHECK evaluate mqar_10M_C6-channel-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-13T09:03:21Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C6-channel-calibrated_seed_42_evaluate
+[2026-11-13T09:03:21Z] COMPLETED evaluate mqar_10M_C6-channel-calibrated_seed_42_evaluate
+[2026-11-13T09:03:21Z] QUEUED evaluate overwrite_10M_C6-channel-calibrated_seed_42_evaluate
+[2026-11-13T09:17:11Z] overwrite_10M_C6-channel-calibrated_seed_42_evaluate [stdout] {'status': 'complete', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_1\\runs\\overwrite\\10M\\C6-channel-calibrated\\seed_42'}
+[2026-11-13T09:17:11Z] PROCESS EXIT evaluate overwrite_10M_C6-channel-calibrated_seed_42_evaluate pid=17316 code= elapsed=830.3s
+[2026-11-13T09:17:14Z] ARTIFACT CHECK evaluate overwrite_10M_C6-channel-calibrated_seed_42_evaluate: COMPLETE
+[2026-11-13T09:17:14Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C6-channel-calibrated_seed_42_evaluate
+[2026-11-13T09:17:14Z] COMPLETED evaluate overwrite_10M_C6-channel-calibrated_seed_42_evaluate
+[2026-11-13T09:17:15Z] All requested training and evaluation tasks completed. Summary: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\output\granularity_exp_1\run_summary.json
