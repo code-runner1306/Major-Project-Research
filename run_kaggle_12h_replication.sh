@@ -141,6 +141,11 @@ PY
 run_pair_phase() {
   local stage="$1" seed="$2" steps="$3" samples="$4" label="$5"
   local pids=() status_files=() configs=() tags=()
+  local timeout_seconds=$(( MAX_SECONDS - ( $(date +%s) - pilot_start ) - RESERVE_SECONDS ))
+  if (( timeout_seconds < 1 )); then
+    echo "Time guard: no execution time remains before the safety reserve."
+    return 1
+  fi
   for entry in "${CONDITIONS[@]}"; do
     IFS='|' read -r condition_id variant initialization <<< "$entry"
     local tag="${label}_${condition_id}_seed${seed}_${stage}"
@@ -151,7 +156,8 @@ run_pair_phase() {
     write_task_config "$cfg" "$stage" "$condition_id" "$variant" "$initialization" "$seed" "$steps" "$samples" "$run_dir" "$EXPERIMENT_ID"
     configs+=("$cfg"); status_files+=("$status"); tags+=("$tag")
     (
-      if "$PYTHON_BIN" run_all.py --study-task-config "$cfg" 2>&1 | tee "$log"; then
+      if timeout --signal=INT --kill-after=30s "${timeout_seconds}s" \
+          "$PYTHON_BIN" run_all.py --study-task-config "$cfg" 2>&1 | tee "$log"; then
         echo 0 > "$status"
       else
         rc=$?
