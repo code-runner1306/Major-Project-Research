@@ -6,8 +6,7 @@ runs exactly two training processes, one on each GPU, then evaluates both saved
 models in parallel. Each selected model uses the committed corrected V4 study
 config, including its learning rate, 1,000-step budget and validation settings.
 Validation runs every 100 optimizer steps using a 512-example validation dataset,
-matching the 48H PowerShell launcher. The Kaggle held-out evaluation dataset is
-still taken from the study config (currently 3,000 examples).
+matching the 48H PowerShell launcher. Held-out evaluation also uses 512 examples.
 There is no additional timing pilot before production training.
 
 For seed 42, run one command in each of four separate notebooks:

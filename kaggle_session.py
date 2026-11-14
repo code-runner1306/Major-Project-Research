@@ -60,7 +60,7 @@ def selections(args, study):
 
 def task_config(study, family, condition, seed, output):
     budget = study["budgets"]["10M"]
-    retrieval = dict(study["retrieval"], validation_examples=512)
+    retrieval = dict(study["retrieval"], validation_examples=512, held_out_examples=512)
     return {
         "operation": "train", "experiment_id": study["experiment_id"],
         "condition_id": condition["id"], "family": family, "scale": "10M",
