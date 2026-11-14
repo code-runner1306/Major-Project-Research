@@ -1,0 +1,10 @@
+{
+  "overwrite_C6-channel-calibrated": {
+    "exit_code": 0,
+    "elapsed_seconds": 1057.1489294589992
+  },
+  "mqar_C6-channel-calibrated": {
+    "exit_code": 0,
+    "elapsed_seconds": 1067.1522205
+  }
+}

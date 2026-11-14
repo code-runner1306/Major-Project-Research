@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "source_revision": "a7722bc9aac95b78804e79c79638f1b3e5e8ff5e",
+  "models": 2,
+  "seed": 42,
+  "train": {
+    "mqar_C6-channel-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 19014.822748312
+    },
+    "overwrite_C6-channel-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 19320.869996596
+    }
+  },
+  "evaluate": {
+    "overwrite_C6-channel-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 1057.1489294589992
+    },
+    "mqar_C6-channel-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 1067.1522205
+    }
+  },
+  "elapsed_seconds": 20390.025702504
+}
