@@ -1,0 +1,155 @@
+{
+  "included": [
+    {
+      "path": "authorized_study_config.json",
+      "bytes": 2911,
+      "sha256": "0d3a3fba7aed2ddfc517854661461649dc60bc8dca6b869f54eac40cc181cc23"
+    },
+    {
+      "path": "evaluate_status.json",
+      "bytes": 204,
+      "sha256": "9dd0b5c91b072a25e06f4046f0c9987112bdebfdcda614af26ca629e2d36c77c"
+    },
+    {
+      "path": "hardware.json",
+      "bytes": 221,
+      "sha256": "5e4a027552817b00180918b70e5ed975e1dff8a9c92bafc6059a5941bc0996ae"
+    },
+    {
+      "path": "logs/mqar_C3-channel-default_evaluate.log",
+      "bytes": 117,
+      "sha256": "cf78bda33704deaa10112be88fd2e9147748f8d03da06f116a8a4f38578e243d"
+    },
+    {
+      "path": "logs/mqar_C3-channel-default_train.log",
+      "bytes": 2827,
+      "sha256": "054e30937c61a516474df93ee8f0750ddee769763e373238fc270720ea58a4dc"
+    },
+    {
+      "path": "logs/overwrite_C3-channel-default_evaluate.log",
+      "bytes": 122,
+      "sha256": "9cdffb63f82de01c63c352e295c6c53361b9e9d13a610302673190169cb14401"
+    },
+    {
+      "path": "logs/overwrite_C3-channel-default_train.log",
+      "bytes": 2982,
+      "sha256": "c5b4a7949df34ae289be5a26c53d5f61c6f157a1d16459c9ac2089f5a4284fc8"
+    },
+    {
+      "path": "plan.json",
+      "bytes": 3156,
+      "sha256": "473f65af43027adf1f167e0867938efef18f5a8e632373b322b361cacd693f44"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/generator_held_out.json",
+      "bytes": 647,
+      "sha256": "fa0de8150fe6734ca858bc76c261f06fd9855c99b9a4eae9796f8b9b9708fbce"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/generator_train.json",
+      "bytes": 646,
+      "sha256": "a538b7acb9b93444853a50e9bb41ef2bcb0c3b102b0d79f0718737c0318d3682"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/generator_validation.json",
+      "bytes": 649,
+      "sha256": "94728f7b0f005f3535cd631b73aeb12407f7e047db8db98ecc34e401a791d9e9"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/lifecycle.json",
+      "bytes": 180,
+      "sha256": "da3f9bced7c67872673be1a4fe7695cdcac1a13963c1a7a01504263d470616d4"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/manifest.json",
+      "bytes": 75434,
+      "sha256": "fbda8184ec1f93cb34f62a34ad42bc434afadc0a486627b363dd614dde515b11"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/metrics.json",
+      "bytes": 19116875,
+      "sha256": "779a10ece192f9541f0112c80db42f0d723073496bf1eed9b614bca570c94dab"
+    },
+    {
+      "path": "runs/mqar/C3-channel-default/seed_42/validation_history.json",
+      "bytes": 2924,
+      "sha256": "6a02534c740ec7967639e7405090b6862650177e3031df10a014bc234ce6b5ad"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/generator_held_out.json",
+      "bytes": 652,
+      "sha256": "393d61731c9cd330d826b673a23628530c9ebd14f9121ff7fcfe4a71d78582a4"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/generator_train.json",
+      "bytes": 651,
+      "sha256": "e751fb6fe9548e59b3777654e3a0282f61258b73179b2a47e175c994bfac596d"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/generator_validation.json",
+      "bytes": 654,
+      "sha256": "b8980f80299cc2f3cd5c2ffbdc50b38a5123be76fa0dad3861060e2b8a16a052"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/lifecycle.json",
+      "bytes": 180,
+      "sha256": "20083f60549df22be656337cc3332e9377b56d18105fd09fcccf8c2a59b73a59"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/manifest.json",
+      "bytes": 75444,
+      "sha256": "37d1ccd10e1f76fe6e3cda4aa8a5988d42ce33b774ff3e49c05554bffc1c1cf5"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/metrics.json",
+      "bytes": 17805330,
+      "sha256": "cb6b739a6611516dda176edbae995d87e5f2972ee8dbf0be922c42a7a405b1d4"
+    },
+    {
+      "path": "runs/overwrite/C3-channel-default/seed_42/validation_history.json",
+      "bytes": 2779,
+      "sha256": "f39a241b4bbd9d9448769e9db25f99bf5eb0c3f8daa334d753105ef44fdb1efd"
+    },
+    {
+      "path": "session_summary.json",
+      "bytes": 624,
+      "sha256": "e19a8906ed21b5fc2736a5a424c72c130698d6e3f66bc03cf25d0e0fbdef6271"
+    },
+    {
+      "path": "source.json",
+      "bytes": 148,
+      "sha256": "a4b316081e608cc24fff39e1fd842175e47c837c983d716dbdc74d010429ee50"
+    },
+    {
+      "path": "tasks/mqar_C3-channel-default_evaluate.json",
+      "bytes": 1258,
+      "sha256": "ee4f8269112c722223df310953b6a1f2cfa3ce21a8f6876ecc65d7557204c445"
+    },
+    {
+      "path": "tasks/mqar_C3-channel-default_train.json",
+      "bytes": 1255,
+      "sha256": "57a80d3cb1fac9b0a184295947ceb25b58f3db60ea1bf3ea1013519e5b93c36e"
+    },
+    {
+      "path": "tasks/overwrite_C3-channel-default_evaluate.json",
+      "bytes": 1268,
+      "sha256": "3fda89fbcf9a08b95df010ec1a91e5735185442c5e64ff06ee67a7e16532f909"
+    },
+    {
+      "path": "tasks/overwrite_C3-channel-default_train.json",
+      "bytes": 1265,
+      "sha256": "505e069803511f913a7e108a0cca170ed1cd9929ea0e1bf9278dde643b4b78b5"
+    },
+    {
+      "path": "train_status.json",
+      "bytes": 198,
+      "sha256": "ce225abd944164f1613843399dc1bf707489192297aebfd83434cc1c3f34ba2b"
+    }
+  ],
+  "excluded": [
+    "runs/mqar/C3-channel-default/seed_42/best_validation_checkpoint.pt",
+    "runs/mqar/C3-channel-default/seed_42/final_checkpoint.pt",
+    "runs/overwrite/C3-channel-default/seed_42/best_validation_checkpoint.pt",
+    "runs/overwrite/C3-channel-default/seed_42/final_checkpoint.pt"
+  ]
+}

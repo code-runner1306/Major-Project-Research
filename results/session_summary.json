@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "source_revision": "a7722bc9aac95b78804e79c79638f1b3e5e8ff5e",
+  "models": 2,
+  "seed": 42,
+  "train": {
+    "mqar_C3-channel-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 21415.382902914
+    },
+    "overwrite_C3-channel-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 21481.391626702
+    }
+  },
+  "evaluate": {
+    "overwrite_C3-channel-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 1174.1795599040015
+    },
+    "mqar_C3-channel-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 1178.1819101909969
+    }
+  },
+  "elapsed_seconds": 22661.576403753
+}
