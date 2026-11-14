@@ -1,0 +1,143 @@
+{
+  "experiment_id": "granularity-corrected-pilot-v1",
+  "description": "Five-seed fresh corrected paired pilot. This plan is intentionally authorization-gated and does not resume the legacy exploratory folders.",
+  "datasets": [
+    "mqar",
+    "overwrite"
+  ],
+  "conditions": [
+    {
+      "id": "C1-scalar-default",
+      "variant": "scalar",
+      "initialization": "default"
+    },
+    {
+      "id": "C3-channel-default",
+      "variant": "channel-wise",
+      "initialization": "default"
+    },
+    {
+      "id": "C4-scalar-calibrated",
+      "variant": "scalar",
+      "initialization": "calibrated-geometric"
+    },
+    {
+      "id": "C6-channel-calibrated",
+      "variant": "channel-wise",
+      "initialization": "calibrated-geometric"
+    }
+  ],
+  "sizes": [
+    "10M"
+  ],
+  "seeds": {
+    "10M": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ]
+  },
+  "budgets": {
+    "10M": {
+      "max_optimizer_steps": 1000,
+      "batch_size": 8,
+      "grad_accum_steps": 4,
+      "context_length": 512,
+      "validation_steps": 100,
+      "evaluation_interval": 100,
+      "learning_rate": 0.001
+    }
+  },
+  "calibration": {
+    "min_half_life": 16,
+    "max_half_life": 128,
+    "examples": 256
+  },
+  "runtime": {
+    "run_mode": "production",
+    "protocol_version": "corrected-v1",
+    "recurrence_backend": "reference",
+    "state_accumulator_dtype": "float32",
+    "workers": 1
+  },
+  "retrieval": {
+    "generator_version": "mqar-overwrite-v4",
+    "train_examples": 50000,
+    "validation_examples": 2000,
+    "held_out_examples": 3000,
+    "sequence_lengths": [
+      128,
+      256,
+      512
+    ],
+    "key_counts": [
+      4,
+      8,
+      16
+    ],
+    "query_distances": [
+      8,
+      16,
+      32
+    ],
+    "overwrite_counts": [
+      1,
+      2
+    ]
+  },
+  "evaluation": {
+    "examples": 512,
+    "group_counts": [
+      8,
+      4,
+      2,
+      1
+    ],
+    "capacity_threshold": 0.9,
+    "shortcut_baseline_max_accuracy": 0.9,
+    "history_conditioning": "answer_free"
+  },
+  "qualification": {
+    "scope": "production",
+    "runtime_sizes": [
+      "10M"
+    ],
+    "easy_task_keys": 4,
+    "easy_task_length": 128,
+    "easy_task_query_distances": [
+      8,
+      16
+    ],
+    "easy_overwrite_counts": [
+      1,
+      2
+    ],
+    "answer_accuracy_threshold": 0.9,
+    "minimum_final_answer_accuracy": 0.5,
+    "consecutive_validations": 2,
+    "learning_rate_candidates": [
+      0.0006,
+      0.001,
+      0.003
+    ],
+    "extension_learning_rate": 0.01,
+    "qualification_steps": 1000,
+    "validation_interval": 100,
+    "pilot_steps": 200
+  },
+  "compute_authorization": {
+    "status": "approved",
+    "approved_by": "Mayank Mehta",
+    "approved_at_utc": "2026-11-14T11:36:10.026213Z",
+    "scope": {
+      "seed": 42,
+      "models": [
+        "mqar:C1-scalar-default",
+        "overwrite:C1-scalar-default"
+      ],
+      "steps": 1000
+    }
+  }
+}

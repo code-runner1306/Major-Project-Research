@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "source_revision": "a7722bc9aac95b78804e79c79638f1b3e5e8ff5e",
+  "models": 2,
+  "seed": 42,
+  "train": {
+    "mqar_C1-scalar-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 18970.799478238
+    },
+    "overwrite_C1-scalar-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 19234.837654134
+    }
+  },
+  "evaluate": {
+    "overwrite_C1-scalar-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 183.0257971389983
+    },
+    "mqar_C1-scalar-default": {
+      "exit_code": 0,
+      "elapsed_seconds": 185.02759272200274
+    }
+  },
+  "elapsed_seconds": 19421.867893497
+}
