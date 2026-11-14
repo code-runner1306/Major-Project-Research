@@ -1,0 +1,31 @@
+Training progress [mqar/10M/channel-wise/seed42]: 50/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 100/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=100/1000 loss=8.909070 perplexity=7398.7773
+Training progress [mqar/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=200/1000 loss=8.461528 perplexity=4729.2778
+Training progress [mqar/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=300/1000 loss=8.380609 perplexity=4361.6665
+Training progress [mqar/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=400/1000 loss=8.362070 perplexity=4281.5488
+Training progress [mqar/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=500/1000 loss=8.344921 perplexity=4208.7466
+Training progress [mqar/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=600/1000 loss=8.336552 perplexity=4173.6729
+Training progress [mqar/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=700/1000 loss=8.334878 perplexity=4166.6929
+Training progress [mqar/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=800/1000 loss=8.331288 perplexity=4151.7632
+Training progress [mqar/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=900/1000 loss=8.329440 perplexity=4144.0967
+Training progress [mqar/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed42]: step=1000/1000 loss=8.328694 perplexity=4141.0073
+{'status': 'trained', 'run_dir': '/kaggle/working/seed42_C3_20261114T113757Z/runs/mqar/C3-channel-default/seed_42'}

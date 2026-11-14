@@ -1,0 +1,31 @@
+Training progress [overwrite/10M/scalar/seed42]: 50/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 100/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=100/1000 loss=9.046117 perplexity=8485.5234
+Training progress [overwrite/10M/scalar/seed42]: 150/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 200/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=200/1000 loss=8.936175 perplexity=7602.0591
+Training progress [overwrite/10M/scalar/seed42]: 250/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 300/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=300/1000 loss=8.782186 perplexity=6517.1113
+Training progress [overwrite/10M/scalar/seed42]: 350/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 400/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=400/1000 loss=8.587190 perplexity=5362.5220
+Training progress [overwrite/10M/scalar/seed42]: 450/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 500/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=500/1000 loss=8.447377 perplexity=4662.8271
+Training progress [overwrite/10M/scalar/seed42]: 550/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 600/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=600/1000 loss=8.392813 perplexity=4415.2192
+Training progress [overwrite/10M/scalar/seed42]: 650/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 700/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=700/1000 loss=8.331171 perplexity=4151.2759
+Training progress [overwrite/10M/scalar/seed42]: 750/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 800/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=800/1000 loss=8.298011 perplexity=4015.8762
+Training progress [overwrite/10M/scalar/seed42]: 850/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 900/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=900/1000 loss=8.285703 perplexity=3966.7549
+Training progress [overwrite/10M/scalar/seed42]: 950/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed42]: 1000/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed42]: step=1000/1000 loss=8.280272 perplexity=3945.2693
+{'status': 'trained', 'run_dir': '/kaggle/working/seed42_C4_20261114T114639Z/runs/overwrite/C4-scalar-calibrated/seed_42'}

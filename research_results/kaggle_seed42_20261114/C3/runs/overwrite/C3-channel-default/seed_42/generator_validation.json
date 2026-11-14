@@ -1,0 +1,35 @@
+{
+  "examples": 512,
+  "generator_version": "mqar-overwrite-v4",
+  "hash": "d9785caf7cd3f114bdb12717955cbd1a0b193db2dd9b3bbe97c028c5f5b25955",
+  "parameters": {
+    "generator_version": "mqar-overwrite-v4",
+    "held_out_examples": 512,
+    "key_counts": [
+      4,
+      8,
+      16
+    ],
+    "overwrite_counts": [
+      1,
+      2
+    ],
+    "query_distances": [
+      8,
+      16,
+      32
+    ],
+    "sequence_lengths": [
+      128,
+      256,
+      512
+    ],
+    "train_examples": 50000,
+    "validation_examples": 512,
+    "vocabulary_size": 8192
+  },
+  "seed": 200042,
+  "sequence_length": null,
+  "split": "validation",
+  "task": "overwrite"
+}

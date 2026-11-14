@@ -1,0 +1,31 @@
+Training progress [mqar/10M/scalar/seed42]: 50/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 100/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=100/1000 loss=8.767432 perplexity=6421.6616
+Training progress [mqar/10M/scalar/seed42]: 150/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 200/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=200/1000 loss=8.434624 perplexity=4603.7373
+Training progress [mqar/10M/scalar/seed42]: 250/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 300/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=300/1000 loss=8.372677 perplexity=4327.2036
+Training progress [mqar/10M/scalar/seed42]: 350/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 400/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=400/1000 loss=8.357629 perplexity=4262.5796
+Training progress [mqar/10M/scalar/seed42]: 450/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 500/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=500/1000 loss=8.340992 perplexity=4192.2461
+Training progress [mqar/10M/scalar/seed42]: 550/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 600/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=600/1000 loss=8.335004 perplexity=4167.2178
+Training progress [mqar/10M/scalar/seed42]: 650/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 700/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=700/1000 loss=8.333792 perplexity=4162.1694
+Training progress [mqar/10M/scalar/seed42]: 750/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 800/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=800/1000 loss=8.330526 perplexity=4148.6006
+Training progress [mqar/10M/scalar/seed42]: 850/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 900/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=900/1000 loss=8.328603 perplexity=4140.6284
+Training progress [mqar/10M/scalar/seed42]: 950/1000 optimizer steps completed
+Training progress [mqar/10M/scalar/seed42]: 1000/1000 optimizer steps completed
+Validation progress [mqar/10M/scalar/seed42]: step=1000/1000 loss=8.327861 perplexity=4137.5571
+{'status': 'trained', 'run_dir': '/kaggle/working/seed42_C4_20261114T114639Z/runs/mqar/C4-scalar-calibrated/seed_42'}

@@ -1,0 +1,165 @@
+{
+  "included": [
+    {
+      "path": "authorized_study_config.json",
+      "bytes": 2917,
+      "sha256": "823585a6bfdf865faa48be77cec4eb651d4641c38dfd48ec3b13e224cceb5f39"
+    },
+    {
+      "path": "evaluate_status.json",
+      "bytes": 204,
+      "sha256": "eae73f544243b5806d194bebbb1e43e9d12b763d697e00260037e22ff497042c"
+    },
+    {
+      "path": "hardware.json",
+      "bytes": 221,
+      "sha256": "5e4a027552817b00180918b70e5ed975e1dff8a9c92bafc6059a5941bc0996ae"
+    },
+    {
+      "path": "logs/mqar_C6-channel-calibrated_evaluate.log",
+      "bytes": 120,
+      "sha256": "bbbe108241d64f2b132fc0c6dce49ba3f553a282fa0d53b7b35bed04ade66ace"
+    },
+    {
+      "path": "logs/mqar_C6-channel-calibrated_train.log",
+      "bytes": 2830,
+      "sha256": "d27ece53584bcb2e7d2c0be5d85bbf46c546cc4cdfea0339a46925a7a02b3694"
+    },
+    {
+      "path": "logs/overwrite_C6-channel-calibrated_evaluate.log",
+      "bytes": 125,
+      "sha256": "164fc23b7904cbfde6f0ae79b4e55622597e4cbb2f065eb9e3d6f58c384a2b69"
+    },
+    {
+      "path": "logs/overwrite_C6-channel-calibrated_train.log",
+      "bytes": 2985,
+      "sha256": "9396bf7ef265dae30823f4592430cffd57d26e43342fcca817e5f1c6ee558094"
+    },
+    {
+      "path": "plan.json",
+      "bytes": 3194,
+      "sha256": "6331ee1a6e1bd103581dad7d010be1ea137115f6c4a7760b2a9174958224d17a"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/calibration.json",
+      "bytes": 12507,
+      "sha256": "a83863dcd4df2c9819520593a4b7905b3a55d851b8b8bc744f180f4c05f82196"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/generator_held_out.json",
+      "bytes": 647,
+      "sha256": "fa0de8150fe6734ca858bc76c261f06fd9855c99b9a4eae9796f8b9b9708fbce"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/generator_train.json",
+      "bytes": 646,
+      "sha256": "a538b7acb9b93444853a50e9bb41ef2bcb0c3b102b0d79f0718737c0318d3682"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/generator_validation.json",
+      "bytes": 649,
+      "sha256": "94728f7b0f005f3535cd631b73aeb12407f7e047db8db98ecc34e401a791d9e9"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/lifecycle.json",
+      "bytes": 180,
+      "sha256": "4b055a31c95d18b9bbd318a43ba5401b2946f2e8bc1b923b214bc72abc832538"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/manifest.json",
+      "bytes": 89869,
+      "sha256": "3f0fa1083837763a32b7ec5c273987e52773acec0d165b2b9cfc3f5fb782a3bf"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/metrics.json",
+      "bytes": 17064779,
+      "sha256": "32584490bd1189c42d47bcde64829b21f6f268577f0d0cfac74c41c879168bff"
+    },
+    {
+      "path": "runs/mqar/C6-channel-calibrated/seed_42/validation_history.json",
+      "bytes": 2888,
+      "sha256": "2ff55397d9890e1285337d8a027843f2fe644777e9825d8bb4f8b17f7ee3ceee"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/calibration.json",
+      "bytes": 12558,
+      "sha256": "2910f89ef78f2d7b36448a069668a3e021899d35b4719aa17f08cb3f27000cbc"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/generator_held_out.json",
+      "bytes": 652,
+      "sha256": "393d61731c9cd330d826b673a23628530c9ebd14f9121ff7fcfe4a71d78582a4"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/generator_train.json",
+      "bytes": 651,
+      "sha256": "e751fb6fe9548e59b3777654e3a0282f61258b73179b2a47e175c994bfac596d"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/generator_validation.json",
+      "bytes": 654,
+      "sha256": "b8980f80299cc2f3cd5c2ffbdc50b38a5123be76fa0dad3861060e2b8a16a052"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/lifecycle.json",
+      "bytes": 180,
+      "sha256": "9c29d4f48ed7b0b20ba34791e58580f72b30b65274daa316acee8ac4b744c026"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/manifest.json",
+      "bytes": 89930,
+      "sha256": "d8d13f241132ac78483b8343081f255a04ed8dba1625d21f129764861fc64820"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/metrics.json",
+      "bytes": 15932143,
+      "sha256": "de9803258ba6b6300ff9079bd424b5c3db53a7ef0d3f0387d13b4a1663f33edb"
+    },
+    {
+      "path": "runs/overwrite/C6-channel-calibrated/seed_42/validation_history.json",
+      "bytes": 2813,
+      "sha256": "deb67b2ff56c703e46a600735a3e99902653214f701bbb224753121e4c1a776f"
+    },
+    {
+      "path": "session_summary.json",
+      "bytes": 630,
+      "sha256": "dc8e06884cc2633858d88fe299f4f927222739f43c030bbc8d20e852f0e005e0"
+    },
+    {
+      "path": "source.json",
+      "bytes": 148,
+      "sha256": "a4b316081e608cc24fff39e1fd842175e47c837c983d716dbdc74d010429ee50"
+    },
+    {
+      "path": "tasks/mqar_C6-channel-calibrated_evaluate.json",
+      "bytes": 1277,
+      "sha256": "4d8769e2344d1e2c5398628429f4a63f7fa97e8a50d7df9209448491918fbd3b"
+    },
+    {
+      "path": "tasks/mqar_C6-channel-calibrated_train.json",
+      "bytes": 1274,
+      "sha256": "0009bff1584f5315783bfa91de2077783af28dea7f816c0329bc5731fa934466"
+    },
+    {
+      "path": "tasks/overwrite_C6-channel-calibrated_evaluate.json",
+      "bytes": 1287,
+      "sha256": "b88e0da4241f2ec99ae65a1315413b97e3155a3971c0e43a475275e1581f9e2f"
+    },
+    {
+      "path": "tasks/overwrite_C6-channel-calibrated_train.json",
+      "bytes": 1284,
+      "sha256": "43d55925e4b7ffc9252852f8b567c0bf43eb3c748d92be21696a669429f523e6"
+    },
+    {
+      "path": "train_status.json",
+      "bytes": 204,
+      "sha256": "e681fe6b691818eecd93599c0dbdd21333d8bb6ab1a5442380adcfa3d78e5022"
+    }
+  ],
+  "excluded": [
+    "runs/mqar/C6-channel-calibrated/seed_42/best_validation_checkpoint.pt",
+    "runs/mqar/C6-channel-calibrated/seed_42/final_checkpoint.pt",
+    "runs/overwrite/C6-channel-calibrated/seed_42/best_validation_checkpoint.pt",
+    "runs/overwrite/C6-channel-calibrated/seed_42/final_checkpoint.pt"
+  ]
+}

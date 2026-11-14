@@ -1,0 +1,14 @@
+[
+  {
+    "gpu": 0,
+    "name": "Tesla T4",
+    "free_bytes": 15419113472,
+    "total_bytes": 15636037632
+  },
+  {
+    "gpu": 1,
+    "name": "Tesla T4",
+    "free_bytes": 15419113472,
+    "total_bytes": 15636037632
+  }
+]
