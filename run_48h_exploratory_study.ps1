@@ -93,7 +93,6 @@ try {
             state_accumulator_dtype = $accumulatorDtype; recurrence_chunk_size = 64; validation_answer_accuracy = $true; concurrent_training_runs = $Concurrency
         }
         if ($corrected) { $task.protocol_version = $protocolVersion }
-        if ($Steps -eq 1000 -and $TaskExperimentId -eq $experimentId) { $task.validation_at_steps = @(300, 650) }
         return [pscustomobject]$task
     }
 

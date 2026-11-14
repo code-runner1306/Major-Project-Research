@@ -60,6 +60,7 @@ def selections(args, study):
 
 def task_config(study, family, condition, seed, output):
     budget = study["budgets"]["10M"]
+    retrieval = dict(study["retrieval"], validation_examples=512)
     return {
         "operation": "train", "experiment_id": study["experiment_id"],
         "condition_id": condition["id"], "family": family, "scale": "10M",
@@ -70,7 +71,7 @@ def task_config(study, family, condition, seed, output):
         "calibration_min_half_life": study["calibration"]["min_half_life"],
         "calibration_max_half_life": study["calibration"]["max_half_life"],
         "calibration_examples": study["calibration"]["examples"],
-        "retrieval_config": study["retrieval"], "run_mode": "production",
+        "retrieval_config": retrieval, "run_mode": "production",
         "recurrence_backend": study["runtime"].get("recurrence_backend", "reference"),
         "state_accumulator_dtype": study["runtime"]["state_accumulator_dtype"],
         "recurrence_chunk_size": 64, "validation_answer_accuracy": True,
