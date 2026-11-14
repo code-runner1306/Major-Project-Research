@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "source_revision": "a7722bc9aac95b78804e79c79638f1b3e5e8ff5e",
+  "models": 2,
+  "seed": 42,
+  "train": {
+    "overwrite_C4-scalar-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 18683.784581056
+    },
+    "mqar_C4-scalar-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 18930.818624298998
+    }
+  },
+  "evaluate": {
+    "overwrite_C4-scalar-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 176.02674853999997
+    },
+    "mqar_C4-scalar-calibrated": {
+      "exit_code": 0,
+      "elapsed_seconds": 178.02862231300242
+    }
+  },
+  "elapsed_seconds": 19110.849115678
+}

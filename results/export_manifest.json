@@ -1,0 +1,165 @@
+{
+  "included": [
+    {
+      "path": "authorized_study_config.json",
+      "bytes": 2915,
+      "sha256": "e31bc338c0a12da5376f099c8b30da508f6d06b0fd0a3ff0eb0a60a2dce18855"
+    },
+    {
+      "path": "evaluate_status.json",
+      "bytes": 208,
+      "sha256": "95ea4deb772859ab0b3aa0a7bcddd4cb424efc83a1e4aabdedbf84446e5a0344"
+    },
+    {
+      "path": "hardware.json",
+      "bytes": 221,
+      "sha256": "5e4a027552817b00180918b70e5ed975e1dff8a9c92bafc6059a5941bc0996ae"
+    },
+    {
+      "path": "logs/mqar_C4-scalar-calibrated_evaluate.log",
+      "bytes": 119,
+      "sha256": "2efd9a5691796248b9a86f8f98528d23201aa334197e3be8d132f6d6c9df8730"
+    },
+    {
+      "path": "logs/mqar_C4-scalar-calibrated_train.log",
+      "bytes": 2649,
+      "sha256": "9280878b19a0c42579e04d6ae001d8f4060b44c609082479de8ef4538e0ea9bc"
+    },
+    {
+      "path": "logs/overwrite_C4-scalar-calibrated_evaluate.log",
+      "bytes": 124,
+      "sha256": "86b7ca4ec7985348ab40f200be440537dfe2d45a6fc460168a33f744f4badbd2"
+    },
+    {
+      "path": "logs/overwrite_C4-scalar-calibrated_train.log",
+      "bytes": 2804,
+      "sha256": "45f49e1e9a7b9e4ae38d0b4f09ec065298ed4e2877e483275ef39c744c924c43"
+    },
+    {
+      "path": "plan.json",
+      "bytes": 3178,
+      "sha256": "051054ade01333c8a1d7e336b36a6c05ce7d9ff6bab8434df67c03b9c37aca14"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/calibration.json",
+      "bytes": 12693,
+      "sha256": "3337d6b366aca42cfcb772ab9bd9b6d570dce47576fb0c4c4cd112027250dc58"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/generator_held_out.json",
+      "bytes": 647,
+      "sha256": "fa0de8150fe6734ca858bc76c261f06fd9855c99b9a4eae9796f8b9b9708fbce"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/generator_train.json",
+      "bytes": 646,
+      "sha256": "a538b7acb9b93444853a50e9bb41ef2bcb0c3b102b0d79f0718737c0318d3682"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/generator_validation.json",
+      "bytes": 649,
+      "sha256": "94728f7b0f005f3535cd631b73aeb12407f7e047db8db98ecc34e401a791d9e9"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/lifecycle.json",
+      "bytes": 180,
+      "sha256": "fe948a5accfbff73b843dd902ebb87cf39eb0036e8df6b2ffaeaa638ef3c4b61"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/manifest.json",
+      "bytes": 90026,
+      "sha256": "37c3fae4c705da3fe373f653e17a5d5651cf2bc568ffdcf9513070aff2911f7a"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/metrics.json",
+      "bytes": 14966514,
+      "sha256": "a2aeece7db95d0bad4f83dcd56791d430d930a2d7c760d1a4cbf59b0d10fae0b"
+    },
+    {
+      "path": "runs/mqar/C4-scalar-calibrated/seed_42/validation_history.json",
+      "bytes": 2911,
+      "sha256": "5a5fb6eee52b7036936378fabaa10f4021eafae206e278b44f663c71175b2883"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/calibration.json",
+      "bytes": 12726,
+      "sha256": "e6a0eb0b282e6f611cb9ecc9035278ab500b737ff52646edf5fbae67a10513d4"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/generator_held_out.json",
+      "bytes": 652,
+      "sha256": "393d61731c9cd330d826b673a23628530c9ebd14f9121ff7fcfe4a71d78582a4"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/generator_train.json",
+      "bytes": 651,
+      "sha256": "e751fb6fe9548e59b3777654e3a0282f61258b73179b2a47e175c994bfac596d"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/generator_validation.json",
+      "bytes": 654,
+      "sha256": "b8980f80299cc2f3cd5c2ffbdc50b38a5123be76fa0dad3861060e2b8a16a052"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/lifecycle.json",
+      "bytes": 180,
+      "sha256": "b4c3db7562512352e58c70a035aa71417402be0998aa1e63254421965c7c33b0"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/manifest.json",
+      "bytes": 90069,
+      "sha256": "b70ac8fb97d390ae9fac08a8889401e329fe403703704b1e8101fac8ca573c83"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/metrics.json",
+      "bytes": 14622182,
+      "sha256": "5c69c78c004490b677ffff868259d1456ef6e964503ea91f3e093abec03ef992"
+    },
+    {
+      "path": "runs/overwrite/C4-scalar-calibrated/seed_42/validation_history.json",
+      "bytes": 2800,
+      "sha256": "2c269409eed5bacaac3957300e525bda487dd5b04b0936e20039998e87e6faf1"
+    },
+    {
+      "path": "session_summary.json",
+      "bytes": 635,
+      "sha256": "b3019958079374a1494e3231810292f2622663d814d5750158eb3c87abfb2240"
+    },
+    {
+      "path": "source.json",
+      "bytes": 148,
+      "sha256": "a4b316081e608cc24fff39e1fd842175e47c837c983d716dbdc74d010429ee50"
+    },
+    {
+      "path": "tasks/mqar_C4-scalar-calibrated_evaluate.json",
+      "bytes": 1269,
+      "sha256": "ba232969635a0e533a6193584aa662b51ec2bdd521de63ba4ba6c5395d2f9f70"
+    },
+    {
+      "path": "tasks/mqar_C4-scalar-calibrated_train.json",
+      "bytes": 1266,
+      "sha256": "e3d42f42747967276bc2fab8fda22cd525b873ef41eefbe0ca4fe43943fa294d"
+    },
+    {
+      "path": "tasks/overwrite_C4-scalar-calibrated_evaluate.json",
+      "bytes": 1279,
+      "sha256": "c46033cd3ee6278ef93a961a56a8661c50150e7618474f7f1ff6e09007bb661e"
+    },
+    {
+      "path": "tasks/overwrite_C4-scalar-calibrated_train.json",
+      "bytes": 1276,
+      "sha256": "fa4817fc69c710021b151f98f6e1be3b461ddc9a4cfa08ce7deb7bd186f6e0db"
+    },
+    {
+      "path": "train_status.json",
+      "bytes": 205,
+      "sha256": "ad2361a1581271fa280e477a415a3981b7d0de20286bae9b55aa42a98b2d166f"
+    }
+  ],
+  "excluded": [
+    "runs/mqar/C4-scalar-calibrated/seed_42/best_validation_checkpoint.pt",
+    "runs/mqar/C4-scalar-calibrated/seed_42/final_checkpoint.pt",
+    "runs/overwrite/C4-scalar-calibrated/seed_42/best_validation_checkpoint.pt",
+    "runs/overwrite/C4-scalar-calibrated/seed_42/final_checkpoint.pt"
+  ]
+}

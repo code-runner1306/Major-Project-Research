@@ -1,0 +1,10 @@
+{
+  "overwrite_C4-scalar-calibrated": {
+    "exit_code": 0,
+    "elapsed_seconds": 18683.784581056
+  },
+  "mqar_C4-scalar-calibrated": {
+    "exit_code": 0,
+    "elapsed_seconds": 18930.818624298998
+  }
+}
