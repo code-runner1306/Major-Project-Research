@@ -10,7 +10,8 @@ usage() {
   cat <<'EOF'
 Usage: bash run_kaggle_v4_smoke.sh [options]
 
-Runs 50 steps per V4 task in solo and two-GPU parallel modes. Compares worker
+Runs 50 steps per V4 task with solo, 2, 3 and 4 workers sharing two GPUs.
+Times held-out evaluation; validation passes record elapsed_seconds in metrics. Compares worker
 throughput and CPU/GPU utilization, then reports 1,000-step and seed estimates.
 The CPU threshold is an operational saturation signal, not proof of hardware throttling.
 
@@ -206,9 +207,13 @@ def phase_run(phase, assignments):
         logs[family] = log; starts[family] = time.monotonic()
         env = dict(os.environ, CUDA_VISIBLE_DEVICES=str(gpu))
         procs[family] = subprocess.Popen([python, "run_all.py", "--study-task-config", str(root / "tasks" / f"{phase}_{family}.json")], stdout=log, stderr=subprocess.STDOUT, env=env)
-    while any(p.poll() is None for p in procs.values()): time.sleep(0.5)
+    durations = {}
+    while len(durations) < len(procs):
+        for label, process in procs.items():
+            if label not in durations and process.poll() is not None:
+                durations[label] = time.monotonic() - starts[label]
+        if len(durations) < len(procs): time.sleep(0.5)
     elapsed = time.monotonic() - phase_start
-    durations = {f: time.monotonic() - starts[f] for f in procs}
     codes = {f: p.returncode for f, p in procs.items()}
     for log in logs.values(): log.close()
     stop.set(); sampler.join(timeout=3)
@@ -231,7 +236,44 @@ parallel = phase_run("parallel", {"mqar": 0, "overwrite": 1})
 if any(code != 0 for code in parallel["exit_codes"].values()):
     raise SystemExit(f"Parallel run failed; inspect {root}/logs/parallel_*.log")
 
-report = {"steps_per_task_per_mode": steps, "solo_baseline": solo, "two_worker_parallel": parallel}
+# Additional workers share the same two physical GPUs; each gets an isolated run.
+worker_trials = {"2": {"training": parallel}}
+for count in (3, 4):
+    phase = f"workers_{count}"
+    assignments = {}
+    for index in range(count):
+        family = families[index % 2]
+        label = f"{family}_{index}"
+        cfg = json.loads((root / "tasks" / f"solo_{family}.json").read_text())
+        cfg["output_dir"] = str(root / "runs" / phase / label)
+        cfg["seed"] = 991 + index // 2
+        cfg["concurrent_training_runs"] = count
+        (root / "tasks" / f"{phase}_{label}.json").write_text(json.dumps(cfg, indent=2))
+        assignments[label] = index % 2
+    print(f"Testing {count} workers on two GPUs", flush=True)
+    trial = phase_run(phase, assignments)
+    worker_trials[str(count)] = {"training": trial}
+    # Retain failures (including OOM) in the report and continue to the next trial.
+
+for count, trial in worker_trials.items():
+    phase = "parallel" if count == "2" else f"workers_{count}"
+    labels = list(trial["training"]["exit_codes"])
+    assignments = {}
+    for index, label in enumerate(labels):
+        if trial["training"]["exit_codes"][label] != 0:
+            continue
+        cfg = json.loads((root / "tasks" / f"{phase}_{label}.json").read_text())
+        cfg["operation"] = "evaluate"
+        (root / "tasks" / f"{phase}_eval_{label}.json").write_text(json.dumps(cfg, indent=2))
+        assignments[label] = index % 2
+    if assignments:
+        print(f"Timing held-out evaluation with {count} workers", flush=True)
+        trial["evaluation"] = phase_run(f"{phase}_eval", assignments)
+    elapsed = trial["training"]["makespan_seconds"]
+    completed = sum(code == 0 for code in trial["training"]["exit_codes"].values())
+    trial["completed_training_jobs_per_hour"] = completed * 3600 / elapsed
+
+report = {"steps_per_task_per_mode": steps, "solo_baseline": solo, "two_worker_parallel": parallel, "worker_trials": worker_trials}
 solo_sum = sum(solo[f]["family_seconds"][f] for f in families)
 pair_makespan = parallel["makespan_seconds"]
 cpu_avg = parallel["avg_cpu_percent"]
@@ -249,6 +291,45 @@ report["timing_estimates"] = {"per_family_1000_step_seconds_solo": {f: solo[f]["
     "one_seed_serial_hours": solo_sum * 1000 / steps * 4 / 3600,
     "one_seed_two_worker_hours": pair_makespan * 1000 / steps * 4 / 3600,
     "assumption": "Corrected config has 4 conditions per dataset; C4 smoke timing is linearly projected to 1000 steps. Seed estimate multiplies by 4 conditions and omits final held-out evaluation."}
+def training_record(value):
+    if isinstance(value, dict):
+        if "optimizer_step_seconds" in value: return value
+        for child in value.values():
+            found = training_record(child)
+            if found is not None: return found
+    return None
+
+for count, trial in worker_trials.items():
+    phase = "parallel" if count == "2" else f"workers_{count}"
+    trial["per_model_estimates"] = {}
+    for label, code in trial["training"]["exit_codes"].items():
+        if code: continue
+        cfg = json.loads((root / "tasks" / f"{phase}_{label}.json").read_text())
+        run_dir = pathlib.Path(cfg["output_dir"])
+        metrics = json.loads((run_dir / "metrics.json").read_text())
+        history = json.loads((run_dir / "validation_history.json").read_text())
+        record = training_record(metrics)
+        step_time = statistics.mean(record["optimizer_step_seconds"])
+        validation_time = statistics.mean(v["elapsed_seconds"] for v in history)
+        final_time = metrics.get("final_validation", {}).get("elapsed_seconds", validation_time)
+        evaluation = trial.get("evaluation", {})
+        eval_time = evaluation.get("family_seconds", {}).get(label) if evaluation.get("exit_codes", {}).get(label) == 0 else None
+        train_val_time = 1000 * step_time + 10 * validation_time + final_time
+        trial["per_model_estimates"][label] = {
+            "family": cfg["family"], "mean_optimizer_step_seconds": step_time,
+            "scheduled_validation_seconds": validation_time,
+            "final_loss_validation_seconds": final_time,
+            "held_out_evaluation_seconds": eval_time,
+            "projected_1000_steps_with_validation_seconds": train_val_time,
+            "projected_total_seconds": train_val_time + eval_time if eval_time is not None else None,
+        }
+    trial["passed"] = (all(c == 0 for c in trial["training"]["exit_codes"].values())
+        and len(trial.get("evaluation", {}).get("exit_codes", {})) == int(count)
+        and all(c == 0 for c in trial.get("evaluation", {}).get("exit_codes", {}).values()))
+qualified = {k: v for k, v in worker_trials.items() if v["passed"]}
+report["best_observed_workers_by_training_throughput"] = max(qualified,
+    key=lambda k: qualified[k]["completed_training_jobs_per_hour"], default=None)
+report["timing_estimates"] = {"assumptions": "C4-only projection: 1000 optimizer steps, ten scheduled validations plus final loss validation, and measured held-out evaluation. Training startup/calibration/checkpoint IO excluded. Three workers use two MQAR and one overwrite jobs; four use two of each. Other conditions may differ."}
 (root / "timing_estimate.json").write_text(json.dumps(report, indent=2) + "\n")
 print(json.dumps(report, indent=2), flush=True)
 PY

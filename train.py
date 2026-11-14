@@ -221,9 +221,11 @@ def train_fixed_budget(
             should_validate = (step in profile.budget.validation_at_steps if profile.budget.validation_at_steps is not None
                                else step % profile.budget.evaluation_interval == 0 or step == max_steps)
             if should_validate:
+                validation_started = time.perf_counter()
                 validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)
                 if validation_metrics_fn is not None:
                     validation.update(validation_metrics_fn(model, step))
+                validation["elapsed_seconds"] = time.perf_counter() - validation_started
                 validation["step"] = step
                 validation_history.append(validation)
                 atomic_write_json(f"{run_dir}/validation_history.json", validation_history)
@@ -248,7 +250,9 @@ def train_fixed_budget(
         completed_steps=max_steps, accepted_optimizer_steps=accepted_optimizer_steps,
         processed_tokens=processed_tokens,
     )
+    final_validation_started = time.perf_counter()
     primary_validation = evaluate_model(model, validation_dataloader, device, profile.budget.validation_steps)
+    primary_validation["elapsed_seconds"] = time.perf_counter() - final_validation_started
     assert energy_region.result is not None
     energy = normalized_energy(energy_region.result, tokens=processed_tokens / 1_000_000, unit="million_training_tokens")
     return {
