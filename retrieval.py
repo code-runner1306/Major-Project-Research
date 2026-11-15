@@ -679,8 +679,14 @@ class RetrievalDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         return data
 
 
-def retrieval_dataloader(dataset: RetrievalDataset, batch_size: int) -> DataLoader:
-    return DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0)
+def retrieval_dataloader(
+    dataset: RetrievalDataset, batch_size: int, *, shuffle: bool = False,
+    generator: torch.Generator | None = None,
+) -> DataLoader:
+    return DataLoader(
+        dataset, batch_size=batch_size, shuffle=shuffle, num_workers=0,
+        generator=generator,
+    )
 
 
 @torch.no_grad()

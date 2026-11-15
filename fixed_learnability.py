@@ -5,6 +5,7 @@ import argparse
 from dataclasses import replace
 import json
 from pathlib import Path
+import random
 import time
 
 import torch
@@ -23,6 +24,17 @@ def compact(metrics):
     return {key: metrics.get(key) for key in keys}
 
 
+def _answer_free_curve(progress, split):
+    curve = [{'step': row['step'],
+              'exact_query_accuracy': row[f'{split}_answer_free']['exact_query_accuracy']}
+             for row in progress]
+    best = max(curve, key=lambda point: point['exact_query_accuracy']) if curve else None
+    return {'points': curve,
+            'final': curve[-1]['exact_query_accuracy'] if curve else None,
+            'best': best['exact_query_accuracy'] if best else None,
+            'best_step': best['step'] if best else None}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--family', required=True, choices=('mqar', 'overwrite'))
@@ -32,12 +44,15 @@ def main():
     parser.add_argument('--train-examples', type=int, default=10_000,
                         help='Number of deterministic generated training examples (128 reproduces the fixed-data test)')
     parser.add_argument('--train-eval-examples', type=int, default=128,
-                        help='Number of already-seen training examples measured at each checkpoint')
+                        help='Number of training-set examples measured at each checkpoint')
+    parser.add_argument('--learning-rate', type=float, default=0.001)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cpu-smoke', action='store_true', help='Use a tiny CPU model for implementation checking')
     args = parser.parse_args()
     if args.steps < 2 or args.eval_every < 1 or args.train_examples < 8 or args.train_eval_examples < 1:
         parser.error('steps must be >= 2, train-examples >= 8 and evaluation settings positive')
+    if not args.learning_rate > 0:
+        parser.error('learning-rate must be positive')
     if not args.cpu_smoke and not torch.cuda.is_available():
         raise SystemExit('CUDA is required')
     args.output.mkdir(parents=True, exist_ok=False)
@@ -60,16 +75,19 @@ def main():
     else:
         profile = production_profile(args.output)
         scale = '10M'
-    profile = replace(profile, budget=budget, learning_rate=0.001, retrieval=config,
+    profile = replace(profile, budget=budget, learning_rate=args.learning_rate, retrieval=config,
         recurrence_backend='reference', state_accumulator_dtype='float32')
     train = RetrievalDataset(task=args.family, examples=config.train_examples, config=config,
                              seed=seed.data_seed, split='train')
     held = RetrievalDataset(task=args.family, examples=config.held_out_examples, config=config,
                             seed=seed.evaluation_seed + 1, split='held_out')
     assert train.manifest()['hash'] != held.manifest()['hash']
-    # The unshuffled loader always sees these first examples before the first
-    # evaluation; do not repeatedly run inference over all 10,000 examples.
-    train_indices = tuple(range(min(args.train_eval_examples, len(train), min(args.eval_every, args.steps) * budget.batch_size * budget.grad_accum_steps)))
+    # Fixed random sample of the training set: with a shuffled training loader
+    # the dataset-order prefix is no longer special, so measure a seeded sample
+    # instead of the first examples in storage order.
+    sample_rng = random.Random(seed.evaluation_seed)
+    train_indices = tuple(sorted(sample_rng.sample(range(len(train)),
+                                                   min(args.train_eval_examples, len(train)))))
     seed_everything(seed.model_seed)
     model, _, metadata = construct_model(_resolved_backbone(profile, args.family, scale), 'scalar',
         config.vocabulary_size, recurrence_options=recurrence_options_for(profile),
@@ -95,12 +113,18 @@ def main():
                                   seed=seed.data_seed, split='train')
     baseline = evaluate_retrieval_baselines(held, frequency_dataset=seen_train)
     (args.output / 'held_out_baselines.json').write_text(json.dumps(baseline, indent=2) + '\n')
-    result = train_fixed_budget(model=model, train_dataloader=retrieval_dataloader(train, budget.batch_size),
+    shuffle_generator = torch.Generator()
+    shuffle_generator.manual_seed(seed.data_seed)
+    result = train_fixed_budget(model=model,
+        train_dataloader=retrieval_dataloader(train, budget.batch_size, shuffle=True,
+                                              generator=shuffle_generator),
         validation_dataloader=retrieval_dataloader(train, budget.batch_size), profile=profile, device=device,
         run_dir=str(args.output), energy_provider=EnergyProvider.create(device),
         progress_label=f'fixed-{args.family}', validation_metrics_fn=measure)
     summary = {'status': 'complete', 'purpose': 'exploratory varied-data overfit and easy held-out learnability',
         'family': args.family, 'seed': args.seed, 'optimizer_steps': args.steps,
+        'learning_rate': args.learning_rate, 'train_shuffle': True,
+        'epochs_completed': (args.steps * budget.batch_size * budget.grad_accum_steps) / max(len(train), 1),
         'train_examples': len(train), 'held_out_examples': len(held),
         'distinct_train_examples_seen': seen_count,
         'train_accuracy_sample_examples': len(train_indices),
@@ -114,6 +138,8 @@ def main():
         'held_out_oracle_audit': baseline['oracle_audit'],
         'shortcut_audit_passed': baseline['shortcut_criterion']['all_cells_pass'],
         'last_measurement': progress[-1], 'all_measurements': progress,
+        'held_out_curve': _answer_free_curve(progress, 'held_out'),
+        'train_sample_curve': _answer_free_curve(progress, 'train_sample'),
         'training_wall_seconds': result['training']['wall_time_seconds'],
         'total_wall_seconds': time.monotonic() - start}
     (args.output / 'diagnostic_summary.json').write_text(json.dumps(summary, indent=2) + '\n')
