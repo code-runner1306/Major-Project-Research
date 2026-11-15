@@ -1,0 +1,90 @@
+{
+  "status": "development_protocol_unqualified",
+  "upstream": {
+    "repository": "https://github.com/HazyResearch/zoology",
+    "revision": "de4e258784224e09909c257ff3ea040f089ed660",
+    "experiment": "zoology/experiments/paper/figure2.py",
+    "authority": "pinned executable, not a mixture of paper prose and current main"
+  },
+  "gdn_reference": {
+    "repository": "https://github.com/fla-org/flash-linear-attention",
+    "revision": "2705ab8ee9a9086bcfa6d079858e4281e01215a1",
+    "extensions": [
+      "key-channel decay",
+      "portable PyTorch executor",
+      "Zoology synthetic backbone"
+    ]
+  },
+  "tasks": [
+    "mqar",
+    "overwrite"
+  ],
+  "variants": [
+    "scalar",
+    "channel-wise"
+  ],
+  "data": {
+    "vocabulary": 8192,
+    "model_input_length": 64,
+    "keys": 4,
+    "train_examples": 100000,
+    "shuffle": false,
+    "development_examples": 512,
+    "confirmation_examples": 512,
+    "confirmation_evaluated": false
+  },
+  "model": {
+    "width": 128,
+    "gdn_layers": 4,
+    "attention_control_layers": 2,
+    "heads": 1,
+    "value_expansion": 2,
+    "state_mixer": "Identity",
+    "embedding_output": "tied",
+    "gdn_absolute_positions": false,
+    "attention_absolute_positions": true
+  },
+  "optimizer": {
+    "name": "AdamW",
+    "weight_decay": 0.1,
+    "timescale_weight_decay": 0.0,
+    "gradient_clipping": null,
+    "effective_batch": 512,
+    "microbatch_initial_candidate": 32,
+    "scheduler": "epochwise cosine, no warmup; pinned executable behavior"
+  },
+  "learning_rate_candidates": [
+    0.0001,
+    0.00046415888336127773,
+    0.0021544346900318843,
+    0.01
+  ],
+  "published_epoch_ceiling": 64,
+  "selected_fixed_budget": null,
+  "qualification": {
+    "minimum_real_task_timing_steps": 50,
+    "primary_accuracy_min": 0.8,
+    "subgroup_accuracy_min": 0.8,
+    "mqar_subgroups": [
+      "first_query",
+      "later_query"
+    ],
+    "overwrite_subgroups": [
+      "latest",
+      "unrelated"
+    ],
+    "selection_split": "development only",
+    "confirmation_policy": "fresh and evaluated once after selection"
+  },
+  "session": {
+    "initial_workers": 2,
+    "additional_workers_candidates": [
+      3,
+      4
+    ],
+    "coordinator_ceiling_seconds": 39600,
+    "outer_watchdog_seconds": 41400,
+    "budget_guard_reserve_seconds": 900
+  },
+  "production_authorized_by_this_file": false
+}

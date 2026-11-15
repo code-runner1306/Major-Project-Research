@@ -16,11 +16,9 @@ import torch
 from torch.nn import functional as F
 
 from artifacts import atomic_write_json
-from config import ModelConfig
-from experimental_chunked_recurrence import chunked_recurrence, install_candidate
-from experimental_scored_loss import scored_token_loss
-from model import GatedDeltaNetLM
-from recurrence import RecurrenceOptions, reference_recurrence
+from experimental_chunked_recurrence import chunked_recurrence
+from recurrence import RecurrenceOptions
+from recipe_model import RecipeLM, serial_rectangular
 
 
 def synchronize(device):
@@ -36,14 +34,14 @@ def numerical_qualification(device, chunk_size):
     for variant, gate_width in (('scalar', 1), ('channel-wise', 128)):
         for zero_gate in (False, True):
             q, k = [F.normalize(torch.randn(2, 64, 1, 128, device=device), dim=-1) for _ in range(2)]
-            v = torch.randn_like(q)
+            v = torch.randn(2,64,1,256,device=device)
             alpha = torch.rand(2, 64, 1, gate_width, device=device)
             if zero_gate:
                 alpha[:, 7] = 0
             beta = torch.rand(2, 64, 1, 1, device=device)
-            initial = torch.randn(2, 1, 128, 128, device=device)
+            initial = torch.randn(2, 1, 256, 128, device=device)
             inputs = [x.requires_grad_() for x in (q, k, v, alpha, beta, initial)]
-            ref, ref_state = reference_recurrence(*inputs, options=options)
+            ref, ref_state = serial_rectangular(*inputs)
             actual, state = chunked_recurrence(*inputs, options=options)
             weights, state_weights = torch.randn_like(ref), torch.randn_like(ref_state)
             reference_grads = torch.autograd.grad((ref * weights).sum() + (ref_state * state_weights).sum(), inputs)
@@ -62,12 +60,9 @@ def numerical_qualification(device, chunk_size):
 
 
 def make_model(variant, backend, chunk_size, device):
-    torch.manual_seed(42)
-    model = GatedDeltaNetLM(ModelConfig('zoology-budget-pilot', 128, 2, 1, 256, 'pure_gdn'),
-        variant, 8192, RecurrenceOptions(state_accumulator_dtype='float32'), study_init_seed=42)
-    # Existing GDN block is our adaptation; this pilot makes no reproduction claim.
-    if backend == 'chunked':
-        install_candidate(model, chunk_size=chunk_size)
+    model = RecipeLM(variant,vocabulary=8192,length=64,width=128,backend=backend,seed=42)
+    for layer in model.network.backbone.layers:
+        layer.sequence_mixer.chunk_size=chunk_size
     return model.to(device)
 
 
@@ -76,24 +71,26 @@ def model_qualification(device, chunk_size):
     for variant in ('scalar','channel-wise'):
         reference = make_model(variant, 'reference', chunk_size, device)
         candidate = copy.deepcopy(reference)
-        install_candidate(candidate, chunk_size=chunk_size)
-        optimizers = [torch.optim.AdamW(m.parameters(), lr=1e-3, weight_decay=.1)
-                      for m in (reference,candidate)]
+        for layer in candidate.network.backbone.layers:
+            layer.sequence_mixer.backend='chunked'
+            layer.sequence_mixer.chunk_size=chunk_size
+        optimizers = [m.optimizer(1e-3) for m in (reference,candidate)]
         torch.manual_seed(991)
         max_error = 0.
         max_relative = 0.
-        for _ in range(5):
+        for step_index in range(5):
             tokens = torch.randint(1,8192,(2,64),device=device)
             labels = torch.full_like(tokens,-100)
             labels[:,[15,23,39,55]]=torch.randint(4096,8192,(2,4),device=device)
             for model,optimizer in zip((reference,candidate),optimizers):
+                torch.manual_seed(12000+step_index)  # Identical published dropout masks.
                 optimizer.zero_grad(set_to_none=True)
                 if model is candidate:
-                    loss=scored_token_loss(model,tokens,labels)
+                    loss=model.loss(tokens,labels)
                 else:
                     _,loss=model(tokens,labels)
                 loss.backward()
-                norm=torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
+                norm=torch.nn.utils.get_total_norm([p.grad for p in model.parameters() if p.grad is not None],foreach=True)
                 if not torch.isfinite(loss) or not torch.isfinite(norm):
                     raise RuntimeError('Nonfinite qualification training trajectory')
                 optimizer.step()
@@ -118,7 +115,7 @@ def worker(args):
     device = torch.device('cpu' if args.cpu_smoke else 'cuda:0')
     started = time.monotonic()
     model = make_model(args.variant, args.backend, args.chunk_size, device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=.1)
+    optimizer = model.optimizer(1e-3)
     # Timing uses generated resident tensors. These scores must never qualify a task.
     generator = torch.Generator().manual_seed(771)
     tokens = torch.randint(1, 8192, (args.batch, 64), generator=generator).to(device)
@@ -126,18 +123,19 @@ def worker(args):
     labels[:, [15, 23, 39, 55]] = torch.randint(4096, 8192, (args.batch, 4), generator=generator).to(device)
     def step():
         optimizer.zero_grad(set_to_none=True)
-        if args.loss_implementation == 'scored':
-            loss = scored_token_loss(model,tokens,labels)
-        else:
-            _, loss = model(tokens, labels)
-        if not torch.isfinite(loss):
-            raise FloatingPointError('Nonfinite pilot loss')
-        loss.backward()
-        norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
+        loss_value=0.
+        for _ in range(args.accumulation):
+            loss=model.loss(tokens,labels,scored_only=args.loss_implementation=='scored')
+            if not torch.isfinite(loss):
+                raise FloatingPointError('Nonfinite pilot loss')
+            (loss/args.accumulation).backward()
+            loss_value+=loss.item()/args.accumulation
+        # Pinned trainer does not clip. Check gradients without changing them.
+        norm=torch.nn.utils.get_total_norm([p.grad for p in model.parameters() if p.grad is not None],foreach=True)
         if not torch.isfinite(norm):
             raise FloatingPointError('Nonfinite pilot gradient')
         optimizer.step()
-        return loss.item()
+        return loss_value
     setup = time.monotonic() - started
     warm_start = time.monotonic()
     for _ in range(args.warmup):
@@ -171,6 +169,8 @@ def worker(args):
     summary = {'status': 'complete', 'backend': args.backend, 'variant': args.variant,
         'loss_implementation':args.loss_implementation,
         'measured_optimizer_steps': args.steps, 'batch': args.batch, 'sequence_length': 64,
+        'gradient_accumulation':args.accumulation,'effective_batch':args.batch*args.accumulation,
+        'model_recipe':'pinned-zoology-backbone-with-FLA-based-GDN-extension',
         'parameters': sum(p.numel() for p in model.parameters()), 'precision': 'float32',
         'setup_seconds': setup, 'warmup_seconds': warmup_seconds,
         'optimizer_step_seconds': durations, 'mean_step_seconds': statistics.mean(durations),
@@ -195,7 +195,10 @@ def coordinator(args):
         raise RuntimeError('Two CUDA GPUs required')
     metadata = {'status': 'running', 'source_revision': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(),
         'candidate_source_sha256': hashlib.sha256(Path('experimental_chunked_recurrence.py').read_bytes()).hexdigest(),
-        'scored_loss_source_sha256': hashlib.sha256(Path('experimental_scored_loss.py').read_bytes()).hexdigest(),
+        'recipe_model_sha256':hashlib.sha256(Path('recipe_model.py').read_bytes()).hexdigest(),
+        'recipe_backbone_sha256':{name:hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in (
+            'third_party/zoology_iclr24/model.py','third_party/zoology_iclr24/compat.py',
+            'third_party/zoology_iclr24/attention.py')},
         'torch': torch.__version__, 'gpus': [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())],
         'purpose': 'Numerical and timing qualification only; no learned accuracy claim', 'phases': []}
     atomic_write_json(args.output/'pilot_status.json', metadata)
@@ -205,10 +208,11 @@ def coordinator(args):
         atomic_write_json(args.output/'numerical_qualification.json', numerical)
         if device.type == 'cuda':
             torch.cuda.empty_cache()
-        for backend,loss_implementation in (('reference','full'),('reference','scored'),('chunked','scored')):
+        for trial_backend,trial_loss in (('reference','full'),('reference','scored'),('chunked','scored')):
+            backend,loss_implementation=trial_backend,trial_loss
             for count in args.workers:
                 # Reference oversubscription is unnecessary if the candidate loses.
-                if backend == 'reference' and count != 2:
+                if trial_backend == 'reference' and count != 2:
                     continue
                 phase_start = time.monotonic()
                 processes, logs, paths = [], [], []
@@ -224,6 +228,7 @@ def coordinator(args):
                             '--loss-implementation',loss_implementation,
                             '--variant','scalar' if index % 2 == 0 else 'channel-wise',
                             '--batch',str(args.batch),'--steps',str(args.steps),'--warmup',str(args.warmup),
+                            '--accumulation',str(args.accumulation),
                             '--chunk-size',str(args.chunk_size),'--output',str(path)]
                         if args.cpu_smoke:
                             command.append('--cpu-smoke')
@@ -232,6 +237,8 @@ def coordinator(args):
                             start_new_session=False))
                     psutil.cpu_percent()
                     while any(p.poll() is None for p in processes):
+                        if any(p.poll() not in (None,0) for p in processes):
+                            raise RuntimeError(f'Worker failed in {backend}/{count}; stopping the wave')
                         if time.monotonic()-start > args.max_seconds:
                             raise TimeoutError('Pilot session limit reached')
                         cpu_samples.append(psutil.cpu_percent())
@@ -262,21 +269,31 @@ def coordinator(args):
                 # Only run 3/4 workers when two-worker peak memory leaves room for
                 # a second worker per GPU, with 25% headroom. Fresh GPU0 context
                 # from numerical tests is released before these waves below.
-                if backend == 'chunked' and count == 2 and not args.cpu_smoke:
+                if trial_backend == 'chunked' and count == 2 and not args.cpu_smoke:
                     reference_phase = metadata['phases'][0]
-                    reference_time = statistics.mean(s['mean_step_seconds'] for s in reference_phase['workers_summary'])
-                    candidate_time = statistics.mean(s['mean_step_seconds'] for s in summaries)
-                    if candidate_time >= reference_time:
-                        metadata['oversubscription_skipped'] = 'Candidate did not improve two-worker optimizer throughput'
+                    def pair_time(phase):
+                        return max(s['mean_step_seconds'] for s in phase['workers_summary'])
+                    best=min(metadata['phases'],key=pair_time)
+                    metadata['selected_two_worker_candidate']={
+                        'backend':best['backend'],'loss_implementation':best['loss_implementation'],
+                        'paired_mean_step_seconds':pair_time(best)}
+                    if pair_time(best) >= pair_time(reference_phase):
+                        metadata['oversubscription_skipped'] = 'Neither optimization improved two-worker optimizer throughput'
                         break
-                    if row['cpu_percent_mean'] is not None and row['cpu_percent_mean'] > 85:
+                    if best['cpu_percent_mean'] is not None and best['cpu_percent_mean'] > 85:
                         metadata['oversubscription_skipped'] = 'Two-worker pilot already saturated CPU capacity'
                         break
                     total_memory = min(torch.cuda.get_device_properties(i).total_memory for i in (0,1))
-                    peak = max(s['peak_gpu_reserved_bytes'] for s in summaries)
+                    peak = max(s['peak_gpu_reserved_bytes'] for s in best['workers_summary'])
                     if peak*2 > total_memory*.75:
                         metadata['oversubscription_skipped'] = 'Two workers per GPU would exceed memory headroom'
                         break
+                    # Benchmark whichever combination actually won, rather
+                    # than presuming the new recurrence is the faster one.
+                    backend,loss_implementation=best['backend'],best['loss_implementation']
+                if count>=3 and row['cpu_percent_mean'] is not None and row['cpu_percent_mean']>90:
+                    metadata['oversubscription_skipped']='Measured oversubscription saturated CPU capacity'
+                    break
         metadata['status'] = 'complete'
     except (Exception, KeyboardInterrupt) as error:
         metadata.update(status='failed_or_incomplete',error=str(error))
@@ -297,11 +314,12 @@ def main():
     parser.add_argument('--steps',type=int,default=50)
     parser.add_argument('--warmup',type=int,default=5)
     parser.add_argument('--batch',type=int,default=32)
+    parser.add_argument('--accumulation',type=int,default=16)
     parser.add_argument('--chunk-size',type=int,default=16)
     parser.add_argument('--max-seconds',type=int,default=5400)
     parser.add_argument('--cpu-smoke',action='store_true')
     args=parser.parse_args()
-    if min(args.steps,args.batch,args.chunk_size,args.max_seconds)<1 or args.warmup<0:
+    if min(args.steps,args.batch,args.accumulation,args.chunk_size,args.max_seconds)<1 or args.warmup<0:
         parser.error('Budgets must be positive')
     if not args.workers or args.workers[0]!=2 or any(x not in (2,3,4) for x in args.workers) or args.workers!=sorted(set(args.workers)):
         parser.error('Worker counts must start at2 and increase uniquely through3/4')

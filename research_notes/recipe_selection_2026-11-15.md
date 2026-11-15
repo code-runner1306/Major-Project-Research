@@ -75,10 +75,12 @@ it does not contain the newer `BaseConv` hybrid. The current Zoology factory
 does create attention and Gated DeltaNet models as a `Hybrid` containing a
 short `BaseConv` mixer plus the selected sequence mixer. The official NVIDIA
 Gated DeltaNet implementation also includes short convolutions in its block.
-Therefore a pure-attention diagnostic cannot be used as a faithful control for
-the current hybrid recipe. If an attention control is retained, it must use
-the same local preprocessing, norms, MLP, tied embeddings/output, and position
-policy as the GDN comparison.
+Therefore a pure-attention diagnostic is not a reproduction of the current
+hybrid recipe. The historical pure-MHA control is legitimate when its published
+backbone, positions, training recipe and data are reproduced. Its depth and
+position mechanism differ from recurrent models and must be reported; it is a
+positive control, not a gate-only ablation. Scalar and channel-wise GDN must
+share their backbone and all common settings for the gate comparison.
 
 ## Resource-constrained adaptation
 

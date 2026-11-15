@@ -1,5 +1,10 @@
 # What the published MQAR recipes actually did
 
+Historical reading note: the executable source audit in
+[recipe_selection_2026-11-15.md](recipe_selection_2026-11-15.md) supersedes
+the initial batch/depth/warmup interpretation below. Paper prose and pinned
+code disagree; implementation must use the explicit source-based decision.
+
 ## Recommendation
 
 Yes, the next diagnostic should copy the published MQAR training protocol as closely as this repository allows. The current run is not a faithful reproduction of the canonical Zoology protocol, so its failure cannot be compared directly with the paper's reported learning behavior. This is a protocol-control run, not a replacement for the planned gate-granularity study.

@@ -26,14 +26,28 @@ def chunked_recurrence(
     All algebra runs in the declared state dtype; outputs use the Q dtype.
     """
     _validate_options(options)
-    batch, length, heads, width = _validate_inputs(q, k, v, alpha, beta, initial_state)
+    if q.shape == v.shape:
+        batch, length, heads, width = _validate_inputs(q, k, v, alpha, beta, initial_state)
+    else:
+        # Published GDN expands values independently of Q/K. The legacy
+        # production oracle accepts only square states; this diagnostic also
+        # supports value-by-key rectangular states without changing that API.
+        if q.ndim != 4 or k.shape != q.shape or v.ndim != 4 or v.shape[:3] != q.shape[:3]:
+            raise ValueError('Q/K must match; V must share batch/time/heads')
+        batch, length, heads, width = q.shape
+        if alpha.shape not in ((batch,length,heads,1),(batch,length,heads,width)) or beta.shape != (batch,length,heads,1):
+            raise ValueError('Invalid alpha/beta shape')
+        if any(x.device != q.device for x in (k,v,alpha,beta)):
+            raise ValueError('Recurrence inputs must share a device')
+        if initial_state is not None and (initial_state.shape != (batch,heads,v.size(-1),width) or initial_state.device != q.device):
+            raise ValueError('Initial state must be [batch,heads,value_width,key_width] on the Q device')
     if length == 0:
         raise ValueError('Chunked recurrence requires a nonempty sequence')
     dtype = _state_dtype(q, options)
     qh, kh, vh, ah, bh = (
         x.to(dtype).transpose(1, 2) for x in (q, k, v, alpha, beta)
     )
-    state = (torch.zeros(batch, heads, width, width, dtype=dtype, device=q.device)
+    state = (torch.zeros(batch, heads, v.size(-1), width, dtype=dtype, device=q.device)
              if initial_state is None else initial_state.to(dtype))
     outputs = []
     for start in range(0, length, options.chunk_size):

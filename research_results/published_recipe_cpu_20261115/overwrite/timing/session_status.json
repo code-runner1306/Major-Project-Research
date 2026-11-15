@@ -1,0 +1,12 @@
+{
+  "conservative_budget_seconds": null,
+  "family": "overwrite",
+  "jobs": {
+    "channel-wise": 0,
+    "scalar": 0
+  },
+  "mode": "timing",
+  "source_revision": "6a94dd45a133ad25250d1262d1125d4c04274088",
+  "status": "complete",
+  "wall_seconds": 10.062000000005355
+}
