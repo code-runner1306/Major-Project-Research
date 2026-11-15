@@ -1,0 +1,15 @@
+{
+  "families": [
+    "mqar"
+  ],
+  "jobs": {
+    "mqar/attention": 0,
+    "mqar/gdn": 0
+  },
+  "limit_seconds": 39600,
+  "reserve_seconds": 600,
+  "results_branch": "diagnostic/mqar/seed42_attention_control_mqar_20261115T065824Z",
+  "source_revision": "658852d265a91e2be2121105a2e858965f16f6fe",
+  "status": "complete",
+  "wall_seconds": 9130.621890396
+}
