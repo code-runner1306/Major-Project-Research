@@ -161,9 +161,9 @@ def worker(args):
     atomic_write_json(args.output / 'summary.json', summary)
 
 
-def compare(root):
+def compare(root, families):
     report = {'purpose': 'four-key attention positive-control diagnostic', 'families': {}}
-    for family in ('mqar', 'overwrite'):
+    for family in families:
         rows = {}
         for arch in ('gdn', 'attention'):
             path = root / family / arch / 'summary.json'
@@ -186,12 +186,15 @@ def compare(root):
 
 def coordinator(args):
     start = time.monotonic()
+    families = ('mqar', 'overwrite') if args.family == 'both' else (args.family,)
     args.output.mkdir(parents=True, exist_ok=False)
     if not args.cpu_smoke and torch.cuda.device_count() < 2: raise RuntimeError('Two CUDA GPUs required')
     # Absolute ceiling includes audits, both task waves and final report writing.
     deadline = start + args.max_seconds - args.reserve_seconds
     status = {'status': 'running', 'jobs': {}, 'limit_seconds': args.max_seconds,
-              'reserve_seconds': args.reserve_seconds, 'source_revision': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()}
+              'reserve_seconds': args.reserve_seconds, 'families': list(families),
+              'results_branch': f'diagnostic/{args.family}/seed{args.seed}_{args.output.name}' if args.push_results else None,
+              'source_revision': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()}
     code = 0
     old_alarm = None
     if os.name == 'posix':
@@ -199,11 +202,11 @@ def coordinator(args):
         old_alarm = signal.signal(signal.SIGALRM, expired)
         signal.setitimer(signal.ITIMER_REAL, max(0.001, deadline - time.monotonic()))
     try:
-        for family in ('mqar', 'overwrite'):
+        for family in families:
             result = audit(family, args.seed, args.cpu_smoke)
             atomic_write_json(args.output / f'{family}_audit.json', result)
             if not result['passed']: raise RuntimeError(f'{family} data audit failed; no training launched')
-        for family in ('mqar', 'overwrite'):
+        for family in families:
             processes, logs = {}, []
             try:
                 for gpu, arch in enumerate(('gdn', 'attention')):
@@ -245,13 +248,14 @@ def coordinator(args):
             signal.signal(signal.SIGALRM, old_alarm)
         status['wall_seconds'] = time.monotonic() - start
         atomic_write_json(args.output / 'session_status.json', status)
-        print(json.dumps(compare(args.output), indent=2), flush=True)
+        print(json.dumps(compare(args.output, families), indent=2), flush=True)
         print(json.dumps(status, indent=2), flush=True)
         if args.push_results:
             from kaggle_session import export_evidence, remote_url, publish
             try:
                 bundle = export_evidence(args.output)
-                publish(bundle, remote_url('origin'), 'diagnostic/' + args.output.name)
+                publish(bundle, remote_url('origin'), status['results_branch'])
+                print(f"Published results branch: {status['results_branch']}", flush=True)
             except Exception as error:
                 print(f'Publishing failed; local results retained: {error}', file=sys.stderr)
                 code = 1
@@ -270,14 +274,15 @@ def main():
     p.add_argument('--cpu-smoke', action='store_true')
     p.add_argument('--push-results', action='store_true', help='Push evidence-only branch using Git credentials or GH_TOKEN')
     p.add_argument('--worker', action='store_true')
-    p.add_argument('--family', choices=('mqar','overwrite'))
+    p.add_argument('--family', choices=('mqar','overwrite','both'), default='both',
+                   help='Dataset for this session; both runs two consecutive task pairs')
     p.add_argument('--architecture', choices=('gdn','attention'))
     args = p.parse_args()
     args.output = args.output.resolve()
     if args.steps < 2 or args.eval_every < 1 or not args.learning_rate > 0: p.error('Invalid training budget')
     if not 0 < args.reserve_seconds < args.max_seconds <= 39600: p.error('Total ceiling must be <=11h with positive reserve')
     if args.worker:
-        if not args.family or not args.architecture: p.error('Worker requires family and architecture')
+        if args.family == 'both' or not args.architecture: p.error('Worker requires family and architecture')
         worker(args)
         return 0
     return coordinator(args)

@@ -4,14 +4,15 @@ set -Eeuo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
-# Default: both tasks, GDN vs attention, with at most two concurrent workers.
+# Select FAMILY=mqar or FAMILY=overwrite; GDN and attention run together.
 # Set DIAGNOSTIC=varied to reproduce the previous varied-data diagnostic.
 if [[ "${DIAGNOSTIC:-attention-control}" == attention-control ]]; then
-  command=("$PYTHON_BIN" attention_control_diagnostic.py
+  [[ "${FAMILY:-}" == mqar || "${FAMILY:-}" == overwrite ]] || { echo 'Set FAMILY=mqar or FAMILY=overwrite for this notebook' >&2; exit 2; }
+  command=("$PYTHON_BIN" attention_control_diagnostic.py --family "$FAMILY"
     --steps "${STEPS:-2000}" --eval-every "${EVAL_EVERY:-200}" --seed "${SEED:-42}"
     --learning-rate "${LEARNING_RATE:-0.001}"
     --max-seconds "${TIME_BUDGET_SECONDS:-39600}" --reserve-seconds "${RESERVE_SECONDS:-600}"
-    --output "${OUTPUT_ROOT:-/kaggle/working/attention_control_$(date -u +%Y%m%dT%H%M%SZ)}")
+    --output "${OUTPUT_ROOT:-/kaggle/working/attention_control_${FAMILY}_$(date -u +%Y%m%dT%H%M%SZ)}")
   [[ "${CPU_SMOKE:-0}" == 1 ]] && command+=(--cpu-smoke)
   [[ "${GIT_PUSH:-0}" == 1 ]] && command+=(--push-results)
   # Independent outer cap also covers interpreter startup and report/push stalls.

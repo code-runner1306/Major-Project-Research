@@ -3,7 +3,7 @@
 Run the existing launcher on Kaggle with GPU T4 x2 and Internet enabled:
 
 ```bash
-bash run_kaggle_fixed_learnability.sh
+FAMILY=mqar bash run_kaggle_fixed_learnability.sh
 ```
 
 The default is now `DIAGNOSTIC=attention-control`. To reproduce the earlier test,
@@ -11,11 +11,11 @@ set `DIAGNOSTIC=varied` before running this shell file.
 
 ## Design
 
-1. Audit four-key V4 MQAR and overwrite data using independent last-write and
-   query-key-change oracles and key-free baselines. Both tasks must pass before
+1. Audit four-key V4 data for the selected family using independent last-write and
+   query-key-change oracles and key-free baselines. The selected task must pass before
    any training starts. Audits cover the development and confirmation sets.
 2. Train scalar/default Gated DeltaNet on GPU 0 and the full causal attention
-   control on GPU 1 for MQAR. Wait for both to finish, then do the same for overwrite.
+   control on GPU 1 for the selected family. Run the other family in a separate notebook.
    There are never more than two training workers.
 3. Each run starts fresh, trains 2,000 optimizer steps at peak LR 0.001, batch 8,
    accumulation 4 and the existing OneCycle schedule. Both architectures use
@@ -54,9 +54,9 @@ failed jobs are explicitly marked incomplete. A timeout is never a model verdict
 Optional environment overrides:
 
 ```bash
-STEPS=1000 EVAL_EVERY=200 bash run_kaggle_fixed_learnability.sh
-SEED=43 OUTPUT_ROOT=/kaggle/working/attention_seed43 bash run_kaggle_fixed_learnability.sh
-GIT_PUSH=1 bash run_kaggle_fixed_learnability.sh
+FAMILY=mqar STEPS=1000 EVAL_EVERY=200 bash run_kaggle_fixed_learnability.sh
+FAMILY=overwrite SEED=43 OUTPUT_ROOT=/kaggle/working/attention_seed43 bash run_kaggle_fixed_learnability.sh
+FAMILY=mqar GIT_PUSH=1 bash run_kaggle_fixed_learnability.sh
 ```
 
 Publishing is optional and off by default. With `GIT_PUSH=1`, use the `GH_TOKEN`
@@ -67,13 +67,13 @@ credential-free origin URL; do not embed tokens in notebook cells or URLs.
 
 ## Outputs
 
-- `mqar_audit.json` and `overwrite_audit.json`: complete baseline and oracle results.
+- `<family>_audit.json`: complete baseline and oracle results.
 - `<family>/<architecture>/settings.json`: exact model and dataset identities.
 - `progress.json`: intermediate accuracy observations, saved every validation.
 - `training_metrics.json`: losses, optimizer times, clipping, retries and validation history.
 - `summary.json`: final development and confirmation results for that worker.
 - `session_status.json`: complete/incomplete status and subprocess exit codes.
-- `comparison_report.json`: all four worker summaries and cautious screening findings.
+- `comparison_report.json`: the selected family's two worker summaries and cautious screening findings.
 - `<family>_<architecture>.log`: live worker logs.
 
 The report uses predeclared 80% and 10% thresholds as operational screens, not
@@ -84,3 +84,39 @@ setup and budget. Intermediate or incomplete results require inspecting curves.
 
 Use Save Version -> Save & Run All so Kaggle retains the output independently
 of the laptop. No production research runs are started just by editing these files.
+
+## Two separate Kaggle sessions
+
+Use GPU T4 x2 and Internet in each notebook. Enable the GH_TOKEN secret.
+Change only FAMILY in the following cell: mqar in one notebook, overwrite in the other.
+Each runs GDN and attention concurrently on GPU 0 and GPU 1.
+Publishing uses separate branches diagnostic/<family>/seed<seed>_<output-folder>.
+Default output folders include family and UTC timestamp. Checkpoints are excluded.
+Concurrent sessions need four GPUs total and depend on account availability.
+
+```python
+FAMILY = "mqar"  # Use "overwrite" in the second notebook.
+
+import os
+import pathlib
+import subprocess
+import sys
+from kaggle_secrets import UserSecretsClient
+
+assert FAMILY in ("mqar", "overwrite")
+repo = pathlib.Path("/kaggle/working/Major-Project-Research")
+if not repo.exists():
+    subprocess.run(["git", "clone", "--branch", "maink",
+        "https://github.com/code-runner1306/Major-Project-Research.git", str(repo)], check=True)
+os.chdir(repo)
+subprocess.run(["git", "fetch", "origin", "maink"], check=True)
+subprocess.run(["git", "checkout", "--detach", "origin/maink"], check=True)
+print("Source revision:", subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip())
+subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], check=True)
+os.environ.update(PYTHON_BIN=sys.executable, DIAGNOSTIC="attention-control",
+    FAMILY=FAMILY, STEPS="2000", EVAL_EVERY="200", LEARNING_RATE="0.001", GIT_PUSH="1")
+os.environ["GH_TOKEN"] = UserSecretsClient().get_secret("GH_TOKEN")
+subprocess.run(["bash", "run_kaggle_fixed_learnability.sh"], check=True)
+```
+
+Use Save Version -> Save & Run All in each notebook.
