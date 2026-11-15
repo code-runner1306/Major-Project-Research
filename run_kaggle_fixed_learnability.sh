@@ -4,6 +4,21 @@ set -Eeuo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
+# Default: both tasks, GDN vs attention, with at most two concurrent workers.
+# Set DIAGNOSTIC=varied to reproduce the previous varied-data diagnostic.
+if [[ "${DIAGNOSTIC:-attention-control}" == attention-control ]]; then
+  command=("$PYTHON_BIN" attention_control_diagnostic.py
+    --steps "${STEPS:-2000}" --eval-every "${EVAL_EVERY:-200}" --seed "${SEED:-42}"
+    --learning-rate "${LEARNING_RATE:-0.001}"
+    --max-seconds "${TIME_BUDGET_SECONDS:-39600}" --reserve-seconds "${RESERVE_SECONDS:-600}"
+    --output "${OUTPUT_ROOT:-/kaggle/working/attention_control_$(date -u +%Y%m%dT%H%M%SZ)}")
+  [[ "${CPU_SMOKE:-0}" == 1 ]] && command+=(--cpu-smoke)
+  [[ "${GIT_PUSH:-0}" == 1 ]] && command+=(--push-results)
+  # Independent outer cap also covers interpreter startup and report/push stalls.
+  # Linux/Kaggle supplies GNU timeout. Allow coordinator time to save partials.
+  exec timeout --signal=INT --kill-after=30s 41400s "${command[@]}"
+fi
+[[ "${DIAGNOSTIC:-varied}" == varied ]] || { echo 'DIAGNOSTIC must be attention-control or varied' >&2; exit 2; }
 STEPS="${STEPS:-200}"
 EVAL_EVERY="${EVAL_EVERY:-50}"
 TRAIN_EXAMPLES="${TRAIN_EXAMPLES:-10000}"

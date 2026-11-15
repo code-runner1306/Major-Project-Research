@@ -959,7 +959,9 @@ def evaluate_retrieval_baselines(
             record("first_value", memory_values[0], target, cell)
             record("last_value", memory_values[-1], target, cell)
             record("most_recent_value", memory_values[-1], target, cell)
-            final_two_prediction = memory_values[-2 + ordinal] if 0 <= ordinal < 2 and len(memory_values) >= 2 else None
+            # Cycle the same two key-free guesses for every query. Omitting
+            # later MQAR queries incorrectly made four-key audits incomplete.
+            final_two_prediction = memory_values[-2 + ordinal % 2] if len(memory_values) >= 2 else None
             record("final_two_values", final_two_prediction, target, cell)
             record("no_memory_frequency", frequency_prediction, target, cell)
             record("query_ordinal_frequency", ordinal_prediction.get(ordinal), target, cell)
