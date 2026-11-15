@@ -1,0 +1,159 @@
+{
+  "included": [
+    {
+      "path": "chunked_scored_workers2_0.json",
+      "bytes": 2192,
+      "sha256": "62b6f90739f9fc565bf5a58edd342657c529f6f69e0ce8b68a233c83b03f9715"
+    },
+    {
+      "path": "chunked_scored_workers2_0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers2_1.json",
+      "bytes": 2206,
+      "sha256": "ead8aeea64ae2dfd42aeb9d0eaf93aa09aabccb6eef851050a444ef7b25dda82"
+    },
+    {
+      "path": "chunked_scored_workers2_1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers3_0.json",
+      "bytes": 2200,
+      "sha256": "fbf45f164ee996eb35dedad31d26c6e3a3089db0cfe5cef4ff4e8efb14f606b0"
+    },
+    {
+      "path": "chunked_scored_workers3_0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers3_1.json",
+      "bytes": 2200,
+      "sha256": "75eb03d2fed51a1be0c4d5a6eb3aae6a88558dbe16f77d127ee2a74df6c7d277"
+    },
+    {
+      "path": "chunked_scored_workers3_1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers3_2.json",
+      "bytes": 2195,
+      "sha256": "7c498d2a56e2a2af9647074043e653e96aef6aa10e3b70632a35a1824435acb3"
+    },
+    {
+      "path": "chunked_scored_workers3_2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers4_0.json",
+      "bytes": 2177,
+      "sha256": "c5db97ece0dc92379677448004186e13a9f42c001fd64a4ba39df798dfc97014"
+    },
+    {
+      "path": "chunked_scored_workers4_0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers4_1.json",
+      "bytes": 2197,
+      "sha256": "07af1a47e6e4a518941bc3a7988e8d6326be5bb4455f1b532be35b296b35087f"
+    },
+    {
+      "path": "chunked_scored_workers4_1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers4_2.json",
+      "bytes": 2183,
+      "sha256": "86e5121ec094ad1d71b5270495b1bad2abc8590552a46f660894904d77649bd5"
+    },
+    {
+      "path": "chunked_scored_workers4_2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "chunked_scored_workers4_3.json",
+      "bytes": 2191,
+      "sha256": "c69f97b1a572cbede6853beeafa967393cbe6b397e5f6de0b1564248e4e6eb07"
+    },
+    {
+      "path": "chunked_scored_workers4_3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "numerical_qualification.json",
+      "bytes": 5224,
+      "sha256": "66471a6decc72728bef7ac31db7d8ea7546aae133b6906ef5d5075a34905cf83"
+    },
+    {
+      "path": "pilot_status.json",
+      "bytes": 39165,
+      "sha256": "49afee49e7d7f5205772b798192e1600bbbf82a2108e5f9d7febe351c1d6a3f5"
+    },
+    {
+      "path": "reference_full_workers2_0.json",
+      "bytes": 2164,
+      "sha256": "e20d454b9337a99d9b3147999739f0cec5fcc107a39656f48adb4485fab6b7e6"
+    },
+    {
+      "path": "reference_full_workers2_0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reference_full_workers2_1.json",
+      "bytes": 2156,
+      "sha256": "6ff3a748d83b5f78a0e622ca71e11cdbc323f81230366a1605728b7c1140a220"
+    },
+    {
+      "path": "reference_full_workers2_1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reference_scored_workers2_0.json",
+      "bytes": 2153,
+      "sha256": "57d96767359239fae07fb23d550105455dcd24b2dbad88a9f6c5440f2b4b673a"
+    },
+    {
+      "path": "reference_scored_workers2_0.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reference_scored_workers2_1.json",
+      "bytes": 2161,
+      "sha256": "f3dfe00bfa1dab3e8785f7492215f0dac212dbb903b71ea5c79fe3d3d9cfc0ba"
+    },
+    {
+      "path": "reference_scored_workers2_1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "excluded": [
+    "chunked_scored_workers2_0.pt",
+    "chunked_scored_workers2_1.pt",
+    "chunked_scored_workers3_0.pt",
+    "chunked_scored_workers3_1.pt",
+    "chunked_scored_workers3_2.pt",
+    "chunked_scored_workers4_0.pt",
+    "chunked_scored_workers4_1.pt",
+    "chunked_scored_workers4_2.pt",
+    "chunked_scored_workers4_3.pt",
+    "reference_full_workers2_0.pt",
+    "reference_full_workers2_1.pt",
+    "reference_scored_workers2_0.pt",
+    "reference_scored_workers2_1.pt"
+  ]
+}
