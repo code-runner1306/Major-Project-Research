@@ -1,0 +1,392 @@
+[
+  {
+    "step": 200,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.00390625,
+      "correct": 1,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0078125,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 400,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 600,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 800,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.0234375,
+      "correct": 6,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.015625,
+      "later_query_accuracy": 0.03125,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.0234375,
+      "correct": 6,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.015625,
+      "later_query_accuracy": 0.03125,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 1000,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.08203125,
+      "correct": 21,
+      "total": 256,
+      "example_accuracy": 0.015625,
+      "first_query_accuracy": 0.0703125,
+      "later_query_accuracy": 0.09375,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.07421875,
+      "correct": 19,
+      "total": 256,
+      "example_accuracy": 0.015625,
+      "first_query_accuracy": 0.0703125,
+      "later_query_accuracy": 0.078125,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 1200,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.125,
+      "correct": 32,
+      "total": 256,
+      "example_accuracy": 0.0078125,
+      "first_query_accuracy": 0.1015625,
+      "later_query_accuracy": 0.1484375,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.078125,
+      "correct": 20,
+      "total": 256,
+      "example_accuracy": 0.0078125,
+      "first_query_accuracy": 0.1015625,
+      "later_query_accuracy": 0.0546875,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 1400,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.17578125,
+      "correct": 45,
+      "total": 256,
+      "example_accuracy": 0.0546875,
+      "first_query_accuracy": 0.1171875,
+      "later_query_accuracy": 0.234375,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.10546875,
+      "correct": 27,
+      "total": 256,
+      "example_accuracy": 0.0390625,
+      "first_query_accuracy": 0.1171875,
+      "later_query_accuracy": 0.09375,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 1600,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.25390625,
+      "correct": 65,
+      "total": 256,
+      "example_accuracy": 0.0546875,
+      "first_query_accuracy": 0.171875,
+      "later_query_accuracy": 0.3359375,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.13671875,
+      "correct": 35,
+      "total": 256,
+      "example_accuracy": 0.015625,
+      "first_query_accuracy": 0.171875,
+      "later_query_accuracy": 0.1015625,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 1800,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.25,
+      "correct": 64,
+      "total": 256,
+      "example_accuracy": 0.0625,
+      "first_query_accuracy": 0.171875,
+      "later_query_accuracy": 0.328125,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.14453125,
+      "correct": 37,
+      "total": 256,
+      "example_accuracy": 0.015625,
+      "first_query_accuracy": 0.171875,
+      "later_query_accuracy": 0.1171875,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  },
+  {
+    "step": 2000,
+    "train_sample_teacher_forced": {
+      "exact_query_accuracy": 0.28125,
+      "correct": 72,
+      "total": 256,
+      "example_accuracy": 0.0703125,
+      "first_query_accuracy": 0.203125,
+      "later_query_accuracy": 0.359375,
+      "evaluated_examples": 128
+    },
+    "train_sample_answer_free": {
+      "exact_query_accuracy": 0.16015625,
+      "correct": 41,
+      "total": 256,
+      "example_accuracy": 0.015625,
+      "first_query_accuracy": 0.203125,
+      "later_query_accuracy": 0.1171875,
+      "evaluated_examples": 128
+    },
+    "held_out_teacher_forced": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    },
+    "held_out_answer_free": {
+      "exact_query_accuracy": 0.0,
+      "correct": 0,
+      "total": 256,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "later_query_accuracy": 0.0,
+      "evaluated_examples": 128
+    }
+  }
+]

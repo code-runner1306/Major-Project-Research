@@ -1,0 +1,170 @@
+{
+  "purpose": "exploratory LR-sweep diagnostic; not a production research result",
+  "family": "mqar",
+  "steps": 2000,
+  "verdict": "all_floor",
+  "notes": [
+    "all LRs near zero; next is an attention control or a pipeline audit"
+  ],
+  "learning_rates": {
+    "1e-03": {
+      "status": "complete",
+      "learning_rate": 0.001,
+      "epochs_completed": 6.4,
+      "held_out_final": 0.0,
+      "held_out_best": 0.0,
+      "held_out_best_step": 200,
+      "held_out_points": [
+        {
+          "step": 200,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 400,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 600,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 800,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1000,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1200,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1400,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1600,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1800,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 2000,
+          "exact_query_accuracy": 0.0
+        }
+      ],
+      "train_sample_final": 0.16015625,
+      "shortcut_audit_passed": true,
+      "wall_seconds": 9009.410479089
+    },
+    "3e-03": {
+      "status": "complete",
+      "learning_rate": 0.003,
+      "epochs_completed": 6.4,
+      "held_out_final": 0.0,
+      "held_out_best": 0.0,
+      "held_out_best_step": 200,
+      "held_out_points": [
+        {
+          "step": 200,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 400,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 600,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 800,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1000,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1200,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1400,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1600,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1800,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 2000,
+          "exact_query_accuracy": 0.0
+        }
+      ],
+      "train_sample_final": 0.00390625,
+      "shortcut_audit_passed": true,
+      "wall_seconds": 9015.877044603
+    },
+    "3e-04": {
+      "status": "complete",
+      "learning_rate": 0.0003,
+      "epochs_completed": 6.4,
+      "held_out_final": 0.0,
+      "held_out_best": 0.0,
+      "held_out_best_step": 200,
+      "held_out_points": [
+        {
+          "step": 200,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 400,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 600,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 800,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1000,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1200,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1400,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1600,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 1800,
+          "exact_query_accuracy": 0.0
+        },
+        {
+          "step": 2000,
+          "exact_query_accuracy": 0.0
+        }
+      ],
+      "train_sample_final": 0.30078125,
+      "shortcut_audit_passed": true,
+      "wall_seconds": 8994.050636893
+    }
+  }
+}

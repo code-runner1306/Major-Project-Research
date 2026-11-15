@@ -1,0 +1,92 @@
+[
+  {
+    "elapsed_seconds": 85.6752050749999,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 8.60866093635559,
+    "perplexity": 5478.90576171875,
+    "step": 200,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.0546875
+  },
+  {
+    "elapsed_seconds": 84.68508592799981,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 8.248575270175934,
+    "perplexity": 3822.176025390625,
+    "step": 400,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.1875
+  },
+  {
+    "elapsed_seconds": 84.94938727099998,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 7.965454339981079,
+    "perplexity": 2879.736572265625,
+    "step": 600,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.1484375
+  },
+  {
+    "elapsed_seconds": 83.71531231900008,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 7.697706967592239,
+    "perplexity": 2203.29052734375,
+    "step": 800,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.26953125
+  },
+  {
+    "elapsed_seconds": 84.04031788799966,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 7.396492213010788,
+    "perplexity": 1630.2554931640625,
+    "step": 1000,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.296875
+  },
+  {
+    "elapsed_seconds": 82.96818831600012,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 7.203041672706604,
+    "perplexity": 1343.5108642578125,
+    "step": 1200,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.2890625
+  },
+  {
+    "elapsed_seconds": 82.17426408099982,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 7.011043965816498,
+    "perplexity": 1108.8115234375,
+    "step": 1400,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.2890625
+  },
+  {
+    "elapsed_seconds": 84.6713373599996,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 6.87767681479454,
+    "perplexity": 970.3695068359375,
+    "step": 1600,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.3203125
+  },
+  {
+    "elapsed_seconds": 83.10588987100164,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 6.828987389802933,
+    "perplexity": 924.254638671875,
+    "step": 1800,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.30078125
+  },
+  {
+    "elapsed_seconds": 86.31123877699974,
+    "held_out_answer_accuracy": 0.0,
+    "loss": 6.813279956579208,
+    "perplexity": 909.850341796875,
+    "step": 2000,
+    "steps": 16,
+    "train_sample_answer_accuracy": 0.30078125
+  }
+]
