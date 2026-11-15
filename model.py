@@ -179,7 +179,7 @@ class GatedDeltaNetAttention(nn.Module):
         if self._gate_observer is not None:
             self._gate_observer(alpha.detach(), self.variant, self.layer_idx)
         g = F.silu(self.gate_proj(x)).view(batch, time, heads, width)
-        output, state = run_recurrence(
+        output, state = self._recurrent_update(
             F.normalize(q, p=2, dim=-1), F.normalize(k, p=2, dim=-1), v, alpha, beta,
             cache.get("state"), options=self.recurrence_options,
         )
@@ -194,6 +194,10 @@ class GatedDeltaNetAttention(nn.Module):
             "k_conv": k_cache,
             "v_conv": v_cache,
         }
+
+    def _recurrent_update(self, q, k, v, alpha, beta, initial_state, *, options):
+        """Backend boundary; diagnostic subclasses may qualify new executors."""
+        return run_recurrence(q, k, v, alpha, beta, initial_state, options=options)
 
 
 class CausalSelfAttention(nn.Module):
