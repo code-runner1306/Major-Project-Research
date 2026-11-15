@@ -1,0 +1,21 @@
+{
+  "batch_size": 2,
+  "concurrent_training_runs": 2,
+  "condition_id": "channel-default",
+  "context_length": 16,
+  "evaluation_interval": 1,
+  "experiment_id": "qualification-test",
+  "family": "mqar",
+  "grad_accum_steps": 1,
+  "initialization": "default",
+  "learning_rate": 0.001,
+  "max_optimizer_steps": 2,
+  "operation": "train",
+  "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\output\\pytest_merge_verify\\test_parallel_qualification_st0\\qualification\\E1\\parallel\\workers_2\\tiny\\mqar\\seed_42",
+  "qualification_stage": "E1-parallel-2",
+  "run_mode": "smoke",
+  "scale": "tiny",
+  "seed": 42,
+  "validation_steps": 1,
+  "variant": "channel-wise"
+}

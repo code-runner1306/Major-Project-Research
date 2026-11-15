@@ -1,0 +1,113 @@
+{
+  "calibration": {},
+  "config_sha256": "2dbb7b9f2356a4182c64c5e102ee7aad37f8a2e0cd0a1ad1e0589e6716486d54",
+  "configuration_snapshot": {
+    "experiment_id": "test-study"
+  },
+  "e0_result": {
+    "status": "passed"
+  },
+  "experiment_id": "test-study",
+  "implementation_sources": {
+    "controls.py": "f60ecf477d90320cf003ac15102267b563a39f84eb75fd26539a43253621da76",
+    "model.py": "17055bb046a81159bf34d0add4693b39e5dcafb65951dd116703cfddfaf3ce34",
+    "recurrence.py": "3ec05b3308a7aee7ce3ac8239b38c487bad8eb10ddb147007a741e37c03e1ede",
+    "retrieval.py": "eb2c5b3cfd71e478d395bb45149b3bf34079c008047c31b46fb55d698c364c5d",
+    "study_qualification.py": "97443475f624bfe0a3cfa63ec3a72abe3b80b92afbeaef99b3f3552066ddf595",
+    "study_runner.py": "4d4ac6824d663481dc9c6c15a25f3b8b93b84306618e555e38c9b837752f1e4b"
+  },
+  "locked_at": "2026-11-15T00:38:00.528241+00:00",
+  "protocol_contract": {
+    "data_and_generator": {
+      "datasets": [],
+      "retrieval": {},
+      "splits": {
+        "held_out": "held_out",
+        "recipe_selection": "validation",
+        "training": "train"
+      }
+    },
+    "evaluation": {},
+    "qualification": {
+      "e0_consecutive_validations": null,
+      "e0_expected_cells": [],
+      "e0_threshold": null,
+      "e1_selection": null,
+      "final_difficulty_floor": null
+    },
+    "stopping_and_exclusions": {
+      "capacity": "reported only after complete corrected pilot",
+      "failed_candidates": "retained and excluded from recipe selection",
+      "incomplete_cells": "cannot authorize a protocol lock"
+    },
+    "training_budget": {},
+    "version": "granularity-study-protocol-v2"
+  },
+  "recipe_selection": {
+    "learnability_status": "passed",
+    "status": "selected"
+  },
+  "scope": "production",
+  "status": "locked",
+  "training_time_estimate": {
+    "budget_estimates_by_size_family_condition": {
+      "10M": {
+        "tinystories": {
+          "C1": {
+            "measured_seconds_per_step": 2.0,
+            "optimizer_steps": 100,
+            "training_hours_per_run": 0.05555555555555555
+          }
+        }
+      }
+    },
+    "calibration_hours_per_seed_by_size": {
+      "10M": 0.0
+    },
+    "calibration_seconds_by_condition": {},
+    "pilot_runs": [
+      {
+        "condition_id": "C1",
+        "family": "tinystories",
+        "initialization": null,
+        "scale": "10M",
+        "seconds_per_step": 2.0,
+        "steps": 4,
+        "timing_scope": "training-phase wall time includes optimizer work, periodic in-loop validation, and best-validation checkpoint writes",
+        "variant": "scalar",
+        "wall_time_seconds": 8.0
+      }
+    ],
+    "scenario_totals_by_size_and_seed_count": {
+      "10M": {
+        "1": {
+          "combined_measured_hours": 0.05555555555555555,
+          "one_time_calibration_hours": 0.0,
+          "training_plus_periodic_validation_hours": 0.05555555555555555
+        },
+        "3": {
+          "combined_measured_hours": 0.16666666666666666,
+          "one_time_calibration_hours": 0.0,
+          "training_plus_periodic_validation_hours": 0.16666666666666666
+        },
+        "5": {
+          "combined_measured_hours": 0.2777777777777778,
+          "one_time_calibration_hours": 0.0,
+          "training_plus_periodic_validation_hours": 0.2777777777777778
+        }
+      }
+    },
+    "seed_counts": {
+      "10M": 1
+    },
+    "status": "measured",
+    "training_plus_periodic_validation_hours_per_seed_by_size": {
+      "10M": 0.05555555555555555
+    },
+    "training_plus_periodic_validation_total_hours_by_size_actual_seed_count": {
+      "10M": 0.05555555555555555
+    },
+    "unmeasured_conditions": [],
+    "validation_checkpoint_and_evaluation_overhead": "Periodic in-loop validation and best-validation checkpoint writes are included in worker training wall time; final validation, final checkpoint writing, and evaluation are not measured by this estimate."
+  }
+}

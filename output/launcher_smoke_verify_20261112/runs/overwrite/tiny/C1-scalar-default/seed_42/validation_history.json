@@ -1,0 +1,12 @@
+[
+  {
+    "answer_accuracy": 0.0,
+    "answer_examples": 4,
+    "answer_validation_seed": 200042,
+    "loss": 4.9137420654296875,
+    "perplexity": 136.14793395996094,
+    "qualification_scope": null,
+    "step": 2,
+    "steps": 2
+  }
+]

@@ -9,7 +9,7 @@
     "cuda_available": false,
     "cuda_runtime": null,
     "python": "3.13.3",
-    "torch": "2.13.0+cpu"
+    "torch": "2.10.0+cpu"
   },
   "evaluation_protocol": {
     "version": 1
@@ -21,7 +21,7 @@
     "final_checkpoint.pt"
   ],
   "family": "tinystories",
-  "fingerprint": "58160d263553c132be8239c5eea068e6268abdefb5d559227469b15db903784d",
+  "fingerprint": "b428c193fad2a695dfd325d06a17b38ab78bf44102707b06d2090f9aae8a4253",
   "model": {
     "attention_layout": "pure_gdn",
     "d_ff": [
@@ -46,7 +46,7 @@
   },
   "source": {
     "dirty": true,
-    "revision": "8f51abf0bbdf4668101513a13acae734a7488e71"
+    "revision": "unavailable"
   },
   "variant": "scalar"
 }

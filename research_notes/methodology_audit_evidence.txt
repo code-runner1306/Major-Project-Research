@@ -1,0 +1,16 @@
+﻿scalar_recurrence {'implemented': 0.5, 'published': 0.75}
+channel_decay_axis {'implemented': [[[[0.20000000298023224, 0.4000000059604645], [2.4000000953674316, 3.200000047683716]]]], 'published_in_same_storage': [[[[0.20000000298023224, 1.600000023841858], [0.6000000238418579, 3.200000047683716]]]]}
+key_free_baseline overwrite {'correct': 1024, 'total': 1024, 'accuracy': 1.0}
+length_control overwrite {'identical_scored_prefix': True, 'last_scored_position': 19}
+key_free_baseline mqar {'correct': 512, 'total': 4772, 'accuracy': 0.10729253981559095}
+length_control mqar {'identical_scored_prefix': True, 'last_scored_position': 25}
+record output/granularity_exp_1/runs/mqar/10M/C1-scalar-default/seed_42/metrics.json {'parameters': 3329784, 'gate_sharing_accuracy': {}}
+record output/granularity_exp_1/runs/mqar/10M/C3-channel-default/seed_42/metrics.json {'parameters': 3480480, 'gate_sharing_accuracy': {'1': 0.00020955574182732607, '2': 0.00020955574182732607, '4': 0.00020955574182732607, '40': 0.004610226320201173, '8': 0.00020955574182732607}}
+record output/granularity_exp_1/runs/mqar/10M/C4-scalar-calibrated/seed_42/metrics.json {'parameters': 3329784, 'gate_sharing_accuracy': {}}
+record output/granularity_exp_1/runs/mqar/10M/C6-channel-calibrated/seed_42/metrics.json {'parameters': 3480480, 'gate_sharing_accuracy': {'1': 0.94279128248114, '2': 0.940905280804694, '4': 0.9404861693210393, '40': 0.9471919530595139, '8': 0.9394383906119028}}
+record output/granularity_exp_1/runs/overwrite/10M/C1-scalar-default/seed_42/metrics.json {'parameters': 3329784, 'gate_sharing_accuracy': {}}
+record output/granularity_exp_1/runs/overwrite/10M/C3-channel-default/seed_42/metrics.json {'parameters': 3480480, 'gate_sharing_accuracy': {'1': 0.0, '2': 0.0, '4': 0.0, '40': 0.02734375, '8': 0.0}}
+record output/granularity_exp_1/runs/overwrite/10M/C4-scalar-calibrated/seed_42/metrics.json {'parameters': 3329784, 'gate_sharing_accuracy': {}}
+record output/granularity_exp_1/runs/overwrite/10M/C6-channel-calibrated/seed_42/metrics.json {'parameters': 3480480, 'gate_sharing_accuracy': {'1': 0.0205078125, '2': 0.0244140625, '4': 0.0322265625, '40': 0.33203125, '8': 0.041015625}}
+current_recurrence_source_sha256 2771bdd7deb3b80a0aef8886f1574e40a4d4b1b14db0d98c54923d02c245f6d1
+VM_CRLF_recurrence_source_sha256 24f5a1f82b55560af7f02b4ebca034a6803d7ba9fac735557e68fa0a33418fcc

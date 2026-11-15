@@ -1,0 +1,72 @@
+{
+  "stages": [
+    {
+      "manifest": {
+        "examples": 8,
+        "generator_version": "mqar-overwrite-v2",
+        "hash": "bf76a3b5742549bace91b2172478633ba75cebd669f8d9d0b0e29e3e15ab9803",
+        "parameters": {
+          "generator_version": "mqar-overwrite-v2",
+          "held_out_examples": 6,
+          "key_counts": [
+            2
+          ],
+          "overwrite_counts": [
+            1,
+            2
+          ],
+          "query_distances": [
+            2,
+            4
+          ],
+          "sequence_lengths": [
+            16,
+            24
+          ],
+          "train_examples": 8,
+          "validation_examples": null,
+          "vocabulary_size": 128
+        },
+        "seed": 100007,
+        "sequence_length": null,
+        "split": "train",
+        "task": "mqar"
+      },
+      "start_step": 1
+    },
+    {
+      "manifest": {
+        "examples": 8,
+        "generator_version": "mqar-overwrite-v2",
+        "hash": "d8de2d5a4212dde6db704fe7f4927cedabed78ebad388ddd209306c760fe0268",
+        "parameters": {
+          "generator_version": "mqar-overwrite-v2",
+          "held_out_examples": 6,
+          "key_counts": [
+            3
+          ],
+          "overwrite_counts": [
+            1,
+            2
+          ],
+          "query_distances": [
+            2,
+            4
+          ],
+          "sequence_lengths": [
+            16,
+            24
+          ],
+          "train_examples": 8,
+          "validation_examples": null,
+          "vocabulary_size": 128
+        },
+        "seed": 100007,
+        "sequence_length": null,
+        "split": "train",
+        "task": "mqar"
+      },
+      "start_step": 2
+    }
+  ]
+}

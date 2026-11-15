@@ -1,0 +1,162 @@
+{
+  "budget": {
+    "batch_size": 2,
+    "concurrent_training_runs": 1,
+    "context_length": 16,
+    "grad_accum_steps": 1,
+    "max_optimizer_steps": 2,
+    "status": "smoke_fixed_budget"
+  },
+  "data_identity": {
+    "generator_version": "mqar-overwrite-v2",
+    "held_out_hash": "2804db918cbde28417f16ba23df24b860444bdbd5234ea21d6d59839e3fa03fe",
+    "paired_order": "indexed_seeded_order",
+    "train_hash": "efa2b1991b6ec137a874823ee5983bb587c643c471815f44e2ed85d0c9f401be"
+  },
+  "environment": {
+    "cuda_available": false,
+    "cuda_runtime": null,
+    "python": "3.13.3",
+    "torch": "2.10.0+cpu"
+  },
+  "evaluation_protocol": {
+    "benchmark_generated_tokens": 2,
+    "benchmark_prompt_lengths": [
+      4,
+      8
+    ],
+    "benchmark_repeats": 1,
+    "benchmark_warmup": 1,
+    "cache_benchmarks": true,
+    "energy": true,
+    "equivalence_generated_tokens": 2,
+    "equivalence_prompt_length": 8,
+    "gate_diagnostics": true,
+    "natural_language_retrieval": null,
+    "posthoc_gate_eval_examples": 512,
+    "posthoc_gate_group_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "posthoc_gate_grouping": false,
+    "resource_capture_version": 1,
+    "resource_sample_interval_seconds": 1.0,
+    "retrieval_version": "mqar-overwrite-v2",
+    "version": 2
+  },
+  "expected_artifacts": [
+    "manifest.json",
+    "lifecycle.json",
+    "metrics.json",
+    "final_checkpoint.pt"
+  ],
+  "family": "mqar",
+  "fingerprint": "8552396cffa2f0e90c4fdb299e8eeaeab763e35c10e95ba79b1f6fb3d2fb73f6",
+  "model": {
+    "architecture_contract": {
+      "attention_layout": "pure_gdn",
+      "calibrated_gate_bias": "trainable alpha bias fitted from training batches; calibration is a package treatment",
+      "decay_parameterization": "sigmoid(alpha projection); scalar, grouped, or channel-wise",
+      "default_gate_bias": "no alpha bias; sigmoid(0)=0.5 before input effects",
+      "embedding_output": "tied token embedding and output projection",
+      "full_attention_layers": 0,
+      "gated_delta_layers": 3,
+      "initialization_treatment": "default",
+      "mlp": "bias-free SwiGLU",
+      "model_family": "gated-delta-net-common-backbone-ablation",
+      "normalization": "pre-attention RMSNorm and pre-MLP RMSNorm; final RMSNorm",
+      "output_gate": "SiLU(gate projection)",
+      "qkv_convolution": "depthwise causal Conv1d, kernel_size=4, bias=True",
+      "qkv_convolution_activation": "none",
+      "qkv_projection": "bias-free linear projections",
+      "query_key_normalization": "L2 normalization before recurrence",
+      "reference_scope": "simplified common-backbone ablation; not a full production KDA/GDN reproduction",
+      "state_orientation": "value_by_key",
+      "variant": "channel-wise",
+      "write_parameterization": "sigmoid(beta projection), one value per head"
+    },
+    "attention_layout": "pure_gdn",
+    "capacity_comparison": {
+      "exact_useful_parameter_match": false,
+      "gate_parameter_overhead_definition": "trainable alpha/beta/gate projection storage included in parameter_components.gates",
+      "same_backbone": true
+    },
+    "control_strategy": "same_backbone",
+    "d_ff": [
+      64,
+      64,
+      64
+    ],
+    "d_head": 8,
+    "d_model": 32,
+    "gate_parameter_overhead": 2688,
+    "n_head": 4,
+    "n_layer": 3,
+    "name": "tiny",
+    "parameter_components": {
+      "convolutions": 1440,
+      "embeddings": 4096,
+      "ffns": 18432,
+      "gates": 6528,
+      "norms": 32,
+      "other": 192,
+      "output_head": 0,
+      "projections": 12288,
+      "tied_output_head": 0,
+      "total": 43008
+    },
+    "parameter_count": 43008,
+    "per_layer_ffn_widths": [
+      64,
+      64,
+      64
+    ],
+    "recurrence": {
+      "chunk_policy": "sequential-reference",
+      "chunk_size": 64,
+      "compiled_architectures": [],
+      "decode_backend_version": "decode-v3-key-axis-decay-stub",
+      "extension_build_identity": "sha256:67813938b43470097b4945b11508d027b24c86513d1c4a38b473598d95842819",
+      "extension_semantic_version": "gdn-cuda-v2-key-axis-decay-scaffold",
+      "implementation_source_hash": "3ec05b3308a7aee7ce3ac8239b38c487bad8eb10ddb147007a741e37c03e1ede",
+      "input_dtype": "autocast",
+      "load_failure_reason": null,
+      "qualification_artifact": null,
+      "qualification_hash": null,
+      "requested_backend": "reference",
+      "resolved_backend": "reference",
+      "semantic_version": "gdn-recurrence-v3-key-axis-decay",
+      "state_accumulator_dtype": "input",
+      "state_layout": "[B,H,D,D]",
+      "supported_alpha_layouts": [
+        "[B,T,H,1]",
+        "[B,T,H,D]"
+      ],
+      "supported_input_dtypes": [
+        "float32",
+        "float16",
+        "bfloat16"
+      ],
+      "target_architecture": "sm_70"
+    },
+    "tied_output_parameter_count": 0,
+    "trainable_parameter_count": 43008,
+    "variant": "channel-wise"
+  },
+  "run_mode": "smoke",
+  "scale": "tiny",
+  "schema_version": 1,
+  "seeds": {
+    "data_seed": 100007,
+    "evaluation_seed": 200007,
+    "model_seed": 7,
+    "research_seed": 7
+  },
+  "source": {
+    "dirty": true,
+    "revision": "unavailable"
+  },
+  "variant": "channel-wise"
+}

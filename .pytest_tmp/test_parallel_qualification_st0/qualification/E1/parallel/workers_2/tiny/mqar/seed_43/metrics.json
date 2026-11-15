@@ -1,0 +1,1 @@
+{"training": {"wall_time_seconds": 1.0, "processed_tokens": 10}, "training_resources": {"runtime": {"cuda_available": false, "device_type": "cpu"}, "activity_samples": [], "activity_summary": {}}}

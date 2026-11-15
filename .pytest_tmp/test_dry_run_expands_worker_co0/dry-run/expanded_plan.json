@@ -1,0 +1,522 @@
+{
+  "config": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\study_configs\\granularity_init_smoke.json",
+  "generated_at": "2026-11-15T00:38:00.336050+00:00",
+  "tasks": [
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-scalar-default",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "mqar",
+      "grad_accum_steps": 1,
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\mqar\\tiny\\smoke-scalar-default\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "scalar"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-grouped4-default",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "mqar",
+      "grad_accum_steps": 1,
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\mqar\\tiny\\smoke-grouped4-default\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "grouped-4"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-channel-default",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "mqar",
+      "grad_accum_steps": 1,
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\mqar\\tiny\\smoke-channel-default\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "channel-wise"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-scalar-calibrated",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "mqar",
+      "grad_accum_steps": 1,
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\mqar\\tiny\\smoke-scalar-calibrated\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "scalar"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-grouped4-calibrated",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "mqar",
+      "grad_accum_steps": 1,
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\mqar\\tiny\\smoke-grouped4-calibrated\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "grouped-4"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-channel-calibrated",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "mqar",
+      "grad_accum_steps": 1,
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\mqar\\tiny\\smoke-channel-calibrated\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "channel-wise"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-scalar-default",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "overwrite",
+      "grad_accum_steps": 1,
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\overwrite\\tiny\\smoke-scalar-default\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "scalar"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-grouped4-default",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "overwrite",
+      "grad_accum_steps": 1,
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\overwrite\\tiny\\smoke-grouped4-default\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "grouped-4"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-channel-default",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "overwrite",
+      "grad_accum_steps": 1,
+      "initialization": "default",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\overwrite\\tiny\\smoke-channel-default\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "channel-wise"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-scalar-calibrated",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "overwrite",
+      "grad_accum_steps": 1,
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\overwrite\\tiny\\smoke-scalar-calibrated\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "scalar"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-grouped4-calibrated",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "overwrite",
+      "grad_accum_steps": 1,
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\overwrite\\tiny\\smoke-grouped4-calibrated\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "grouped-4"
+    },
+    {
+      "batch_size": 2,
+      "calibration_examples": 4,
+      "calibration_max_half_life": 16,
+      "calibration_min_half_life": 4,
+      "condition_id": "smoke-channel-calibrated",
+      "context_length": 64,
+      "evaluation_interval": 1,
+      "experiment_id": "granularity-init-smoke-v1",
+      "family": "overwrite",
+      "grad_accum_steps": 1,
+      "initialization": "calibrated-geometric",
+      "learning_rate": 0.0006,
+      "max_optimizer_steps": 2,
+      "output_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_dry_run_expands_worker_co0\\dry-run\\runs\\overwrite\\tiny\\smoke-channel-calibrated\\seed_7",
+      "protocol_version": "corrected-v1",
+      "recurrence_backend": "reference",
+      "recurrence_chunk_size": 64,
+      "retrieval_config": {
+        "generator_version": "mqar-overwrite-v3",
+        "held_out_examples": 4,
+        "key_counts": [
+          2
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          1
+        ],
+        "sequence_lengths": [
+          32
+        ],
+        "train_examples": 8,
+        "validation_examples": 4
+      },
+      "run_mode": "smoke",
+      "scale": "tiny",
+      "seed": 7,
+      "state_accumulator_dtype": "input",
+      "validation_steps": 1,
+      "variant": "channel-wise"
+    }
+  ]
+}

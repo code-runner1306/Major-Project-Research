@@ -1,0 +1,2 @@
+family,scale,condition,granularity,initialization,seed,status,retrieval.exact_query_accuracy,retrieval.latest_value_accuracy,retrieval.stale_value_error_rate,final_validation.loss,training.processed_tokens,training.fixed_optimizer_steps,training.wall_time_seconds,parameter.parameter_count
+mqar,tiny,scalar,scalar,default,7,unknown,,,,,,,,

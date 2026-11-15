@@ -1,0 +1,59 @@
+{
+  "cpu_utilization_interpretation": "CPU utilization is recorded but does not by itself establish CPU throttling.",
+  "qualification_basis": "separate processes at each configured model size and family using channel-wise endpoint and distinct seeds",
+  "qualified_training_workers": 1,
+  "requested_training_workers": 2,
+  "status": "not_qualified",
+  "strata": [
+    {
+      "family": "mqar",
+      "measured_parallel_tokens_per_second": 425.5319147081114,
+      "parallel_wall_seconds": 0.0470000000204891,
+      "per_run_slowdown": {
+        "42": {
+          "concurrent_seconds": 1.0,
+          "sequential_seconds": 1.0,
+          "slowdown_ratio": 1.0
+        },
+        "43": {
+          "concurrent_seconds": 1.0,
+          "sequential_seconds": 1.0,
+          "slowdown_ratio": 1.0
+        }
+      },
+      "reason": "worker failure or unavailable/unsafe NVML VRAM used/total telemetry",
+      "sequential_comparison_sum_seconds": 2.0,
+      "size": "tiny",
+      "status": "not_qualified",
+      "total_processed_tokens": 20,
+      "worker_telemetry": [
+        {
+          "cpu_activity_summary": {
+            "process_cpu_percent": null,
+            "process_rss_bytes": null,
+            "system_cpu_percent": null,
+            "system_memory_used_bytes": null
+          },
+          "cuda_available": false,
+          "device_type": "cpu",
+          "max_gpu_utilization_percent": null,
+          "max_vram_used_percent": -100,
+          "nvml_samples": 0
+        },
+        {
+          "cpu_activity_summary": {
+            "process_cpu_percent": null,
+            "process_rss_bytes": null,
+            "system_cpu_percent": null,
+            "system_memory_used_bytes": null
+          },
+          "cuda_available": false,
+          "device_type": "cpu",
+          "max_gpu_utilization_percent": null,
+          "max_vram_used_percent": -100,
+          "nvml_samples": 0
+        }
+      ]
+    }
+  ]
+}

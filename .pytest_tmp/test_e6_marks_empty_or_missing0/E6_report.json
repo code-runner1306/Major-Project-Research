@@ -1,0 +1,163 @@
+{
+  "analysis": "E6",
+  "cohort_audit": [
+    {
+      "expected_cells": [
+        [
+          "scalar",
+          "default"
+        ]
+      ],
+      "family": "mqar",
+      "missing_cells": [],
+      "paired_complete": true,
+      "protocol_version": "legacy-v1",
+      "scale": "tiny",
+      "seed": 7
+    }
+  ],
+  "exclusions": [
+    {
+      "identity": {
+        "condition": "scalar",
+        "family": "mqar",
+        "scale": "tiny",
+        "seed": 7
+      },
+      "missing_or_incomplete": [
+        "E3_tiny",
+        "final_checkpoint",
+        "lifecycle",
+        "lifecycle_status_not_complete",
+        "manifest",
+        "metrics"
+      ]
+    }
+  ],
+  "mixed_protocols": false,
+  "paper_outputs": {
+    "figures": [],
+    "learning_curve_status": "no validation history with a recorded token, wall-time, or optimizer-step coordinate",
+    "seed_table": "e6_seed_metrics.csv"
+  },
+  "planned_missing_cells": [],
+  "primary_comparison": "paired granularity \u00d7 initialization difference-in-differences across training seeds",
+  "primary_interactions": {
+    "final_validation.loss": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "final_validation.loss",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "parameter.parameter_count": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "parameter.parameter_count",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "retrieval.exact_query_accuracy": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "retrieval.exact_query_accuracy",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "retrieval.latest_value_accuracy": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "retrieval.latest_value_accuracy",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "retrieval.stale_value_error_rate": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "retrieval.stale_value_error_rate",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "training.fixed_optimizer_steps": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "training.fixed_optimizer_steps",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "training.processed_tokens": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "training.processed_tokens",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    },
+    "training.wall_time_seconds": {
+      "contrast": "(channel-wise-scalar)[calibrated] - (channel-wise-scalar)[default]",
+      "metric": "training.wall_time_seconds",
+      "mixed_protocols": false,
+      "per_seed_effects": [],
+      "protocol_versions": [],
+      "summary": [],
+      "unit_of_uncertainty": "paired training seed; test examples are not treated as independent trained models"
+    }
+  },
+  "primary_summary": [],
+  "protocol_versions": [
+    "legacy-v1"
+  ],
+  "report_version": 1,
+  "seed_records": [
+    {
+      "artifacts": {
+        "E3_tiny": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_e6_marks_empty_or_missing0\\missing_E3.json",
+        "final_checkpoint": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_e6_marks_empty_or_missing0\\missing_checkpoint.pt",
+        "lifecycle": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_e6_marks_empty_or_missing0\\missing_lifecycle.json",
+        "manifest": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_e6_marks_empty_or_missing0\\missing_manifest.json",
+        "metrics": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_e6_marks_empty_or_missing0\\missing_metrics.json"
+      },
+      "condition": "scalar",
+      "eligible_for_primary": false,
+      "experiment": null,
+      "family": "mqar",
+      "granularity": "scalar",
+      "initialization": "default",
+      "metrics": {
+        "final_validation.loss": null,
+        "parameter.parameter_count": null,
+        "retrieval.exact_query_accuracy": null,
+        "retrieval.latest_value_accuracy": null,
+        "retrieval.stale_value_error_rate": null,
+        "training.fixed_optimizer_steps": null,
+        "training.processed_tokens": null,
+        "training.wall_time_seconds": null
+      },
+      "protocol_version": "legacy-v1",
+      "recipe": null,
+      "scale": "tiny",
+      "seed": 7,
+      "status": "unknown"
+    }
+  ],
+  "status": "incomplete",
+  "status_counts": {
+    "unknown": 1
+  },
+  "summary": [],
+  "task_count": 1,
+  "uncertainty_note": "All aggregate uncertainty is computed over paired training seeds. Example-level counts are descriptive evaluation precision and are not independent model replicates."
+}

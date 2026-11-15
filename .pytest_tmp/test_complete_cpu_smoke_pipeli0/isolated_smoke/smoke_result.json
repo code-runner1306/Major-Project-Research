@@ -1,0 +1,19 @@
+{
+  "cuda_required": false,
+  "elapsed_seconds": 17.36171560001094,
+  "measured_rss_mb_at_completion": 382.37890625,
+  "network_required": false,
+  "recovery_first_pass": {
+    "run_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_complete_cpu_smoke_pipeli0\\isolated_smoke\\tinystories\\tiny\\scalar\\seed_7_4356b79514b4",
+    "status": "trained"
+  },
+  "recovery_resume": {
+    "run_dir": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.pytest_tmp\\test_complete_cpu_smoke_pipeli0\\isolated_smoke\\tinystories\\tiny\\scalar\\seed_7_4356b79514b4",
+    "status": "complete"
+  },
+  "resource_target": {
+    "ram_gb": 2,
+    "seconds": 300
+  },
+  "status": "complete"
+}
