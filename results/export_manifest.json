@@ -1,0 +1,85 @@
+{
+  "included": [
+    {
+      "path": "comparison_report.json",
+      "bytes": 15430,
+      "sha256": "8584478f1188428ce0f8e921609cd89f81ec5a7a50602db42fd8f921f7634ee6"
+    },
+    {
+      "path": "overwrite/attention/progress.json",
+      "bytes": 24499,
+      "sha256": "6bd3aef90c9b54a77d5988744ede5445de25e715c5319109eae106d58fcaee84"
+    },
+    {
+      "path": "overwrite/attention/settings.json",
+      "bytes": 2573,
+      "sha256": "7aebcd913a1bf659a9bd0fd21dc41463f1b6f819fd8a75bf9affd7dadede712a"
+    },
+    {
+      "path": "overwrite/attention/summary.json",
+      "bytes": 5965,
+      "sha256": "987d39ec4b2be9a2327b5beff82638a595a771dfffa9d470cbe3cf1cd10ae48a"
+    },
+    {
+      "path": "overwrite/attention/training_metrics.json",
+      "bytes": 178005,
+      "sha256": "0d5498424eddc720d32290f50e436062865515e0dc6b870fe710aac3ce5ebb0c"
+    },
+    {
+      "path": "overwrite/attention/validation_history.json",
+      "bytes": 1990,
+      "sha256": "5ff9d0d1accd17cd7926ac6de039db5bdd59d67c569c039772d0d496545bfd93"
+    },
+    {
+      "path": "overwrite/gdn/progress.json",
+      "bytes": 24229,
+      "sha256": "65945bd85e4ac3291ccb9e0c3f2557129f0d593725eb70b4c2d5ae9811d98fa4"
+    },
+    {
+      "path": "overwrite/gdn/settings.json",
+      "bytes": 2553,
+      "sha256": "c470fce54e85c6cb07a48adc8c726501c8a3653c8101f28ca6937cb89ec93ba6"
+    },
+    {
+      "path": "overwrite/gdn/summary.json",
+      "bytes": 5952,
+      "sha256": "49852aa4d9b135d58abe66bf9935a3944b19c5f95d4dc188a6d07ad25bdf1232"
+    },
+    {
+      "path": "overwrite/gdn/training_metrics.json",
+      "bytes": 172594,
+      "sha256": "87af808b78596c4c9801de1a61e381893993f1b0cb2eec22c7bf46240fe4aec8"
+    },
+    {
+      "path": "overwrite/gdn/validation_history.json",
+      "bytes": 1979,
+      "sha256": "43e316f10e8e8b076222c51bee703c11f72e574adc115a4d9bf93a99e5c430d9"
+    },
+    {
+      "path": "overwrite_attention.log",
+      "bytes": 24121,
+      "sha256": "22c0ec03d14c478d833bb274491bdc44d3d79e707c0ab9de64166f34680393d2"
+    },
+    {
+      "path": "overwrite_audit.json",
+      "bytes": 14873,
+      "sha256": "9bd67dcaac289c1b98cceac923639e56a8f7c4ced06db624ad30ad581f701b64"
+    },
+    {
+      "path": "overwrite_gdn.log",
+      "bytes": 23562,
+      "sha256": "9c2bb265f873a7de569839041706afbc7be11e15297402f08e9c42ba15e62334"
+    },
+    {
+      "path": "session_status.json",
+      "bytes": 384,
+      "sha256": "469629e0b0e00c0ef1f9f8063c78b0d14b87e3fd586d17ac5a97d04e2e35a244"
+    }
+  ],
+  "excluded": [
+    "overwrite/attention/best_validation_checkpoint.pt",
+    "overwrite/attention/final_checkpoint.pt",
+    "overwrite/gdn/best_validation_checkpoint.pt",
+    "overwrite/gdn/final_checkpoint.pt"
+  ]
+}
