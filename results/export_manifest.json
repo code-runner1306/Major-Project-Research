@@ -1,0 +1,73 @@
+{
+  "included": [
+    {
+      "path": "channel-wise/data_audit.json",
+      "bytes": 302,
+      "sha256": "1a15c44ed755c4990ef76faa0124972b13c8da7bbdfc24f9015347277ec481f2"
+    },
+    {
+      "path": "channel-wise/data_manifests.json",
+      "bytes": 631,
+      "sha256": "5313793d88b7dd746f2ae3651bf55e4cb5be9aa158153d53318095efac593d42"
+    },
+    {
+      "path": "channel-wise/development_curve.json",
+      "bytes": 81549,
+      "sha256": "4e16beed6868979bb116ada5a6b4ef8c672fd6eb7610921b3edfc15c1d8356f6"
+    },
+    {
+      "path": "channel-wise/settings.json",
+      "bytes": 1840,
+      "sha256": "3f180505e1c49f860b2f8c1b63dda9ffa92fa5bfac43aecda69c6547068b4cdc"
+    },
+    {
+      "path": "channel-wise/summary.json",
+      "bytes": 301707,
+      "sha256": "9abd99a71f55b2cf52a00ca0d41743dfab6264d0ba7459f4ef7e50695e2106ae"
+    },
+    {
+      "path": "channel-wise.log",
+      "bytes": 78335,
+      "sha256": "11636b352aca7933502cfdaa808333dde0e052e95d5ae0b6efd132ecb8a5dd88"
+    },
+    {
+      "path": "scalar/data_audit.json",
+      "bytes": 302,
+      "sha256": "1a15c44ed755c4990ef76faa0124972b13c8da7bbdfc24f9015347277ec481f2"
+    },
+    {
+      "path": "scalar/data_manifests.json",
+      "bytes": 631,
+      "sha256": "5313793d88b7dd746f2ae3651bf55e4cb5be9aa158153d53318095efac593d42"
+    },
+    {
+      "path": "scalar/development_curve.json",
+      "bytes": 82058,
+      "sha256": "13307d6006481b38dfd2a1841ca25ab0ac8ea67d71972ac4a7c9bc0070da4979"
+    },
+    {
+      "path": "scalar/settings.json",
+      "bytes": 1840,
+      "sha256": "3f180505e1c49f860b2f8c1b63dda9ffa92fa5bfac43aecda69c6547068b4cdc"
+    },
+    {
+      "path": "scalar/summary.json",
+      "bytes": 302219,
+      "sha256": "2e90d38e1f9cd762d00174d6771bf33377685f00ef5961ccaa99f583d7012154"
+    },
+    {
+      "path": "scalar.log",
+      "bytes": 77344,
+      "sha256": "4f2d5d32c09c7c172249131c97904f82709983a0a924ee8f2e7c8cde56a3a2b2"
+    },
+    {
+      "path": "session_status.json",
+      "bytes": 340,
+      "sha256": "9b7dffb982e2315ea1da8a1f03180d409d8c580682b6c71429ed582edb66aae8"
+    }
+  ],
+  "excluded": [
+    "channel-wise/latest_checkpoint.pt",
+    "scalar/latest_checkpoint.pt"
+  ]
+}
