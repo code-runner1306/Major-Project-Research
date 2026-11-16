@@ -1,0 +1,148 @@
+{
+  "device": "cuda:0",
+  "results": {
+    "mqar/channel-wise": {
+      "answer_free": {
+        "correct": 2048,
+        "data_sha256": "39f7c83d3ce14c8cf8090bdb99bda86ae18f6de867e0c5d1b7ef0e8d42a97fda",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 2.6716571483120788e-05,
+        "stale_value_error_rate": null,
+        "total": 2048,
+        "unrelated_association_retention": null
+      },
+      "checkpoint": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\published_mqar\\channel-wise\\latest_checkpoint.pt",
+      "checkpoint_sha256": "0eea4eb28e707f12f7272c212eb8540d02a2604cba8e0ea070787ac7e8027862",
+      "evaluation_seconds": 0.20155940006952733,
+      "teacher_forced": {
+        "correct": 2048,
+        "data_sha256": "39f7c83d3ce14c8cf8090bdb99bda86ae18f6de867e0c5d1b7ef0e8d42a97fda",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "teacher_forced",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 2.6716571483120788e-05,
+        "stale_value_error_rate": null,
+        "total": 2048,
+        "unrelated_association_retention": null
+      }
+    },
+    "mqar/scalar": {
+      "answer_free": {
+        "correct": 2048,
+        "data_sha256": "39f7c83d3ce14c8cf8090bdb99bda86ae18f6de867e0c5d1b7ef0e8d42a97fda",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 0.00045795873575116275,
+        "stale_value_error_rate": null,
+        "total": 2048,
+        "unrelated_association_retention": null
+      },
+      "checkpoint": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\published_mqar\\scalar\\latest_checkpoint.pt",
+      "checkpoint_sha256": "8b8046ab9ae27a074be6a687105be194171308e77c3e389cbb6c01069d2f443b",
+      "evaluation_seconds": 0.40847129991743714,
+      "teacher_forced": {
+        "correct": 2048,
+        "data_sha256": "39f7c83d3ce14c8cf8090bdb99bda86ae18f6de867e0c5d1b7ef0e8d42a97fda",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "teacher_forced",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 0.00045795873575116275,
+        "stale_value_error_rate": null,
+        "total": 2048,
+        "unrelated_association_retention": null
+      }
+    },
+    "overwrite/channel-wise": {
+      "answer_free": {
+        "correct": 1024,
+        "data_sha256": "af7ec699b90c626aa99b6b2163785779507280329007d8c9fb87e8e27bc5b1ff",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": 1.0,
+        "loss": 0.002951098602352431,
+        "stale_value_error_rate": 0.0,
+        "total": 1024,
+        "unrelated_association_retention": 1.0
+      },
+      "checkpoint": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\published_overwrite\\channel_wise\\latest_checkpoint.pt",
+      "checkpoint_sha256": "f23980064e6b4c5b28c2cc175e31ee36fdb406b2e9f78cd6e5f365045f6dcc17",
+      "evaluation_seconds": 0.43209949997253716,
+      "teacher_forced": {
+        "correct": 1024,
+        "data_sha256": "af7ec699b90c626aa99b6b2163785779507280329007d8c9fb87e8e27bc5b1ff",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "teacher_forced",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": 1.0,
+        "loss": 0.002761261455816566,
+        "stale_value_error_rate": 0.0,
+        "total": 1024,
+        "unrelated_association_retention": 1.0
+      }
+    },
+    "overwrite/scalar": {
+      "answer_free": {
+        "correct": 1016,
+        "data_sha256": "af7ec699b90c626aa99b6b2163785779507280329007d8c9fb87e8e27bc5b1ff",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 0.9921875,
+        "example_accuracy": 0.984375,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 0.984375,
+        "latest_value_accuracy": 1.0,
+        "loss": 0.013760810239546117,
+        "stale_value_error_rate": 0.0,
+        "total": 1024,
+        "unrelated_association_retention": 0.984375
+      },
+      "checkpoint": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\published_overwrite\\scalar\\latest_checkpoint.pt",
+      "checkpoint_sha256": "74930f41eb1b1e464509f7fbaf8dce9352126a629b31bdadb880c0c413ec3e6b",
+      "evaluation_seconds": 0.6061109999427572,
+      "teacher_forced": {
+        "correct": 1023,
+        "data_sha256": "af7ec699b90c626aa99b6b2163785779507280329007d8c9fb87e8e27bc5b1ff",
+        "evaluated_examples": 512,
+        "exact_query_accuracy": 0.9990234375,
+        "example_accuracy": 0.998046875,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "teacher_forced",
+        "later_query_accuracy": 0.998046875,
+        "latest_value_accuracy": 1.0,
+        "loss": 0.0020782758833775006,
+        "stale_value_error_rate": 0.0,
+        "total": 1024,
+        "unrelated_association_retention": 0.998046875
+      }
+    }
+  },
+  "status": "complete",
+  "torch": "2.11.0+cu128",
+  "wall_seconds": 54.57613619999029
+}

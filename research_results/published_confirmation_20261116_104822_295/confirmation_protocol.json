@@ -1,0 +1,12 @@
+{
+  "batch": 32,
+  "examples": 512,
+  "generator_split": {
+    "mqar": "confirmation",
+    "overwrite": "held_out"
+  },
+  "primary": "answer_free",
+  "scope": "same-distribution confirmation, not harder-task or multi-seed evidence",
+  "seed_offset": 300000,
+  "selection": "all four final epoch64 checkpoints; no best-checkpoint selection"
+}

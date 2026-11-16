@@ -1,0 +1,84 @@
+{
+  "development": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "model_input_length": 64,
+    "seed": 200042,
+    "sha256": "bd9a01392d6e58cc0250eb8af86f0b12fa2da6be6e837fb729af578ff3033d38",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 512,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "c8b224ad9d0788334c4194117cbed25deaa1043aaf54fdb11c427c13865c9e82",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200042,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "train": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "model_input_length": 64,
+    "seed": 100042,
+    "sha256": "afc228f0e99854574312ca3ad3e963692d3014da5a816a162de5b0250e4116ac",
+    "shape": [
+      100000,
+      64
+    ],
+    "source_manifest": {
+      "examples": 100000,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "03643c94d4a44521c5f8df4175482491a9627d6243c9b71ff4f3653875375187",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 100042,
+      "sequence_length": null,
+      "split": "train",
+      "task": "overwrite"
+    },
+    "split": "train",
+    "upstream_revision": null
+  }
+}

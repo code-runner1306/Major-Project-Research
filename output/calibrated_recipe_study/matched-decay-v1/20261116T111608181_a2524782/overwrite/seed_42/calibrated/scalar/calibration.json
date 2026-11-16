@@ -1,0 +1,95 @@
+{
+  "examples": 256,
+  "interpretation": "Mean-decay diagnostic targets, not measured full-state memory lifetimes",
+  "layers": [
+    {
+      "achieved_mean_decay": [
+        [
+          0.9576032388537363
+        ]
+      ],
+      "decay_std": [
+        [
+          0.00480802582860252
+        ]
+      ],
+      "layer": 0,
+      "maximum_error": 4.184483737290634e-08,
+      "offsets": [
+        [
+          -3.4121036529541016
+        ]
+      ],
+      "target_half_life": 16.0,
+      "target_mean_decay": 0.9576032806985737
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9785720899358114
+        ]
+      ],
+      "decay_std": [
+        [
+          0.004765282318240425
+        ]
+      ],
+      "layer": 1,
+      "maximum_error": 2.7848111261441488e-08,
+      "offsets": [
+        [
+          -6.09715461730957
+        ]
+      ],
+      "target_half_life": 32.0,
+      "target_mean_decay": 0.9785720620877001
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9892280848754977
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0011316745512213924
+        ]
+      ],
+      "layer": 2,
+      "maximum_error": 7.168152227343683e-08,
+      "offsets": [
+        [
+          -6.265869140625
+        ]
+      ],
+      "target_half_life": 64.0,
+      "target_mean_decay": 0.9892280131939755
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9945994550731205
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0006985343520754304
+        ]
+      ],
+      "layer": 3,
+      "maximum_error": 3.158948735926259e-08,
+      "offsets": [
+        [
+          -5.689697265625
+        ]
+      ],
+      "target_half_life": 128.0,
+      "target_mean_decay": 0.9945994234836332
+    }
+  ],
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens": 16384,
+  "tokens_sha256": "518ffc017e8a0f6ca09771f7717edfabfc8e278cb5618643c7aa47f4bdf24046",
+  "wall_seconds": 0.9309341000625864
+}
