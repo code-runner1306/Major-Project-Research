@@ -1,0 +1,95 @@
+{
+  "examples": 256,
+  "interpretation": "Mean-decay diagnostic targets, not measured full-state memory lifetimes",
+  "layers": [
+    {
+      "achieved_mean_decay": [
+        [
+          0.9576033072913369
+        ]
+      ],
+      "decay_std": [
+        [
+          0.005103407375717171
+        ]
+      ],
+      "layer": 0,
+      "maximum_error": 2.6592763213706405e-08,
+      "offsets": [
+        [
+          -1.2903261184692383
+        ]
+      ],
+      "target_half_life": 16.0,
+      "target_mean_decay": 0.9576032806985737
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9785719760565894
+        ]
+      ],
+      "decay_std": [
+        [
+          0.002364688195777747
+        ]
+      ],
+      "layer": 1,
+      "maximum_error": 8.60311106798406e-08,
+      "offsets": [
+        [
+          -5.990667343139648
+        ]
+      ],
+      "target_half_life": 32.0,
+      "target_mean_decay": 0.9785720620877001
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9892279230821903
+        ]
+      ],
+      "decay_std": [
+        [
+          0.001677210238826337
+        ]
+      ],
+      "layer": 2,
+      "maximum_error": 9.011178514484186e-08,
+      "offsets": [
+        [
+          -0.7846832275390625
+        ]
+      ],
+      "target_half_life": 64.0,
+      "target_mean_decay": 0.9892280131939755
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9945995035428333
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0005780690031449695
+        ]
+      ],
+      "layer": 3,
+      "maximum_error": 8.005920015818901e-08,
+      "offsets": [
+        [
+          -8.0291748046875
+        ]
+      ],
+      "target_half_life": 128.0,
+      "target_mean_decay": 0.9945994234836332
+    }
+  ],
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens": 16384,
+  "tokens_sha256": "628a537d58012b006ab29f6b2aa3cae0ef6e500680993e34bc650659fa925ab1",
+  "wall_seconds": 0.9422744999174029
+}
