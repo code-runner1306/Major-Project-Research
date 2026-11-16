@@ -1,5 +1,11 @@
 # Study update — November 2026
 
+**Current executable scope, 16 November 2026:** see
+[RESEARCH_METHODOLOGY.md](RESEARCH_METHODOLOGY.md) for the active approximately 1.6M
+parameter synthetic study and its calibrated-decay rationale. The 10M/30M,
+grouped-gate and three-family expansion described below is historical/prospective
+and does not describe the model size or matrix now being trained.
+
 This update supersedes the earlier proposal's claim that gate granularity has not been isolated in a controlled factorial study. A 2026 controlled factorial comparison already evaluates scalar and channel-wise decay with and without delta-rule writes across small and larger model scales. It reports that the granularity effect interacts with the delta rule and varies by dataset and scale ([Das, “Delta-Rule Writes in Linear Attention: A Controlled Factorial Study of Decay Design”](https://tmlr.infinite-conf.org/paper_pages/FdXB4u27LD.html)). The present project therefore does not claim to be the first controlled study of gate granularity.
 
 The previously completed `granularity_exp_1` run is retained as exploratory

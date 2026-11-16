@@ -1,5 +1,9 @@
 # Matched calibrated gating study
 
+For exact parameter counts, model-size selection, and the distinction between
+16/32/64/128-token decay targets and fitted offsets, see
+[RESEARCH_METHODOLOGY.md](RESEARCH_METHODOLOGY.md).
+
 The current clean-task experiments prove learnability, not a calibration benefit.
 V3 suggests an initialization effect but has task shortcuts and a different
 architecture. Neither replaces a calibrated comparison on the new recipe.
