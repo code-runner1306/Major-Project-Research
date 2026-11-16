@@ -19,6 +19,14 @@ wheels/
 *.zip
 output/**/*.pt
 
+# Only the four published development checkpoints may be committed.
+/published_mqar/**/latest_checkpoint/
+/published_overwrite/**/latest_checkpoint/
+!/published_mqar/scalar/latest_checkpoint.pt
+!/published_mqar/channel-wise/latest_checkpoint.pt
+!/published_overwrite/scalar/latest_checkpoint.pt
+!/published_overwrite/channel_wise/latest_checkpoint.pt
+
 # Ignore heavy raw dataset cache in data/, but keep JSON split manifests tracked
 data/*
 !data/splits/
