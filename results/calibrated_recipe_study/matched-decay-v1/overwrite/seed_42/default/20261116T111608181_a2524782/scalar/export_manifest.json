@@ -1,0 +1,48 @@
+{
+  "branch": "research/calibrated-recipe/matched-decay-v1/overwrite/42/default/20261116T111608181_a2524782/scalar",
+  "checkpoints_included": true,
+  "files": [
+    {
+      "bytes": 75,
+      "path": "calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895"
+    },
+    {
+      "bytes": 6988,
+      "path": "data_audit.json",
+      "sha256": "f8d0ea904489f4fc933d1d428f4e428e6bff3eb455dd21979a923c0b237506c4"
+    },
+    {
+      "bytes": 2111,
+      "path": "data_manifests.json",
+      "sha256": "9038337ca5dca2cb9ef4507007ea1aeac33848496d236a790e32aaea4a8a3497"
+    },
+    {
+      "bytes": 21002,
+      "path": "development_curve.json",
+      "sha256": "f32ac0c51ac48d8377515400b4a08bf029bc8dc4c318dacbdde03ea0d13be8af"
+    },
+    {
+      "bytes": 195,
+      "path": "initialization_manifest.json",
+      "sha256": "c1b97bd00ae73efc0098f3ba9d86598032b650c2e013b3ebe8b7b90c206debf2"
+    },
+    {
+      "bytes": 19123887,
+      "path": "latest_checkpoint.pt",
+      "sha256": "137fb5b5f240e92d083c54a5738d5066bed72a7fa2deca093cff50e6a2e00148"
+    },
+    {
+      "bytes": 1900,
+      "path": "settings.json",
+      "sha256": "d3377104198d385f550cfad9c43cfe47a3740d110a01778e2106b585847d07cf"
+    },
+    {
+      "bytes": 78460,
+      "path": "summary.json",
+      "sha256": "8543433dd604c5170251c185526fe08a0501c2636dd04b6d808d976f08af06a7"
+    }
+  ],
+  "master_path": "calibrated_recipe_study/matched-decay-v1/overwrite/seed_42/default/20261116T111608181_a2524782/scalar",
+  "protocol": "matched-decay-v1"
+}
