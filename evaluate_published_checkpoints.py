@@ -56,6 +56,13 @@ def load_checkpoint(path, family):
     return checkpoint
 
 
+def build_confirmation(family, cfg):
+    # V4 retrieval uses explicit RNG domains; confirmation is a protocol role,
+    # implemented with its supported held_out domain and a fresh fixed seed.
+    split = 'held_out' if family == 'overwrite' else 'confirmation'
+    return build_data(family,512,cfg['seed']+300000,split,cfg['vocabulary'],cfg['length'])
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--checkpoint-root', type=Path, default=Path('.'))
@@ -84,6 +91,7 @@ def main():
     args.output.mkdir(parents=True, exist_ok=False)
     # Freeze before generating examples or observing any confirmation score.
     protocol = dict(examples=512, seed_offset=300000, batch=32, primary='answer_free',
+                    generator_split={'mqar':'confirmation','overwrite':'held_out'},
                     selection='all four final epoch64 checkpoints; no best-checkpoint selection',
                     scope='same-distribution confirmation, not harder-task or multi-seed evidence')
     atomic_write_json(args.output / 'confirmation_protocol.json', protocol)
@@ -103,7 +111,7 @@ def main():
                     raise ValueError('Paired checkpoint settings differ')
                 paired = cfg
                 if data is None:
-                    data = build_data(family,512,cfg['seed']+300000,'confirmation',cfg['vocabulary'],cfg['length'])
+                    data = build_confirmation(family, cfg)
                     overlaps = {}
                     for split,offset,count in [('train',100000,cfg['train_examples']),
                                                ('validation',200000,cfg['validation_examples'])]:

@@ -33,6 +33,9 @@ newline conversion), final epoch/step counters, strict model weight loading,
 paired settings, and actual confirmation overlap with regenerated train and
 development splits. It records dataset and checkpoint hashes. The seed and size
 are fixed in the evaluator rather than adjustable after seeing results.
+For overwrite, the protocol's confirmation role uses the generator's supported
+`held_out` RNG domain with seed300042. MQAR keeps its original confirmation
+examples unchanged. This does not modify either task's training generator.
 
 Reports are saved under `research_results/published_confirmation_<timestamp>/`.
 `confirmation_results.json` includes accuracy, latest-value accuracy, unrelated
