@@ -26,6 +26,9 @@ output/**/*.pt
 !/published_mqar/channel-wise/latest_checkpoint.pt
 !/published_overwrite/scalar/latest_checkpoint.pt
 !/published_overwrite/channel_wise/latest_checkpoint.pt
+# Calibrated-study runs explicitly preserve their small final checkpoints.
+!/output/calibrated_recipe_study/**/latest_checkpoint.pt
+!/research_results/aggregated_recipe_study/**/latest_checkpoint.pt
 
 # Ignore heavy raw dataset cache in data/, but keep JSON split manifests tracked
 data/*

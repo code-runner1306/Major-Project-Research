@@ -1,0 +1,54 @@
+{
+  "protocol": "matched-decay-v1",
+  "status": "awaiting_gpu_calibrated_pilot",
+  "tasks": ["mqar", "overwrite"],
+  "seeds": [42, 43, 44],
+  "qualification_seed": 41,
+  "conditions": {
+    "C1": ["scalar", "default"],
+    "C3": ["channel-wise", "default"],
+    "C4": ["scalar", "calibrated"],
+    "C6": ["channel-wise", "calibrated"]
+  },
+  "calibration": {
+    "target_half_life_per_layer": [16, 32, 64, 128],
+    "target_function": "mean(alpha)=2**(-1/target_half_life)",
+    "parameter_changed": "dt_bias only",
+    "training_examples": 256,
+    "tokens": "all emitted model input positions, uniformly weighted, no padding",
+    "maximum_absolute_error": 0.000001,
+    "dropout": "disabled during calibration; training RNG restored"
+  },
+  "training": {
+    "epochs": 64,
+    "optimizer_steps": 12544,
+    "scheduler_epochs": 64,
+    "learning_rate": 0.0021544346900318843,
+    "effective_batch": 512,
+    "microbatch": 32,
+    "precision": "float32",
+    "backend": "chunked",
+    "validation_examples": 512,
+    "validation_interval": "each epoch"
+  },
+  "pilot": {
+    "epochs": 16,
+    "scheduler_epochs": 64,
+    "minimum_accuracy_and_subgroups": 0.8,
+    "consecutive_final_validations": 3
+  },
+  "primary_metrics": {
+    "mqar": "answer-free accuracy normalized AULC epochs 1..16",
+    "overwrite": "unrelated retention normalized AULC epochs 1..16"
+  },
+  "confirmation": {
+    "examples": 512,
+    "seed_offset": 400000,
+    "policy": "all selected conditions must finish before evaluation"
+  },
+  "publication": {
+    "master_folder": "calibrated_recipe_study/matched-decay-v1",
+    "unit": "one model run per branch",
+    "checkpoints": "included"
+  }
+}
