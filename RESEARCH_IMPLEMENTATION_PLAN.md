@@ -1,5 +1,12 @@
 # Research implementation plan: gate granularity, initialization, and memory behavior
 
+**Current scope update, 16 November 2026:** the historical 10M/30M plan below is
+superseded for the active synthetic study by [RESEARCH_METHODOLOGY.md](RESEARCH_METHODOLOGY.md)
+and [CALIBRATED_RECIPE_STUDY.md](CALIBRATED_RECIPE_STUDY.md). The actual new models
+have 1,585,416 scalar or 1,651,456 channel-wise parameters. Model capacity and the
+16/32/64/128-token mean-decay targets are resource-constrained experimental
+choices, not established optima. The methodology documents their exact basis.
+
 ## 1. Research question and scope
 
 **Main question:** How much independent decay control is useful when initial memory timescales are controlled, and does the answer differ between retaining associations and overwriting them?

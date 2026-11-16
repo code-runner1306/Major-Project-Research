@@ -1,5 +1,11 @@
 # Gated DeltaNet gating granularity study
 
+Current synthetic-study methodology: [model capacity and calibrated decay](RESEARCH_METHODOLOGY.md).
+The published-recipe adaptation uses **1,585,416 scalar / 1,651,456 channel-wise
+parameters**, all trainable. Historical `10M` folder labels are not its size.
+See the methodology for the model-size rationale, matched 16/32/64/128-token
+decay targets, fitted offsets, and scope of the current four-condition experiment.
+
 This repository studies scalar head-wise versus channel-wise decay gates in Gated DeltaNet language models. The paper reports two deliberately separate comparisons:
 
 - Same-backbone: scalar and channel-wise models have the same backbone dimensions and baseline FFN widths. Channel-wise models retain their natural gate-parameter overhead.
