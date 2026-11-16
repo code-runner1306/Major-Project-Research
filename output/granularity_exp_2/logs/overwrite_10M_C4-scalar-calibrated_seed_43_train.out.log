@@ -1,0 +1,23 @@
+Training progress [overwrite/10M/scalar/seed43]: 50/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 100/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 150/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 200/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 250/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 300/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed43]: step=300/1000 loss=7.703390 perplexity=2215.8462
+Training progress [overwrite/10M/scalar/seed43]: 350/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 400/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 450/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 500/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 550/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 600/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 650/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed43]: step=650/1000 loss=5.663415 perplexity=288.1309
+Training progress [overwrite/10M/scalar/seed43]: 700/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 750/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 800/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 850/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 900/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 950/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed43]: 1000/1000 optimizer steps completed
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C4-scalar-calibrated\\seed_43'}

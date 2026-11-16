@@ -1,0 +1,23 @@
+Training progress [overwrite/10M/scalar/seed44]: 50/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 100/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 150/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 200/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 250/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 300/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed44]: step=300/1000 loss=8.718423 perplexity=6114.5283
+Training progress [overwrite/10M/scalar/seed44]: 350/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 400/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 450/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 500/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 550/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 600/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 650/1000 optimizer steps completed
+Validation progress [overwrite/10M/scalar/seed44]: step=650/1000 loss=6.999364 perplexity=1095.9358
+Training progress [overwrite/10M/scalar/seed44]: 700/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 750/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 800/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 850/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 900/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 950/1000 optimizer steps completed
+Training progress [overwrite/10M/scalar/seed44]: 1000/1000 optimizer steps completed
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C1-scalar-default\\seed_44'}

@@ -1,0 +1,23 @@
+Training progress [mqar/10M/channel-wise/seed43]: 50/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 100/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 150/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 200/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 250/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 300/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed43]: step=300/1000 loss=8.172509 perplexity=3542.2209
+Training progress [mqar/10M/channel-wise/seed43]: 350/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 400/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 450/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 500/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 550/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 600/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 650/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed43]: step=650/1000 loss=6.403564 perplexity=603.9941
+Training progress [mqar/10M/channel-wise/seed43]: 700/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 750/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 800/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 850/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 900/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 950/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed43]: 1000/1000 optimizer steps completed
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C6-channel-calibrated\\seed_43'}

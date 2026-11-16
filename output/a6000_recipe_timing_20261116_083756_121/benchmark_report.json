@@ -1,0 +1,97 @@
+{
+  "benchmark_wall_seconds": 451.36615999997593,
+  "comparisons": {
+    "mqar": {
+      "parallel": {
+        "benchmark_wall_seconds": 74.07604299997911,
+        "conservative_pair_training_seconds": 16983.48360052792,
+        "end_to_end_optimizer_steps_per_second": 1.3499641172791614,
+        "estimated_pair_training_seconds": 13391.723495372911
+      },
+      "recommended_mode_by_projected_pair_time": "parallel",
+      "sequential": {
+        "benchmark_wall_seconds": 118.64062279998325,
+        "conservative_pair_training_seconds": 24959.0892477026,
+        "end_to_end_optimizer_steps_per_second": 0.8428816171050488,
+        "estimated_pair_training_seconds": 19276.7220602189
+      }
+    },
+    "overwrite": {
+      "parallel": {
+        "benchmark_wall_seconds": 93.30513410002459,
+        "conservative_pair_training_seconds": 16933.67775227694,
+        "end_to_end_optimizer_steps_per_second": 1.071752384952348,
+        "estimated_pair_training_seconds": 13337.387709697448
+      },
+      "recommended_mode_by_projected_pair_time": "parallel",
+      "sequential": {
+        "benchmark_wall_seconds": 159.6669035999803,
+        "conservative_pair_training_seconds": 25977.82639898789,
+        "end_to_end_optimizer_steps_per_second": 0.6263038722823479,
+        "estimated_pair_training_seconds": 20100.157269957872
+      }
+    }
+  },
+  "cpu_smoke": false,
+  "gpu": "NVIDIA RTXA6000-12Q",
+  "interpretation": "Timing only; no learned accuracy qualification. Compare sequential and concurrent workers on device 0.",
+  "jobs": {
+    "mqar/parallel/channel-wise": {
+      "conservative_seconds": 16983.48360052792,
+      "estimated_seconds": 13391.723495372911,
+      "mean_step_seconds": 1.0647462459956296,
+      "optimizer_steps": 12544
+    },
+    "mqar/parallel/scalar": {
+      "conservative_seconds": 16490.51284964555,
+      "estimated_seconds": 12981.11650630432,
+      "mean_step_seconds": 1.031671992004849,
+      "optimizer_steps": 12544
+    },
+    "mqar/sequential/channel-wise": {
+      "conservative_seconds": 12530.90192485863,
+      "estimated_seconds": 9681.148853782266,
+      "mean_step_seconds": 0.7689193359995261,
+      "optimizer_steps": 12544
+    },
+    "mqar/sequential/scalar": {
+      "conservative_seconds": 12428.187322843969,
+      "estimated_seconds": 9595.573206436635,
+      "mean_step_seconds": 0.7620395679958165,
+      "optimizer_steps": 12544
+    },
+    "overwrite/parallel/channel-wise": {
+      "conservative_seconds": 16923.841460848915,
+      "estimated_seconds": 13329.240309573197,
+      "mean_step_seconds": 1.0560791159979999,
+      "optimizer_steps": 12544
+    },
+    "overwrite/parallel/scalar": {
+      "conservative_seconds": 16933.67775227694,
+      "estimated_seconds": 13337.387709697448,
+      "mean_step_seconds": 1.0574301719944925,
+      "optimizer_steps": 12544
+    },
+    "overwrite/sequential/channel-wise": {
+      "conservative_seconds": 12946.145382448598,
+      "estimated_seconds": 10014.495796308182,
+      "mean_step_seconds": 0.7926053460058756,
+      "optimizer_steps": 12544
+    },
+    "overwrite/sequential/scalar": {
+      "conservative_seconds": 13031.68101653929,
+      "estimated_seconds": 10085.66147364969,
+      "mean_step_seconds": 0.7986067040055059,
+      "optimizer_steps": 12544
+    }
+  },
+  "source_hashes": {
+    "experimental_chunked_recurrence.py": "db8bb4ff9f92de9efa35cc445ae879cb84f696ea4de03cc729dc3a28e485d2ec",
+    "recipe_data.py": "810886a383ddf7891dfe0227b04297fdeb2ea9a75619e7d1123027954d8e4253",
+    "recipe_evaluation.py": "1d741915445da149adc16eee8cf7bc5e696f77e5d4ad1b71cab19e21f453307a",
+    "recipe_model.py": "92c9c176ccf0b461de22d3ec0050019fc77537008844d5e973ffe945f9418370",
+    "run_published_recipe.py": "903930d131ba99f4bf877fc7ce788e41e7950b8ec60436402b77ffce407a5cf0"
+  },
+  "status": "complete",
+  "torch": "2.11.0+cu128"
+}

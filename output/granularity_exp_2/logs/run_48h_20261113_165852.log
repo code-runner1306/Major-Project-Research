@@ -1,0 +1,610 @@
+﻿[2026-11-13T11:28:56Z] Python: C:\Users\Intern\Desktop\Mayank\Major-Project-Research\venv\Scripts\python.exe PyTorch: 2.11.0+cu128 CUDA available: True
+[2026-11-13T11:29:08Z] QUEUED train mqar_10M_C1-scalar-default_seed_42_train
+[2026-11-13T11:37:28Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 50/1000 optimizer steps completed
+[2026-11-13T11:45:48Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 100/1000 optimizer steps completed
+[2026-11-13T11:53:58Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 150/1000 optimizer steps completed
+[2026-11-13T12:02:09Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 200/1000 optimizer steps completed
+[2026-11-13T12:10:19Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T12:18:29Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T12:20:49Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Validation progress [mqar/10M/scalar/seed42]: step=300/1000 loss=8.359214 perplexity=4269.3369
+[2026-11-13T12:29:00Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 350/1000 optimizer steps completed
+[2026-11-13T12:37:20Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 400/1000 optimizer steps completed
+[2026-11-13T12:45:30Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 450/1000 optimizer steps completed
+[2026-11-13T12:53:40Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 500/1000 optimizer steps completed
+[2026-11-13T13:02:01Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 550/1000 optimizer steps completed
+[2026-11-13T13:10:11Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 600/1000 optimizer steps completed
+[2026-11-13T13:18:21Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 650/1000 optimizer steps completed
+[2026-11-13T13:20:41Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Validation progress [mqar/10M/scalar/seed42]: step=650/1000 loss=8.216080 perplexity=3699.9724
+[2026-11-13T13:28:52Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 700/1000 optimizer steps completed
+[2026-11-13T13:37:02Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 750/1000 optimizer steps completed
+[2026-11-13T13:45:22Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 800/1000 optimizer steps completed
+[2026-11-13T13:54:13Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 850/1000 optimizer steps completed
+[2026-11-13T14:03:03Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 900/1000 optimizer steps completed
+[2026-11-13T14:11:33Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 950/1000 optimizer steps completed
+[2026-11-13T14:19:54Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 1000/1000 optimizer steps completed
+[2026-11-13T14:20:14Z] mqar_10M_C1-scalar-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C1-scalar-default\\seed_42'}
+[2026-11-13T14:20:24Z] PROCESS EXIT train mqar_10M_C1-scalar-default_seed_42_train pid=10100 code= elapsed=10276.1s
+[2026-11-13T14:20:27Z] ARTIFACT CHECK train mqar_10M_C1-scalar-default_seed_42_train: COMPLETE
+[2026-11-13T14:20:27Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C1-scalar-default_seed_42_train
+[2026-11-13T14:20:27Z] COMPLETED train mqar_10M_C1-scalar-default_seed_42_train
+[2026-11-13T14:20:27Z] QUEUED train overwrite_10M_C1-scalar-default_seed_42_train
+[2026-11-13T14:28:57Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 50/1000 optimizer steps completed
+[2026-11-13T14:37:18Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 100/1000 optimizer steps completed
+[2026-11-13T14:45:28Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 150/1000 optimizer steps completed
+[2026-11-13T14:53:48Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 200/1000 optimizer steps completed
+[2026-11-13T15:01:59Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T15:10:19Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T15:12:49Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Validation progress [overwrite/10M/scalar/seed42]: step=300/1000 loss=8.656315 perplexity=5746.3252
+[2026-11-13T15:21:19Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 350/1000 optimizer steps completed
+[2026-11-13T15:29:40Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 400/1000 optimizer steps completed
+[2026-11-13T15:38:00Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 450/1000 optimizer steps completed
+[2026-11-13T15:46:10Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 500/1000 optimizer steps completed
+[2026-11-13T15:54:30Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 550/1000 optimizer steps completed
+[2026-11-13T16:02:51Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 600/1000 optimizer steps completed
+[2026-11-13T16:11:01Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 650/1000 optimizer steps completed
+[2026-11-13T16:13:31Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Validation progress [overwrite/10M/scalar/seed42]: step=650/1000 loss=7.903973 perplexity=2708.0203
+[2026-11-13T16:22:42Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 700/1000 optimizer steps completed
+[2026-11-13T16:31:12Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 750/1000 optimizer steps completed
+[2026-11-13T16:39:32Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 800/1000 optimizer steps completed
+[2026-11-13T16:47:53Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 850/1000 optimizer steps completed
+[2026-11-13T16:56:13Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 900/1000 optimizer steps completed
+[2026-11-13T17:04:23Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 950/1000 optimizer steps completed
+[2026-11-13T17:12:43Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 1000/1000 optimizer steps completed
+[2026-11-13T17:13:03Z] overwrite_10M_C1-scalar-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C1-scalar-default\\seed_42'}
+[2026-11-13T17:13:03Z] PROCESS EXIT train overwrite_10M_C1-scalar-default_seed_42_train pid=2404 code= elapsed=10356.2s
+[2026-11-13T17:13:13Z] ARTIFACT CHECK train overwrite_10M_C1-scalar-default_seed_42_train: COMPLETE
+[2026-11-13T17:13:13Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C1-scalar-default_seed_42_train
+[2026-11-13T17:13:13Z] COMPLETED train overwrite_10M_C1-scalar-default_seed_42_train
+[2026-11-13T17:13:13Z] QUEUED train mqar_10M_C3-channel-default_seed_42_train
+[2026-11-13T17:21:44Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 50/1000 optimizer steps completed
+[2026-11-13T17:29:54Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 100/1000 optimizer steps completed
+[2026-11-13T17:38:14Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
+[2026-11-13T17:46:35Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
+[2026-11-13T17:54:55Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T18:03:18Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T18:05:38Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Validation progress [mqar/10M/channel-wise/seed42]: step=300/1000 loss=8.359061 perplexity=4268.6855
+[2026-11-13T18:13:58Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+[2026-11-13T18:22:18Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+[2026-11-13T18:30:59Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+[2026-11-13T18:39:19Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+[2026-11-13T18:47:39Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+[2026-11-13T18:56:00Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+[2026-11-13T19:04:40Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+[2026-11-13T19:07:00Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Validation progress [mqar/10M/channel-wise/seed42]: step=650/1000 loss=8.333223 perplexity=4159.8042
+[2026-11-13T19:15:30Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+[2026-11-13T19:24:01Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+[2026-11-13T19:32:31Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+[2026-11-13T19:40:51Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+[2026-11-13T19:49:22Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+[2026-11-13T19:57:52Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+[2026-11-13T20:06:52Z] mqar_10M_C3-channel-default_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+[2026-11-13T20:07:22Z] mqar_10M_C3-channel-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C3-channel-default\\seed_42'}
+[2026-11-13T20:07:22Z] PROCESS EXIT train mqar_10M_C3-channel-default_seed_42_train pid=27396 code= elapsed=10448.7s
+[2026-11-13T20:07:26Z] ARTIFACT CHECK train mqar_10M_C3-channel-default_seed_42_train: COMPLETE
+[2026-11-13T20:07:26Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C3-channel-default_seed_42_train
+[2026-11-13T20:07:26Z] COMPLETED train mqar_10M_C3-channel-default_seed_42_train
+[2026-11-13T20:07:26Z] QUEUED train overwrite_10M_C3-channel-default_seed_42_train
+[2026-11-13T20:15:58Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 50/1000 optimizer steps completed
+[2026-11-13T20:24:28Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 100/1000 optimizer steps completed
+[2026-11-13T20:32:58Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
+[2026-11-13T20:41:29Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
+[2026-11-13T20:50:09Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T20:58:39Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T21:01:09Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Validation progress [overwrite/10M/channel-wise/seed42]: step=300/1000 loss=8.099308 perplexity=3292.1892
+[2026-11-13T21:09:40Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+[2026-11-13T21:18:10Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+[2026-11-13T21:26:40Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+[2026-11-13T21:35:10Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+[2026-11-13T21:43:31Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+[2026-11-13T21:52:01Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+[2026-11-13T22:00:31Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+[2026-11-13T22:03:02Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Validation progress [overwrite/10M/channel-wise/seed42]: step=650/1000 loss=5.192350 perplexity=179.8909
+[2026-11-13T22:11:32Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+[2026-11-13T22:20:02Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+[2026-11-13T22:28:33Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+[2026-11-13T22:37:03Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+[2026-11-13T22:45:33Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+[2026-11-13T22:54:04Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+[2026-11-13T23:02:34Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+[2026-11-13T23:02:54Z] overwrite_10M_C3-channel-default_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C3-channel-default\\seed_42'}
+[2026-11-13T23:02:54Z] PROCESS EXIT train overwrite_10M_C3-channel-default_seed_42_train pid=32472 code= elapsed=10528.3s
+[2026-11-13T23:02:57Z] ARTIFACT CHECK train overwrite_10M_C3-channel-default_seed_42_train: COMPLETE
+[2026-11-13T23:02:57Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C3-channel-default_seed_42_train
+[2026-11-13T23:02:57Z] COMPLETED train overwrite_10M_C3-channel-default_seed_42_train
+[2026-11-13T23:02:57Z] QUEUED train mqar_10M_C4-scalar-calibrated_seed_42_train
+[2026-11-13T23:12:48Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 50/1000 optimizer steps completed
+[2026-11-13T23:21:18Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 100/1000 optimizer steps completed
+[2026-11-13T23:29:38Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 150/1000 optimizer steps completed
+[2026-11-13T23:38:09Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 200/1000 optimizer steps completed
+[2026-11-13T23:46:19Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 250/1000 optimizer steps completed
+[2026-11-13T23:54:39Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 300/1000 optimizer steps completed
+[2026-11-13T23:57:09Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Validation progress [mqar/10M/scalar/seed42]: step=300/1000 loss=8.087237 perplexity=3252.6892
+[2026-11-14T00:05:30Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 350/1000 optimizer steps completed
+[2026-11-14T00:13:50Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 400/1000 optimizer steps completed
+[2026-11-14T00:22:10Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 450/1000 optimizer steps completed
+[2026-11-14T00:30:20Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 500/1000 optimizer steps completed
+[2026-11-14T00:38:51Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 550/1000 optimizer steps completed
+[2026-11-14T00:47:11Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 600/1000 optimizer steps completed
+[2026-11-14T00:55:31Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 650/1000 optimizer steps completed
+[2026-11-14T00:57:51Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Validation progress [mqar/10M/scalar/seed42]: step=650/1000 loss=5.940678 perplexity=380.1927
+[2026-11-14T01:06:22Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 700/1000 optimizer steps completed
+[2026-11-14T01:14:42Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 750/1000 optimizer steps completed
+[2026-11-14T01:23:02Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 800/1000 optimizer steps completed
+[2026-11-14T01:31:23Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 850/1000 optimizer steps completed
+[2026-11-14T01:39:43Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 900/1000 optimizer steps completed
+[2026-11-14T01:48:03Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 950/1000 optimizer steps completed
+[2026-11-14T01:56:34Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [mqar/10M/scalar/seed42]: 1000/1000 optimizer steps completed
+[2026-11-14T01:56:54Z] mqar_10M_C4-scalar-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C4-scalar-calibrated\\seed_42'}
+[2026-11-14T01:56:54Z] PROCESS EXIT train mqar_10M_C4-scalar-calibrated_seed_42_train pid=24676 code= elapsed=10436.9s
+[2026-11-14T01:56:57Z] ARTIFACT CHECK train mqar_10M_C4-scalar-calibrated_seed_42_train: COMPLETE
+[2026-11-14T01:56:57Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C4-scalar-calibrated_seed_42_train
+[2026-11-14T01:56:57Z] COMPLETED train mqar_10M_C4-scalar-calibrated_seed_42_train
+[2026-11-14T01:56:57Z] QUEUED train overwrite_10M_C4-scalar-calibrated_seed_42_train
+[2026-11-14T02:06:48Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 50/1000 optimizer steps completed
+[2026-11-14T02:15:48Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 100/1000 optimizer steps completed
+[2026-11-14T02:24:19Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 150/1000 optimizer steps completed
+[2026-11-14T02:32:39Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 200/1000 optimizer steps completed
+[2026-11-14T02:41:09Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 250/1000 optimizer steps completed
+[2026-11-14T02:49:29Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 300/1000 optimizer steps completed
+[2026-11-14T02:52:00Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Validation progress [overwrite/10M/scalar/seed42]: step=300/1000 loss=7.605465 perplexity=2009.1458
+[2026-11-14T03:00:20Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 350/1000 optimizer steps completed
+[2026-11-14T03:08:50Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 400/1000 optimizer steps completed
+[2026-11-14T03:17:21Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 450/1000 optimizer steps completed
+[2026-11-14T03:25:51Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 500/1000 optimizer steps completed
+[2026-11-14T03:34:11Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 550/1000 optimizer steps completed
+[2026-11-14T03:42:41Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 600/1000 optimizer steps completed
+[2026-11-14T03:51:12Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 650/1000 optimizer steps completed
+[2026-11-14T03:53:32Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Validation progress [overwrite/10M/scalar/seed42]: step=650/1000 loss=5.123461 perplexity=167.9155
+[2026-11-14T04:02:02Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 700/1000 optimizer steps completed
+[2026-11-14T04:10:33Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 750/1000 optimizer steps completed
+[2026-11-14T04:18:53Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 800/1000 optimizer steps completed
+[2026-11-14T04:27:33Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 850/1000 optimizer steps completed
+[2026-11-14T04:35:53Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 900/1000 optimizer steps completed
+[2026-11-14T04:44:24Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 950/1000 optimizer steps completed
+[2026-11-14T04:52:54Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/scalar/seed42]: 1000/1000 optimizer steps completed
+[2026-11-14T04:53:14Z] overwrite_10M_C4-scalar-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C4-scalar-calibrated\\seed_42'}
+[2026-11-14T04:53:24Z] PROCESS EXIT train overwrite_10M_C4-scalar-calibrated_seed_42_train pid=23336 code= elapsed=10587.5s
+[2026-11-14T04:53:28Z] ARTIFACT CHECK train overwrite_10M_C4-scalar-calibrated_seed_42_train: COMPLETE
+[2026-11-14T04:53:28Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C4-scalar-calibrated_seed_42_train
+[2026-11-14T04:53:28Z] COMPLETED train overwrite_10M_C4-scalar-calibrated_seed_42_train
+[2026-11-14T04:53:28Z] QUEUED train mqar_10M_C6-channel-calibrated_seed_42_train
+[2026-11-14T05:03:38Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 50/1000 optimizer steps completed
+[2026-11-14T05:12:09Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 100/1000 optimizer steps completed
+[2026-11-14T05:20:39Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
+[2026-11-14T05:28:59Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
+[2026-11-14T05:37:29Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+[2026-11-14T05:46:00Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+[2026-11-14T05:48:30Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [mqar/10M/channel-wise/seed42]: step=300/1000 loss=7.721791 perplexity=2256.9978
+[2026-11-14T05:56:50Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+[2026-11-14T06:05:21Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+[2026-11-14T06:13:51Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+[2026-11-14T06:22:21Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+[2026-11-14T06:31:21Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+[2026-11-14T06:39:52Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+[2026-11-14T06:48:22Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+[2026-11-14T06:50:42Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [mqar/10M/channel-wise/seed42]: step=650/1000 loss=6.405733 perplexity=605.3054
+[2026-11-14T06:59:13Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+[2026-11-14T07:07:43Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+[2026-11-14T07:15:53Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+[2026-11-14T07:24:24Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+[2026-11-14T07:32:34Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+[2026-11-14T07:40:54Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+[2026-11-14T07:49:14Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [mqar/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+[2026-11-14T07:49:44Z] mqar_10M_C6-channel-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C6-channel-calibrated\\seed_42'}
+[2026-11-14T07:49:44Z] PROCESS EXIT train mqar_10M_C6-channel-calibrated_seed_42_train pid=31600 code= elapsed=10576.7s
+[2026-11-14T07:49:48Z] ARTIFACT CHECK train mqar_10M_C6-channel-calibrated_seed_42_train: COMPLETE
+[2026-11-14T07:49:48Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C6-channel-calibrated_seed_42_train
+[2026-11-14T07:49:48Z] COMPLETED train mqar_10M_C6-channel-calibrated_seed_42_train
+[2026-11-14T07:49:48Z] QUEUED train overwrite_10M_C6-channel-calibrated_seed_42_train
+[2026-11-14T07:59:38Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 50/1000 optimizer steps completed
+[2026-11-14T08:07:59Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 100/1000 optimizer steps completed
+[2026-11-14T08:16:49Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 150/1000 optimizer steps completed
+[2026-11-14T08:25:39Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 200/1000 optimizer steps completed
+[2026-11-14T08:34:10Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 250/1000 optimizer steps completed
+[2026-11-14T08:42:40Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 300/1000 optimizer steps completed
+[2026-11-14T08:45:00Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [overwrite/10M/channel-wise/seed42]: step=300/1000 loss=7.094579 perplexity=1205.4150
+[2026-11-14T08:53:30Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 350/1000 optimizer steps completed
+[2026-11-14T09:02:01Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 400/1000 optimizer steps completed
+[2026-11-14T09:10:31Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 450/1000 optimizer steps completed
+[2026-11-14T09:18:51Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 500/1000 optimizer steps completed
+[2026-11-14T09:27:12Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 550/1000 optimizer steps completed
+[2026-11-14T09:35:32Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 600/1000 optimizer steps completed
+[2026-11-14T09:43:53Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 650/1000 optimizer steps completed
+[2026-11-14T09:46:13Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Validation progress [overwrite/10M/channel-wise/seed42]: step=650/1000 loss=4.669672 perplexity=106.6627
+[2026-11-14T09:54:33Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 700/1000 optimizer steps completed
+[2026-11-14T10:02:53Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 750/1000 optimizer steps completed
+[2026-11-14T10:11:14Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 800/1000 optimizer steps completed
+[2026-11-14T10:19:24Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 850/1000 optimizer steps completed
+[2026-11-14T10:27:34Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 900/1000 optimizer steps completed
+[2026-11-14T10:35:55Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 950/1000 optimizer steps completed
+[2026-11-14T10:44:15Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] Training progress [overwrite/10M/channel-wise/seed42]: 1000/1000 optimizer steps completed
+[2026-11-14T10:44:35Z] overwrite_10M_C6-channel-calibrated_seed_42_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C6-channel-calibrated\\seed_42'}
+[2026-11-14T10:44:35Z] PROCESS EXIT train overwrite_10M_C6-channel-calibrated_seed_42_train pid=14528 code= elapsed=10487.3s
+[2026-11-14T10:44:38Z] ARTIFACT CHECK train overwrite_10M_C6-channel-calibrated_seed_42_train: COMPLETE
+[2026-11-14T10:44:38Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C6-channel-calibrated_seed_42_train
+[2026-11-14T10:44:38Z] COMPLETED train overwrite_10M_C6-channel-calibrated_seed_42_train
+[2026-11-14T10:44:38Z] QUEUED train mqar_10M_C1-scalar-default_seed_43_train
+[2026-11-14T10:52:59Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 50/1000 optimizer steps completed
+[2026-11-14T11:01:09Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 100/1000 optimizer steps completed
+[2026-11-14T11:09:19Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 150/1000 optimizer steps completed
+[2026-11-14T11:17:29Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 200/1000 optimizer steps completed
+[2026-11-14T11:25:40Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 250/1000 optimizer steps completed
+[2026-11-14T11:33:40Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 300/1000 optimizer steps completed
+[2026-11-14T11:36:00Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Validation progress [mqar/10M/scalar/seed43]: step=300/1000 loss=8.361838 perplexity=4280.5566
+[2026-11-14T11:44:20Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 350/1000 optimizer steps completed
+[2026-11-14T11:52:31Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 400/1000 optimizer steps completed
+[2026-11-14T12:00:31Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 450/1000 optimizer steps completed
+[2026-11-14T12:08:41Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 500/1000 optimizer steps completed
+[2026-11-14T12:17:02Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 550/1000 optimizer steps completed
+[2026-11-14T12:25:12Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 600/1000 optimizer steps completed
+[2026-11-14T12:33:22Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 650/1000 optimizer steps completed
+[2026-11-14T12:35:42Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Validation progress [mqar/10M/scalar/seed43]: step=650/1000 loss=8.336415 perplexity=4173.1035
+[2026-11-14T12:43:53Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 700/1000 optimizer steps completed
+[2026-11-14T12:52:13Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 750/1000 optimizer steps completed
+[2026-11-14T13:00:23Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 800/1000 optimizer steps completed
+[2026-11-14T13:08:43Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 850/1000 optimizer steps completed
+[2026-11-14T13:16:54Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 900/1000 optimizer steps completed
+[2026-11-14T13:25:04Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 950/1000 optimizer steps completed
+[2026-11-14T13:33:24Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 1000/1000 optimizer steps completed
+[2026-11-14T13:33:44Z] mqar_10M_C1-scalar-default_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C1-scalar-default\\seed_43'}
+[2026-11-14T13:33:44Z] PROCESS EXIT train mqar_10M_C1-scalar-default_seed_43_train pid=23056 code= elapsed=10146.5s
+[2026-11-14T13:33:47Z] ARTIFACT CHECK train mqar_10M_C1-scalar-default_seed_43_train: COMPLETE
+[2026-11-14T13:33:47Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C1-scalar-default_seed_43_train
+[2026-11-14T13:33:47Z] COMPLETED train mqar_10M_C1-scalar-default_seed_43_train
+[2026-11-14T13:33:47Z] QUEUED train overwrite_10M_C1-scalar-default_seed_43_train
+[2026-11-14T13:42:19Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 50/1000 optimizer steps completed
+[2026-11-14T13:50:29Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 100/1000 optimizer steps completed
+[2026-11-14T13:58:49Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 150/1000 optimizer steps completed
+[2026-11-14T14:07:10Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 200/1000 optimizer steps completed
+[2026-11-14T14:15:30Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 250/1000 optimizer steps completed
+[2026-11-14T14:23:50Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 300/1000 optimizer steps completed
+[2026-11-14T14:26:10Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Validation progress [overwrite/10M/scalar/seed43]: step=300/1000 loss=8.669382 perplexity=5821.9009
+[2026-11-14T14:34:51Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 350/1000 optimizer steps completed
+[2026-11-14T14:43:11Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 400/1000 optimizer steps completed
+[2026-11-14T14:51:41Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 450/1000 optimizer steps completed
+[2026-11-14T15:00:12Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 500/1000 optimizer steps completed
+[2026-11-14T15:09:02Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 550/1000 optimizer steps completed
+[2026-11-14T15:17:32Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 600/1000 optimizer steps completed
+[2026-11-14T15:26:13Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 650/1000 optimizer steps completed
+[2026-11-14T15:28:53Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Validation progress [overwrite/10M/scalar/seed43]: step=650/1000 loss=7.752261 perplexity=2326.8279
+[2026-11-14T15:37:13Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 700/1000 optimizer steps completed
+[2026-11-14T15:45:33Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 750/1000 optimizer steps completed
+[2026-11-14T15:53:54Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 800/1000 optimizer steps completed
+[2026-11-14T16:02:14Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 850/1000 optimizer steps completed
+[2026-11-14T16:10:34Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 900/1000 optimizer steps completed
+[2026-11-14T16:18:55Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 950/1000 optimizer steps completed
+[2026-11-14T16:27:25Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 1000/1000 optimizer steps completed
+[2026-11-14T16:27:55Z] overwrite_10M_C1-scalar-default_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C1-scalar-default\\seed_43'}
+[2026-11-14T16:27:55Z] PROCESS EXIT train overwrite_10M_C1-scalar-default_seed_43_train pid=6460 code= elapsed=10447.6s
+[2026-11-14T16:27:58Z] ARTIFACT CHECK train overwrite_10M_C1-scalar-default_seed_43_train: COMPLETE
+[2026-11-14T16:27:58Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C1-scalar-default_seed_43_train
+[2026-11-14T16:27:58Z] COMPLETED train overwrite_10M_C1-scalar-default_seed_43_train
+[2026-11-14T16:27:59Z] QUEUED train mqar_10M_C3-channel-default_seed_43_train
+[2026-11-14T16:36:39Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 50/1000 optimizer steps completed
+[2026-11-14T16:44:49Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 100/1000 optimizer steps completed
+[2026-11-14T16:53:10Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 150/1000 optimizer steps completed
+[2026-11-14T17:01:20Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 200/1000 optimizer steps completed
+[2026-11-14T17:09:30Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 250/1000 optimizer steps completed
+[2026-11-14T17:18:21Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 300/1000 optimizer steps completed
+[2026-11-14T17:20:51Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Validation progress [mqar/10M/channel-wise/seed43]: step=300/1000 loss=8.363025 perplexity=4285.6382
+[2026-11-14T17:29:11Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 350/1000 optimizer steps completed
+[2026-11-14T17:37:21Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 400/1000 optimizer steps completed
+[2026-11-14T17:45:42Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 450/1000 optimizer steps completed
+[2026-11-14T17:53:52Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 500/1000 optimizer steps completed
+[2026-11-14T18:02:12Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 550/1000 optimizer steps completed
+[2026-11-14T18:10:32Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 600/1000 optimizer steps completed
+[2026-11-14T18:18:43Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 650/1000 optimizer steps completed
+[2026-11-14T18:21:03Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Validation progress [mqar/10M/channel-wise/seed43]: step=650/1000 loss=8.336243 perplexity=4172.3833
+[2026-11-14T18:29:23Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 700/1000 optimizer steps completed
+[2026-11-14T18:37:44Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 750/1000 optimizer steps completed
+[2026-11-14T18:45:54Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 800/1000 optimizer steps completed
+[2026-11-14T18:54:04Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 850/1000 optimizer steps completed
+[2026-11-14T19:02:34Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 900/1000 optimizer steps completed
+[2026-11-14T19:10:45Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 950/1000 optimizer steps completed
+[2026-11-14T19:19:05Z] mqar_10M_C3-channel-default_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 1000/1000 optimizer steps completed
+[2026-11-14T19:19:35Z] mqar_10M_C3-channel-default_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C3-channel-default\\seed_43'}
+[2026-11-14T19:19:35Z] PROCESS EXIT train mqar_10M_C3-channel-default_seed_43_train pid=28592 code= elapsed=10296.7s
+[2026-11-14T19:19:45Z] ARTIFACT CHECK train mqar_10M_C3-channel-default_seed_43_train: COMPLETE
+[2026-11-14T19:19:45Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C3-channel-default_seed_43_train
+[2026-11-14T19:19:45Z] COMPLETED train mqar_10M_C3-channel-default_seed_43_train
+[2026-11-14T19:19:45Z] QUEUED train overwrite_10M_C3-channel-default_seed_43_train
+[2026-11-14T19:28:15Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 50/1000 optimizer steps completed
+[2026-11-14T19:36:35Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 100/1000 optimizer steps completed
+[2026-11-14T19:44:46Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 150/1000 optimizer steps completed
+[2026-11-14T19:53:06Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 200/1000 optimizer steps completed
+[2026-11-14T20:01:26Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 250/1000 optimizer steps completed
+[2026-11-14T20:10:19Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 300/1000 optimizer steps completed
+[2026-11-14T20:12:39Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Validation progress [overwrite/10M/channel-wise/seed43]: step=300/1000 loss=8.557045 perplexity=5203.2827
+[2026-11-14T20:20:50Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 350/1000 optimizer steps completed
+[2026-11-14T20:29:20Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 400/1000 optimizer steps completed
+[2026-11-14T20:37:30Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 450/1000 optimizer steps completed
+[2026-11-14T20:46:10Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 500/1000 optimizer steps completed
+[2026-11-14T20:54:41Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 550/1000 optimizer steps completed
+[2026-11-14T21:03:01Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 600/1000 optimizer steps completed
+[2026-11-14T21:11:21Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 650/1000 optimizer steps completed
+[2026-11-14T21:13:41Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Validation progress [overwrite/10M/channel-wise/seed43]: step=650/1000 loss=6.175099 perplexity=480.6306
+[2026-11-14T21:22:02Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 700/1000 optimizer steps completed
+[2026-11-14T21:30:22Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 750/1000 optimizer steps completed
+[2026-11-14T21:39:22Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 800/1000 optimizer steps completed
+[2026-11-14T21:47:53Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 850/1000 optimizer steps completed
+[2026-11-14T21:56:13Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 900/1000 optimizer steps completed
+[2026-11-14T22:04:33Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 950/1000 optimizer steps completed
+[2026-11-14T22:12:54Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 1000/1000 optimizer steps completed
+[2026-11-14T22:13:24Z] overwrite_10M_C3-channel-default_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C3-channel-default\\seed_43'}
+[2026-11-14T22:13:24Z] PROCESS EXIT train overwrite_10M_C3-channel-default_seed_43_train pid=23236 code= elapsed=10418.6s
+[2026-11-14T22:13:27Z] ARTIFACT CHECK train overwrite_10M_C3-channel-default_seed_43_train: COMPLETE
+[2026-11-14T22:13:27Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C3-channel-default_seed_43_train
+[2026-11-14T22:13:27Z] COMPLETED train overwrite_10M_C3-channel-default_seed_43_train
+[2026-11-14T22:13:27Z] QUEUED train mqar_10M_C4-scalar-calibrated_seed_43_train
+[2026-11-14T22:23:09Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 50/1000 optimizer steps completed
+[2026-11-14T22:31:10Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 100/1000 optimizer steps completed
+[2026-11-14T22:39:30Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 150/1000 optimizer steps completed
+[2026-11-14T22:47:40Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 200/1000 optimizer steps completed
+[2026-11-14T22:55:50Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 250/1000 optimizer steps completed
+[2026-11-14T23:04:01Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 300/1000 optimizer steps completed
+[2026-11-14T23:06:31Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Validation progress [mqar/10M/scalar/seed43]: step=300/1000 loss=7.971601 perplexity=2897.4912
+[2026-11-14T23:14:41Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 350/1000 optimizer steps completed
+[2026-11-14T23:23:01Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 400/1000 optimizer steps completed
+[2026-11-14T23:31:12Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 450/1000 optimizer steps completed
+[2026-11-14T23:39:22Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 500/1000 optimizer steps completed
+[2026-11-14T23:47:42Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 550/1000 optimizer steps completed
+[2026-11-14T23:55:52Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 600/1000 optimizer steps completed
+[2026-11-15T00:04:03Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 650/1000 optimizer steps completed
+[2026-11-15T00:06:33Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Validation progress [mqar/10M/scalar/seed43]: step=650/1000 loss=5.850438 perplexity=347.3864
+[2026-11-15T00:14:43Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 700/1000 optimizer steps completed
+[2026-11-15T00:23:03Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 750/1000 optimizer steps completed
+[2026-11-15T00:31:14Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 800/1000 optimizer steps completed
+[2026-11-15T00:39:34Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 850/1000 optimizer steps completed
+[2026-11-15T00:47:44Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 900/1000 optimizer steps completed
+[2026-11-15T00:55:55Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 950/1000 optimizer steps completed
+[2026-11-15T01:04:15Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [mqar/10M/scalar/seed43]: 1000/1000 optimizer steps completed
+[2026-11-15T01:04:45Z] mqar_10M_C4-scalar-calibrated_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C4-scalar-calibrated\\seed_43'}
+[2026-11-15T01:04:45Z] PROCESS EXIT train mqar_10M_C4-scalar-calibrated_seed_43_train pid=24344 code= elapsed=10278s
+[2026-11-15T01:04:48Z] ARTIFACT CHECK train mqar_10M_C4-scalar-calibrated_seed_43_train: COMPLETE
+[2026-11-15T01:04:48Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C4-scalar-calibrated_seed_43_train
+[2026-11-15T01:04:48Z] COMPLETED train mqar_10M_C4-scalar-calibrated_seed_43_train
+[2026-11-15T01:04:48Z] QUEUED train overwrite_10M_C4-scalar-calibrated_seed_43_train
+[2026-11-15T01:14:38Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 50/1000 optimizer steps completed
+[2026-11-15T01:22:50Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 100/1000 optimizer steps completed
+[2026-11-15T01:31:10Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 150/1000 optimizer steps completed
+[2026-11-15T01:39:50Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 200/1000 optimizer steps completed
+[2026-11-15T01:48:31Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 250/1000 optimizer steps completed
+[2026-11-15T01:56:51Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 300/1000 optimizer steps completed
+[2026-11-15T01:59:11Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Validation progress [overwrite/10M/scalar/seed43]: step=300/1000 loss=7.703390 perplexity=2215.8462
+[2026-11-15T02:07:31Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 350/1000 optimizer steps completed
+[2026-11-15T02:15:52Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 400/1000 optimizer steps completed
+[2026-11-15T02:24:12Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 450/1000 optimizer steps completed
+[2026-11-15T02:32:22Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 500/1000 optimizer steps completed
+[2026-11-15T02:40:42Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 550/1000 optimizer steps completed
+[2026-11-15T02:49:03Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 600/1000 optimizer steps completed
+[2026-11-15T02:57:53Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 650/1000 optimizer steps completed
+[2026-11-15T03:00:13Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Validation progress [overwrite/10M/scalar/seed43]: step=650/1000 loss=5.663415 perplexity=288.1309
+[2026-11-15T03:08:33Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 700/1000 optimizer steps completed
+[2026-11-15T03:17:04Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 750/1000 optimizer steps completed
+[2026-11-15T03:25:24Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 800/1000 optimizer steps completed
+[2026-11-15T03:33:44Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 850/1000 optimizer steps completed
+[2026-11-15T03:41:55Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 900/1000 optimizer steps completed
+[2026-11-15T03:50:15Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 950/1000 optimizer steps completed
+[2026-11-15T03:58:35Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/scalar/seed43]: 1000/1000 optimizer steps completed
+[2026-11-15T03:59:05Z] overwrite_10M_C4-scalar-calibrated_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C4-scalar-calibrated\\seed_43'}
+[2026-11-15T03:59:05Z] PROCESS EXIT train overwrite_10M_C4-scalar-calibrated_seed_43_train pid=27888 code= elapsed=10457.6s
+[2026-11-15T03:59:08Z] ARTIFACT CHECK train overwrite_10M_C4-scalar-calibrated_seed_43_train: COMPLETE
+[2026-11-15T03:59:08Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C4-scalar-calibrated_seed_43_train
+[2026-11-15T03:59:08Z] COMPLETED train overwrite_10M_C4-scalar-calibrated_seed_43_train
+[2026-11-15T03:59:08Z] QUEUED train mqar_10M_C6-channel-calibrated_seed_43_train
+[2026-11-15T04:09:10Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 50/1000 optimizer steps completed
+[2026-11-15T04:17:30Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 100/1000 optimizer steps completed
+[2026-11-15T04:25:40Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 150/1000 optimizer steps completed
+[2026-11-15T04:34:01Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 200/1000 optimizer steps completed
+[2026-11-15T04:42:21Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 250/1000 optimizer steps completed
+[2026-11-15T04:50:41Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 300/1000 optimizer steps completed
+[2026-11-15T04:53:11Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Validation progress [mqar/10M/channel-wise/seed43]: step=300/1000 loss=8.172509 perplexity=3542.2209
+[2026-11-15T05:01:32Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 350/1000 optimizer steps completed
+[2026-11-15T05:09:52Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 400/1000 optimizer steps completed
+[2026-11-15T05:18:12Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 450/1000 optimizer steps completed
+[2026-11-15T05:26:33Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 500/1000 optimizer steps completed
+[2026-11-15T05:34:53Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 550/1000 optimizer steps completed
+[2026-11-15T05:43:13Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 600/1000 optimizer steps completed
+[2026-11-15T05:51:34Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 650/1000 optimizer steps completed
+[2026-11-15T05:54:04Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Validation progress [mqar/10M/channel-wise/seed43]: step=650/1000 loss=6.403564 perplexity=603.9941
+[2026-11-15T06:02:34Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 700/1000 optimizer steps completed
+[2026-11-15T06:10:54Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 750/1000 optimizer steps completed
+[2026-11-15T06:19:15Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 800/1000 optimizer steps completed
+[2026-11-15T06:28:05Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 850/1000 optimizer steps completed
+[2026-11-15T06:36:25Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 900/1000 optimizer steps completed
+[2026-11-15T06:44:56Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 950/1000 optimizer steps completed
+[2026-11-15T06:53:16Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [mqar/10M/channel-wise/seed43]: 1000/1000 optimizer steps completed
+[2026-11-15T06:53:46Z] mqar_10M_C6-channel-calibrated_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C6-channel-calibrated\\seed_43'}
+[2026-11-15T06:53:46Z] PROCESS EXIT train mqar_10M_C6-channel-calibrated_seed_43_train pid=27844 code= elapsed=10477.5s
+[2026-11-15T06:53:49Z] ARTIFACT CHECK train mqar_10M_C6-channel-calibrated_seed_43_train: COMPLETE
+[2026-11-15T06:53:49Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C6-channel-calibrated_seed_43_train
+[2026-11-15T06:53:49Z] COMPLETED train mqar_10M_C6-channel-calibrated_seed_43_train
+[2026-11-15T06:53:49Z] QUEUED train overwrite_10M_C6-channel-calibrated_seed_43_train
+[2026-11-15T07:03:50Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 50/1000 optimizer steps completed
+[2026-11-15T07:12:21Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 100/1000 optimizer steps completed
+[2026-11-15T07:20:41Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 150/1000 optimizer steps completed
+[2026-11-15T07:29:11Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 200/1000 optimizer steps completed
+[2026-11-15T07:37:31Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 250/1000 optimizer steps completed
+[2026-11-15T07:45:52Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 300/1000 optimizer steps completed
+[2026-11-15T07:48:22Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Validation progress [overwrite/10M/channel-wise/seed43]: step=300/1000 loss=6.262871 perplexity=524.7231
+[2026-11-15T07:56:52Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 350/1000 optimizer steps completed
+[2026-11-15T08:05:13Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 400/1000 optimizer steps completed
+[2026-11-15T08:13:43Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 450/1000 optimizer steps completed
+[2026-11-15T08:22:03Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 500/1000 optimizer steps completed
+[2026-11-15T08:30:23Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 550/1000 optimizer steps completed
+[2026-11-15T08:38:54Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 600/1000 optimizer steps completed
+[2026-11-15T08:47:24Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 650/1000 optimizer steps completed
+[2026-11-15T08:49:54Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Validation progress [overwrite/10M/channel-wise/seed43]: step=650/1000 loss=4.215174 perplexity=67.7060
+[2026-11-15T08:58:15Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 700/1000 optimizer steps completed
+[2026-11-15T09:07:15Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 750/1000 optimizer steps completed
+[2026-11-15T09:15:45Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 800/1000 optimizer steps completed
+[2026-11-15T09:24:16Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 850/1000 optimizer steps completed
+[2026-11-15T09:32:56Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 900/1000 optimizer steps completed
+[2026-11-15T09:41:16Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 950/1000 optimizer steps completed
+[2026-11-15T09:49:47Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] Training progress [overwrite/10M/channel-wise/seed43]: 1000/1000 optimizer steps completed
+[2026-11-15T09:50:07Z] overwrite_10M_C6-channel-calibrated_seed_43_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C6-channel-calibrated\\seed_43'}
+[2026-11-15T09:50:07Z] PROCESS EXIT train overwrite_10M_C6-channel-calibrated_seed_43_train pid=18896 code= elapsed=10577.4s
+[2026-11-15T09:50:10Z] ARTIFACT CHECK train overwrite_10M_C6-channel-calibrated_seed_43_train: COMPLETE
+[2026-11-15T09:50:10Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C6-channel-calibrated_seed_43_train
+[2026-11-15T09:50:10Z] COMPLETED train overwrite_10M_C6-channel-calibrated_seed_43_train
+[2026-11-15T09:50:10Z] QUEUED train mqar_10M_C1-scalar-default_seed_44_train
+[2026-11-15T09:58:50Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 50/1000 optimizer steps completed
+[2026-11-15T10:07:30Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 100/1000 optimizer steps completed
+[2026-11-15T10:15:51Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 150/1000 optimizer steps completed
+[2026-11-15T10:24:21Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 200/1000 optimizer steps completed
+[2026-11-15T10:32:51Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 250/1000 optimizer steps completed
+[2026-11-15T10:41:12Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 300/1000 optimizer steps completed
+[2026-11-15T10:43:42Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Validation progress [mqar/10M/scalar/seed44]: step=300/1000 loss=8.340238 perplexity=4189.0850
+[2026-11-15T10:52:12Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 350/1000 optimizer steps completed
+[2026-11-15T11:00:42Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 400/1000 optimizer steps completed
+[2026-11-15T11:09:13Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 450/1000 optimizer steps completed
+[2026-11-15T11:17:33Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 500/1000 optimizer steps completed
+[2026-11-15T11:26:03Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 550/1000 optimizer steps completed
+[2026-11-15T11:34:54Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 600/1000 optimizer steps completed
+[2026-11-15T11:43:24Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 650/1000 optimizer steps completed
+[2026-11-15T11:45:54Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Validation progress [mqar/10M/scalar/seed44]: step=650/1000 loss=8.048300 perplexity=3128.4744
+[2026-11-15T11:54:14Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 700/1000 optimizer steps completed
+[2026-11-15T12:02:55Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 750/1000 optimizer steps completed
+[2026-11-15T12:11:15Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 800/1000 optimizer steps completed
+[2026-11-15T12:19:45Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 850/1000 optimizer steps completed
+[2026-11-15T12:28:16Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 900/1000 optimizer steps completed
+[2026-11-15T12:36:46Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 950/1000 optimizer steps completed
+[2026-11-15T12:45:16Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 1000/1000 optimizer steps completed
+[2026-11-15T12:45:46Z] mqar_10M_C1-scalar-default_seed_44_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C1-scalar-default\\seed_44'}
+[2026-11-15T12:45:46Z] PROCESS EXIT train mqar_10M_C1-scalar-default_seed_44_train pid=17836 code= elapsed=10536.4s
+[2026-11-15T12:45:49Z] ARTIFACT CHECK train mqar_10M_C1-scalar-default_seed_44_train: COMPLETE
+[2026-11-15T12:45:49Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C1-scalar-default_seed_44_train
+[2026-11-15T12:45:49Z] COMPLETED train mqar_10M_C1-scalar-default_seed_44_train
+[2026-11-15T12:45:49Z] QUEUED train overwrite_10M_C1-scalar-default_seed_44_train
+[2026-11-15T12:54:29Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 50/1000 optimizer steps completed
+[2026-11-15T13:03:00Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 100/1000 optimizer steps completed
+[2026-11-15T13:11:31Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 150/1000 optimizer steps completed
+[2026-11-15T13:20:01Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 200/1000 optimizer steps completed
+[2026-11-15T13:28:31Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 250/1000 optimizer steps completed
+[2026-11-15T13:37:02Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 300/1000 optimizer steps completed
+[2026-11-15T13:39:22Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Validation progress [overwrite/10M/scalar/seed44]: step=300/1000 loss=8.718423 perplexity=6114.5283
+[2026-11-15T13:47:52Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 350/1000 optimizer steps completed
+[2026-11-15T13:56:22Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 400/1000 optimizer steps completed
+[2026-11-15T14:05:03Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 450/1000 optimizer steps completed
+[2026-11-15T14:13:33Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 500/1000 optimizer steps completed
+[2026-11-15T14:22:03Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 550/1000 optimizer steps completed
+[2026-11-15T14:30:34Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 600/1000 optimizer steps completed
+[2026-11-15T14:39:14Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 650/1000 optimizer steps completed
+[2026-11-15T14:41:34Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Validation progress [overwrite/10M/scalar/seed44]: step=650/1000 loss=6.999364 perplexity=1095.9358
+[2026-11-15T14:50:04Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 700/1000 optimizer steps completed
+[2026-11-15T14:58:35Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 750/1000 optimizer steps completed
+[2026-11-15T15:07:15Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 800/1000 optimizer steps completed
+[2026-11-15T15:16:15Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 850/1000 optimizer steps completed
+[2026-11-15T15:24:46Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 900/1000 optimizer steps completed
+[2026-11-15T15:33:16Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 950/1000 optimizer steps completed
+[2026-11-15T15:41:46Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 1000/1000 optimizer steps completed
+[2026-11-15T15:42:16Z] overwrite_10M_C1-scalar-default_seed_44_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C1-scalar-default\\seed_44'}
+[2026-11-15T15:42:16Z] PROCESS EXIT train overwrite_10M_C1-scalar-default_seed_44_train pid=7412 code= elapsed=10587.3s
+[2026-11-15T15:42:20Z] ARTIFACT CHECK train overwrite_10M_C1-scalar-default_seed_44_train: COMPLETE
+[2026-11-15T15:42:20Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C1-scalar-default_seed_44_train
+[2026-11-15T15:42:20Z] COMPLETED train overwrite_10M_C1-scalar-default_seed_44_train
+[2026-11-15T15:42:20Z] QUEUED train mqar_10M_C3-channel-default_seed_44_train
+[2026-11-15T15:50:51Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 50/1000 optimizer steps completed
+[2026-11-15T15:59:21Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 100/1000 optimizer steps completed
+[2026-11-15T16:07:51Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 150/1000 optimizer steps completed
+[2026-11-15T16:16:12Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 200/1000 optimizer steps completed
+[2026-11-15T16:24:32Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 250/1000 optimizer steps completed
+[2026-11-15T16:33:12Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 300/1000 optimizer steps completed
+[2026-11-15T16:35:32Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Validation progress [mqar/10M/channel-wise/seed44]: step=300/1000 loss=8.363625 perplexity=4288.2095
+[2026-11-15T16:44:03Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 350/1000 optimizer steps completed
+[2026-11-15T16:52:23Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 400/1000 optimizer steps completed
+[2026-11-15T17:00:53Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 450/1000 optimizer steps completed
+[2026-11-15T17:09:14Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 500/1000 optimizer steps completed
+[2026-11-15T17:17:44Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 550/1000 optimizer steps completed
+[2026-11-15T17:26:04Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 600/1000 optimizer steps completed
+[2026-11-15T17:34:35Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 650/1000 optimizer steps completed
+[2026-11-15T17:36:55Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Validation progress [mqar/10M/channel-wise/seed44]: step=650/1000 loss=7.635219 perplexity=2069.8235
+[2026-11-15T17:45:25Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 700/1000 optimizer steps completed
+[2026-11-15T17:53:45Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 750/1000 optimizer steps completed
+[2026-11-15T18:02:16Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 800/1000 optimizer steps completed
+[2026-11-15T18:10:36Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 850/1000 optimizer steps completed
+[2026-11-15T18:19:16Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 900/1000 optimizer steps completed
+[2026-11-15T18:28:17Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 950/1000 optimizer steps completed
+[2026-11-15T18:36:37Z] mqar_10M_C3-channel-default_seed_44_train [stdout] Training progress [mqar/10M/channel-wise/seed44]: 1000/1000 optimizer steps completed
+[2026-11-15T18:37:07Z] mqar_10M_C3-channel-default_seed_44_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C3-channel-default\\seed_44'}
+[2026-11-15T18:37:07Z] PROCESS EXIT train mqar_10M_C3-channel-default_seed_44_train pid=16672 code= elapsed=10487.3s
+[2026-11-15T18:37:17Z] ARTIFACT CHECK train mqar_10M_C3-channel-default_seed_44_train: COMPLETE
+[2026-11-15T18:37:17Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C3-channel-default_seed_44_train
+[2026-11-15T18:37:17Z] COMPLETED train mqar_10M_C3-channel-default_seed_44_train
+[2026-11-15T18:37:17Z] QUEUED train overwrite_10M_C3-channel-default_seed_44_train
+[2026-11-15T18:45:47Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 50/1000 optimizer steps completed
+[2026-11-15T18:54:11Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 100/1000 optimizer steps completed
+[2026-11-15T19:02:41Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 150/1000 optimizer steps completed
+[2026-11-15T19:11:01Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 200/1000 optimizer steps completed
+[2026-11-15T19:19:22Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 250/1000 optimizer steps completed
+[2026-11-15T19:27:52Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 300/1000 optimizer steps completed
+[2026-11-15T19:30:22Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Validation progress [overwrite/10M/channel-wise/seed44]: step=300/1000 loss=7.751178 perplexity=2324.3083
+[2026-11-15T19:38:42Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 350/1000 optimizer steps completed
+[2026-11-15T19:47:13Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 400/1000 optimizer steps completed
+[2026-11-15T19:55:33Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 450/1000 optimizer steps completed
+[2026-11-15T20:04:13Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 500/1000 optimizer steps completed
+[2026-11-15T20:12:34Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 550/1000 optimizer steps completed
+[2026-11-15T20:20:54Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 600/1000 optimizer steps completed
+[2026-11-15T20:29:14Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 650/1000 optimizer steps completed
+[2026-11-15T20:31:44Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Validation progress [overwrite/10M/channel-wise/seed44]: step=650/1000 loss=5.016222 perplexity=150.8403
+[2026-11-15T20:40:05Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 700/1000 optimizer steps completed
+[2026-11-15T20:48:25Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 750/1000 optimizer steps completed
+[2026-11-15T20:56:55Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 800/1000 optimizer steps completed
+[2026-11-15T21:05:15Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 850/1000 optimizer steps completed
+[2026-11-15T21:13:36Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 900/1000 optimizer steps completed
+[2026-11-15T21:22:06Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 950/1000 optimizer steps completed
+[2026-11-15T21:30:56Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] Training progress [overwrite/10M/channel-wise/seed44]: 1000/1000 optimizer steps completed
+[2026-11-15T21:31:26Z] overwrite_10M_C3-channel-default_seed_44_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\overwrite\\10M\\C3-channel-default\\seed_44'}
+[2026-11-15T21:31:26Z] PROCESS EXIT train overwrite_10M_C3-channel-default_seed_44_train pid=12992 code= elapsed=10449.2s
+[2026-11-15T21:31:30Z] ARTIFACT CHECK train overwrite_10M_C3-channel-default_seed_44_train: COMPLETE
+[2026-11-15T21:31:30Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for overwrite_10M_C3-channel-default_seed_44_train
+[2026-11-15T21:31:30Z] COMPLETED train overwrite_10M_C3-channel-default_seed_44_train
+[2026-11-15T21:31:30Z] QUEUED train mqar_10M_C4-scalar-calibrated_seed_44_train
+[2026-11-15T21:41:11Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 50/1000 optimizer steps completed
+[2026-11-15T21:49:31Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 100/1000 optimizer steps completed
+[2026-11-15T21:58:02Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 150/1000 optimizer steps completed
+[2026-11-15T22:06:22Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 200/1000 optimizer steps completed
+[2026-11-15T22:14:42Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 250/1000 optimizer steps completed
+[2026-11-15T22:22:53Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 300/1000 optimizer steps completed
+[2026-11-15T22:25:23Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Validation progress [mqar/10M/scalar/seed44]: step=300/1000 loss=7.857937 perplexity=2586.1780
+[2026-11-15T22:33:33Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 350/1000 optimizer steps completed
+[2026-11-15T22:41:53Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 400/1000 optimizer steps completed
+[2026-11-15T22:50:04Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 450/1000 optimizer steps completed
+[2026-11-15T22:58:24Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 500/1000 optimizer steps completed
+[2026-11-15T23:06:44Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 550/1000 optimizer steps completed
+[2026-11-15T23:15:04Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 600/1000 optimizer steps completed
+[2026-11-15T23:23:25Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 650/1000 optimizer steps completed
+[2026-11-15T23:25:45Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Validation progress [mqar/10M/scalar/seed44]: step=650/1000 loss=4.549510 perplexity=94.5861
+[2026-11-15T23:34:05Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 700/1000 optimizer steps completed
+[2026-11-15T23:42:26Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 750/1000 optimizer steps completed
+[2026-11-15T23:50:46Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 800/1000 optimizer steps completed
+[2026-11-15T23:59:06Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 850/1000 optimizer steps completed
+[2026-11-16T00:07:37Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 900/1000 optimizer steps completed
+[2026-11-16T00:15:47Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 950/1000 optimizer steps completed
+[2026-11-16T00:24:07Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [mqar/10M/scalar/seed44]: 1000/1000 optimizer steps completed
+[2026-11-16T00:24:37Z] mqar_10M_C4-scalar-calibrated_seed_44_train [stdout] {'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C4-scalar-calibrated\\seed_44'}
+[2026-11-16T00:24:37Z] PROCESS EXIT train mqar_10M_C4-scalar-calibrated_seed_44_train pid=7388 code= elapsed=10386.7s
+[2026-11-16T00:24:40Z] ARTIFACT CHECK train mqar_10M_C4-scalar-calibrated_seed_44_train: COMPLETE
+[2026-11-16T00:24:40Z] PROCESS EXIT CODE UNAVAILABLE; accepting verified artifact for mqar_10M_C4-scalar-calibrated_seed_44_train
+[2026-11-16T00:24:40Z] COMPLETED train mqar_10M_C4-scalar-calibrated_seed_44_train
+[2026-11-16T00:24:40Z] QUEUED train overwrite_10M_C4-scalar-calibrated_seed_44_train
+[2026-11-16T00:34:31Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 50/1000 optimizer steps completed
+[2026-11-16T00:43:02Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 100/1000 optimizer steps completed
+[2026-11-16T00:51:32Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 150/1000 optimizer steps completed
+[2026-11-16T00:59:52Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 200/1000 optimizer steps completed
+[2026-11-16T01:08:22Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 250/1000 optimizer steps completed
+[2026-11-16T01:16:53Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 300/1000 optimizer steps completed
+[2026-11-16T01:19:23Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Validation progress [overwrite/10M/scalar/seed44]: step=300/1000 loss=7.016936 perplexity=1115.3636
+[2026-11-16T01:27:43Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 350/1000 optimizer steps completed
+[2026-11-16T01:36:13Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 400/1000 optimizer steps completed
+[2026-11-16T01:44:34Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 450/1000 optimizer steps completed
+[2026-11-16T01:52:54Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 500/1000 optimizer steps completed
+[2026-11-16T02:01:14Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 550/1000 optimizer steps completed
+[2026-11-16T02:09:35Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 600/1000 optimizer steps completed
+[2026-11-16T02:18:05Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 650/1000 optimizer steps completed
+[2026-11-16T02:20:25Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Validation progress [overwrite/10M/scalar/seed44]: step=650/1000 loss=5.435687 perplexity=229.4504
+[2026-11-16T02:28:35Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 700/1000 optimizer steps completed
+[2026-11-16T02:36:56Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 750/1000 optimizer steps completed
+[2026-11-16T02:45:06Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 800/1000 optimizer steps completed
+[2026-11-16T02:53:26Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 850/1000 optimizer steps completed
+[2026-11-16T03:01:57Z] overwrite_10M_C4-scalar-calibrated_seed_44_train [stdout] Training progress [overwrite/10M/scalar/seed44]: 900/1000 optimizer steps completed

@@ -1,0 +1,39 @@
+[
+  {
+    "answer_free": {
+      "correct": 1,
+      "data_sha256": "bd9a01392d6e58cc0250eb8af86f0b12fa2da6be6e837fb729af578ff3033d38",
+      "evaluated_examples": 512,
+      "exact_query_accuracy": 0.0009765625,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.001953125,
+      "history_conditioning": "answer_free",
+      "later_query_accuracy": 0.0,
+      "latest_value_accuracy": 0.001953125,
+      "loss": 8.567655980587006,
+      "stale_value_error_rate": 0.0,
+      "total": 1024,
+      "unrelated_association_retention": 0.0
+    },
+    "epoch": 1,
+    "learning_rate": 0.0021544346900318843,
+    "step": 50,
+    "teacher_forced": {
+      "correct": 1,
+      "data_sha256": "bd9a01392d6e58cc0250eb8af86f0b12fa2da6be6e837fb729af578ff3033d38",
+      "evaluated_examples": 512,
+      "exact_query_accuracy": 0.0009765625,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.001953125,
+      "history_conditioning": "teacher_forced",
+      "later_query_accuracy": 0.0,
+      "latest_value_accuracy": 0.001953125,
+      "loss": 8.567694187164307,
+      "stale_value_error_rate": 0.0,
+      "total": 1024,
+      "unrelated_association_retention": 0.0
+    },
+    "train_loss": 8.56454473733902,
+    "validation_seconds": 0.6526261999970302
+  }
+]

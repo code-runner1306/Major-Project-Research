@@ -1,0 +1,22 @@
+[
+  {
+    "answer_accuracy": 0.00020955574182732607,
+    "answer_examples": 512,
+    "answer_validation_seed": 200044,
+    "loss": 8.340237751603127,
+    "perplexity": 4189.0849609375,
+    "qualification_scope": null,
+    "step": 300,
+    "steps": 64
+  },
+  {
+    "answer_accuracy": 0.016345347862531435,
+    "answer_examples": 512,
+    "answer_validation_seed": 200044,
+    "loss": 8.048300482332706,
+    "perplexity": 3128.474365234375,
+    "qualification_scope": null,
+    "step": 650,
+    "steps": 64
+  }
+]

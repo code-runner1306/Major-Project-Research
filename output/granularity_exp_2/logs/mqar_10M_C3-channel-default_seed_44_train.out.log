@@ -1,0 +1,23 @@
+Training progress [mqar/10M/channel-wise/seed44]: 50/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 100/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 150/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 200/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 250/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 300/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed44]: step=300/1000 loss=8.363625 perplexity=4288.2095
+Training progress [mqar/10M/channel-wise/seed44]: 350/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 400/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 450/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 500/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 550/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 600/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 650/1000 optimizer steps completed
+Validation progress [mqar/10M/channel-wise/seed44]: step=650/1000 loss=7.635219 perplexity=2069.8235
+Training progress [mqar/10M/channel-wise/seed44]: 700/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 750/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 800/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 850/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 900/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 950/1000 optimizer steps completed
+Training progress [mqar/10M/channel-wise/seed44]: 1000/1000 optimizer steps completed
+{'status': 'trained', 'run_dir': 'C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\granularity_exp_2\\runs\\mqar\\10M\\C3-channel-default\\seed_44'}
