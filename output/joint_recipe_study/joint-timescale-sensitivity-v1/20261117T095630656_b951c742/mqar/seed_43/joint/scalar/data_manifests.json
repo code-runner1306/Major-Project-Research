@@ -1,0 +1,24 @@
+{
+  "development": {
+    "generator": "pinned-zoology-mqar-memory-bounded",
+    "seed": 200043,
+    "sha256": "ba5980dc9957d53663425e738157214ceda3a1955f08ff0f380e9562c18d0cc3",
+    "shape": [
+      512,
+      64
+    ],
+    "split": "validation",
+    "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+  },
+  "train": {
+    "generator": "pinned-zoology-mqar-memory-bounded",
+    "seed": 100043,
+    "sha256": "12e7ca8a2b9b596474a91496d9f4c4dfdee0c8b1dd4834290d797ce7fc0f4344",
+    "shape": [
+      100000,
+      64
+    ],
+    "split": "train",
+    "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+  }
+}
