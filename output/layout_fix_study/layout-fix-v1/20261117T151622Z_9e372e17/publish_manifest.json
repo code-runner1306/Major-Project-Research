@@ -764,6 +764,12 @@
       "weights_only_checkpoint": false
     },
     {
+      "bytes": 3687,
+      "path": "session_status.json",
+      "sha256": "532eeae8c8a1f27d665314e32300c8efc493b3ad9427fe25df4de89186ebdeec",
+      "weights_only_checkpoint": false
+    },
+    {
       "bytes": 3154,
       "path": "study_protocol.json",
       "sha256": "e074451b3b602d1dbd3ab63d5a24750656b94a64b01384a62925681eff3f3c53",
