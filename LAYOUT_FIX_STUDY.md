@@ -61,16 +61,15 @@ git fetch origin "refs/heads/research/layout-fix/*:refs/remotes/origin/research/
 ```
 
 ```bash
-git checkout origin/research/layout-fix/layout-fix-v1/<arms>/<session> -- output/layout_fix_study
+git restore --source=origin/research/layout-fix/layout-fix-v1/<arms>/<session> --worktree -- output/layout_fix_study
 ```
 
-Repeat the checkout for the second branch. Then run the confirmation on fresh data:
+Repeat this for the second branch. `git restore --worktree` writes the files without staging them, so
+nothing is added to `maink`. Then run the confirmation on fresh data:
 
 ```bash
 python confirm_block_layout.py --output research_results/layout_fix_confirmation --device cuda --initializations --layout-fix-root output/layout_fix_study/layout-fix-v1 --arms A0_control A1_varied_distance A2_no_block_first A3_mixed_rewrites --seed-offset 1400000 --extra-distances 20 24
 ```
-
-`output/` is git-ignored on `maink`, so the checked-out files stay out of `maink` commits.
 
 The two sessions may run on different Kaggle machines. Each run records
 `initialization_manifest.json`; compare the `base_parameter_sha256` values for the same seed and
