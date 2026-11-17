@@ -254,6 +254,132 @@
       "weights_only_checkpoint": false
     },
     {
+      "bytes": 75,
+      "path": "A1_varied_distance/seed_44/channel-wise/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7027,
+      "path": "A1_varied_distance/seed_44/channel-wise/data_audit.json",
+      "sha256": "bded67ed9ea62e05f97dc6c9aa3c3bdb827862d84778af35f8e7dd8d16bb2edd",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4493,
+      "path": "A1_varied_distance/seed_44/channel-wise/data_manifests.json",
+      "sha256": "e5e468dc3b651908f2052c8790b86f84af808d00906f4ab6de663183c0e9c69d",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 30125,
+      "path": "A1_varied_distance/seed_44/channel-wise/development_curve.json",
+      "sha256": "ee4c3dbb1950e3fe94cd285ce8bbbc9be390cbcf9bebdf49b8a38371f68727df",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A1_varied_distance/seed_44/channel-wise/initialization_manifest.json",
+      "sha256": "d50f00b3ebae58f981c9d6a0dacba39e7864c5dc40bb43c5655240b0efdb5872",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6637904,
+      "path": "A1_varied_distance/seed_44/channel-wise/latest_checkpoint.pt",
+      "sha256": "0c6f914f8f7b4f73b586af540a06325eb6f3130aabf0b5f83bdf29b01ec0e795",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2106,
+      "path": "A1_varied_distance/seed_44/channel-wise/settings.json",
+      "sha256": "4f51a92355e2418b5daa9584a5f92be4f369c3d28f4adcd2f9448f09e7a5be5f",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79621,
+      "path": "A1_varied_distance/seed_44/channel-wise/summary.json",
+      "sha256": "6dc693ac710634a3690dba98e5b3d61873295396079d3010025c22a0cd482949",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 28174,
+      "path": "A1_varied_distance/seed_44/channel-wise.log",
+      "sha256": "938629ccc222577860a98549c8bcdbb109b5537581f6d60eb06b22ffb687152a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "A1_varied_distance/seed_44/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1700,
+      "path": "A1_varied_distance/seed_44/pair_status.json",
+      "sha256": "3533bf27f6368080e0f345d913fda2931a78f0fb099703aa7aea36a2dd96838c",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A1_varied_distance/seed_44/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7027,
+      "path": "A1_varied_distance/seed_44/scalar/data_audit.json",
+      "sha256": "bded67ed9ea62e05f97dc6c9aa3c3bdb827862d84778af35f8e7dd8d16bb2edd",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4493,
+      "path": "A1_varied_distance/seed_44/scalar/data_manifests.json",
+      "sha256": "e5e468dc3b651908f2052c8790b86f84af808d00906f4ab6de663183c0e9c69d",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 30208,
+      "path": "A1_varied_distance/seed_44/scalar/development_curve.json",
+      "sha256": "4948470b0522d5b5e47ef30c754c623e38a59dbe6866072943edee0cb9df6d68",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A1_varied_distance/seed_44/scalar/initialization_manifest.json",
+      "sha256": "cfdb0658e7e88682bd08cd24ce1927ef478770a337a0b1b14e47c24f03e71930",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373712,
+      "path": "A1_varied_distance/seed_44/scalar/latest_checkpoint.pt",
+      "sha256": "89603e9e2a0aa3f7e8833801dcca5371ffc5c0d4edb622dd0dee4fef3b2c2760",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2100,
+      "path": "A1_varied_distance/seed_44/scalar/settings.json",
+      "sha256": "e9ac82d6390d6609ce06d5d6dd534337d24008077e0eed7484d359dc7fa7706b",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79688,
+      "path": "A1_varied_distance/seed_44/scalar/summary.json",
+      "sha256": "d9da104eb036a427b24e30775f0c6e61097eec27d78febcf6029d7b3c271f1d3",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 27885,
+      "path": "A1_varied_distance/seed_44/scalar.log",
+      "sha256": "6b40870d9b226fccd4ffc5459d9758db8f5e999cde5f3f7021213184a9e6e59e",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3288,
+      "path": "A1_varied_distance/seed_44/study_protocol.json",
+      "sha256": "6b924b0e82b9f5de4e6e791f790b9019b5b86411bb34ec16b19201c0a0f19ebb",
+      "weights_only_checkpoint": false
+    },
+    {
       "bytes": 4663,
       "path": "numerical_qualification.json",
       "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
