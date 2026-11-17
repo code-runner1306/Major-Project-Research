@@ -1,0 +1,18 @@
+{
+  "identity": {
+    "generator": "pinned-zoology-mqar-memory-bounded",
+    "seed": 400043,
+    "sha256": "1c85700e34a8199e086e8f1b79f7784366a892f02d39963c59a5deb80e196457",
+    "shape": [
+      512,
+      64
+    ],
+    "split": "confirmation",
+    "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+  },
+  "overlap": {
+    "development": 0,
+    "previous_confirmation": 0,
+    "train": 0
+  }
+}

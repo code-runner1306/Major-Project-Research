@@ -1,0 +1,45 @@
+{
+  "checkpoint_selection": {
+    "('mqar', 42, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\calibrated\\channel-wise\\summary.json",
+    "('mqar', 42, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\calibrated\\scalar\\summary.json",
+    "('mqar', 42, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\channel-wise\\summary.json",
+    "('mqar', 42, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\scalar\\summary.json",
+    "('mqar', 43, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\calibrated\\channel-wise\\summary.json",
+    "('mqar', 43, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\calibrated\\scalar\\summary.json",
+    "('mqar', 43, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\default\\channel-wise\\summary.json",
+    "('mqar', 43, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\default\\scalar\\summary.json",
+    "('mqar', 44, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\calibrated\\channel-wise\\summary.json",
+    "('mqar', 44, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\calibrated\\scalar\\summary.json",
+    "('mqar', 44, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\channel-wise\\summary.json",
+    "('mqar', 44, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\scalar\\summary.json",
+    "('overwrite', 42, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\calibrated\\channel-wise\\summary.json",
+    "('overwrite', 42, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\calibrated\\scalar\\summary.json",
+    "('overwrite', 42, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\default\\channel-wise\\summary.json",
+    "('overwrite', 42, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\default\\scalar\\summary.json",
+    "('overwrite', 43, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T153034494_5014216e\\overwrite\\seed_43\\calibrated\\channel-wise\\summary.json",
+    "('overwrite', 43, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T153034494_5014216e\\overwrite\\seed_43\\calibrated\\scalar\\summary.json",
+    "('overwrite', 43, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T140317869_6f95b296\\overwrite\\seed_43\\default\\channel-wise\\summary.json",
+    "('overwrite', 43, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T140317869_6f95b296\\overwrite\\seed_43\\default\\scalar\\summary.json",
+    "('overwrite', 44, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\calibrated\\channel-wise\\summary.json",
+    "('overwrite', 44, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\calibrated\\scalar\\summary.json",
+    "('overwrite', 44, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\default\\channel-wise\\summary.json",
+    "('overwrite', 44, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\default\\scalar\\summary.json"
+  },
+  "device": "cpu",
+  "epochs": 16,
+  "examples": 512,
+  "families": [
+    "mqar",
+    "overwrite"
+  ],
+  "overwrite_domain": "held_out",
+  "protocol": "matched-decay-v1",
+  "seed_offset": 400000,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "selection": "all final checkpoints; no best selection",
+  "stage": "explore"
+}

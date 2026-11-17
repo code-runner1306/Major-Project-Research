@@ -1,0 +1,48 @@
+{
+  "identity": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "model_input_length": 64,
+    "seed": 400043,
+    "sha256": "c5415c6f22933b10184fc720c31c1a3610508699f80accef2e33341524d9de7e",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 512,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "4d1a7c3668429bbebcce901844d24a90ec2d9e8cf7e77b015eb887df2028c904",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 400043,
+      "sequence_length": null,
+      "split": "held_out",
+      "task": "overwrite"
+    },
+    "split": "held_out",
+    "upstream_revision": null
+  },
+  "overlap": {
+    "development": 0,
+    "previous_confirmation": 0,
+    "train": 0
+  }
+}

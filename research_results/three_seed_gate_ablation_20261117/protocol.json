@@ -1,0 +1,13 @@
+{
+  "conditioning": "answer_free",
+  "device": "cpu",
+  "examples": 256,
+  "initialization": "unchanged trained checkpoint",
+  "interpretation": "Post-hoc reliance test on training inputs, not a fair trained-scalar comparison or a causal explanation of learning speed",
+  "intervention": "replace alpha at every layer by its per-token headwise channel mean, preserving instantaneous mean",
+  "training_indices": [
+    256,
+    512
+  ],
+  "weights": "fixed"
+}

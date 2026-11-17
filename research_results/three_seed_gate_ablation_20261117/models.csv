@@ -1,0 +1,13 @@
+family,seed,initialization,baseline_accuracy,shared_mean_accuracy,accuracy_drop,baseline_retention,shared_mean_retention
+mqar,42,calibrated,1.0,0.8251953125,0.1748046875,,
+mqar,42,default,1.0,0.9794921875,0.0205078125,,
+mqar,43,calibrated,1.0,0.3056640625,0.6943359375,,
+mqar,43,default,1.0,0.9443359375,0.0556640625,,
+mqar,44,calibrated,1.0,0.9580078125,0.0419921875,,
+mqar,44,default,1.0,0.541015625,0.458984375,,
+overwrite,42,calibrated,0.986328125,0.78515625,0.201171875,0.97265625,0.7265625
+overwrite,42,default,1.0,0.859375,0.140625,1.0,0.83203125
+overwrite,43,calibrated,0.998046875,0.994140625,0.00390625,0.99609375,0.99609375
+overwrite,43,default,1.0,1.0,0.0,1.0,1.0
+overwrite,44,calibrated,1.0,0.869140625,0.130859375,1.0,0.99609375
+overwrite,44,default,0.98828125,0.650390625,0.337890625,0.9765625,0.72265625
