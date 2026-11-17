@@ -14,6 +14,7 @@ param(
     [string]$OutputRoot = '',
     [string]$Python = 'python',
     [ValidateRange(1,128)][int]$BatchSize = 32,
+    [ValidateRange(1,2)][int]$Workers = 2,
     [ValidateRange(1,8192)][int]$Examples = 512,
     [switch]$Resume,
     [switch]$PlanOnly,
@@ -34,14 +35,14 @@ try {
         $OutputRoot = Join-Path $PSScriptRoot "research_results/dynamic_decay_boundary_v1/$id"
     }
     $arguments = @('evaluate_decay_boundary.py','--root',$CheckpointRoot,'--output',$OutputRoot,
-        '--batch',"$BatchSize",'--examples',"$Examples",'--family') + $Family + @('--seeds') + @($Seeds | ForEach-Object { "$_" })
+        '--workers',"$Workers",'--batch',"$BatchSize",'--examples',"$Examples",'--family') + $Family + @('--seeds') + @($Seeds | ForEach-Object { "$_" })
     if ($JointRoot) { $arguments += @('--joint-root',$JointRoot) }
     if ($RunId) { $arguments += @('--run-id') + $RunId }
     if ($JointRunId) { $arguments += @('--joint-run-id') + $JointRunId }
     if ($Resume) { $arguments += '--resume' }
     if ($PlanOnly) { $arguments += '--plan-only' }
     if ($CpuSmoke) { $arguments += '--cpu-smoke' }
-    Write-Host 'Evaluation only: one worker on GPU 0; publish=false.'
+    Write-Host "Evaluation only: $Workers worker(s) sharing GPU 0; publish=false."
     & $Python @arguments
     if ($LASTEXITCODE -ne 0) { throw "Evaluation failed; inspect $OutputRoot and resume with the same settings." }
     if (-not $PlanOnly) { Write-Host "Report: $OutputRoot/REPORT.md" }
