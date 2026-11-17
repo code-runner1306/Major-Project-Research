@@ -1,0 +1,8 @@
+{
+  "cuda_build": "12.8",
+  "device": "cuda:0",
+  "gpu": "NVIDIA RTXA6000-12Q",
+  "publish": false,
+  "torch": "2.11.0+cu128",
+  "workers": 1
+}

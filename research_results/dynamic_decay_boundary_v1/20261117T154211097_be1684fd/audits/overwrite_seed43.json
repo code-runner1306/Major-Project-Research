@@ -1,0 +1,1885 @@
+{
+  "cases": {
+    "baseline": {
+      "audit": {
+        "baselines": {
+          "final_two_values": {
+            "accuracy": 0.220703125,
+            "correct": 226,
+            "total": 1024
+          },
+          "first_value": {
+            "accuracy": 0.068359375,
+            "correct": 70,
+            "total": 1024
+          },
+          "keyed_last_write_oracle": {
+            "accuracy": 1.0,
+            "correct": 1024,
+            "total": 1024
+          },
+          "last_value": {
+            "accuracy": 0.1689453125,
+            "correct": 173,
+            "total": 1024
+          },
+          "most_recent_value": {
+            "accuracy": 0.1689453125,
+            "correct": 173,
+            "total": 1024
+          },
+          "no_memory_frequency": {
+            "accuracy": 0.0009765625,
+            "correct": 1,
+            "total": 1024
+          },
+          "query_ordinal_frequency": {
+            "accuracy": 0.0009765625,
+            "correct": 1,
+            "total": 1024
+          }
+        },
+        "by_difficulty_cell": {
+          "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.275390625,
+              "correct": 141,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.13671875,
+              "correct": 70,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.337890625,
+              "correct": 173,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.337890625,
+              "correct": 173,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          },
+          "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.166015625,
+              "correct": 85,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.001953125,
+              "correct": 1,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.001953125,
+              "correct": 1,
+              "total": 512
+            }
+          }
+        },
+        "chance_expectation": {
+          "final_two_values": "min(2 / distinct_memory_values, 1)",
+          "first_value": "1 / distinct_memory_values",
+          "keyed_last_write_oracle": 1.0,
+          "last_value": "1 / distinct_memory_values",
+          "most_recent_value": "1 / distinct_memory_values",
+          "no_memory_frequency": 0.0032552083333333335,
+          "query_ordinal_frequency": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          }
+        },
+        "completeness": {
+          "incomplete_checks": 0,
+          "oracle_checks": 1024,
+          "oracle_mismatches": 0
+        },
+        "counterfactual_query_key_audit": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            },
+            "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            }
+          },
+          "checks": 1024,
+          "incomplete": 0,
+          "method": "replace query key while preserving the causal memory prefix",
+          "mismatches": 0,
+          "pass": true,
+          "passes": 1024,
+          "target_source": "independent last-write token-prefix scan"
+        },
+        "evaluated_examples": 512,
+        "example_indices_sha256": "036f25d3e52783865ddc4915bf4d0cb05839ca214b36af36cfda74b16c16b99c",
+        "frequency_fit": {
+          "observed_value_tokens": 1536,
+          "ordinal_majority_chance": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          },
+          "ordinal_prediction": {
+            "0": 7789,
+            "1": 4098
+          },
+          "prediction": 5130,
+          "source_examples": 256,
+          "source_split": "train",
+          "value_count": 1104
+        },
+        "generator_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "5003dda8a0777d80cf8c21c376a085608335ec3f154f1a92ee8d53363d4984b4",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              1
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+        "oracle_audit": {
+          "independent_last_write_oracle": "causal token-prefix scan",
+          "pass": true,
+          "target_checks": 1024,
+          "target_mismatches": 0
+        },
+        "overwrite_error_contract": {
+          "latest_value_accuracy_denominator": "latest answers only",
+          "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+          "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+          "unrelated_association_retention_denominator": "unrelated answers only"
+        },
+        "passed": true,
+        "post_target_write_count_mean": 1.982421875,
+        "shortcut_criterion": {
+          "all_cells_pass": true,
+          "baseline_names": [
+            "first_value",
+            "last_value",
+            "most_recent_value",
+            "final_two_values",
+            "no_memory_frequency",
+            "query_ordinal_frequency"
+          ],
+          "by_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.337890625,
+              "pass": true,
+              "threshold": 0.9
+            },
+            "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.166015625,
+              "pass": true,
+              "threshold": 0.9
+            }
+          },
+          "max_accuracy": 0.9,
+          "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+        },
+        "stale_latest_diagnostic": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "matches_current_latest": 0
+            }
+          },
+          "checks": 512,
+          "incomplete": 0,
+          "matches_current_latest": 0,
+          "method": "copy the previous value for the queried key from the causal token prefix",
+          "status": "complete"
+        },
+        "status": "complete",
+        "task": "overwrite"
+      },
+      "identity": {
+        "distance": 8,
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "rewrites": 1,
+        "seed": 700043,
+        "sha256": "3476950f977858fc95b3d6c7efcff3846e079431840f7753c8ecc3f42489846e",
+        "shape": [
+          512,
+          64
+        ],
+        "source_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "5003dda8a0777d80cf8c21c376a085608335ec3f154f1a92ee8d53363d4984b4",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              1
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "distance24": {
+      "audit": {
+        "baselines": {
+          "final_two_values": {
+            "accuracy": 0.2197265625,
+            "correct": 225,
+            "total": 1024
+          },
+          "first_value": {
+            "accuracy": 0.068359375,
+            "correct": 70,
+            "total": 1024
+          },
+          "keyed_last_write_oracle": {
+            "accuracy": 1.0,
+            "correct": 1024,
+            "total": 1024
+          },
+          "last_value": {
+            "accuracy": 0.1689453125,
+            "correct": 173,
+            "total": 1024
+          },
+          "most_recent_value": {
+            "accuracy": 0.1689453125,
+            "correct": 173,
+            "total": 1024
+          },
+          "no_memory_frequency": {
+            "accuracy": 0.0009765625,
+            "correct": 1,
+            "total": 1024
+          },
+          "query_ordinal_frequency": {
+            "accuracy": 0.0009765625,
+            "correct": 1,
+            "total": 1024
+          }
+        },
+        "by_difficulty_cell": {
+          "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":24,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.2734375,
+              "correct": 140,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.13671875,
+              "correct": 70,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.337890625,
+              "correct": 173,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.337890625,
+              "correct": 173,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          },
+          "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":24,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.166015625,
+              "correct": 85,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.001953125,
+              "correct": 1,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.001953125,
+              "correct": 1,
+              "total": 512
+            }
+          }
+        },
+        "chance_expectation": {
+          "final_two_values": "min(2 / distinct_memory_values, 1)",
+          "first_value": "1 / distinct_memory_values",
+          "keyed_last_write_oracle": 1.0,
+          "last_value": "1 / distinct_memory_values",
+          "most_recent_value": "1 / distinct_memory_values",
+          "no_memory_frequency": 0.0032552083333333335,
+          "query_ordinal_frequency": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          }
+        },
+        "completeness": {
+          "incomplete_checks": 0,
+          "oracle_checks": 1024,
+          "oracle_mismatches": 0
+        },
+        "counterfactual_query_key_audit": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":24,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            },
+            "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":24,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            }
+          },
+          "checks": 1024,
+          "incomplete": 0,
+          "method": "replace query key while preserving the causal memory prefix",
+          "mismatches": 0,
+          "pass": true,
+          "passes": 1024,
+          "target_source": "independent last-write token-prefix scan"
+        },
+        "evaluated_examples": 512,
+        "example_indices_sha256": "036f25d3e52783865ddc4915bf4d0cb05839ca214b36af36cfda74b16c16b99c",
+        "frequency_fit": {
+          "observed_value_tokens": 1536,
+          "ordinal_majority_chance": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          },
+          "ordinal_prediction": {
+            "0": 7789,
+            "1": 4098
+          },
+          "prediction": 5130,
+          "source_examples": 256,
+          "source_split": "train",
+          "value_count": 1104
+        },
+        "generator_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "bfe79a55351bd83073320d44c395e9a1221dd000fd93e45bb13d024838e0f872",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              1
+            ],
+            "query_distances": [
+              24
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+        "oracle_audit": {
+          "independent_last_write_oracle": "causal token-prefix scan",
+          "pass": true,
+          "target_checks": 1024,
+          "target_mismatches": 0
+        },
+        "overwrite_error_contract": {
+          "latest_value_accuracy_denominator": "latest answers only",
+          "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+          "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+          "unrelated_association_retention_denominator": "unrelated answers only"
+        },
+        "passed": true,
+        "post_target_write_count_mean": 1.982421875,
+        "shortcut_criterion": {
+          "all_cells_pass": true,
+          "baseline_names": [
+            "first_value",
+            "last_value",
+            "most_recent_value",
+            "final_two_values",
+            "no_memory_frequency",
+            "query_ordinal_frequency"
+          ],
+          "by_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":24,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.337890625,
+              "pass": true,
+              "threshold": 0.9
+            },
+            "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":24,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.166015625,
+              "pass": true,
+              "threshold": 0.9
+            }
+          },
+          "max_accuracy": 0.9,
+          "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+        },
+        "stale_latest_diagnostic": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":24,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "matches_current_latest": 0
+            }
+          },
+          "checks": 512,
+          "incomplete": 0,
+          "matches_current_latest": 0,
+          "method": "copy the previous value for the queried key from the causal token prefix",
+          "status": "complete"
+        },
+        "status": "complete",
+        "task": "overwrite"
+      },
+      "identity": {
+        "distance": 24,
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "rewrites": 1,
+        "seed": 700043,
+        "sha256": "93c7036e4190f55e426bfabce33de49eb39816ea6f3dee3cd404ef4dd0d7c0fd",
+        "shape": [
+          512,
+          64
+        ],
+        "source_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "bfe79a55351bd83073320d44c395e9a1221dd000fd93e45bb13d024838e0f872",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              1
+            ],
+            "query_distances": [
+              24
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "load8": {
+      "audit": {
+        "baselines": {
+          "final_two_values": {
+            "accuracy": 0.1455078125,
+            "correct": 149,
+            "total": 1024
+          },
+          "first_value": {
+            "accuracy": 0.0634765625,
+            "correct": 65,
+            "total": 1024
+          },
+          "keyed_last_write_oracle": {
+            "accuracy": 1.0,
+            "correct": 1024,
+            "total": 1024
+          },
+          "last_value": {
+            "accuracy": 0.0673828125,
+            "correct": 69,
+            "total": 1024
+          },
+          "most_recent_value": {
+            "accuracy": 0.0673828125,
+            "correct": 69,
+            "total": 1024
+          },
+          "no_memory_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          },
+          "query_ordinal_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          }
+        },
+        "by_difficulty_cell": {
+          "{\"key_count\":8,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.1171875,
+              "correct": 60,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.126953125,
+              "correct": 65,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.134765625,
+              "correct": 69,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.134765625,
+              "correct": 69,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          },
+          "{\"key_count\":8,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.173828125,
+              "correct": 89,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          }
+        },
+        "chance_expectation": {
+          "final_two_values": "min(2 / distinct_memory_values, 1)",
+          "first_value": "1 / distinct_memory_values",
+          "keyed_last_write_oracle": 1.0,
+          "last_value": "1 / distinct_memory_values",
+          "most_recent_value": "1 / distinct_memory_values",
+          "no_memory_frequency": 0.0032552083333333335,
+          "query_ordinal_frequency": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          }
+        },
+        "completeness": {
+          "incomplete_checks": 0,
+          "oracle_checks": 1024,
+          "oracle_mismatches": 0
+        },
+        "counterfactual_query_key_audit": {
+          "by_difficulty_cell": {
+            "{\"key_count\":8,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            },
+            "{\"key_count\":8,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            }
+          },
+          "checks": 1024,
+          "incomplete": 0,
+          "method": "replace query key while preserving the causal memory prefix",
+          "mismatches": 0,
+          "pass": true,
+          "passes": 1024,
+          "target_source": "independent last-write token-prefix scan"
+        },
+        "evaluated_examples": 512,
+        "example_indices_sha256": "036f25d3e52783865ddc4915bf4d0cb05839ca214b36af36cfda74b16c16b99c",
+        "frequency_fit": {
+          "observed_value_tokens": 1536,
+          "ordinal_majority_chance": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          },
+          "ordinal_prediction": {
+            "0": 7789,
+            "1": 4098
+          },
+          "prediction": 5130,
+          "source_examples": 256,
+          "source_split": "train",
+          "value_count": 1104
+        },
+        "generator_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "89c12c5536ad8ff576bc2a84d69ef980b846dd6a527801d5f59aebd932c26bf1",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              8
+            ],
+            "overwrite_counts": [
+              1
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+        "oracle_audit": {
+          "independent_last_write_oracle": "causal token-prefix scan",
+          "pass": true,
+          "target_checks": 1024,
+          "target_mismatches": 0
+        },
+        "overwrite_error_contract": {
+          "latest_value_accuracy_denominator": "latest answers only",
+          "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+          "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+          "unrelated_association_retention_denominator": "unrelated answers only"
+        },
+        "passed": true,
+        "post_target_write_count_mean": 1.951171875,
+        "shortcut_criterion": {
+          "all_cells_pass": true,
+          "baseline_names": [
+            "first_value",
+            "last_value",
+            "most_recent_value",
+            "final_two_values",
+            "no_memory_frequency",
+            "query_ordinal_frequency"
+          ],
+          "by_cell": {
+            "{\"key_count\":8,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.134765625,
+              "pass": true,
+              "threshold": 0.9
+            },
+            "{\"key_count\":8,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.173828125,
+              "pass": true,
+              "threshold": 0.9
+            }
+          },
+          "max_accuracy": 0.9,
+          "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+        },
+        "stale_latest_diagnostic": {
+          "by_difficulty_cell": {
+            "{\"key_count\":8,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "matches_current_latest": 0
+            }
+          },
+          "checks": 512,
+          "incomplete": 0,
+          "matches_current_latest": 0,
+          "method": "copy the previous value for the queried key from the causal token prefix",
+          "status": "complete"
+        },
+        "status": "complete",
+        "task": "overwrite"
+      },
+      "identity": {
+        "distance": 8,
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 8,
+        "rewrites": 1,
+        "seed": 700043,
+        "sha256": "272bc1cd55c80b9c54a58840fddd53c08f500905912567b2bafd6fff0a346d8a",
+        "shape": [
+          512,
+          64
+        ],
+        "source_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "89c12c5536ad8ff576bc2a84d69ef980b846dd6a527801d5f59aebd932c26bf1",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              8
+            ],
+            "overwrite_counts": [
+              1
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "pair_latest_value": {
+      "audit": {
+        "passed": true,
+        "scope": "paired oracle and target-change checks"
+      },
+      "identity": {
+        "base_sha256": "7832f8042077357611f2faff1bda1886e21190a32fd666675c7d705c0c2b6c89",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "pair": "latest_value",
+        "phase": "discovery",
+        "seed": 711043,
+        "sha256": "4c647da79cba6fbb0fe86e69c3dd0f520019a97da881553e4aa8853d02077a0e",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "pair_obsolete_prefix": {
+      "audit": {
+        "passed": true,
+        "scope": "paired oracle and target-change checks"
+      },
+      "identity": {
+        "base_sha256": "7832f8042077357611f2faff1bda1886e21190a32fd666675c7d705c0c2b6c89",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "pair": "obsolete_prefix",
+        "phase": "discovery",
+        "seed": 710043,
+        "sha256": "bad352771ae9d45b48bd46e1649b5da4dd5811af06a5b15ea399950be60fd768",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "pair_rename_key": {
+      "audit": {
+        "passed": true,
+        "scope": "paired oracle and target-change checks"
+      },
+      "identity": {
+        "base_sha256": "7832f8042077357611f2faff1bda1886e21190a32fd666675c7d705c0c2b6c89",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "pair": "rename_key",
+        "phase": "discovery",
+        "seed": 712043,
+        "sha256": "d8188fe36d02037a8133f3759f173543d68966d14cef63019df37ca31da58d6f",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "rewrites2": {
+      "audit": {
+        "baselines": {
+          "final_two_values": {
+            "accuracy": 0.228515625,
+            "correct": 234,
+            "total": 1024
+          },
+          "first_value": {
+            "accuracy": 0.0478515625,
+            "correct": 49,
+            "total": 1024
+          },
+          "keyed_last_write_oracle": {
+            "accuracy": 1.0,
+            "correct": 1024,
+            "total": 1024
+          },
+          "last_value": {
+            "accuracy": 0.1689453125,
+            "correct": 173,
+            "total": 1024
+          },
+          "most_recent_value": {
+            "accuracy": 0.1689453125,
+            "correct": 173,
+            "total": 1024
+          },
+          "no_memory_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          },
+          "query_ordinal_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          }
+        },
+        "by_difficulty_cell": {
+          "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.26953125,
+              "correct": 138,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.095703125,
+              "correct": 49,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.337890625,
+              "correct": 173,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.337890625,
+              "correct": 173,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          },
+          "{\"key_count\":4,\"overwrite_count\":2,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.1875,
+              "correct": 96,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          }
+        },
+        "chance_expectation": {
+          "final_two_values": "min(2 / distinct_memory_values, 1)",
+          "first_value": "1 / distinct_memory_values",
+          "keyed_last_write_oracle": 1.0,
+          "last_value": "1 / distinct_memory_values",
+          "most_recent_value": "1 / distinct_memory_values",
+          "no_memory_frequency": 0.0032552083333333335,
+          "query_ordinal_frequency": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          }
+        },
+        "completeness": {
+          "incomplete_checks": 0,
+          "oracle_checks": 1024,
+          "oracle_mismatches": 0
+        },
+        "counterfactual_query_key_audit": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            },
+            "{\"key_count\":4,\"overwrite_count\":2,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            }
+          },
+          "checks": 1024,
+          "incomplete": 0,
+          "method": "replace query key while preserving the causal memory prefix",
+          "mismatches": 0,
+          "pass": true,
+          "passes": 1024,
+          "target_source": "independent last-write token-prefix scan"
+        },
+        "evaluated_examples": 512,
+        "example_indices_sha256": "036f25d3e52783865ddc4915bf4d0cb05839ca214b36af36cfda74b16c16b99c",
+        "frequency_fit": {
+          "observed_value_tokens": 1536,
+          "ordinal_majority_chance": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          },
+          "ordinal_prediction": {
+            "0": 7789,
+            "1": 4098
+          },
+          "prediction": 5130,
+          "source_examples": 256,
+          "source_split": "train",
+          "value_count": 1104
+        },
+        "generator_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "f051ce160444e6b2cc3de4e951c968055fc1494b9c71dedc39ab8f36221752dd",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              2
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+        "oracle_audit": {
+          "independent_last_write_oracle": "causal token-prefix scan",
+          "pass": true,
+          "target_checks": 1024,
+          "target_mismatches": 0
+        },
+        "overwrite_error_contract": {
+          "latest_value_accuracy_denominator": "latest answers only",
+          "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+          "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+          "unrelated_association_retention_denominator": "unrelated answers only"
+        },
+        "passed": true,
+        "post_target_write_count_mean": 1.9453125,
+        "shortcut_criterion": {
+          "all_cells_pass": true,
+          "baseline_names": [
+            "first_value",
+            "last_value",
+            "most_recent_value",
+            "final_two_values",
+            "no_memory_frequency",
+            "query_ordinal_frequency"
+          ],
+          "by_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.337890625,
+              "pass": true,
+              "threshold": 0.9
+            },
+            "{\"key_count\":4,\"overwrite_count\":2,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.1875,
+              "pass": true,
+              "threshold": 0.9
+            }
+          },
+          "max_accuracy": 0.9,
+          "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+        },
+        "stale_latest_diagnostic": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":2,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "matches_current_latest": 0
+            }
+          },
+          "checks": 512,
+          "incomplete": 0,
+          "matches_current_latest": 0,
+          "method": "copy the previous value for the queried key from the causal token prefix",
+          "status": "complete"
+        },
+        "status": "complete",
+        "task": "overwrite"
+      },
+      "identity": {
+        "distance": 8,
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "rewrites": 2,
+        "seed": 700043,
+        "sha256": "daba49b85fbffb3bbbdec91c29456101deaaf96415b9c6af58f92cb284b17064",
+        "shape": [
+          512,
+          64
+        ],
+        "source_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "f051ce160444e6b2cc3de4e951c968055fc1494b9c71dedc39ab8f36221752dd",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              2
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "rewrites3": {
+      "audit": {
+        "baselines": {
+          "final_two_values": {
+            "accuracy": 0.24609375,
+            "correct": 252,
+            "total": 1024
+          },
+          "first_value": {
+            "accuracy": 0.037109375,
+            "correct": 38,
+            "total": 1024
+          },
+          "keyed_last_write_oracle": {
+            "accuracy": 1.0,
+            "correct": 1024,
+            "total": 1024
+          },
+          "last_value": {
+            "accuracy": 0.17578125,
+            "correct": 180,
+            "total": 1024
+          },
+          "most_recent_value": {
+            "accuracy": 0.17578125,
+            "correct": 180,
+            "total": 1024
+          },
+          "no_memory_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          },
+          "query_ordinal_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          }
+        },
+        "by_difficulty_cell": {
+          "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.2890625,
+              "correct": 148,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.07421875,
+              "correct": 38,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.3515625,
+              "correct": 180,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.3515625,
+              "correct": 180,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          },
+          "{\"key_count\":4,\"overwrite_count\":3,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.203125,
+              "correct": 104,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          }
+        },
+        "chance_expectation": {
+          "final_two_values": "min(2 / distinct_memory_values, 1)",
+          "first_value": "1 / distinct_memory_values",
+          "keyed_last_write_oracle": 1.0,
+          "last_value": "1 / distinct_memory_values",
+          "most_recent_value": "1 / distinct_memory_values",
+          "no_memory_frequency": 0.0032552083333333335,
+          "query_ordinal_frequency": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          }
+        },
+        "completeness": {
+          "incomplete_checks": 0,
+          "oracle_checks": 1024,
+          "oracle_mismatches": 0
+        },
+        "counterfactual_query_key_audit": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            },
+            "{\"key_count\":4,\"overwrite_count\":3,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            }
+          },
+          "checks": 1024,
+          "incomplete": 0,
+          "method": "replace query key while preserving the causal memory prefix",
+          "mismatches": 0,
+          "pass": true,
+          "passes": 1024,
+          "target_source": "independent last-write token-prefix scan"
+        },
+        "evaluated_examples": 512,
+        "example_indices_sha256": "036f25d3e52783865ddc4915bf4d0cb05839ca214b36af36cfda74b16c16b99c",
+        "frequency_fit": {
+          "observed_value_tokens": 1536,
+          "ordinal_majority_chance": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          },
+          "ordinal_prediction": {
+            "0": 7789,
+            "1": 4098
+          },
+          "prediction": 5130,
+          "source_examples": 256,
+          "source_split": "train",
+          "value_count": 1104
+        },
+        "generator_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "dd72f8adae5b9f3082040515c5389f452adbf42a8d4bcfbe59152b64d5c6d76c",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              3
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+        "oracle_audit": {
+          "independent_last_write_oracle": "causal token-prefix scan",
+          "pass": true,
+          "target_checks": 1024,
+          "target_mismatches": 0
+        },
+        "overwrite_error_contract": {
+          "latest_value_accuracy_denominator": "latest answers only",
+          "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+          "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+          "unrelated_association_retention_denominator": "unrelated answers only"
+        },
+        "passed": true,
+        "post_target_write_count_mean": 1.94921875,
+        "shortcut_criterion": {
+          "all_cells_pass": true,
+          "baseline_names": [
+            "first_value",
+            "last_value",
+            "most_recent_value",
+            "final_two_values",
+            "no_memory_frequency",
+            "query_ordinal_frequency"
+          ],
+          "by_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.3515625,
+              "pass": true,
+              "threshold": 0.9
+            },
+            "{\"key_count\":4,\"overwrite_count\":3,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.203125,
+              "pass": true,
+              "threshold": 0.9
+            }
+          },
+          "max_accuracy": 0.9,
+          "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+        },
+        "stale_latest_diagnostic": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":3,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "matches_current_latest": 0
+            }
+          },
+          "checks": 512,
+          "incomplete": 0,
+          "matches_current_latest": 0,
+          "method": "copy the previous value for the queried key from the causal token prefix",
+          "status": "complete"
+        },
+        "status": "complete",
+        "task": "overwrite"
+      },
+      "identity": {
+        "distance": 8,
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "rewrites": 3,
+        "seed": 700043,
+        "sha256": "7832f8042077357611f2faff1bda1886e21190a32fd666675c7d705c0c2b6c89",
+        "shape": [
+          512,
+          64
+        ],
+        "source_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "dd72f8adae5b9f3082040515c5389f452adbf42a8d4bcfbe59152b64d5c6d76c",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              3
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "rewrites4": {
+      "audit": {
+        "baselines": {
+          "final_two_values": {
+            "accuracy": 0.2314453125,
+            "correct": 237,
+            "total": 1024
+          },
+          "first_value": {
+            "accuracy": 0.037109375,
+            "correct": 38,
+            "total": 1024
+          },
+          "keyed_last_write_oracle": {
+            "accuracy": 1.0,
+            "correct": 1024,
+            "total": 1024
+          },
+          "last_value": {
+            "accuracy": 0.169921875,
+            "correct": 174,
+            "total": 1024
+          },
+          "most_recent_value": {
+            "accuracy": 0.169921875,
+            "correct": 174,
+            "total": 1024
+          },
+          "no_memory_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          },
+          "query_ordinal_frequency": {
+            "accuracy": 0.0,
+            "correct": 0,
+            "total": 1024
+          }
+        },
+        "by_difficulty_cell": {
+          "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.291015625,
+              "correct": 149,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.07421875,
+              "correct": 38,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.33984375,
+              "correct": 174,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.33984375,
+              "correct": 174,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          },
+          "{\"key_count\":4,\"overwrite_count\":4,\"requested_query_distance\":8,\"sequence_length\":65}": {
+            "final_two_values": {
+              "accuracy": 0.171875,
+              "correct": 88,
+              "total": 512
+            },
+            "first_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "keyed_last_write_oracle": {
+              "accuracy": 1.0,
+              "correct": 512,
+              "total": 512
+            },
+            "last_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "most_recent_value": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "no_memory_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            },
+            "query_ordinal_frequency": {
+              "accuracy": 0.0,
+              "correct": 0,
+              "total": 512
+            }
+          }
+        },
+        "chance_expectation": {
+          "final_two_values": "min(2 / distinct_memory_values, 1)",
+          "first_value": "1 / distinct_memory_values",
+          "keyed_last_write_oracle": 1.0,
+          "last_value": "1 / distinct_memory_values",
+          "most_recent_value": "1 / distinct_memory_values",
+          "no_memory_frequency": 0.0032552083333333335,
+          "query_ordinal_frequency": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          }
+        },
+        "completeness": {
+          "incomplete_checks": 0,
+          "oracle_checks": 1024,
+          "oracle_mismatches": 0
+        },
+        "counterfactual_query_key_audit": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            },
+            "{\"key_count\":4,\"overwrite_count\":4,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "mismatches": 0,
+              "passes": 512
+            }
+          },
+          "checks": 1024,
+          "incomplete": 0,
+          "method": "replace query key while preserving the causal memory prefix",
+          "mismatches": 0,
+          "pass": true,
+          "passes": 1024,
+          "target_source": "independent last-write token-prefix scan"
+        },
+        "evaluated_examples": 512,
+        "example_indices_sha256": "036f25d3e52783865ddc4915bf4d0cb05839ca214b36af36cfda74b16c16b99c",
+        "frequency_fit": {
+          "observed_value_tokens": 1536,
+          "ordinal_majority_chance": {
+            "0": 0.0078125,
+            "1": 0.0078125
+          },
+          "ordinal_prediction": {
+            "0": 7789,
+            "1": 4098
+          },
+          "prediction": 5130,
+          "source_examples": 256,
+          "source_split": "train",
+          "value_count": 1104
+        },
+        "generator_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "2f4a956c4fe9a89c49ecd51d1bbe3a9b00c7502cbdde0c46e415a2e4cf340453",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              4
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+        "oracle_audit": {
+          "independent_last_write_oracle": "causal token-prefix scan",
+          "pass": true,
+          "target_checks": 1024,
+          "target_mismatches": 0
+        },
+        "overwrite_error_contract": {
+          "latest_value_accuracy_denominator": "latest answers only",
+          "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+          "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+          "unrelated_association_retention_denominator": "unrelated answers only"
+        },
+        "passed": true,
+        "post_target_write_count_mean": 2.048828125,
+        "shortcut_criterion": {
+          "all_cells_pass": true,
+          "baseline_names": [
+            "first_value",
+            "last_value",
+            "most_recent_value",
+            "final_two_values",
+            "no_memory_frequency",
+            "query_ordinal_frequency"
+          ],
+          "by_cell": {
+            "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.33984375,
+              "pass": true,
+              "threshold": 0.9
+            },
+            "{\"key_count\":4,\"overwrite_count\":4,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "incomplete_checks": 0,
+              "max_key_free_accuracy": 0.171875,
+              "pass": true,
+              "threshold": 0.9
+            }
+          },
+          "max_accuracy": 0.9,
+          "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+        },
+        "stale_latest_diagnostic": {
+          "by_difficulty_cell": {
+            "{\"key_count\":4,\"overwrite_count\":4,\"requested_query_distance\":8,\"sequence_length\":65}": {
+              "checks": 512,
+              "incomplete": 0,
+              "matches_current_latest": 0
+            }
+          },
+          "checks": 512,
+          "incomplete": 0,
+          "matches_current_latest": 0,
+          "method": "copy the previous value for the queried key from the causal token prefix",
+          "status": "complete"
+        },
+        "status": "complete",
+        "task": "overwrite"
+      },
+      "identity": {
+        "distance": 8,
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "rewrites": 4,
+        "seed": 700043,
+        "sha256": "b5ecd298961e70d6b69d3a4e78c290d805b8705da400c28f8c7821ee15396d4a",
+        "shape": [
+          512,
+          64
+        ],
+        "source_manifest": {
+          "examples": 512,
+          "generator_version": "mqar-overwrite-v4",
+          "hash": "2f4a956c4fe9a89c49ecd51d1bbe3a9b00c7502cbdde0c46e415a2e4cf340453",
+          "parameters": {
+            "generator_version": "mqar-overwrite-v4",
+            "held_out_examples": 3000,
+            "key_counts": [
+              4
+            ],
+            "overwrite_counts": [
+              4
+            ],
+            "query_distances": [
+              8
+            ],
+            "sequence_lengths": [
+              65
+            ],
+            "train_examples": 100000,
+            "validation_examples": null,
+            "vocabulary_size": 8192
+          },
+          "seed": 700043,
+          "sequence_length": null,
+          "split": "held_out",
+          "task": "overwrite"
+        },
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    }
+  },
+  "family": "overwrite",
+  "seed": 43,
+  "smoke_only": false
+}

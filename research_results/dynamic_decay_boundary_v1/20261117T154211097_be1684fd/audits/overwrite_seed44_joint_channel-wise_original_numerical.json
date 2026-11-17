@@ -1,0 +1,7 @@
+{
+  "atol": 0.0003,
+  "examples": 2,
+  "max_logit_absolute_error": 2.652406692504883e-06,
+  "passed": true,
+  "rtol": 0.0003
+}

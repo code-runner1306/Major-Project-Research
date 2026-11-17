@@ -1,0 +1,200 @@
+[
+  {
+    "baseline_gap": 0.0,
+    "family": "mqar",
+    "initialization": "calibrated",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.0009765625,
+    "stress_specific_gap": 0.0009765625
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "mqar",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.001953125,
+    "stress_specific_gap": 0.001953125
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "mqar",
+    "initialization": "joint",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.000732421875,
+    "stress_specific_gap": -0.000732421875
+  },
+  {
+    "baseline_gap": 0.0009765625,
+    "family": "mqar",
+    "initialization": "calibrated",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 43,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.002685546875,
+    "stress_specific_gap": 0.001708984375
+  },
+  {
+    "baseline_gap": -0.00048828125,
+    "family": "mqar",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 43,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.004150390625,
+    "stress_specific_gap": -0.003662109375
+  },
+  {
+    "baseline_gap": 0.00048828125,
+    "family": "mqar",
+    "initialization": "joint",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 43,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.000244140625,
+    "stress_specific_gap": -0.000244140625
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "mqar",
+    "initialization": "calibrated",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 44,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.000244140625,
+    "stress_specific_gap": -0.000244140625
+  },
+  {
+    "baseline_gap": 0.00048828125,
+    "family": "mqar",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 44,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.002197265625,
+    "stress_specific_gap": 0.001708984375
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "mqar",
+    "initialization": "joint",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 44,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.00439453125,
+    "stress_specific_gap": 0.00439453125
+  },
+  {
+    "baseline_gap": 0.013671875,
+    "family": "overwrite",
+    "initialization": "calibrated",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.01953125,
+    "stress_specific_gap": 0.005859375
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "overwrite",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.00390625,
+    "stress_specific_gap": -0.00390625
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "overwrite",
+    "initialization": "joint",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.0,
+    "stress_specific_gap": 0.0
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "overwrite",
+    "initialization": "calibrated",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 43,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.0390625,
+    "stress_specific_gap": -0.0390625
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "overwrite",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 43,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.0,
+    "stress_specific_gap": 0.0
+  },
+  {
+    "baseline_gap": -0.009765625,
+    "family": "overwrite",
+    "initialization": "joint",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 43,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.015625,
+    "stress_specific_gap": -0.005859375
+  },
+  {
+    "baseline_gap": 0.259765625,
+    "family": "overwrite",
+    "initialization": "calibrated",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 44,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.095703125,
+    "stress_specific_gap": -0.35546875
+  },
+  {
+    "baseline_gap": 0.033203125,
+    "family": "overwrite",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 44,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.052734375,
+    "stress_specific_gap": 0.01953125
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "overwrite",
+    "initialization": "joint",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 44,
+    "seed_operational_reliance": false,
+    "stress_gap": -0.001953125,
+    "stress_specific_gap": -0.001953125
+  }
+]

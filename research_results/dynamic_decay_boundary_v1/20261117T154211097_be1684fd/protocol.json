@@ -1,0 +1,404 @@
+{
+  "batch": 32,
+  "checkpoint_selection": [
+    {
+      "family": "mqar",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\calibrated\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "a5cd17e0f209ed25601dc064f22060c854dd7113174c17601d09dec94cb8a845",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\calibrated\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "ba210eefd1670779e0cad113846a466f345a7dd1ce2817bd363f4c9e9541dfa8",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "f988b37daf1c2ce676cd96c4c6dc6eeb11361371bd677afd1064ce865f5b68a5",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "510a079d243e2549c22d07e4416fc179f38065b4a7abb6b64fe1b6c2d3423aa2",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\mqar\\seed_42\\joint\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "377e37a883a44434a24aa44b309d073a96e170b644ad44d3fd2136682d7500a2",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\mqar\\seed_42\\joint\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "f6a733b84b9564da4e2587449c443ea725a523458061473790602f6de54c990b",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\calibrated\\channel-wise\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "78dc57dea15cbb221625b8303dd18b844f33ab97084ad98d0e89b422a9841bb1",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\calibrated\\scalar\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "96c7185770add557402661fea102526d76a59b013c6b8556f7a816660bca7656",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "e782c25cd8e49b651d525dbb5402fb431ec38cdcaa355497be41592bcc9510d4",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "d14534d89578584cc66b0f5fe82d2aa5697ac05c3179b9917042cc77333b555c",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\mqar\\seed_43\\joint\\channel-wise\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "dc85fe30105af1c2c75ed31379876958a08e28b107c03cd7dac0adab8ef76581",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\mqar\\seed_43\\joint\\scalar\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "03b432eafab7c288b7e84dd240d9610b2ae54bafde9a51e090510042d65b352a",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\calibrated\\channel-wise\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "c07f6b4c3a2ff014fcc883b62bca481c15e7f20fdda5fb33d8d311264f0a8c01",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\calibrated\\scalar\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "ec1b09abe1546d79739b11d071333dd3ce5e0bd75eabff5c7d1cb17495f6dae1",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "70425d8ff27862dc9ac4aa273e3a1ab3765a845b51a2832762dd08ecd279cf14",
+      "variant": "scalar"
+    },
+    {
+      "family": "mqar",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\mqar\\seed_44\\joint\\channel-wise\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "c911f6d4555db612faece585559047173c27ac064bc53c40a21bab4b531e466f",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\mqar\\seed_44\\joint\\scalar\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "7722cd6a5c42e664002bc077cac076227b52ec58409ae954b2a9585568340903",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\calibrated\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "2a6893364ea0d073616fa58d32bc81eec2cd093d8e8ed9a6f1d4ed8cdc0993a7",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\calibrated\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "70044ce2e56077996c1add06275e15be34f8ae170f0711f1b8a1f036f1d00749",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "8309c277dc3803f51f6dc820d73ae96d98f15aea500f41b4691376c06c09cf65",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "137fb5b5f240e92d083c54a5738d5066bed72a7fa2deca093cff50e6a2e00148",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_42\\joint\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "30465f8fb3b002d4efc0a3f29e910b27fd7ab021f746d19c1d937a4bbebd1508",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_42\\joint\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "efd91218a98469c65300a48c3375745161b40ca5f7c5c8608b2ba820dc99b1c1",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T153034494_5014216e\\overwrite\\seed_43\\calibrated\\channel-wise\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "4a5e576e39287e423d42188c0a0d69591c71252e9f2f42d8266d193d3ccc7475",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T153034494_5014216e\\overwrite\\seed_43\\calibrated\\scalar\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "ee65cf556f3af27032fe980bdf70c77adc955116941755b1299c3e3a810ab06d",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T140317869_6f95b296\\overwrite\\seed_43\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "3df9f4639c92264e9f9a6096c7defb7b79421ffd6c8aa5df849f24b2a1fed074",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T140317869_6f95b296\\overwrite\\seed_43\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "29539bd2090d68111128cdd03e6a3df3a47e723721ad7f17c5b33b3e93007432",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_43\\joint\\channel-wise\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "bdf6d1088ed4427b8ba008ed5405c440ebf3baa5304869a5941f277aa9b883f0",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_43\\joint\\scalar\\latest_checkpoint.pt",
+      "seed": 43,
+      "sha256": "dbf511180d9af338ce7f4c1d9c49de90f855fe0c15355900ac3859e7f6cc2584",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\calibrated\\channel-wise\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "122cda61b33f32874d7eaf0c74fcfe5d2d26fdbfc478fff70d95d3b55a865ae4",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "calibrated",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\calibrated\\scalar\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "4890a63d130d26cc04b6110421c0b9fcb4419c4e380e8e4ca5a1e38efb3b5ebd",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "3a22961b3124600158bb752ea23f6c9d04e2fe3377ff9f38b629f6de2a8a8e45",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "default",
+      "path": "C:\\Users\\Intern\\Desktop\\Mayank\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "ddf4fc326b9113b9c6ef3f5cb7ddada590881820803a20ab2e84bf6e478b1f6f",
+      "variant": "scalar"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_44\\joint\\channel-wise\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "bba7ed7bc9c1d6686f46b3c45c7f92909208b0b1d517746f90a5e707d2031a8d",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "overwrite",
+      "initialization": "joint",
+      "path": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_44\\joint\\scalar\\latest_checkpoint.pt",
+      "seed": 44,
+      "sha256": "a4426d19f16db1a8c1ec6e542db89d541d6cfe58221160f4ab14447b6a280a3b",
+      "variant": "scalar"
+    }
+  ],
+  "cpu_smoke": false,
+  "device": "cuda:0",
+  "evaluator_sources": {
+    "config.py": "65f7091291561f32dc16a094882fc3043c1a1f25cf748de0383d4abc49730dad",
+    "confirm_recipe_study.py": "8dd7711e24ea85dc9a53f44e6ba896439647a7851cced0e7c0669aa17cff7c17",
+    "evaluate_decay_boundary.py": "5e3cee53b31ad720c7d4ab38e2867626d86e71ddec49db5a1ecb836ccd247c7a",
+    "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+    "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+    "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+    "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+    "recurrence.py": "87d205bdbaf529fc6e804c1e6b2270a7e25660418e1942133122c537a0c49db1",
+    "retrieval.py": "17015695c5531067dcbf26be519eaa99c2bdbadb2beb0587cb9617758b70e94c",
+    "stress_recipe_checkpoints.py": "f0bf0a3c9316f02c2eb0caf69dd8ae9f293fe816db815229d8918426b74e7c72",
+    "stronger_gate_tests.py": "954517ef9e11905871f4a1efc36101c5e1600e586cf12ed936b0f24bb375a180"
+  },
+  "examples": 512,
+  "families": [
+    "mqar",
+    "overwrite"
+  ],
+  "fit_examples": 256,
+  "initializations": [
+    "calibrated",
+    "default",
+    "joint"
+  ],
+  "mqar_cells": [
+    [
+      "baseline",
+      64,
+      4
+    ],
+    [
+      "load8",
+      64,
+      8
+    ],
+    [
+      "load12",
+      64,
+      12
+    ],
+    [
+      "length128",
+      128,
+      4
+    ],
+    [
+      "length128_load8",
+      128,
+      8
+    ],
+    [
+      "length128_load12",
+      128,
+      12
+    ]
+  ],
+  "overwrite_cells": [
+    [
+      "baseline",
+      4,
+      8,
+      1
+    ],
+    [
+      "load8",
+      8,
+      8,
+      1
+    ],
+    [
+      "distance24",
+      4,
+      24,
+      1
+    ],
+    [
+      "rewrites2",
+      4,
+      8,
+      2
+    ],
+    [
+      "rewrites3",
+      4,
+      8,
+      3
+    ],
+    [
+      "rewrites4",
+      4,
+      8,
+      4
+    ]
+  ],
+  "paired_tests": [
+    "obsolete_prefix",
+    "latest_value",
+    "rename_key"
+  ],
+  "phase": "discovery",
+  "protocol": "dynamic-decay-boundary-discovery-v1",
+  "publish": false,
+  "reserved_confirmation_offset": 900000,
+  "seed_offset": 700000,
+  "seeds": [
+    42,
+    43,
+    44
+  ]
+}
