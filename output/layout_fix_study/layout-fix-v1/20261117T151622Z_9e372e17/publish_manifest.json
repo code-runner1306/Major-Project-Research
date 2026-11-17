@@ -129,6 +129,132 @@
     },
     {
       "bytes": 75,
+      "path": "A0_control/seed_43/channel-wise/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A0_control/seed_43/channel-wise/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3930,
+      "path": "A0_control/seed_43/channel-wise/data_manifests.json",
+      "sha256": "bf0aeda66b9f3821554557473a5c08a28030b04fcc81d21c85adf67f4e24b422",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 29189,
+      "path": "A0_control/seed_43/channel-wise/development_curve.json",
+      "sha256": "62b6e6712f8e9fc7d6fd15a2daf52d59429ca583514d4f7c23be2b533d7ce2cc",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A0_control/seed_43/channel-wise/initialization_manifest.json",
+      "sha256": "77b9890ce0225c485c3dcdcd0c48657ac06fd4e154b6425756002795a9e4682a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6637840,
+      "path": "A0_control/seed_43/channel-wise/latest_checkpoint.pt",
+      "sha256": "83871d7d6d944cf6b7032ca5bcab3c346e897d329fe078a918fa3383fea90edb",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2019,
+      "path": "A0_control/seed_43/channel-wise/settings.json",
+      "sha256": "de82b88c396b7c99222e13387404d0b64cc0e9d2d45c0e66da40d18cf17b8460",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79318,
+      "path": "A0_control/seed_43/channel-wise/summary.json",
+      "sha256": "28c40303dcf8a147058c7650482b4f1d9449bf4346c0c84d45f3940bc1400dd1",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 26742,
+      "path": "A0_control/seed_43/channel-wise.log",
+      "sha256": "d20590d55d6a27d261fb5b233fa247088b2f271330cc971747c8a3c0441aac1a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "A0_control/seed_43/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1692,
+      "path": "A0_control/seed_43/pair_status.json",
+      "sha256": "75bac0491c957004d0fda5ba68391b3c24c8c0b45bb0626332c39d7ac1ed68d8",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A0_control/seed_43/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A0_control/seed_43/scalar/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3930,
+      "path": "A0_control/seed_43/scalar/data_manifests.json",
+      "sha256": "bf0aeda66b9f3821554557473a5c08a28030b04fcc81d21c85adf67f4e24b422",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 29138,
+      "path": "A0_control/seed_43/scalar/development_curve.json",
+      "sha256": "47ab8344b36e04dc3fe5419ab56e8d6e201caa3b223f6722908ce5d16213a0e2",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A0_control/seed_43/scalar/initialization_manifest.json",
+      "sha256": "551200c8684c3972d535244e989d5450f08d6f29e718691408c95a5efb7ae343",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373648,
+      "path": "A0_control/seed_43/scalar/latest_checkpoint.pt",
+      "sha256": "49496c63595b43330281184800f10edf22dcf318962aab256c8c49a4505d4a61",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2013,
+      "path": "A0_control/seed_43/scalar/settings.json",
+      "sha256": "a15cec49ad7f592cc0aa090436a2dc79fe37ee4f95f681a7f64d9500f457124b",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79364,
+      "path": "A0_control/seed_43/scalar/summary.json",
+      "sha256": "bb219252b75e27f66872d76fb6e25e1cdabe280c6c660a3446ef5c184ae0dbf1",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 26319,
+      "path": "A0_control/seed_43/scalar.log",
+      "sha256": "e1dd4408c20638e65b97ad8856b2594220538ee2f0841ef5a6059da90e26248c",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3154,
+      "path": "A0_control/seed_43/study_protocol.json",
+      "sha256": "e074451b3b602d1dbd3ab63d5a24750656b94a64b01384a62925681eff3f3c53",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
       "path": "A2_no_block_first/seed_42/channel-wise/calibration.json",
       "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
       "weights_only_checkpoint": false
