@@ -1,0 +1,24 @@
+{
+  "conditioning": "answer_free",
+  "device": "cpu",
+  "evaluation_training_indices": [
+    256,
+    512
+  ],
+  "examples": 256,
+  "fitting_training_indices": [
+    0,
+    256
+  ],
+  "interpretation": "Post-hoc functional reliance, not trained architecture superiority or causal learning-speed explanation",
+  "models": 12,
+  "permutation_policy": "one fixed permutation per layer for all tokens; preserve local gate multiset",
+  "static_policy": "per-channel means fitted on separate training-prefix inputs under original trained model, no labels/loss fitting",
+  "tests": [
+    "baseline",
+    "global mean",
+    "global static",
+    "global shuffle seeds90221/90222/90223",
+    "mean one layer at a time layers0/1/2/3"
+  ]
+}

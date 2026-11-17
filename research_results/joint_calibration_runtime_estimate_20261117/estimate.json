@@ -1,0 +1,33 @@
+{
+  "proposed_experiment": "additional joint-timescale/sensitivity initialization for current scalar/channel models",
+  "model_count": 12,
+  "seed_count": 3,
+  "models_per_seed": 4,
+  "tasks": [
+    "mqar",
+    "overwrite"
+  ],
+  "epochs": 16,
+  "optimizer_steps_per_model": 3136,
+  "scheduler_epochs": 64,
+  "hardware": "NVIDIA RTXA6000-12Q",
+  "workers": 2,
+  "paired_sessions": 6,
+  "measured_pair_seconds": {
+    "mqar": 3364.274687800013,
+    "overwrite": 3402.016971200006
+  },
+  "expected_seconds_per_seed": 6766.291659000019,
+  "expected_total_seconds": 20298.874977000058,
+  "budget_with_20percent_and_15minutes_overhead_seconds": 25258.649972400068,
+  "optional_separate_qualification_models": 4,
+  "optional_qualification_expected_seconds": 6766.291659000019,
+  "total_with_qualification_and_margin_seconds": 33378.19996320009,
+  "assumptions": [
+    "same architecture/batches/precision/data exposure and per-step implementation",
+    "only initialization changes; existing24models remain comparison references after compatibility checks",
+    "joint fitting overhead is not yet benchmarked",
+    "implementation and debugging effort are not GPU runtime"
+  ],
+  "status": "estimate only; joint initialization not implemented or trained"
+}

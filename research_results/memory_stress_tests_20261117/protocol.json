@@ -1,0 +1,57 @@
+{
+  "conditioning": "answer_free",
+  "data_policy": "same examples per task/seed/cell across conditions; generated diagnostic data, not tuning data",
+  "device": "cpu",
+  "examples": 256,
+  "interpretation": "Zero-shot distribution-shift stress tests of fixed checkpoints, not learnability of newly trained hard-task models",
+  "mqar_cells": [
+    [
+      "baseline",
+      64,
+      4
+    ],
+    [
+      "more_keys",
+      64,
+      8
+    ],
+    [
+      "longer_context",
+      128,
+      4
+    ],
+    [
+      "longer_more_keys",
+      128,
+      8
+    ]
+  ],
+  "overwrite_cells": [
+    [
+      "baseline",
+      4,
+      8,
+      1
+    ],
+    [
+      "more_keys",
+      8,
+      8,
+      1
+    ],
+    [
+      "farther_query",
+      4,
+      24,
+      1
+    ],
+    [
+      "more_rewrites",
+      4,
+      8,
+      3
+    ]
+  ],
+  "seed_offset": 500000,
+  "stale_definition": "prediction equals ANY prior value for the updated key"
+}

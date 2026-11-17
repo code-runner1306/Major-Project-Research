@@ -35,7 +35,7 @@ def shared_mean_gates(model):
             else:delattr(layer,'decay')
 
 
-def probe_data(family,seed,confirmation):
+def probe_data(family,seed,confirmation,start=256,stop=512):
     with np.load(confirmation/'diagnostic_training_samples'/f'{family}_seed{seed}.npz',allow_pickle=False) as sample:
         tokens=torch.from_numpy(sample['tokens'].copy());labels=torch.from_numpy(sample['labels'].copy())
         erase=torch.from_numpy(sample['erase_answers'].copy())
@@ -43,11 +43,11 @@ def probe_data(family,seed,confirmation):
         prefix=build_data(family,512,seed+100000,'train',8192,64)
         if not torch.equal(prefix.tokens,tokens) or not torch.equal(prefix.labels,labels) or not torch.equal(prefix.erase_answers,erase):
             raise ValueError('Overwrite diagnostic prefix does not match cached full training pool')
-        kinds=prefix.kinds[256:];stale=prefix.stale[256:]
+        kinds=prefix.kinds[start:stop];stale=prefix.stale[start:stop]
     else:
-        kinds=torch.where(labels[256:]!=-100,0,-1);stale=torch.full_like(labels[256:],-1)
-    return RecipeData(tokens[256:],labels[256:],kinds,stale,erase[256:],
-                      manifest(tokens[256:],labels[256:],seed=seed+100000,split='training_diagnostic',indices=[256,512]))
+        kinds=torch.where(labels[start:stop]!=-100,0,-1);stale=torch.full_like(labels[start:stop],-1)
+    return RecipeData(tokens[start:stop],labels[start:stop],kinds,stale,erase[start:stop],
+                      manifest(tokens[start:stop],labels[start:stop],seed=seed+100000,split='training_diagnostic',indices=[start,stop]))
 
 
 def main():

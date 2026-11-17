@@ -1,0 +1,13 @@
+seed,cell,mean,median,maximum
+42,baseline,18.2578125,13.0,61
+42,more_keys,23.212890625,19.0,61
+42,longer_context,31.18359375,19.0,123
+42,longer_more_keys,36.6904296875,25.0,125
+43,baseline,17.79296875,11.0,61
+43,more_keys,22.7568359375,19.0,61
+43,longer_context,29.056640625,17.0,125
+43,longer_more_keys,35.9697265625,25.0,123
+44,baseline,18.212890625,13.0,61
+44,more_keys,22.703125,19.0,59
+44,longer_context,30.75,17.0,123
+44,longer_more_keys,35.94140625,25.0,125
