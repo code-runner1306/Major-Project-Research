@@ -28,7 +28,8 @@ from confirm_recipe_study import select_runs
 from recipe_data import RecipeData, build_data, manifest, split_overlap
 from retrieval import RetrievalDataset
 
-SEED_OFFSET = 1300000
+SEED_OFFSET = 1300000   # overridable with --seed-offset (layout-fix evaluation uses 1400000)
+EXTRA_DISTANCES = ()    # overridable with --extra-distances
 SHORTCUT_GAP = .20       # block-first accuracy at least 20 points below general non-block
 SPECIAL_MATCH = .10      # discriminating layouts within 10 points of general non-block
 RULES = ('latest', 'initial', 'second_occurrence', 'memory_slot_1', 'opening_run_second', 'final_run_second')
@@ -49,7 +50,7 @@ def cells():
     out = []
     for rewrites in (1, 2, 3, 4):
         out.append((f'main_r{rewrites}', 4, 8, rewrites, [*special_patterns(rewrites), 'general_nonblock']))
-    for distance in (12, 16):
+    for distance in (12, 16, *EXTRA_DISTANCES):
         for rewrites in (1, 3):
             out.append((f'distance{distance}_r{rewrites}', 4, distance, rewrites, ['block_first', 'general_nonblock']))
     return out
@@ -157,6 +158,32 @@ def evaluate(model, cell, device, batch):
     return outcomes, unrelated, latest_answers
 
 
+def select_layout_fix(root, seeds, arms, variants):
+    """Complete layout-fix-v1 overwrite runs, keyed like select_runs: (family, seed, arm, variant)."""
+    from run_layout_fix_study import identity
+    selected = {}
+    for path in root.rglob('summary.json'):
+        summary = json.loads(path.read_text())
+        cfg = summary.get('settings', {})
+        if cfg.get('protocol') != 'layout-fix-v1' or cfg.get('seed') not in seeds or cfg.get('arm') not in arms:
+            continue
+        if cfg.get('variant') not in variants:
+            continue
+        key = ('overwrite', cfg['seed'], cfg['arm'], cfg['variant'])
+        if key in selected:
+            raise ValueError(f'Duplicate layout-fix condition: {key}')
+        if (summary.get('status') != 'complete' or cfg.get('epochs') != 16 or summary.get('accepted_optimizer_steps') != 3136
+                or cfg.get('source_hashes') != identity()):
+            raise ValueError(f'Incomplete or incompatible layout-fix run: {path}')
+        if not (path.parent / 'latest_checkpoint.pt').is_file():
+            raise ValueError(f'Missing checkpoint: {path.parent}')
+        selected[key] = (path, summary)
+    expected = {('overwrite', s, a, v) for s in seeds for a in arms for v in variants}
+    if set(selected) != expected:
+        raise ValueError(f'Incomplete layout-fix matrix: {sorted(expected - set(selected))}')
+    return selected
+
+
 def verdicts(summary, models):
     def acc(model, cell, layout):
         return summary[model, cell, layout]['latest_value_accuracy']
@@ -191,6 +218,7 @@ def verdicts(summary, models):
 def write_report(output, verdict, summary, models, rule_rows, wall):
     lines = ['# Block-first layout confirmation', '',
              f'Models: {len(models)}. Wall time {wall:.0f} s. Fresh data, seed offset {SEED_OFFSET}. '
+             'Verdicts are reported for all models and separately per initialization or training arm. '
              'Hypotheses were frozen in protocol.json before evaluation.', '', '## Verdicts', '']
     for key, value in verdict.items():
         lines.append(f'- **{key}**: `{json.dumps(value)}`')
@@ -217,13 +245,18 @@ def write_report(output, verdict, summary, models, rule_rows, wall):
 
 
 def main():
+    global SEED_OFFSET, EXTRA_DISTANCES
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=Path('output/calibrated_recipe_study/matched-decay-v1'))
     parser.add_argument('--joint-root', type=Path)
     parser.add_argument('--joint-run-id', nargs='*', default=[])
+    parser.add_argument('--layout-fix-root', type=Path, help='Also evaluate layout-fix-v1 runs (run_layout_fix_study.py)')
+    parser.add_argument('--arms', nargs='+', default=['A2_no_block_first', 'A1_varied_distance', 'A3_mixed_rewrites'])
+    parser.add_argument('--seed-offset', type=int, default=SEED_OFFSET)
+    parser.add_argument('--extra-distances', type=int, nargs='*', default=[])
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--seeds', type=int, nargs='+', default=[42, 43, 44])
-    parser.add_argument('--initializations', nargs='+', default=['default', 'calibrated'])
+    parser.add_argument('--initializations', nargs='*', default=['default', 'calibrated'])
     parser.add_argument('--variants', nargs='+', default=['scalar', 'channel-wise'])
     parser.add_argument('--examples', type=int, default=256, help='Examples per layout per cell')
     parser.add_argument('--batch', type=int, default=64)
@@ -235,8 +268,15 @@ def main():
         parser.error('CUDA requested but unavailable')
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
-    selected = select_runs(args.root, ['overwrite'], args.seeds, [], 'explore')
-    selected = {k: v for k, v in selected.items() if k[2] in args.initializations and k[3] in args.variants}
+    if args.seed_offset in (100000, 200000, 300000, 400000, 500000, 700000, 900000):
+        parser.error('That seed offset is already used or reserved')
+    SEED_OFFSET, EXTRA_DISTANCES = args.seed_offset, tuple(args.extra_distances)
+    selected = {}
+    if args.initializations:
+        selected = select_runs(args.root, ['overwrite'], args.seeds, [], 'explore')
+        selected = {k: v for k, v in selected.items() if k[2] in args.initializations and k[3] in args.variants}
+    if args.layout_fix_root:
+        selected.update(select_layout_fix(args.layout_fix_root, args.seeds, args.arms, args.variants))
     if args.joint_root:
         joint = select_joint(args.joint_root, args.seeds, args.joint_run_id)
         selected.update({k: v for k, v in joint.items() if k[3] in args.variants})
@@ -297,7 +337,10 @@ def main():
         del model
         print(f'{init}/{variant}/{seed}: done ({time.monotonic() - started:.0f}s)', flush=True)
 
-    verdict = verdicts(summary, models)
+    groups = sorted({m[0] for m in models})
+    verdict = dict(all_models=verdicts(summary, models))
+    if len(groups) > 1:
+        verdict.update({f'group_{g}': verdicts(summary, [m for m in models if m[0] == g]) for g in groups})
     rule_rows = [dict(model='/'.join(map(str, m)), **{r: rule_counts[m][r] / rule_counts[m]['n'] for r in RULES}) for m in models]
     wall = time.monotonic() - started
     atomic_write_json(args.output / 'results.json', dict(
