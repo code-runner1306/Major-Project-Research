@@ -45,3 +45,4 @@ data/*
 .codex/
 tinystories/
 output/full_research/aggregate_report.json 
+research_results/write_gate_mechanism_20261117/diagnostics_per_write.csv

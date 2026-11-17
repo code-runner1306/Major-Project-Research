@@ -1,0 +1,113 @@
+{
+  "cells": {
+    "1": "trained_one_rewrite",
+    "2": "two_rewrites",
+    "3": "three_rewrites",
+    "4": "four_rewrites"
+  },
+  "checkpoints": {
+    "('overwrite', 42, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\calibrated\\channel-wise",
+    "('overwrite', 42, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\calibrated\\scalar",
+    "('overwrite', 42, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\default\\channel-wise",
+    "('overwrite', 42, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T111608181_a2524782\\overwrite\\seed_42\\default\\scalar",
+    "('overwrite', 42, 'joint', 'channel-wise')": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_42\\joint\\channel-wise",
+    "('overwrite', 42, 'joint', 'scalar')": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_42\\joint\\scalar",
+    "('overwrite', 43, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T153034494_5014216e\\overwrite\\seed_43\\calibrated\\channel-wise",
+    "('overwrite', 43, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T153034494_5014216e\\overwrite\\seed_43\\calibrated\\scalar",
+    "('overwrite', 43, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T140317869_6f95b296\\overwrite\\seed_43\\default\\channel-wise",
+    "('overwrite', 43, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T140317869_6f95b296\\overwrite\\seed_43\\default\\scalar",
+    "('overwrite', 43, 'joint', 'channel-wise')": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_43\\joint\\channel-wise",
+    "('overwrite', 43, 'joint', 'scalar')": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_43\\joint\\scalar",
+    "('overwrite', 44, 'calibrated', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\calibrated\\channel-wise",
+    "('overwrite', 44, 'calibrated', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\calibrated\\scalar",
+    "('overwrite', 44, 'default', 'channel-wise')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\default\\channel-wise",
+    "('overwrite', 44, 'default', 'scalar')": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\overwrite\\seed_44\\default\\scalar",
+    "('overwrite', 44, 'joint', 'channel-wise')": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_44\\joint\\channel-wise",
+    "('overwrite', 44, 'joint', 'scalar')": "output\\joint_recipe_study\\joint-timescale-sensitivity-v1\\20261117T095630656_b951c742\\overwrite\\seed_44\\joint\\scalar"
+  },
+  "conditioning": "answer_free",
+  "device": "cuda",
+  "distance": 8,
+  "examples": 256,
+  "gpu": "NVIDIA RTXA6000-12Q",
+  "keys": 4,
+  "patch_cell": 3,
+  "patches": [
+    [
+      "none",
+      "all"
+    ],
+    [
+      "beta_one_latest",
+      "all"
+    ],
+    [
+      "beta_copy_rewrite1",
+      "all"
+    ],
+    [
+      "beta_zero_rewrite1",
+      "all"
+    ],
+    [
+      "key_align_latest",
+      "all"
+    ],
+    [
+      "control_beta_one_unrelated",
+      "all"
+    ],
+    [
+      "beta_one_latest",
+      0
+    ],
+    [
+      "beta_one_latest",
+      1
+    ],
+    [
+      "beta_one_latest",
+      2
+    ],
+    [
+      "beta_one_latest",
+      3
+    ],
+    [
+      "beta_zero_rewrite1",
+      0
+    ],
+    [
+      "beta_zero_rewrite1",
+      1
+    ],
+    [
+      "beta_zero_rewrite1",
+      2
+    ],
+    [
+      "beta_zero_rewrite1",
+      3
+    ],
+    [
+      "key_align_latest",
+      0
+    ],
+    [
+      "key_align_latest",
+      1
+    ],
+    [
+      "key_align_latest",
+      2
+    ],
+    [
+      "key_align_latest",
+      3
+    ]
+  ],
+  "purpose": "Write-gate, key-consistency and readout diagnostics for the first-replacement error.\n\nNo training. Loads existing 16-epoch overwrite checkpoints, re-runs the GDN mixers\nwith the exact serial delta-rule recurrence, and records per-layer quantities at\nevery write of the queried (target) key:\n\n* beta    -- write strength sigmoid(b_proj(x)) at the key and value token of each write\n* keys    -- cosine of each write's key with the latest write's key and with the\n             query vector used at the answer position (short-conv \"key drift\")\n* readout -- exact attribution of the memory readout S_T q_T at the answer position:\n             S_T q_T = sum_t w_t v_t with w_t = beta_t k_t^T A_{t+1}..A_T q_T and\n             A_t = diag(alpha_t)(I - beta_t k_t k_t^T); reported at each target write\n\nIt then applies causal patches inside the recurrence (beta and key edits restricted\nto the target key's writes, plus an unrelated-write control) and re-scores answers.\nDiscovery evidence only: stress data use seed offset 500000 (already observed in\nmemory_stress_tests_20261117); confirmation offset 900000 stays untouched.\n",
+  "recurrence": "serial reference (exact delta rule), checked against stock chunked predictions",
+  "seed_offset": 500000,
+  "torch": "2.11.0+cu128"
+}
