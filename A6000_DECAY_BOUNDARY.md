@@ -8,7 +8,9 @@ In the existing CUDA-enabled Python environment, from the repository root:
 powershell.exe -File .\run_A6000_decay_boundary.ps1
 ```
 
-Default: both tasks, seeds 42/43/44, 24 complete legacy exploratory checkpoints, 512 fresh discovery examples per cell, fixed gates fitted on the first 256 exact training examples, batch 32, one evaluation worker on GPU 0. The full default comprises **360 evaluations**: 288 stress/intervention executions plus 72 paired-update executions. Results are saved under a unique `research_results/dynamic_decay_boundary_v1/<session>/` folder.
+Default: both tasks, seeds 42/43/44, 24 complete legacy exploratory checkpoints, 512 fresh discovery examples per cell, fixed gates fitted on the first 256 exact training examples, batch 32, **two evaluation workers sharing GPU 0**. The full default comprises **360 evaluations**: 288 stress/intervention executions plus 72 paired-update executions. Results are saved under a unique `research_results/dynamic_decay_boundary_v1/<session>/` folder.
+
+Each worker receives disjoint scalar/channel initialization pairs, balanced by scored-cell workload. Separate worker folders/logs prevent concurrent writes to shared results. On successful completion, the coordinator checks exact coverage and prediction hashes, then produces one combined report and artifact set at the session root. Wall time is coordinator elapsed time, not the sum of concurrent worker durations. Two workers are not guaranteed to halve runtime; GPU throughput for this concurrent evaluator remains unmeasured.
 
 Use the existing training environment's CUDA PyTorch and repository dependencies. This launcher does not install or replace PyTorch. A6000-family CUDA devices are supported; the code does not require a particular GPU name. GPU runtime for this new suite has not yet been measured.
 
@@ -17,6 +19,12 @@ Use the existing training environment's CUDA PyTorch and repository dependencies
 ```powershell
 # Inspect selected models and workload; no evaluation or GPU allocation
 .\run_A6000_decay_boundary.ps1 -PlanOnly
+
+# Explicitly request two workers (the default)
+.\run_A6000_decay_boundary.ps1 -Workers 2
+
+# Retain the single-worker option
+.\run_A6000_decay_boundary.ps1 -Workers 1
 
 # Run only overwrite
 .\run_A6000_decay_boundary.ps1 -Family overwrite
@@ -62,7 +70,7 @@ Preflight checks completed training counters, full training recipe, source ident
 - `results.json`, `protocol.json`, `environment.json`: results, frozen selections/hashes, environment.
 - `audits/`, `fitted_gates/`, `predictions/`: generator/overlap/numerical proofs, fitted constants, raw predictions and target/index mappings.
 
-Results are saved after every cell. Resume verifies unchanged configuration, source/checkpoint hashes, data identities, and raw-prediction hashes. The exact batch size is part of the protocol: changing it requires a new session. Console output gives progress; redirect it to a file if a full terminal transcript is desired.
+Results are saved after every cell in each worker's folder. Resume verifies unchanged configuration, source/checkpoint hashes, data identities, and raw-prediction hashes. Repeat the original worker count on resume; changing it or the batch size requires a new session. Sessions created before this source change cannot be resumed with the new evaluator. Console output gives total progress, and `worker_0.log`/`worker_1.log` contain detailed worker output. A worker failure stops its sibling and preserves completed cells for resume; consult `coordinator_status.json`. Partial artifacts remain in worker folders until successful final aggregation.
 
 ## Local verification and limits
 

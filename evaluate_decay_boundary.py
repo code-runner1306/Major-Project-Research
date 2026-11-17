@@ -6,6 +6,11 @@ import hashlib
 import json
 from pathlib import Path
 import random
+import re
+import os
+import shutil
+import subprocess
+import sys
 import time
 
 import numpy as np
@@ -27,6 +32,18 @@ PAIRS=('obsolete_prefix','latest_value','rename_key')
 
 
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def partition_checkpoints(selected,workers):
+    """Keep each scalar/channel initialization pair together; balance scored cells."""
+    groups={}
+    for key in sorted(selected):groups.setdefault(key[:3],[]).append(key)
+    cost=lambda keys:sum((1 if k[3]=='scalar' else 3)*(6 if k[0]=='mqar' else 9) for k in keys)
+    assignments=[[] for _ in range(workers)];loads=[0]*workers
+    for group,keys in sorted(groups.items(),key=lambda item:(-cost(item[1]),item[0])):
+        target=min(range(workers),key=lambda index:(loads[index],index))
+        assignments[target].extend(keys);loads[target]+=cost(keys)
+    return [sorted(keys) for keys in assignments]
 
 
 def source_identity():
@@ -262,6 +279,9 @@ def summarize(report,output):
 def run(args):
     torch.set_num_threads(1);torch.backends.cuda.matmul.allow_tf32=False
     selected=select_checkpoints(args)
+    if args.worker_index is not None:
+        assigned=set(partition_checkpoints(selected,args.workers)[args.worker_index])
+        selected={key:value for key,value in selected.items() if key in assigned}
     selection=[dict(family=k[0],seed=k[1],initialization=k[2],variant=k[3],
         path=str(p.parent/'latest_checkpoint.pt'),sha256=sha(p.parent/'latest_checkpoint.pt')) for k,(p,s) in sorted(selected.items())]
     protocol=dict(protocol=PROTOCOL,phase='discovery',families=args.family,seeds=args.seeds,
@@ -270,6 +290,7 @@ def run(args):
         mqar_cells=MQAR,overwrite_cells=OVERWRITE,paired_tests=PAIRS,
         cpu_smoke=args.cpu_smoke,device='cpu' if args.cpu_smoke else 'cuda:0',publish=False,
         checkpoint_selection=selection,evaluator_sources=source_identity())
+    if args.worker_index is not None:protocol.update(workers=args.workers,worker_index=args.worker_index)
     executions=sum((1 if k[3]=='scalar' else 3)*(6 if k[0]=='mqar' else 9) for k in selected)
     if args.plan_only:
         print(json.dumps(dict(protocol=PROTOCOL,models=len(selected),evaluations=executions,examples=args.examples,
@@ -285,7 +306,8 @@ def run(args):
         report=dict(status='running',protocol=protocol,results=[],audits=[],wall_seconds=0.)
     for name in ('audits','predictions','fitted_gates'):(args.output/name).mkdir(exist_ok=True)
     atomic_write_json(args.output/'environment.json',dict(torch=str(torch.__version__),cuda_build=torch.version.cuda,
-        gpu=torch.cuda.get_device_name(0) if device.type=='cuda' else None,device=str(device),workers=1,publish=False))
+        gpu=torch.cuda.get_device_name(0) if device.type=='cuda' else None,device=str(device),workers=args.workers,
+        worker_index=args.worker_index,pid=os.getpid(),publish=False))
     previous=report.get('wall_seconds',0.);started=time.monotonic()
     report.update(status='running');report.pop('error',None)
     done={(r['family'],r['seed'],r['initialization'],r['variant'],r['intervention'],r['cell']) for r in report['results']}
@@ -296,6 +318,7 @@ def run(args):
         print(f'{len(selected)} models; {executions} evaluations; no training; publish=false',flush=True)
         for family in args.family:
             for seed in args.seeds:
+                if not any((key[0],key[1])==(family,seed) for key in selected):continue
                 cases=cases_for(family,seed,args.examples)
                 train=source_training(family,seed,args,selected)
                 audit=dict(family=family,seed=seed,smoke_only=args.cpu_smoke,cases={})
@@ -371,6 +394,126 @@ def run(args):
     print('Complete:',args.output/'REPORT.md',flush=True)
 
 
+def merge_worker_results(output,protocol,selected,status,wall_seconds):
+    rows=[];worker_times={};seen=set()
+    for index,assigned in enumerate(protocol['assignments']):
+        worker=output/f'worker_{index}'
+        path=worker/'results.json'
+        if not path.exists():
+            if status=='complete':raise ValueError(f'Missing worker {index} results')
+            continue
+        child=json.loads(path.read_text())
+        if child['protocol']['evaluator_sources']!=protocol['evaluator_sources']:raise ValueError('Worker evaluation sources differ')
+        allowed={tuple(key) for key in assigned}
+        for row in child['results']:
+            model=tuple(row[k] for k in ('family','seed','initialization','variant'))
+            key=(*model,row['intervention'],row['cell'])
+            if model not in allowed or key in seen:raise ValueError('Wrong or duplicated worker result')
+            seen.add(key);rows.append(row)
+        worker_times[str(index)]=child['wall_seconds']
+        if status=='complete':
+            if child['status']!='complete':raise ValueError('A worker is incomplete')
+            # Export immutable artifacts only after successful worker completion.
+            for name in ('audits','predictions','fitted_gates'):
+                destination=output/name;destination.mkdir(exist_ok=True)
+                for source in (worker/name).iterdir():
+                    if not source.is_file():continue
+                    target=destination/source.name
+                    if target.exists() and sha(target)!=sha(source):raise ValueError(f'Conflicting worker artifact: {target}')
+                    if not target.exists():shutil.copy2(source,target)
+    expected=set()
+    for family,seed,init,variant in selected:
+        cells=[cell[0] for cell in (MQAR if family=='mqar' else OVERWRITE)]
+        if family=='overwrite':cells+=['pair_'+kind for kind in PAIRS]
+        for mode in ('original','static','mean') if variant=='channel-wise' else ('original',):
+            expected.update((family,seed,init,variant,mode,cell) for cell in cells)
+    if not seen<=expected or (status=='complete' and seen!=expected):raise ValueError('Merged evaluation coverage differs from selected matrix')
+    if status=='complete':
+        for row in rows:
+            name=f"{row['family']}_seed{row['seed']}_{row['initialization']}_{row['variant']}_{row['intervention']}_{row['cell']}.npz"
+            if sha(output/'predictions'/name)!=row['prediction_sha256']:raise ValueError('Merged prediction hash differs')
+    rows.sort(key=lambda row:tuple(str(row[k]) for k in ('family','seed','initialization','variant','intervention','cell')))
+    report=dict(status=status,protocol=protocol,results=rows,wall_seconds=wall_seconds,worker_wall_seconds=worker_times,
+        artifact_policy='Complete runs export merged artifacts; incomplete runs retain artifacts in worker folders')
+    atomic_write_json(output/'results.json',report);summarize(report,output)
+    return report
+
+
+def coordinator(args):
+    selected=select_checkpoints(args);assignments=partition_checkpoints(selected,args.workers)
+    if any(not group for group in assignments):raise ValueError('Not enough model pairs for two workers; use --workers 1')
+    protocol=dict(protocol=PROTOCOL,phase='discovery',families=args.family,seeds=args.seeds,
+        initializations=sorted({key[2] for key in selected}),workers=args.workers,device='cpu' if args.cpu_smoke else 'cuda:0',
+        examples=args.examples,fit_examples=args.fit_examples,batch=args.batch,cpu_smoke=args.cpu_smoke,
+        seed_offset=700000,reserved_confirmation_offset=900000,publish=False,
+        assignments=assignments,evaluator_sources=source_identity(),
+        checkpoint_selection=[dict(condition=key,path=str(path.parent/'latest_checkpoint.pt'),sha256=sha(path.parent/'latest_checkpoint.pt'))
+                              for key,(path,_) in sorted(selected.items())])
+    cost=lambda keys:sum((1 if k[3]=='scalar' else 3)*(6 if k[0]=='mqar' else 9) for k in keys)
+    if args.plan_only:
+        print(json.dumps(dict(protocol=PROTOCOL,models=len(selected),evaluations=sum(map(cost,assignments)),
+            workers=args.workers,worker_models=list(map(len,assignments)),worker_evaluations=list(map(cost,assignments)),
+            examples=args.examples,device=protocol['device'],publish=False,output=str(args.output)),indent=2));return
+    if args.resume:
+        if not same_manifest(json.loads((args.output/'protocol.json').read_text()),protocol):raise ValueError('Cannot resume a different worker/configuration/source selection')
+        previous=json.loads((args.output/'coordinator_status.json').read_text()).get('wall_seconds',0.)
+    else:
+        args.output.mkdir(parents=True,exist_ok=False);previous=0.
+        atomic_write_json(args.output/'protocol.json',protocol)
+    started=time.monotonic();processes=[];logs=[]
+    state=dict(status='running',workers=args.workers,publish=False,wall_seconds=previous)
+    atomic_write_json(args.output/'coordinator_status.json',state)
+    try:
+        for index in range(args.workers):
+            worker=args.output/f'worker_{index}'
+            command=[sys.executable,str(Path(__file__).resolve()),'--workers',str(args.workers),'--worker-index',str(index),
+                '--root',str(args.root),'--output',str(worker),'--examples',str(args.examples),
+                '--fit-examples',str(args.fit_examples),'--batch',str(args.batch),
+                '--family',*args.family,'--seeds',*map(str,args.seeds),'--training-cache',str(args.training_cache.resolve())]
+            if args.joint_root:command+=['--joint-root',str(args.joint_root.resolve())]
+            if args.run_id:command+=['--run-id',*args.run_id]
+            if args.joint_run_id:command+=['--joint-run-id',*args.joint_run_id]
+            if args.cpu_smoke:command+=['--cpu-smoke']
+            if args.resume and (worker/'protocol.json').exists():command+=['--resume']
+            log=(args.output/f'worker_{index}.log').open('a' if args.resume else 'w',encoding='utf-8');logs.append(log)
+            process=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,
+                env=dict(os.environ,OMP_NUM_THREADS='1',MKL_NUM_THREADS='1'))
+            processes.append(process)
+            print(f'Worker {index}: PID {process.pid}; {cost(assignments[index])} evaluations; log={log.name}',flush=True)
+        last=-1
+        while any(process.poll() is None for process in processes):
+            if any(process.poll() not in (None,0) for process in processes):raise RuntimeError('Evaluation worker failed; inspect worker logs')
+            progress=0
+            for index in range(args.workers):
+                # Windows readers can briefly block atomic replacement of JSON.
+                # Logs are append-only; do not open a live worker's result file.
+                path=args.output/f'worker_{index}.log'
+                if path.exists():
+                    try:
+                        counts=re.findall(r'(?m)^(\d+)/\d+:',path.read_text(encoding='utf-8'))
+                        if counts:progress+=int(counts[-1])
+                    except OSError:pass
+            if progress!=last:
+                print(f'Total progress: {progress}/{sum(map(cost,assignments))}',flush=True);last=progress
+            time.sleep(1.)
+        if any(process.returncode for process in processes):raise RuntimeError('Worker failed; inspect worker logs')
+        state['status']='complete'
+        merge_worker_results(args.output,protocol,selected,'complete',previous+time.monotonic()-started)
+    except BaseException as error:
+        state.update(status='failed_or_interrupted',error=str(error));raise
+    finally:
+        for process in processes:
+            if process.poll() is None:process.terminate()
+        for process in processes:
+            try:process.wait(timeout=10)
+            except subprocess.TimeoutExpired:process.kill();process.wait()
+        for log in logs:log.close()
+        state['wall_seconds']=previous+time.monotonic()-started
+        atomic_write_json(args.output/'coordinator_status.json',state)
+        if state['status']!='complete':merge_worker_results(args.output,protocol,selected,state['status'],state['wall_seconds'])
+    print('Complete:',args.output/'REPORT.md',flush=True)
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root',type=Path,default=Path('output/calibrated_recipe_study/matched-decay-v1'))
@@ -379,16 +522,20 @@ def main():
     p.add_argument('--seeds',nargs='+',type=int,default=[42,43,44]);p.add_argument('--output',type=Path,required=True)
     p.add_argument('--examples',type=int,default=512);p.add_argument('--fit-examples',type=int,default=256)
     p.add_argument('--batch',type=int,default=32);p.add_argument('--resume',action='store_true');p.add_argument('--plan-only',action='store_true')
+    p.add_argument('--workers',type=int,choices=[1,2],default=1)
+    p.add_argument('--worker-index',type=int,choices=[0,1],help=argparse.SUPPRESS)
     p.add_argument('--cpu-smoke',action='store_true',help='Infrastructure check using cached training prefix; not scientific evidence')
     p.add_argument('--training-cache',type=Path,default=Path('research_results/three_seed_confirmation_20261117/diagnostic_training_samples'))
     args=p.parse_args()
+    if args.worker_index is not None and args.worker_index>=args.workers:p.error('Invalid worker index')
     if any(len(set(x))!=len(x) for x in (args.family,args.seeds)):p.error('Selections must be unique')
     if any(s<0 for s in args.seeds) or min(args.examples,args.fit_examples,args.batch)<1 or args.fit_examples>512:p.error('Invalid example/batch/seed selection')
     if args.cpu_smoke:
         args.examples=min(args.examples,2);args.fit_examples=min(args.fit_examples,2);args.batch=2
         if args.joint_root:p.error('CPU smoke uses legacy default models only')
     args.output=args.output.resolve();args.root=args.root.resolve()
-    run(args)
+    if args.workers==2 and args.worker_index is None:coordinator(args)
+    else:run(args)
 
 
 if __name__=='__main__':main()

@@ -1,5 +1,5 @@
 import torch
-from evaluate_decay_boundary import (audit_overwrite,cases_for,paired_case,pair_metrics,score,fit_constants,qualify_forward)
+from evaluate_decay_boundary import (audit_overwrite,cases_for,paired_case,pair_metrics,score,fit_constants,qualify_forward,partition_checkpoints)
 from recipe_evaluation import evaluate
 from recipe_model import RecipeLM
 from stronger_gate_tests import intervention
@@ -61,3 +61,17 @@ def test_agreement_is_not_counted_as_correct_updating():
     assert metrics['latest_joint_correct']==0.
     assert metrics['latest_changed_fraction']==0.
     assert metrics['latest_correct_after_given_correct_before'] is None
+
+
+def test_worker_partition_has_no_duplicates_and_keeps_paired_models_together():
+    selected={(f,s,i,v):None for f in ('mqar','overwrite') for s in (42,43,44)
+              for i in ('default','calibrated','joint') for v in ('scalar','channel-wise')}
+    groups=partition_checkpoints(selected,2)
+    assert set(groups[0]).isdisjoint(groups[1])
+    assert set(groups[0])|set(groups[1])==set(selected)
+    assert partition_checkpoints(dict(reversed(list(selected.items()))),2)==groups
+    for group in groups:
+        for key in group:
+            assert (*key[:3],'scalar') in group and (*key[:3],'channel-wise') in group
+    cost=lambda keys:sum((1 if k[3]=='scalar' else 3)*(6 if k[0]=='mqar' else 9) for k in keys)
+    assert abs(cost(groups[0])-cost(groups[1]))<=36
