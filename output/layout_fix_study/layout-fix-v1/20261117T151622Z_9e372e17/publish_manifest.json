@@ -128,6 +128,132 @@
       "weights_only_checkpoint": false
     },
     {
+      "bytes": 75,
+      "path": "A2_no_block_first/seed_43/channel-wise/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A2_no_block_first/seed_43/channel-wise/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3923,
+      "path": "A2_no_block_first/seed_43/channel-wise/data_manifests.json",
+      "sha256": "6d3f6109b68a8ba17dcf516071a00213125bfd1774afc732b2816945ca5bd87a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 29769,
+      "path": "A2_no_block_first/seed_43/channel-wise/development_curve.json",
+      "sha256": "f6bec979eaeb170eeef50a6975ec95c9faf640bc1fe6b84a99632fa7b265d6c5",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A2_no_block_first/seed_43/channel-wise/initialization_manifest.json",
+      "sha256": "77b9890ce0225c485c3dcdcd0c48657ac06fd4e154b6425756002795a9e4682a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6637840,
+      "path": "A2_no_block_first/seed_43/channel-wise/latest_checkpoint.pt",
+      "sha256": "d550008c8c083c5c4952b027928b96de7f1709e8353befc46e896620e8e05e32",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2025,
+      "path": "A2_no_block_first/seed_43/channel-wise/settings.json",
+      "sha256": "c40e7ec84fc24dfc30e3180c91343c7bfff5adc2609ac06ebe730b7dd4274443",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79367,
+      "path": "A2_no_block_first/seed_43/channel-wise/summary.json",
+      "sha256": "a0e96fde029eb52b38fdc080fd4111021cff038bbeea51a54c204d1c7086e577",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 27756,
+      "path": "A2_no_block_first/seed_43/channel-wise.log",
+      "sha256": "c9ed02a36f9ba215b95ab755007520f9375f30da021acb8b2ac609fb3b89d281",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "A2_no_block_first/seed_43/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1695,
+      "path": "A2_no_block_first/seed_43/pair_status.json",
+      "sha256": "1a84f71bcbc1c0d421339932573bb220117390847ecea3dccabb2dbb95674697",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A2_no_block_first/seed_43/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A2_no_block_first/seed_43/scalar/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3923,
+      "path": "A2_no_block_first/seed_43/scalar/data_manifests.json",
+      "sha256": "6d3f6109b68a8ba17dcf516071a00213125bfd1774afc732b2816945ca5bd87a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 30274,
+      "path": "A2_no_block_first/seed_43/scalar/development_curve.json",
+      "sha256": "be8dc2ff4fec92afd62095509730c8d0ddc5b4f078b8b22e1dfadf579daafb7f",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A2_no_block_first/seed_43/scalar/initialization_manifest.json",
+      "sha256": "551200c8684c3972d535244e989d5450f08d6f29e718691408c95a5efb7ae343",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373648,
+      "path": "A2_no_block_first/seed_43/scalar/latest_checkpoint.pt",
+      "sha256": "560d3f74b4248bda9272e6ddc96f82f1c8a28a7654db4dfe2424a2740b350f83",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2019,
+      "path": "A2_no_block_first/seed_43/scalar/settings.json",
+      "sha256": "74dec4cd087999edaa5d04946b01cedc8d5f3774ec2c987a3b2b1bef6bff48e9",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79657,
+      "path": "A2_no_block_first/seed_43/scalar/summary.json",
+      "sha256": "0359c56a3f5c5c0f2cb60b7614de276f6a767fa3c864c8b045e756df992530a1",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 27889,
+      "path": "A2_no_block_first/seed_43/scalar.log",
+      "sha256": "723dff5698608257393329dbae3dba39a5fbad29d9e4702ed50c260a189478e5",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3154,
+      "path": "A2_no_block_first/seed_43/study_protocol.json",
+      "sha256": "e074451b3b602d1dbd3ab63d5a24750656b94a64b01384a62925681eff3f3c53",
+      "weights_only_checkpoint": false
+    },
+    {
       "bytes": 4663,
       "path": "numerical_qualification.json",
       "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
