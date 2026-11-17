@@ -1,0 +1,159 @@
+{
+  "cases": [
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 5.7220458984375e-06,
+          "normalized_l2": 1.9305419129977963e-07
+        },
+        "beta_grad": {
+          "max_absolute": 3.814697265625e-06,
+          "normalized_l2": 1.6439737748896732e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 1.2387187098283903e-07
+        },
+        "k_grad": {
+          "max_absolute": 1.0967254638671875e-05,
+          "normalized_l2": 2.652554940141272e-07
+        },
+        "output": {
+          "max_absolute": 2.384185791015625e-07,
+          "normalized_l2": 1.5505106887303555e-07
+        },
+        "q_grad": {
+          "max_absolute": 3.814697265625e-06,
+          "normalized_l2": 1.6806660596557776e-07
+        },
+        "state": {
+          "max_absolute": 7.450580596923828e-08,
+          "normalized_l2": 1.0300328767698375e-07
+        },
+        "v_grad": {
+          "max_absolute": 5.960464477539062e-07,
+          "normalized_l2": 2.1865980670554563e-07
+        }
+      },
+      "variant": "scalar",
+      "zero_gate": false
+    },
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 5.7220458984375e-06,
+          "normalized_l2": 2.741520006566134e-07
+        },
+        "beta_grad": {
+          "max_absolute": 5.7220458984375e-06,
+          "normalized_l2": 2.2336990923577105e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 9.343622764390602e-08
+        },
+        "k_grad": {
+          "max_absolute": 1.9073486328125e-05,
+          "normalized_l2": 2.9378625754361565e-07
+        },
+        "output": {
+          "max_absolute": 5.960464477539062e-07,
+          "normalized_l2": 1.5020158627976343e-07
+        },
+        "q_grad": {
+          "max_absolute": 5.7220458984375e-06,
+          "normalized_l2": 1.8737938489721273e-07
+        },
+        "state": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 9.776739062772322e-08
+        },
+        "v_grad": {
+          "max_absolute": 5.960464477539062e-07,
+          "normalized_l2": 1.993952878365235e-07
+        }
+      },
+      "variant": "scalar",
+      "zero_gate": true
+    },
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 2.5033950805664062e-06,
+          "normalized_l2": 2.682906199424906e-07
+        },
+        "beta_grad": {
+          "max_absolute": 3.814697265625e-06,
+          "normalized_l2": 2.831187089213927e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 1.2094614021407324e-07
+        },
+        "k_grad": {
+          "max_absolute": 1.33514404296875e-05,
+          "normalized_l2": 2.76691679346186e-07
+        },
+        "output": {
+          "max_absolute": 4.76837158203125e-07,
+          "normalized_l2": 1.5527513141933014e-07
+        },
+        "q_grad": {
+          "max_absolute": 9.059906005859375e-06,
+          "normalized_l2": 1.8878064622640522e-07
+        },
+        "state": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 9.884083596034543e-08
+        },
+        "v_grad": {
+          "max_absolute": 8.344650268554688e-07,
+          "normalized_l2": 2.2887077477662388e-07
+        }
+      },
+      "variant": "channel-wise",
+      "zero_gate": false
+    },
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 1.430511474609375e-06,
+          "normalized_l2": 2.484258061485889e-07
+        },
+        "beta_grad": {
+          "max_absolute": 4.291534423828125e-06,
+          "normalized_l2": 2.8424781817193434e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 9.835968484139812e-08
+        },
+        "k_grad": {
+          "max_absolute": 1.33514404296875e-05,
+          "normalized_l2": 2.644693211095728e-07
+        },
+        "output": {
+          "max_absolute": 3.5762786865234375e-07,
+          "normalized_l2": 1.5019770671642618e-07
+        },
+        "q_grad": {
+          "max_absolute": 8.106231689453125e-06,
+          "normalized_l2": 1.8322268147130671e-07
+        },
+        "state": {
+          "max_absolute": 8.940696716308594e-08,
+          "normalized_l2": 9.856007920916454e-08
+        },
+        "v_grad": {
+          "max_absolute": 7.152557373046875e-07,
+          "normalized_l2": 2.1649987047567265e-07
+        }
+      },
+      "variant": "channel-wise",
+      "zero_gate": true
+    }
+  ],
+  "chunk_size": 16,
+  "passed": true,
+  "precision": "float32"
+}

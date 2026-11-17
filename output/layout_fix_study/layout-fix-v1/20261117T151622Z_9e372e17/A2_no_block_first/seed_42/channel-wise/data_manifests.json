@@ -1,0 +1,161 @@
+{
+  "arm_development": {
+    "arm": "A2_no_block_first",
+    "emitted_sequence_length": 65,
+    "generator": "layout-fix-v1",
+    "layout_statistics": {
+      "block_first": 0,
+      "draws": 746,
+      "overwrite_count": {
+        "1": 512
+      },
+      "post_target_writes": {
+        "1": 257,
+        "2": 255
+      },
+      "query_distance": {
+        "8": 512
+      },
+      "rejected_block_first": 234,
+      "scored_answers": 1024,
+      "write_tokens": 5120
+    },
+    "model_input_length": 64,
+    "seed": 200042,
+    "sha256": "e8066d46371184462c772401c12346b4fc3f11da3ebf333da3f2be264289757b",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 2048,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "d9650702dd61aafc476eb35f9afb8f1106b876ff243f49b87bd492b59db7733d",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200042,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "development": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "model_input_length": 64,
+    "seed": 200042,
+    "sha256": "bd9a01392d6e58cc0250eb8af86f0b12fa2da6be6e837fb729af578ff3033d38",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 512,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "c8b224ad9d0788334c4194117cbed25deaa1043aaf54fdb11c427c13865c9e82",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200042,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "train": {
+    "arm": "A2_no_block_first",
+    "emitted_sequence_length": 65,
+    "generator": "layout-fix-v1",
+    "layout_statistics": {
+      "block_first": 0,
+      "draws": 149483,
+      "overwrite_count": {
+        "1": 100000
+      },
+      "post_target_writes": {
+        "1": 50203,
+        "2": 49797
+      },
+      "query_distance": {
+        "8": 100000
+      },
+      "rejected_block_first": 49483,
+      "scored_answers": 200000,
+      "write_tokens": 1000000
+    },
+    "model_input_length": 64,
+    "seed": 100042,
+    "sha256": "bd6acd54fadfa6a2fb86790ccd898f3e729790abb064cb919949c0d220a6d54d",
+    "shape": [
+      100000,
+      64
+    ],
+    "source_manifest": {
+      "examples": 400000,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "971c06a377ee1bb04dd8b9fa30dc0ee6bb2e7995064df955f8fe684e173557c7",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 100042,
+      "sequence_length": null,
+      "split": "train",
+      "task": "overwrite"
+    },
+    "split": "train",
+    "upstream_revision": null
+  }
+}
