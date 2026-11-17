@@ -193,6 +193,20 @@ def coordinator(args):
     atomic_write_json(args.output/'study_protocol.json',protocol)
     queue=[(a,s) for a in args.arm for s in args.seeds]
     status=dict(status='running',completed=[],deferred=[],protocol=protocol)
+    publisher=None
+    if args.publish:
+        from layout_fix_publish import SessionPublisher, default_branch
+        branch=args.publish_branch or default_branch(PROTOCOL,args.arm,args.output.name)
+        publisher=SessionPublisher(args.output,branch,args.publish_remote)
+        status['publish_branch']=branch
+        print('Results branch:',branch,flush=True)
+    def publish(message):
+        # A failed push must not kill training; the next sync retries with everything so far.
+        if publisher is None:return True
+        try:
+            publisher.sync(message);print('Published:',message,flush=True);return True
+        except Exception as error:
+            print('WARNING: publishing failed, will retry at the next sync:',error,flush=True);return False
     try:
         if not args.cpu_smoke:
             from benchmark_kaggle_recipe import numerical_qualification
@@ -244,6 +258,7 @@ def coordinator(args):
                 for log in logs:log.close()
                 state['wall_seconds']=time.monotonic()-tick
                 atomic_write_json(pair/'pair_status.json',state)
+                publish(f'Record {arm} seed {seed} ({state["status"]})')
         status['status']='deferred' if status['deferred'] else 'complete'
         print(json.dumps(dict(status=status['status'],completed=status['completed'],deferred=status['deferred'])),flush=True)
     except BaseException as error:
@@ -251,6 +266,12 @@ def coordinator(args):
     finally:
         status['wall_seconds']=time.monotonic()-start
         atomic_write_json(args.output/'session_status.json',status)
+        if publisher is not None:
+            published=publish(f'Record session status ({status["status"]})')
+            publisher.close()
+            if not published:
+                raise RuntimeError(f'Final publish to {publisher.branch} failed; results are still in {args.output}. '
+                                   f'Retry with: python layout_fix_publish.py {args.output} --branch <new branch name>')
 
 
 def check_control(args):
@@ -299,6 +320,9 @@ def main():
     p.add_argument('--cpu-smoke',action='store_true')
     p.add_argument('--plan-only',action='store_true',help='Print selected runs without loading a GPU or writing files')
     p.add_argument('--check-control',action='store_true',help='Verify that existing default checkpoints can serve as A0')
+    p.add_argument('--publish',action='store_true',help='Push results to a new GitHub branch after every model pair')
+    p.add_argument('--publish-branch',help='Branch name (default: research/layout-fix/layout-fix-v1/<arms>/<session>)')
+    p.add_argument('--publish-remote',help='Remote URL or path (default: the origin remote)')
     p.add_argument('--control-root',type=Path,default=Path('output/calibrated_recipe_study/matched-decay-v1'))
     args=p.parse_args()
     if args.seed_count is not None and args.seed_count<1:p.error('Seed count must be positive')
