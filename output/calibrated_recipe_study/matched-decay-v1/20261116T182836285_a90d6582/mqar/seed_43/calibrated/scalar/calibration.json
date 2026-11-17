@@ -1,0 +1,95 @@
+{
+  "examples": 256,
+  "interpretation": "Mean-decay diagnostic targets, not measured full-state memory lifetimes",
+  "layers": [
+    {
+      "achieved_mean_decay": [
+        [
+          0.957603273940919
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0037324363243127993
+        ]
+      ],
+      "layer": 0,
+      "maximum_error": 6.757654658073875e-09,
+      "offsets": [
+        [
+          -1.1717987060546875
+        ]
+      ],
+      "target_half_life": 16.0,
+      "target_mean_decay": 0.9576032806985737
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9785720567468831
+        ]
+      ],
+      "decay_std": [
+        [
+          0.002005926714569799
+        ]
+      ],
+      "layer": 1,
+      "maximum_error": 5.340817010868193e-09,
+      "offsets": [
+        [
+          -6.086359024047852
+        ]
+      ],
+      "target_half_life": 32.0,
+      "target_mean_decay": 0.9785720620877001
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9892280574305814
+        ]
+      ],
+      "decay_std": [
+        [
+          0.00113769825199941
+        ]
+      ],
+      "layer": 2,
+      "maximum_error": 4.423660593388945e-08,
+      "offsets": [
+        [
+          -0.9576797485351562
+        ]
+      ],
+      "target_half_life": 64.0,
+      "target_mean_decay": 0.9892280131939755
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9945993346135695
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0007443002779447838
+        ]
+      ],
+      "layer": 3,
+      "maximum_error": 8.887006364144412e-08,
+      "offsets": [
+        [
+          -7.798194885253906
+        ]
+      ],
+      "target_half_life": 128.0,
+      "target_mean_decay": 0.9945994234836332
+    }
+  ],
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens": 16384,
+  "tokens_sha256": "4aa7b6d19e2fceab27c2d5da1703efe9a51cbaa32010eeff30eb75c4fffbdba9",
+  "wall_seconds": 0.695045999949798
+}

@@ -1,0 +1,95 @@
+{
+  "examples": 256,
+  "interpretation": "Mean-decay diagnostic targets, not measured full-state memory lifetimes",
+  "layers": [
+    {
+      "achieved_mean_decay": [
+        [
+          0.9576032465864862
+        ]
+      ],
+      "decay_std": [
+        [
+          0.004536267303583383
+        ]
+      ],
+      "layer": 0,
+      "maximum_error": 3.4112087488047393e-08,
+      "offsets": [
+        [
+          -3.426828384399414
+        ]
+      ],
+      "target_half_life": 16.0,
+      "target_mean_decay": 0.9576032806985737
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9785719852741533
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0024923377658288707
+        ]
+      ],
+      "layer": 1,
+      "maximum_error": 7.681354674549112e-08,
+      "offsets": [
+        [
+          -5.653181076049805
+        ]
+      ],
+      "target_half_life": 32.0,
+      "target_mean_decay": 0.9785720620877001
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9892280963052981
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0011210360132196623
+        ]
+      ],
+      "layer": 2,
+      "maximum_error": 8.311132260185872e-08,
+      "offsets": [
+        [
+          -6.299571990966797
+        ]
+      ],
+      "target_half_life": 64.0,
+      "target_mean_decay": 0.9892280131939755
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9945994647405756
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0009082744459543905
+        ]
+      ],
+      "layer": 3,
+      "maximum_error": 4.1256942417966513e-08,
+      "offsets": [
+        [
+          -5.548362731933594
+        ]
+      ],
+      "target_half_life": 128.0,
+      "target_mean_decay": 0.9945994234836332
+    }
+  ],
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens": 16384,
+  "tokens_sha256": "dea68e8bf4d422d62a273d1b025ff7aa2e4a426691e9e96948fb246f130efd8a",
+  "wall_seconds": 0.7849524000193924
+}
