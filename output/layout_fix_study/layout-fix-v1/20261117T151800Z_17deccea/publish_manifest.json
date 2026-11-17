@@ -506,6 +506,132 @@
       "weights_only_checkpoint": false
     },
     {
+      "bytes": 75,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4088,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/data_manifests.json",
+      "sha256": "7cd3f603eedbdbc0e538ca5da8b3a0802e3b1d7b7ff3bb751f7dfb84ec911c06",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 28884,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/development_curve.json",
+      "sha256": "3a90b7f37c64f22f767ff8f9e138f8aa7dd6b3ff94eff3879903bb44a17c8a24",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/initialization_manifest.json",
+      "sha256": "77b9890ce0225c485c3dcdcd0c48657ac06fd4e154b6425756002795a9e4682a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6637840,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/latest_checkpoint.pt",
+      "sha256": "25cb8153741d5dffeea6c9d2bf2ad873589ac8005d8c1e05944fed6ae3b3d437",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2044,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/settings.json",
+      "sha256": "e187c5f93e67a7afb6c0fdfd9a8af2d6bb9bea49ffdd96a349a11f546356ffbd",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79473,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise/summary.json",
+      "sha256": "ddff0ebd8ed9c7677a94e29592576f21f287367ebf56a5d6797a2e09d1054dfe",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 26871,
+      "path": "A3_mixed_rewrites/seed_43/channel-wise.log",
+      "sha256": "a6da00a396ffb2a40c43277a7c7a5d39966b4b6ca985119fd6c4d65fd47401a6",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "A3_mixed_rewrites/seed_43/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1698,
+      "path": "A3_mixed_rewrites/seed_43/pair_status.json",
+      "sha256": "fb330350469c70901f5d9853203cb97cd66acd144b16ad321f5603e90ede3d17",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A3_mixed_rewrites/seed_43/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A3_mixed_rewrites/seed_43/scalar/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4088,
+      "path": "A3_mixed_rewrites/seed_43/scalar/data_manifests.json",
+      "sha256": "7cd3f603eedbdbc0e538ca5da8b3a0802e3b1d7b7ff3bb751f7dfb84ec911c06",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 29291,
+      "path": "A3_mixed_rewrites/seed_43/scalar/development_curve.json",
+      "sha256": "bfd980a8ce040a47283a7b16b2a8c1ba428d8e13906317883a188f96effa2e1e",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A3_mixed_rewrites/seed_43/scalar/initialization_manifest.json",
+      "sha256": "551200c8684c3972d535244e989d5450f08d6f29e718691408c95a5efb7ae343",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373648,
+      "path": "A3_mixed_rewrites/seed_43/scalar/latest_checkpoint.pt",
+      "sha256": "ae22ded725b4d421f36e4bfb2479551843a8689ea13fdf639448d631870d8e3f",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2038,
+      "path": "A3_mixed_rewrites/seed_43/scalar/settings.json",
+      "sha256": "171217c2120a9dc02062b3f9379db6ef833af22a860b19fd4df7ad39a8e9a224",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 79490,
+      "path": "A3_mixed_rewrites/seed_43/scalar/summary.json",
+      "sha256": "e0c9b27959aaa9020796cb0cd79b51ecb52af5a1c09141e2efd8235d58b5e9a4",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 26906,
+      "path": "A3_mixed_rewrites/seed_43/scalar.log",
+      "sha256": "b4360258c1241f0f8356ebc26ff82f6770b569b9dd176a5dd785dc646b3ac916",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3288,
+      "path": "A3_mixed_rewrites/seed_43/study_protocol.json",
+      "sha256": "6b924b0e82b9f5de4e6e791f790b9019b5b86411bb34ec16b19201c0a0f19ebb",
+      "weights_only_checkpoint": false
+    },
+    {
       "bytes": 4663,
       "path": "numerical_qualification.json",
       "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
