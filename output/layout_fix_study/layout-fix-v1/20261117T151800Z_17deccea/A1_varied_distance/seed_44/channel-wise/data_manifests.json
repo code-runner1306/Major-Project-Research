@@ -1,0 +1,195 @@
+{
+  "arm_development": {
+    "arm": "A1_varied_distance",
+    "emitted_sequence_length": 65,
+    "generator": "layout-fix-v1",
+    "layout_statistics": {
+      "block_first": 196,
+      "draws": 512,
+      "overwrite_count": {
+        "1": 512
+      },
+      "post_target_writes": {
+        "1": 142,
+        "2": 174,
+        "3": 196
+      },
+      "query_distance": {
+        "8": 57,
+        "9": 57,
+        "10": 57,
+        "11": 57,
+        "12": 57,
+        "13": 57,
+        "14": 57,
+        "15": 57,
+        "16": 56
+      },
+      "rejected_block_first": 0,
+      "scored_answers": 1024,
+      "write_tokens": 5120
+    },
+    "model_input_length": 64,
+    "seed": 200044,
+    "sha256": "20274f045e90ca2c942905bb9a2287b5c458addf23a09563f261fc985fbc97f2",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 2048,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "32fe8dd80c390bce0cecb838fed80af9bf43e59cb7901c6ce13643e2866913c2",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200044,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "development": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "model_input_length": 64,
+    "seed": 200044,
+    "sha256": "c1e122f77beafb20fa1cfd9bdb0774868db40956590c69691c2237d0137274a7",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 512,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "59090f69410686f35b17e437e5162eb880b5947f544ba4e4610c2079ad665bd2",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200044,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "train": {
+    "arm": "A1_varied_distance",
+    "emitted_sequence_length": 65,
+    "generator": "layout-fix-v1",
+    "layout_statistics": {
+      "block_first": 33570,
+      "draws": 100000,
+      "overwrite_count": {
+        "1": 100000
+      },
+      "post_target_writes": {
+        "1": 33323,
+        "2": 33107,
+        "3": 33570
+      },
+      "query_distance": {
+        "8": 11112,
+        "9": 11111,
+        "10": 11111,
+        "11": 11111,
+        "12": 11111,
+        "13": 11111,
+        "14": 11111,
+        "15": 11111,
+        "16": 11111
+      },
+      "rejected_block_first": 0,
+      "scored_answers": 200000,
+      "write_tokens": 1000000
+    },
+    "model_input_length": 64,
+    "seed": 100044,
+    "sha256": "024e99f8b5feac1a3418d678668da02a3b31f7d90a2c0439582d66a3bb5148e4",
+    "shape": [
+      100000,
+      64
+    ],
+    "source_manifest": {
+      "examples": 400000,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "805ab14831b842141b3f457ccabda074cab90da3aadbde7495f93f417a725d97",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 100044,
+      "sequence_length": null,
+      "split": "train",
+      "task": "overwrite"
+    },
+    "split": "train",
+    "upstream_revision": null
+  }
+}

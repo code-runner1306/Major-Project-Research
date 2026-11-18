@@ -1,0 +1,161 @@
+{
+  "arm_development": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "layout_statistics": {
+      "block_first": 156,
+      "draws": 512,
+      "overwrite_count": {
+        "1": 512
+      },
+      "post_target_writes": {
+        "1": 182,
+        "2": 174,
+        "3": 156
+      },
+      "query_distance": {
+        "8": 512
+      },
+      "rejected_block_first": 0,
+      "scored_answers": 1024,
+      "write_tokens": 5120
+    },
+    "model_input_length": 64,
+    "seed": 200042,
+    "sha256": "bd9a01392d6e58cc0250eb8af86f0b12fa2da6be6e837fb729af578ff3033d38",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 512,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "d9650702dd61aafc476eb35f9afb8f1106b876ff243f49b87bd492b59db7733d",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200042,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "development": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "model_input_length": 64,
+    "seed": 200042,
+    "sha256": "bd9a01392d6e58cc0250eb8af86f0b12fa2da6be6e837fb729af578ff3033d38",
+    "shape": [
+      512,
+      64
+    ],
+    "source_manifest": {
+      "examples": 512,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "c8b224ad9d0788334c4194117cbed25deaa1043aaf54fdb11c427c13865c9e82",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 200042,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "overwrite"
+    },
+    "split": "validation",
+    "upstream_revision": null
+  },
+  "train": {
+    "emitted_sequence_length": 65,
+    "generator": "audited-v4-overwrite-extension",
+    "layout_statistics": {
+      "block_first": 33165,
+      "draws": 100000,
+      "overwrite_count": {
+        "1": 100000
+      },
+      "post_target_writes": {
+        "1": 33680,
+        "2": 33155,
+        "3": 33165
+      },
+      "query_distance": {
+        "8": 100000
+      },
+      "rejected_block_first": 0,
+      "scored_answers": 200000,
+      "write_tokens": 1000000
+    },
+    "model_input_length": 64,
+    "seed": 100042,
+    "sha256": "afc228f0e99854574312ca3ad3e963692d3014da5a816a162de5b0250e4116ac",
+    "shape": [
+      100000,
+      64
+    ],
+    "source_manifest": {
+      "examples": 100000,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "971c06a377ee1bb04dd8b9fa30dc0ee6bb2e7995064df955f8fe684e173557c7",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 3000,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          65
+        ],
+        "train_examples": 100000,
+        "validation_examples": null,
+        "vocabulary_size": 8192
+      },
+      "seed": 100042,
+      "sequence_length": null,
+      "split": "train",
+      "task": "overwrite"
+    },
+    "split": "train",
+    "upstream_revision": null
+  }
+}
