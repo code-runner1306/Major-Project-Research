@@ -1,0 +1,5 @@
+RUN armed_gdn K32 seed0 steps6000
+DONE armed_gdn K32 seed0 acc=0.9785 loss=0.1006 tok/s=137008
+RUN armed_gdn K32 seed1 steps6000
+DONE armed_gdn K32 seed1 acc=1.0000 loss=0.0007 tok/s=136933
+RUN armed_gdn K32 seed2 steps6000

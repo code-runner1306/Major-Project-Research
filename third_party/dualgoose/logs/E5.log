@@ -1,0 +1,5 @@
+RUN armed_gdn L64 p4 seed0 steps3000
+DONE armed_gdn L64 seed0 acc=1.0000 loss=0.0027 tok/s=75163
+RUN armed_gdn L64 p4 seed1 steps3000
+DONE armed_gdn L64 seed1 acc=0.9731 loss=0.0366 tok/s=75050
+RUN armed_gdn L64 p4 seed2 steps3000
