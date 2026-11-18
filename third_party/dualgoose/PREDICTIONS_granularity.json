@@ -1,0 +1,24 @@
+{
+  "study": "Scalar vs channel-wise decay in the Anatomy of Associative Recall harness (dualgoose 8ca624a + Major-Project-Research patch)",
+  "frozen": "2026-11-18, before any training run of the scalar arms",
+  "plan": "research_notes/gate_granularity_dualgoose_plan_2026-11-18.md (sections 4 and 9)",
+  "arms": {
+    "armed_gdn": "published cell, unchanged: per-key-channel decay (the code is channel-wise although the paper text says scalar)",
+    "armed_gdn_scalar": "identical except the decay projection outputs one value per token, shared by all key channels"
+  },
+  "experiments": {
+    "E1": "MQAR K=32, d=32, 1 layer, bidirectional, 6000 steps, fp32, rebinding control; seeds 0-9. Upstream reference tag _h10.",
+    "E4": "Haystack L=64, 4 pairs, dense 4, uniform distance curriculum, 2 layers, 2 heads, 3000 steps, fp32; seeds 0-9. Upstream reference tag _h5_d4c.",
+    "E5": "E4 plus --collision and the rebinding control; seeds 0-9. Upstream reference tag _h10ck.",
+    "E6": "Decay interventions on the armed_gdn checkpoints of E1, E4 and E5."
+  },
+  "thresholds": {"mqar_lock_in": 0.9, "long_retrieval_lock_in": 0.8, "alpha": 0.05},
+  "predictions": {
+    "R0_reproduction": "Our armed_gdn reproduces the published cells: E1 mean within 0.05 of the upstream _h10 mean; E4 and E5 lock-in counts not significantly different from upstream (_h5_d4c 6/10, _h10ck 3/10; Fisher two-sided p >= 0.05). If R0 fails, G1-G4 are not interpreted.",
+    "G1_capacity": "E1: armed_gdn mean accuracy minus armed_gdn_scalar mean accuracy > 0, two-sided exact permutation test p < 0.05 over 10 vs 10 seeds. Both arms' rebinding accuracy must stay near the floors.",
+    "G2_distractors": "E4: armed_gdn lock-in rate >= armed_gdn_scalar lock-in rate; Fisher exact reported. No direction is assumed significant.",
+    "G3_collision": "E5: armed_gdn lock-in rate > armed_gdn_scalar lock-in rate, and among non-locked-in seeds the channel-wise arm's accuracy is not lower. Fisher exact reported.",
+    "G4_mechanism": "E6, only if G1 or G3 shows a channel-wise advantage: fixed_channel_mean keeps most of the original accuracy while token_channel_average loses more.",
+    "null_rule": "If G1-G3 all fail at 10 seeds: no detectable decay-granularity effect at constrained state in this harness. Thresholds are not changed after seeing results."
+  }
+}
