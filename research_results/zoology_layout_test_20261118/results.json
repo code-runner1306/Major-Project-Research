@@ -1,0 +1,2563 @@
+{
+  "results": [
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9951171875,
+      "accuracy_by_query_ordinal": [
+        0.9921875,
+        0.990234375,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_1",
+      "errors": 10,
+      "errors_other_memory_value": 10,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        0.998046875,
+        0.998046875
+      ],
+      "cell": "shift_2",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9970703125,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.99609375,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 6,
+      "errors_other_memory_value": 6,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99560546875,
+      "accuracy_by_query_ordinal": [
+        0.9921875,
+        0.990234375,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 9,
+      "errors_other_memory_value": 9,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99658203125,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.990234375,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_8_far",
+      "errors": 7,
+      "errors_other_memory_value": 7,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        0.998046875,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_0",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.96630859375,
+      "accuracy_by_query_ordinal": [
+        0.94921875,
+        0.970703125,
+        0.966796875,
+        0.978515625
+      ],
+      "cell": "shift_1",
+      "errors": 69,
+      "errors_other_memory_value": 62,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9326171875,
+      "accuracy_by_query_ordinal": [
+        0.8984375,
+        0.93359375,
+        0.955078125,
+        0.943359375
+      ],
+      "cell": "shift_2",
+      "errors": 138,
+      "errors_other_memory_value": 99,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.88525390625,
+      "accuracy_by_query_ordinal": [
+        0.828125,
+        0.888671875,
+        0.912109375,
+        0.912109375
+      ],
+      "cell": "shift_4",
+      "errors": 235,
+      "errors_other_memory_value": 174,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.90185546875,
+      "accuracy_by_query_ordinal": [
+        0.853515625,
+        0.908203125,
+        0.923828125,
+        0.921875
+      ],
+      "cell": "shift_8",
+      "errors": 201,
+      "errors_other_memory_value": 156,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.91064453125,
+      "accuracy_by_query_ordinal": [
+        0.876953125,
+        0.888671875,
+        0.9453125,
+        0.931640625
+      ],
+      "cell": "shift_16",
+      "errors": 183,
+      "errors_other_memory_value": 137,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.90966796875,
+      "accuracy_by_query_ordinal": [
+        0.91796875,
+        0.90625,
+        0.8828125,
+        0.931640625
+      ],
+      "cell": "shift_8_far",
+      "errors": 185,
+      "errors_other_memory_value": 156,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99755859375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.994140625,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 5,
+      "errors_other_memory_value": 5,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.99609375,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_16",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8_far",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9951171875,
+      "accuracy_by_query_ordinal": [
+        0.990234375,
+        0.99609375,
+        0.994140625,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 10,
+      "errors_other_memory_value": 10,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99267578125,
+      "accuracy_by_query_ordinal": [
+        0.990234375,
+        0.98828125,
+        0.994140625,
+        0.998046875
+      ],
+      "cell": "shift_2",
+      "errors": 15,
+      "errors_other_memory_value": 13,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.97314453125,
+      "accuracy_by_query_ordinal": [
+        0.953125,
+        0.974609375,
+        0.982421875,
+        0.982421875
+      ],
+      "cell": "shift_4",
+      "errors": 55,
+      "errors_other_memory_value": 49,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.94140625,
+      "accuracy_by_query_ordinal": [
+        0.921875,
+        0.943359375,
+        0.939453125,
+        0.9609375
+      ],
+      "cell": "shift_8",
+      "errors": 120,
+      "errors_other_memory_value": 90,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9462890625,
+      "accuracy_by_query_ordinal": [
+        0.90234375,
+        0.943359375,
+        0.966796875,
+        0.97265625
+      ],
+      "cell": "shift_16",
+      "errors": 110,
+      "errors_other_memory_value": 87,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        0.99609375,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9326171875,
+      "accuracy_by_query_ordinal": [
+        0.958984375,
+        0.93359375,
+        0.931640625,
+        0.90625
+      ],
+      "cell": "shift_8_far",
+      "errors": 138,
+      "errors_other_memory_value": 73,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 1,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99755859375,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.99609375,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_8_far",
+      "errors": 5,
+      "errors_other_memory_value": 5,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        0.998046875
+      ],
+      "cell": "zoology_baseline",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.970703125,
+      "accuracy_by_query_ordinal": [
+        0.96484375,
+        0.953125,
+        0.970703125,
+        0.994140625
+      ],
+      "cell": "shift_1",
+      "errors": 60,
+      "errors_other_memory_value": 58,
+      "errors_position_anchored": 1,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_2",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9853515625,
+      "accuracy_by_query_ordinal": [
+        0.96875,
+        0.98828125,
+        0.986328125,
+        0.998046875
+      ],
+      "cell": "shift_4",
+      "errors": 30,
+      "errors_other_memory_value": 30,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.974609375,
+      "accuracy_by_query_ordinal": [
+        0.953125,
+        0.984375,
+        0.9765625,
+        0.984375
+      ],
+      "cell": "shift_8",
+      "errors": 52,
+      "errors_other_memory_value": 49,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.94970703125,
+      "accuracy_by_query_ordinal": [
+        0.9296875,
+        0.943359375,
+        0.958984375,
+        0.966796875
+      ],
+      "cell": "shift_16",
+      "errors": 103,
+      "errors_other_memory_value": 98,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.97265625,
+      "accuracy_by_query_ordinal": [
+        0.96875,
+        0.970703125,
+        0.97265625,
+        0.978515625
+      ],
+      "cell": "shift_8_far",
+      "errors": 56,
+      "errors_other_memory_value": 46,
+      "errors_position_anchored": 0,
+      "model": "calibrated/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.998046875,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_1",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.994140625,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        0.998046875,
+        0.998046875
+      ],
+      "cell": "shift_8",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8_far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99365234375,
+      "accuracy_by_query_ordinal": [
+        0.9921875,
+        0.98828125,
+        0.994140625,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 13,
+      "errors_other_memory_value": 13,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_2",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99560546875,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        0.9921875,
+        1.0,
+        0.99609375
+      ],
+      "cell": "shift_8",
+      "errors": 9,
+      "errors_other_memory_value": 9,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.99609375,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        0.998046875
+      ],
+      "cell": "near",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        0.998046875
+      ],
+      "cell": "far",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99560546875,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        0.998046875,
+        0.998046875,
+        0.9921875
+      ],
+      "cell": "shift_8_far",
+      "errors": 9,
+      "errors_other_memory_value": 9,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9970703125,
+      "accuracy_by_query_ordinal": [
+        0.9921875,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 6,
+      "errors_other_memory_value": 6,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99462890625,
+      "accuracy_by_query_ordinal": [
+        0.98828125,
+        0.99609375,
+        0.994140625,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 11,
+      "errors_other_memory_value": 11,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99755859375,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 5,
+      "errors_other_memory_value": 5,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99609375,
+      "accuracy_by_query_ordinal": [
+        0.990234375,
+        1.0,
+        0.994140625,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 8,
+      "errors_other_memory_value": 8,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.994140625,
+      "accuracy_by_query_ordinal": [
+        0.990234375,
+        0.994140625,
+        0.99609375,
+        0.99609375
+      ],
+      "cell": "shift_16",
+      "errors": 12,
+      "errors_other_memory_value": 12,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99609375,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.9921875,
+        0.998046875,
+        0.998046875
+      ],
+      "cell": "shift_8_far",
+      "errors": 8,
+      "errors_other_memory_value": 8,
+      "errors_position_anchored": 0,
+      "model": "default/channel-wise/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.99609375,
+        0.998046875,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9931640625,
+      "accuracy_by_query_ordinal": [
+        0.98828125,
+        0.994140625,
+        0.9921875,
+        0.998046875
+      ],
+      "cell": "shift_4",
+      "errors": 14,
+      "errors_other_memory_value": 14,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99609375,
+      "accuracy_by_query_ordinal": [
+        0.9921875,
+        0.998046875,
+        0.994140625,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 8,
+      "errors_other_memory_value": 8,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99169921875,
+      "accuracy_by_query_ordinal": [
+        0.990234375,
+        0.978515625,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 17,
+      "errors_other_memory_value": 17,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        0.998046875,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99365234375,
+      "accuracy_by_query_ordinal": [
+        0.990234375,
+        0.990234375,
+        0.99609375,
+        0.998046875
+      ],
+      "cell": "shift_8_far",
+      "errors": 13,
+      "errors_other_memory_value": 13,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        0.99609375,
+        0.998046875
+      ],
+      "cell": "zoology_baseline",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        0.998046875
+      ],
+      "cell": "shift_0",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.998046875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        0.994140625,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 4,
+      "errors_other_memory_value": 4,
+      "errors_position_anchored": 1,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99658203125,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.99609375,
+        0.998046875,
+        0.99609375
+      ],
+      "cell": "shift_4",
+      "errors": 7,
+      "errors_other_memory_value": 7,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99560546875,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        0.998046875,
+        0.994140625,
+        0.99609375
+      ],
+      "cell": "shift_8",
+      "errors": 9,
+      "errors_other_memory_value": 9,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9970703125,
+      "accuracy_by_query_ordinal": [
+        0.994140625,
+        0.998046875,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 6,
+      "errors_other_memory_value": 6,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99755859375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.994140625,
+        1.0,
+        0.998046875
+      ],
+      "cell": "memory_order",
+      "errors": 5,
+      "errors_other_memory_value": 5,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99560546875,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.9921875,
+        0.99609375,
+        0.998046875
+      ],
+      "cell": "shift_8_far",
+      "errors": 9,
+      "errors_other_memory_value": 9,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/43",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.7529296875,
+      "accuracy_by_query_ordinal": [
+        0.7734375,
+        0.728515625,
+        0.748046875,
+        0.76171875
+      ],
+      "cell": "shift_1",
+      "errors": 506,
+      "errors_other_memory_value": 483,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.89453125,
+      "accuracy_by_query_ordinal": [
+        0.908203125,
+        0.896484375,
+        0.890625,
+        0.8828125
+      ],
+      "cell": "shift_2",
+      "errors": 216,
+      "errors_other_memory_value": 216,
+      "errors_position_anchored": 134,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9140625,
+      "accuracy_by_query_ordinal": [
+        0.896484375,
+        0.927734375,
+        0.91796875,
+        0.9140625
+      ],
+      "cell": "shift_4",
+      "errors": 176,
+      "errors_other_memory_value": 174,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.90576171875,
+      "accuracy_by_query_ordinal": [
+        0.91015625,
+        0.904296875,
+        0.89453125,
+        0.9140625
+      ],
+      "cell": "shift_8",
+      "errors": 193,
+      "errors_other_memory_value": 191,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.89404296875,
+      "accuracy_by_query_ordinal": [
+        0.87890625,
+        0.900390625,
+        0.87890625,
+        0.91796875
+      ],
+      "cell": "shift_16",
+      "errors": 217,
+      "errors_other_memory_value": 216,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.88916015625,
+      "accuracy_by_query_ordinal": [
+        0.859375,
+        0.888671875,
+        0.9140625,
+        0.89453125
+      ],
+      "cell": "shift_8_far",
+      "errors": 227,
+      "errors_other_memory_value": 227,
+      "errors_position_anchored": 0,
+      "model": "default/scalar/44",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8_far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/channel-wise/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "zoology_baseline",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.99609375,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_0",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.99609375,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_1",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_2",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "shift_4",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_8",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.99609375,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "shift_16",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        0.998046875,
+        1.0
+      ],
+      "cell": "near",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 1.0,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "cell": "far",
+      "errors": 0,
+      "errors_other_memory_value": 0,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.9990234375,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "memory_order",
+      "errors": 2,
+      "errors_other_memory_value": 2,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99951171875,
+      "accuracy_by_query_ordinal": [
+        1.0,
+        0.998046875,
+        1.0,
+        1.0
+      ],
+      "cell": "reverse_order",
+      "errors": 1,
+      "errors_other_memory_value": 1,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    },
+    {
+      "accuracy": 0.99853515625,
+      "accuracy_by_query_ordinal": [
+        0.998046875,
+        1.0,
+        0.99609375,
+        1.0
+      ],
+      "cell": "shift_8_far",
+      "errors": 3,
+      "errors_other_memory_value": 3,
+      "errors_position_anchored": 0,
+      "model": "published64/scalar/42",
+      "queries": 2048
+    }
+  ],
+  "status": "complete",
+  "verdicts": {
+    "Z1_sanity": {
+      "models_at_least_95": 14,
+      "of": 14
+    },
+    "Z2_position_shortcut": {
+      "majority": false,
+      "models": [
+        "default/scalar/44"
+      ],
+      "models_showing": 1,
+      "of": 14
+    },
+    "Z3_anchored_errors": {
+      "anchored_share": 0.34183673469387754,
+      "confirmed": false,
+      "errors": 392
+    },
+    "Z4_query_layout": {
+      "far": {
+        "models_within_10_points": 14,
+        "of": 14
+      },
+      "memory_order": {
+        "models_within_10_points": 14,
+        "of": 14
+      },
+      "near": {
+        "models_within_10_points": 14,
+        "of": 14
+      },
+      "reverse_order": {
+        "models_within_10_points": 14,
+        "of": 14
+      }
+    }
+  },
+  "wall_seconds": 1265.3129999999946
+}

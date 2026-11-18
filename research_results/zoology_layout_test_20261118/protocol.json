@@ -1,0 +1,777 @@
+{
+  "cells": [
+    [
+      "zoology_baseline",
+      0,
+      "upstream"
+    ],
+    [
+      "shift_0",
+      0,
+      "power"
+    ],
+    [
+      "shift_1",
+      1,
+      "power"
+    ],
+    [
+      "shift_2",
+      2,
+      "power"
+    ],
+    [
+      "shift_4",
+      4,
+      "power"
+    ],
+    [
+      "shift_8",
+      8,
+      "power"
+    ],
+    [
+      "shift_16",
+      16,
+      "power"
+    ],
+    [
+      "near",
+      0,
+      "near"
+    ],
+    [
+      "far",
+      0,
+      "far"
+    ],
+    [
+      "memory_order",
+      0,
+      "memory_order"
+    ],
+    [
+      "reverse_order",
+      0,
+      "reverse_order"
+    ],
+    [
+      "shift_8_far",
+      8,
+      "far"
+    ]
+  ],
+  "data": [
+    {
+      "cell": "zoology_baseline",
+      "cell_seed": 1600042,
+      "identity": {
+        "cell": "zoology_baseline",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1600042,
+        "sha256": "ff89132b3880640c2fb062a288f1fc7508997afddefc9916e414ddce5c473535",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "upstream",
+      "prefix": 0,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_0",
+      "cell_seed": 1601042,
+      "identity": {
+        "cell": "shift_0",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1601042,
+        "sha256": "f712d678a23207dd7cac86ab8a1f88577206414874d7527f1318f9f849495eef",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 0,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_1",
+      "cell_seed": 1602042,
+      "identity": {
+        "cell": "shift_1",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1602042,
+        "sha256": "59b3294dd3c3e99125b6237c40c39777561a97b4543960455c13d8acac6b01b4",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 1,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_2",
+      "cell_seed": 1603042,
+      "identity": {
+        "cell": "shift_2",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1603042,
+        "sha256": "a957e9b813209367078daafb02d568239720ca4b4e38382cc1cc064324861b54",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 2,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_4",
+      "cell_seed": 1604042,
+      "identity": {
+        "cell": "shift_4",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1604042,
+        "sha256": "e38f30fafcbeeac4099bf7fdb01a134b84cf6e3be98c66f6101e702f08f7f415",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 4,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_8",
+      "cell_seed": 1605042,
+      "identity": {
+        "cell": "shift_8",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1605042,
+        "sha256": "4df6bbf472060817fa5b41cb72151f336c19ad77db7b4a55a5da1e90f690b05e",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 8,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_16",
+      "cell_seed": 1606042,
+      "identity": {
+        "cell": "shift_16",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1606042,
+        "sha256": "c875401f46c42bb7b1ed258f5794e6050c4970a828a607ed7157316a48e3009e",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 16,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "near",
+      "cell_seed": 1607042,
+      "identity": {
+        "cell": "near",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1607042,
+        "sha256": "69adeaeef5f6f3efc7f7079b0fd2b05373f223f08dd454f8bfa8973c5ac3da38",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "near",
+      "prefix": 0,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "far",
+      "cell_seed": 1608042,
+      "identity": {
+        "cell": "far",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1608042,
+        "sha256": "8663faffd2b0c7beb555f8fe2f8345a5a002fccb52be24ac0dfa2a8531e05067",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "far",
+      "prefix": 0,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "memory_order",
+      "cell_seed": 1609042,
+      "identity": {
+        "cell": "memory_order",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1609042,
+        "sha256": "e35ed34abac52bdc7b1b071b0c2e08ca6b2bd7a87cb246f304505a594f4f9515",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "memory_order",
+      "prefix": 0,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "reverse_order",
+      "cell_seed": 1610042,
+      "identity": {
+        "cell": "reverse_order",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1610042,
+        "sha256": "f01433b75b03c6cf8764bb8c1edb9f9c41f378821ab706b86cc2b89398ce90d6",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "reverse_order",
+      "prefix": 0,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_8_far",
+      "cell_seed": 1611042,
+      "identity": {
+        "cell": "shift_8_far",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1611042,
+        "sha256": "865bfd0f4680b278217c89694d530a25335e406a28e4514390646e2a53ecd25d",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "far",
+      "prefix": 8,
+      "seed": 42,
+      "train_overlap": 0
+    },
+    {
+      "cell": "zoology_baseline",
+      "cell_seed": 1600043,
+      "identity": {
+        "cell": "zoology_baseline",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1600043,
+        "sha256": "9e3d99fd3c633caf72b93499d0aa055816af1210519542769c80a0d9c2480cc4",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "upstream",
+      "prefix": 0,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_0",
+      "cell_seed": 1601043,
+      "identity": {
+        "cell": "shift_0",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1601043,
+        "sha256": "782d514d1d699738a719b8d25b4bb41df282e30e0986ca02c975d8cb18bb2241",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 0,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_1",
+      "cell_seed": 1602043,
+      "identity": {
+        "cell": "shift_1",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1602043,
+        "sha256": "0230d4c1c1d590f035f50d1308b747132fd0b6a4ab8effa62ba868b6ed5dcb93",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 1,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_2",
+      "cell_seed": 1603043,
+      "identity": {
+        "cell": "shift_2",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1603043,
+        "sha256": "fdb8340c98e6bfd2546ea640ec72444ee6211b90a2d03c81e81515131162f3ee",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 2,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_4",
+      "cell_seed": 1604043,
+      "identity": {
+        "cell": "shift_4",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1604043,
+        "sha256": "6d16dfa2f9095f2f44dcf0b32948cd105088f0530fade4cbfde15026ebbe0ede",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 4,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_8",
+      "cell_seed": 1605043,
+      "identity": {
+        "cell": "shift_8",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1605043,
+        "sha256": "8004e273f28acbbd9e0e7786c6194ff5b1a89c3e634432e158f97130e995f0d6",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 8,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_16",
+      "cell_seed": 1606043,
+      "identity": {
+        "cell": "shift_16",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1606043,
+        "sha256": "48388a8eba4d54e475b249148ecbbe9a0334d173b8c524714177e30cdc3e90f5",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 16,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "near",
+      "cell_seed": 1607043,
+      "identity": {
+        "cell": "near",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1607043,
+        "sha256": "6a58e44bf4cd285cc60961b46c27aca5a4c36b124ea216af02137ed4a48d0b99",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "near",
+      "prefix": 0,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "far",
+      "cell_seed": 1608043,
+      "identity": {
+        "cell": "far",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1608043,
+        "sha256": "ce3830f704bcb9769250827e2ab7100583e84a6722978ac397ed15e489cc1231",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "far",
+      "prefix": 0,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "memory_order",
+      "cell_seed": 1609043,
+      "identity": {
+        "cell": "memory_order",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1609043,
+        "sha256": "fa135858b9ef553551e808ecef309349a226a2d5529606845abebd204e800648",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "memory_order",
+      "prefix": 0,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "reverse_order",
+      "cell_seed": 1610043,
+      "identity": {
+        "cell": "reverse_order",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1610043,
+        "sha256": "f6aa256cee231b78f8263acbb5cbf513d92bd0d22ee9e3027f2b974bab18f9b7",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "reverse_order",
+      "prefix": 0,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_8_far",
+      "cell_seed": 1611043,
+      "identity": {
+        "cell": "shift_8_far",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1611043,
+        "sha256": "c51eb4ad967e952873c34a8b2ca328a8be73cbf4f11b741cdb9f6cbc19b6630a",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "far",
+      "prefix": 8,
+      "seed": 43,
+      "train_overlap": 0
+    },
+    {
+      "cell": "zoology_baseline",
+      "cell_seed": 1600044,
+      "identity": {
+        "cell": "zoology_baseline",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1600044,
+        "sha256": "6172b7f616d53da721737987520d9e5c119844e67568ac9af2f9f4baf5e6329d",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "upstream",
+      "prefix": 0,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_0",
+      "cell_seed": 1601044,
+      "identity": {
+        "cell": "shift_0",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1601044,
+        "sha256": "ac5e6886d1d8423ae0511daa44f753a2d033c827d6df542f1a37f42c95c45a40",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 0,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_1",
+      "cell_seed": 1602044,
+      "identity": {
+        "cell": "shift_1",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1602044,
+        "sha256": "f39b72c8e05608bd7a96fe6d0fbd9f10b8bad50a5f23917e1626f7206aad3ba2",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 1,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_2",
+      "cell_seed": 1603044,
+      "identity": {
+        "cell": "shift_2",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1603044,
+        "sha256": "05e6e3db941023b67332418e90f4b1a41a038cb4e8a2d5587d451a453d95b753",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 2,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_4",
+      "cell_seed": 1604044,
+      "identity": {
+        "cell": "shift_4",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1604044,
+        "sha256": "ee041a8eaf0dfa03790e2d4630f3b317d7ea15143d04af332d6a5510ce1f60eb",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 4,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_8",
+      "cell_seed": 1605044,
+      "identity": {
+        "cell": "shift_8",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1605044,
+        "sha256": "d4f410657e0209c4e09fa4b09d05647adaef824d3aef412570e6914d84f959de",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 8,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_16",
+      "cell_seed": 1606044,
+      "identity": {
+        "cell": "shift_16",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1606044,
+        "sha256": "4cd8ced015514df9f6caad0b037da8b87bbe30cf55ca31814c1ed9c8aca62098",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "power",
+      "prefix": 16,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "near",
+      "cell_seed": 1607044,
+      "identity": {
+        "cell": "near",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1607044,
+        "sha256": "a6b1201fa0fc652fcd812faded443721461fc35b09b70f997bb8844765dfc5e8",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "near",
+      "prefix": 0,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "far",
+      "cell_seed": 1608044,
+      "identity": {
+        "cell": "far",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1608044,
+        "sha256": "8d80a8a82970f77dc96d62d5cd26292bf5fa17b9a8a1033ad96e9d1609334c60",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "far",
+      "prefix": 0,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "memory_order",
+      "cell_seed": 1609044,
+      "identity": {
+        "cell": "memory_order",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1609044,
+        "sha256": "3fc04a848bb66763136c5dabf26e5fb979da2e745718fc1785175f8a87e43b57",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "memory_order",
+      "prefix": 0,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "reverse_order",
+      "cell_seed": 1610044,
+      "identity": {
+        "cell": "reverse_order",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1610044,
+        "sha256": "488ccea1918da3220d59cfb6f74eef81522c2f2d5e52789b5d020e6cefed31e1",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "reverse_order",
+      "prefix": 0,
+      "seed": 44,
+      "train_overlap": 0
+    },
+    {
+      "cell": "shift_8_far",
+      "cell_seed": 1611044,
+      "identity": {
+        "cell": "shift_8_far",
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "seed": 1611044,
+        "sha256": "411a7cf9a7b681b30ff4efac487f2481ff4bd9c35e5fc6e60e0b54a8181d02f9",
+        "shape": [
+          512,
+          64
+        ],
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "mode": "far",
+      "prefix": 8,
+      "seed": 44,
+      "train_overlap": 0
+    }
+  ],
+  "device": "cpu",
+  "examples": 512,
+  "hypotheses": {
+    "Z1_sanity": "zoology_baseline accuracy >= 95% for every model (they are near-perfect on their training distribution).",
+    "Z2_position_shortcut": "A model shows a position shortcut if accuracy on shift_1, shift_2 or shift_4 is at least 20 points below shift_0. Reported as a count; a majority would mean the shortcut generalises to the standard benchmark.",
+    "Z3_anchored_errors": "Among errors in shift_2 and shift_4, at least 50% equal the position-anchored token (the token where the correct value sits in the unshifted layout) for models showing Z2.",
+    "Z4_query_layout": "Descriptive: near, far, memory_order and reverse_order accuracy relative to shift_0. Key-based retrieval predicts all within 10 points."
+  },
+  "models": {
+    "calibrated/channel-wise/42": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\calibrated\\channel-wise\\latest_checkpoint.pt",
+    "calibrated/channel-wise/43": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\calibrated\\channel-wise\\latest_checkpoint.pt",
+    "calibrated/channel-wise/44": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\calibrated\\channel-wise\\latest_checkpoint.pt",
+    "calibrated/scalar/42": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\calibrated\\scalar\\latest_checkpoint.pt",
+    "calibrated/scalar/43": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\calibrated\\scalar\\latest_checkpoint.pt",
+    "calibrated/scalar/44": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\calibrated\\scalar\\latest_checkpoint.pt",
+    "default/channel-wise/42": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\channel-wise\\latest_checkpoint.pt",
+    "default/channel-wise/43": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\default\\channel-wise\\latest_checkpoint.pt",
+    "default/channel-wise/44": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\channel-wise\\latest_checkpoint.pt",
+    "default/scalar/42": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\scalar\\latest_checkpoint.pt",
+    "default/scalar/43": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T182836285_a90d6582\\mqar\\seed_43\\default\\scalar\\latest_checkpoint.pt",
+    "default/scalar/44": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\scalar\\latest_checkpoint.pt",
+    "published64/channel-wise/42": "published_mqar\\channel-wise\\latest_checkpoint.pt",
+    "published64/scalar/42": "published_mqar\\scalar\\latest_checkpoint.pt"
+  },
+  "purpose": "Layout-stratified test of models trained on the standard Zoology MQAR generator.\n\nQuestion: do models trained on data we did not design (pinned upstream Zoology MQAR, recipe_data.mqar, byte-equivalent\nto Zoology random_non_queries=False) also hide position-based shortcuts behind near-perfect accuracy?\n\nZoology MQAR has fixed structure: the key-value memory always starts at position 0, keys always sit at even positions\nand values at odd positions, and queries follow at power-law gaps (near ones much more likely). This script keeps\neverything else as in Zoology (vocabulary halves, filler token 0, answer-free scoring at the query key) and changes\none layout property at a time:\n\n  zoology_baseline      upstream generator, fresh seed (sanity check)\n  shift_<s>             s filler tokens before the memory; odd s also flips key/value parity\n  near / far            all queries in the first / last available slots\n  memory_order / reverse_order   query order equal to / reversed from memory order (power-law gaps)\n  shift_8_far           shifted memory and far queries together\n\nErrors are attributed: the value of another memory pair, and specifically the \"position-anchored\" answer, meaning the\ntoken sitting where the correct value would be in the unshifted Zoology layout. Hypotheses are written to protocol.json\nbefore evaluation. No training. Seed offset 1600000 is new.\n",
+  "seed_offset": 1600000,
+  "shortcut_gap": 0.2
+}
