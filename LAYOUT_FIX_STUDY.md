@@ -61,11 +61,13 @@ git fetch origin "refs/heads/research/layout-fix/*:refs/remotes/origin/research/
 ```
 
 ```bash
-git restore --source=origin/research/layout-fix/layout-fix-v1/<arms>/<session> --worktree -- output/layout_fix_study
+git restore --source=origin/research/layout-fix/layout-fix-v1/<arms>/<session> --worktree -- output/layout_fix_study/layout-fix-v1/<session>
 ```
 
-Repeat this for the second branch. `git restore --worktree` writes the files without staging them, so
-nothing is added to `maink`. Then run the confirmation on fresh data:
+Repeat this for each branch. **Always restore only the session's own folder (`.../<session>`).** Restoring the
+whole `output/layout_fix_study` folder makes it match that one branch, which deletes the working copies of any
+other sessions' files tracked on `maink`. If that happens, `git checkout HEAD -- output/layout_fix_study` brings them
+back. `git restore --worktree` writes the files without staging them, so nothing is added to `maink`. Then run the confirmation on fresh data:
 
 ```bash
 python confirm_block_layout.py --output research_results/layout_fix_confirmation --device cuda --initializations --layout-fix-root output/layout_fix_study/layout-fix-v1 --arms A0_control A1_varied_distance A2_no_block_first A3_mixed_rewrites --seed-offset 1400000 --extra-distances 20 24

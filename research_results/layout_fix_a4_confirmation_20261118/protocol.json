@@ -1,0 +1,1586 @@
+{
+  "cells": [
+    [
+      "main_r1",
+      4,
+      8,
+      1,
+      [
+        "block_first",
+        "block_after_one_unrelated",
+        "run_broken_before_latest",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "main_r2",
+      4,
+      8,
+      2,
+      [
+        "block_first",
+        "block_after_one_unrelated",
+        "run_broken_before_latest",
+        "initial_then_run",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "main_r3",
+      4,
+      8,
+      3,
+      [
+        "block_first",
+        "block_after_one_unrelated",
+        "run_broken_before_latest",
+        "initial_then_run",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "main_r4",
+      4,
+      8,
+      4,
+      [
+        "block_first",
+        "block_after_one_unrelated",
+        "run_broken_before_latest",
+        "initial_then_run",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance12_r1",
+      4,
+      12,
+      1,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance12_r3",
+      4,
+      12,
+      3,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance16_r1",
+      4,
+      16,
+      1,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance16_r3",
+      4,
+      16,
+      3,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance20_r1",
+      4,
+      20,
+      1,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance20_r3",
+      4,
+      20,
+      3,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance24_r1",
+      4,
+      24,
+      1,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ],
+    [
+      "distance24_r3",
+      4,
+      24,
+      3,
+      [
+        "block_first",
+        "general_nonblock"
+      ]
+    ]
+  ],
+  "checkpoints": {
+    "overwrite/42/A0_control/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A0_control\\seed_42\\channel-wise",
+    "overwrite/42/A0_control/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A0_control\\seed_42\\scalar",
+    "overwrite/42/A1_varied_distance/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A1_varied_distance\\seed_42\\channel-wise",
+    "overwrite/42/A1_varied_distance/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A1_varied_distance\\seed_42\\scalar",
+    "overwrite/42/A2_no_block_first/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A2_no_block_first\\seed_42\\channel-wise",
+    "overwrite/42/A2_no_block_first/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A2_no_block_first\\seed_42\\scalar",
+    "overwrite/42/A3_mixed_rewrites/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A3_mixed_rewrites\\seed_42\\channel-wise",
+    "overwrite/42/A3_mixed_rewrites/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A3_mixed_rewrites\\seed_42\\scalar",
+    "overwrite/42/A4_distance_and_rewrites/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261118T043038Z_4b14ba6b\\A4_distance_and_rewrites\\seed_42\\channel-wise",
+    "overwrite/42/A4_distance_and_rewrites/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261118T035958Z_bede5390\\A4_distance_and_rewrites\\seed_42\\scalar",
+    "overwrite/43/A0_control/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A0_control\\seed_43\\channel-wise",
+    "overwrite/43/A0_control/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A0_control\\seed_43\\scalar",
+    "overwrite/43/A1_varied_distance/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A1_varied_distance\\seed_43\\channel-wise",
+    "overwrite/43/A1_varied_distance/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A1_varied_distance\\seed_43\\scalar",
+    "overwrite/43/A2_no_block_first/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A2_no_block_first\\seed_43\\channel-wise",
+    "overwrite/43/A2_no_block_first/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A2_no_block_first\\seed_43\\scalar",
+    "overwrite/43/A3_mixed_rewrites/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A3_mixed_rewrites\\seed_43\\channel-wise",
+    "overwrite/43/A3_mixed_rewrites/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A3_mixed_rewrites\\seed_43\\scalar",
+    "overwrite/43/A4_distance_and_rewrites/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261118T043038Z_4b14ba6b\\A4_distance_and_rewrites\\seed_43\\channel-wise",
+    "overwrite/43/A4_distance_and_rewrites/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261118T035958Z_bede5390\\A4_distance_and_rewrites\\seed_43\\scalar",
+    "overwrite/44/A0_control/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A0_control\\seed_44\\channel-wise",
+    "overwrite/44/A0_control/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A0_control\\seed_44\\scalar",
+    "overwrite/44/A1_varied_distance/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A1_varied_distance\\seed_44\\channel-wise",
+    "overwrite/44/A1_varied_distance/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A1_varied_distance\\seed_44\\scalar",
+    "overwrite/44/A2_no_block_first/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A2_no_block_first\\seed_44\\channel-wise",
+    "overwrite/44/A2_no_block_first/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151622Z_9e372e17\\A2_no_block_first\\seed_44\\scalar",
+    "overwrite/44/A3_mixed_rewrites/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A3_mixed_rewrites\\seed_44\\channel-wise",
+    "overwrite/44/A3_mixed_rewrites/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261117T151800Z_17deccea\\A3_mixed_rewrites\\seed_44\\scalar",
+    "overwrite/44/A4_distance_and_rewrites/channel-wise": "output\\layout_fix_study\\layout-fix-v1\\20261118T043038Z_4b14ba6b\\A4_distance_and_rewrites\\seed_44\\channel-wise",
+    "overwrite/44/A4_distance_and_rewrites/scalar": "output\\layout_fix_study\\layout-fix-v1\\20261118T035958Z_bede5390\\A4_distance_and_rewrites\\seed_44\\scalar"
+  },
+  "conditioning": "answer_free",
+  "data": [
+    {
+      "cell": "main_r1",
+      "draws": 1635,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "2b95d0a382d9b03b62951f9c6effbd51dda64143898e96143c0d400d99ffbc5f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1635,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "b8ebf1d3c4b5832b8c924cba214f6222a73b319e5ae2c20b06d88e343f64eff4",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1635,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TUTUU": 256
+      },
+      "seed": 42,
+      "sha256": "1b60c413cd44f6e58effea3506f137b95fe5b79abdd7a819a19830b2cdc56c72",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1635,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 84,
+        "UTUTU": 85,
+        "UUTTU": 87
+      },
+      "seed": 42,
+      "sha256": "85d9548be06e8400edbd015cb1748cfe491295b742641b14ddc5df07186119b6",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2408,
+      "layout": "block_first",
+      "patterns": {
+        "TTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "347618b382b931c0fa2f548c859093406cab990a53d2e3e4824d020c8666c94e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2408,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "5e928016f93a621adff39ecefe546f08dc9e76b6a6f0bf5d4354b2b003ad035e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2408,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTUTUU": 256
+      },
+      "seed": 42,
+      "sha256": "afd4ae003626b862feaf96f8cb86b34201c02d53a2f1f22c2df4db7ba70484da",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2408,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "5d4774d7e07847808e5d67f6320ed46cf95e22af2fb4f79857f1662fe02bc305",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2408,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTUUTU": 39,
+        "TUTUTU": 45,
+        "TUUTTU": 42,
+        "UTTUTU": 49,
+        "UTUTTU": 45,
+        "UUTTTU": 36
+      },
+      "seed": 42,
+      "sha256": "7c0e986cf94e1c81031556ad4047c9e818a870ceff332439adb2587b87bd2d3b",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3186,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "671be0fd91fe96c52c60c1002774249f2beb007f86c19fc4f699d4b64c577c83",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3186,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "2e6fcf75e43d25402012f0591502f70e331c3546b30a948b861d714d96f5dfc7",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3186,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTTUTUU": 256
+      },
+      "seed": 42,
+      "sha256": "900e72048e7781caca32df9d1ee67f8c98b46a298f9672ebe95f78dffcca1887",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3186,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "9842cfcee5c9ee96be331064fcf1664abd0585184a37e3554286f7c7c9646736",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3186,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 19,
+        "TTUTTUU": 53,
+        "TTUTUTU": 23,
+        "TTUUTTU": 18,
+        "TUTTUTU": 33,
+        "TUTUTTU": 18,
+        "TUUTTTU": 25,
+        "UTTTUTU": 20,
+        "UTTUTTU": 13,
+        "UTUTTTU": 14,
+        "UUTTTTU": 20
+      },
+      "seed": 42,
+      "sha256": "b9ab14a43e5039dcc7b150313af4e140d06c24658964a5b5c3720c3816578a83",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 3971,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "5ce387386e5697f54de20789e42755e060bab2473155d71e66a92081dd2b1366",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 3971,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "bd3fbd47e2cb49500c06d70893237c31d3b8459e1a9ee1a5f2af02fd7d007ec8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 3971,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTTTUTUU": 256
+      },
+      "seed": 42,
+      "sha256": "24282f35f63d58ef45a6e05a7792e8d990d1b40a648eadf8dce88a6038aa5252",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 3971,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTTTUU": 256
+      },
+      "seed": 42,
+      "sha256": "db739ae86e0d86333c89b03bc6a39f37daaf954bb1e63e3a4f49a20189050398",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 3971,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTTUUTU": 7,
+        "TTTUTTUU": 35,
+        "TTTUTUTU": 7,
+        "TTTUUTTU": 12,
+        "TTUTTTUU": 36,
+        "TTUTTUTU": 13,
+        "TTUTUTTU": 14,
+        "TTUUTTTU": 9,
+        "TUTTTUTU": 15,
+        "TUTTUTTU": 9,
+        "TUTUTTTU": 15,
+        "TUUTTTTU": 15,
+        "UTTTTUTU": 20,
+        "UTTTUTTU": 9,
+        "UTTUTTTU": 20,
+        "UTUTTTTU": 9,
+        "UUTTTTTU": 11
+      },
+      "seed": 42,
+      "sha256": "94d936262d92ba891e32b02b7953d18438d7170e6b90fdbbfb6cd89dc90abbd4",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r1",
+      "draws": 818,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "59790c0376a173b641e48a2823c0559b84a8440c8de16104d6f39809190288f4",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r1",
+      "draws": 818,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 90,
+        "UTUTU": 79,
+        "UUTTU": 87
+      },
+      "seed": 42,
+      "sha256": "3ee71a50e95bc4e795843a3777741b2ef995c3bb4aef138ab7f6aba98dc14d5f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r3",
+      "draws": 750,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "ab9c0517d9993c894242ecc5dda75eeaf8acf1de97ac5b76da0131dcc5acfd7f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r3",
+      "draws": 750,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 18,
+        "TTUTTUU": 55,
+        "TTUTUTU": 23,
+        "TTUUTTU": 15,
+        "TUTTUTU": 14,
+        "TUTUTTU": 20,
+        "TUUTTTU": 24,
+        "UTTTUTU": 23,
+        "UTTUTTU": 25,
+        "UTUTTTU": 24,
+        "UUTTTTU": 15
+      },
+      "seed": 42,
+      "sha256": "de9dfc70cd7ae340d6ef98be9ae9f0d845e66a8738928eb28b53af4f3f7fd5fd",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r1",
+      "draws": 756,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "42459ed4cf53b3c6a22571d304736c9e2a013778734a0ffb662419e9a434b216",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r1",
+      "draws": 756,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 80,
+        "UTUTU": 90,
+        "UUTTU": 86
+      },
+      "seed": 42,
+      "sha256": "bb5b8bf6d805e53ba98e00ac18574570515c21112e9f8feeb90991385e28fcb1",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r3",
+      "draws": 729,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "e31633df090596e225cca76527350d1978d7b3d02737267a6e56f2a6745f95c5",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r3",
+      "draws": 729,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 17,
+        "TTUTTUU": 54,
+        "TTUTUTU": 20,
+        "TTUUTTU": 19,
+        "TUTTUTU": 32,
+        "TUTUTTU": 21,
+        "TUUTTTU": 17,
+        "UTTTUTU": 15,
+        "UTTUTTU": 25,
+        "UTUTTTU": 22,
+        "UUTTTTU": 14
+      },
+      "seed": 42,
+      "sha256": "e92e7d0d8ff257e4698130f68be2ee85c8f41e0080be178e8c9bd44dc2f3798d",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r1",
+      "draws": 812,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "a0010144ef5e9fd8c3aad96b6f075b802efee6f2d401a27be3a32d8ce984527f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r1",
+      "draws": 812,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 92,
+        "UTUTU": 78,
+        "UUTTU": 86
+      },
+      "seed": 42,
+      "sha256": "a34f86f52510eb46d28c4bb190a5dd5595169b279f277c5613a8463886e8e386",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r3",
+      "draws": 772,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "8d57d5d2a3a0a6231c54cef8523a8abf62b35e80afc7adac5a21be442a196489",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r3",
+      "draws": 772,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 18,
+        "TTUTTUU": 59,
+        "TTUTUTU": 23,
+        "TTUUTTU": 21,
+        "TUTTUTU": 19,
+        "TUTUTTU": 17,
+        "TUUTTTU": 22,
+        "UTTTUTU": 18,
+        "UTTUTTU": 19,
+        "UTUTTTU": 22,
+        "UUTTTTU": 18
+      },
+      "seed": 42,
+      "sha256": "56c919c9a853725fda4a6b7c9d3e0f63ff0ced513dbd54d06f76b872916af78c",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r1",
+      "draws": 772,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "8013a4c588913739265b5651d2c9892e428695211a3740eb59bd398b87f355e8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r1",
+      "draws": 772,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 85,
+        "UTUTU": 83,
+        "UUTTU": 88
+      },
+      "seed": 42,
+      "sha256": "44466b8211814b83696635f12ceb13c93d5913a7ffd357dcd4966b4e19fbd32d",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r3",
+      "draws": 817,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 42,
+      "sha256": "7ccdc3f70dd00229f296265c0bdedb123b71d4b8369d564f622d5c326a549fe6",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r3",
+      "draws": 817,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 24,
+        "TTUTTUU": 51,
+        "TTUTUTU": 19,
+        "TTUUTTU": 17,
+        "TUTTUTU": 24,
+        "TUTUTTU": 20,
+        "TUUTTTU": 21,
+        "UTTTUTU": 16,
+        "UTTUTTU": 16,
+        "UTUTTTU": 22,
+        "UUTTTTU": 26
+      },
+      "seed": 42,
+      "sha256": "4a0449c52113140c4d87a61d4e6fa2e6337331a3376cfcd8c8fbeadf5308007a",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1573,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "24f5b8a5ceb792438df4da57ddad7206e8842f80e8876a88a60b53345cc89cb2",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1573,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "8aec6bf68000566ab3b8b2e81dcc47c1a4a31c55f4fb832093d6141f2b027c31",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1573,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TUTUU": 256
+      },
+      "seed": 43,
+      "sha256": "c3d09ebc59e9ac792d95e9373037ad393a294db22596721dc03ea9091dfada02",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1573,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 88,
+        "UTUTU": 81,
+        "UUTTU": 87
+      },
+      "seed": 43,
+      "sha256": "7014d9ecec1a27cc2d17be9f8e53482cedc2e052270d565220d499b36af4672c",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2539,
+      "layout": "block_first",
+      "patterns": {
+        "TTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "ff1fe057ef797338a381d52aaa3df561d645fbb7f52ddf7ae7928d64e3b96138",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2539,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "2f1a0f42eaca3fdb4f396b23eab0d91d70e0dd23579e2620bd577f0b69872617",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2539,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTUTUU": 256
+      },
+      "seed": 43,
+      "sha256": "e945b67adbddd9b3678eab0f71a7b0af0b9aea7813129127cbbf283acba0d0e8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2539,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "01ef1121dc655f2bfd9d638f8d94fce9409944b980d6de518e140b00d2443f3f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2539,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTUUTU": 36,
+        "TUTUTU": 39,
+        "TUUTTU": 52,
+        "UTTUTU": 53,
+        "UTUTTU": 36,
+        "UUTTTU": 40
+      },
+      "seed": 43,
+      "sha256": "c9704876f1b38903362c8cd99d88b5b957f4ee9af9723034f4a1186aff99610e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3097,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "8bae8c0536f7f10920e48529d2b912eae22dc50612e8b28142e0919f44013b69",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3097,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "f661fe7df4e6f4210d687715e356bf24755f639b134de76c06580ee5ff36b06d",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3097,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTTUTUU": 256
+      },
+      "seed": 43,
+      "sha256": "b5fc3487f89b957e5abbe28db9878f4cf11a2fcfb45225d851a09822242f9d99",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3097,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "32b05626fa45a1ffc346102d102d1b6defddf27d2aa732627860ec60ce54908e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3097,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 12,
+        "TTUTTUU": 58,
+        "TTUTUTU": 20,
+        "TTUUTTU": 20,
+        "TUTTUTU": 16,
+        "TUTUTTU": 25,
+        "TUUTTTU": 19,
+        "UTTTUTU": 26,
+        "UTTUTTU": 19,
+        "UTUTTTU": 20,
+        "UUTTTTU": 21
+      },
+      "seed": 43,
+      "sha256": "7d90218b556d45b9baffefd15bbd7d834c886430b62b1eb981bfea2791626df1",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4163,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "3535c0a6c74755566f9ab5cdd727a73dbbdd30aec3a0119e1416fda955fd8660",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4163,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "f0693e174401b6fc505705faeae44665fbd393020bf188718eded1c2933042de",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4163,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTTTUTUU": 256
+      },
+      "seed": 43,
+      "sha256": "929ed594120fd281952e336d0adc55ea224ef9003f9dc2dbd7d14360d9bc15b0",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4163,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTTTUU": 256
+      },
+      "seed": 43,
+      "sha256": "ca58ba2c1d8c3e59e2eadc38a0c5f3d292d0509cdd7e79a608d4b104a9c293ee",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4163,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTTUUTU": 13,
+        "TTTUTTUU": 44,
+        "TTTUTUTU": 11,
+        "TTTUUTTU": 20,
+        "TTUTTTUU": 31,
+        "TTUTTUTU": 10,
+        "TTUTUTTU": 15,
+        "TTUUTTTU": 15,
+        "TUTTTUTU": 9,
+        "TUTTUTTU": 10,
+        "TUTUTTTU": 12,
+        "TUUTTTTU": 11,
+        "UTTTTUTU": 9,
+        "UTTTUTTU": 8,
+        "UTTUTTTU": 13,
+        "UTUTTTTU": 14,
+        "UUTTTTTU": 11
+      },
+      "seed": 43,
+      "sha256": "bad25ec95640461b03e266dd67ad9c49948f3e226d6852f1d9596106aa8008e4",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r1",
+      "draws": 756,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "aa43d231006659663b5060b0dec21dfca3ed468b58f6b572bdf56549410e8a74",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r1",
+      "draws": 756,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 70,
+        "UTUTU": 86,
+        "UUTTU": 100
+      },
+      "seed": 43,
+      "sha256": "b2b0a12258cdd129f8bd4ac425219b1a95bf12c810a2bddf256937ede9673f03",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r3",
+      "draws": 768,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "1d1e300b8e1e89f80b4205c595848f773d6fa33c79150bbedbf673aecdb7b743",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r3",
+      "draws": 768,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 22,
+        "TTUTTUU": 43,
+        "TTUTUTU": 23,
+        "TTUUTTU": 26,
+        "TUTTUTU": 13,
+        "TUTUTTU": 18,
+        "TUUTTTU": 26,
+        "UTTTUTU": 24,
+        "UTTUTTU": 27,
+        "UTUTTTU": 17,
+        "UUTTTTU": 17
+      },
+      "seed": 43,
+      "sha256": "79f96ee6c3bc1e5a21bac0073a9faa9d8b53f6ad36f7a44259a5e67d56a50ae6",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r1",
+      "draws": 765,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "c7ac7bfc7239cade70621a78fa4d32ac47c88c0799058e5661252b9dfc5f89d0",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r1",
+      "draws": 765,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 72,
+        "UTUTU": 84,
+        "UUTTU": 100
+      },
+      "seed": 43,
+      "sha256": "7f73c6a03254407183ab3ea4530d34dbd5233f062e8b4bdebe4de5709e0ec01b",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r3",
+      "draws": 766,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "6630ea4b828633f225c7a86b76be39d56c070d9a7c611a0f4deaf1c6cbc57be8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r3",
+      "draws": 766,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 17,
+        "TTUTTUU": 42,
+        "TTUTUTU": 17,
+        "TTUUTTU": 36,
+        "TUTTUTU": 19,
+        "TUTUTTU": 23,
+        "TUUTTTU": 23,
+        "UTTTUTU": 19,
+        "UTTUTTU": 27,
+        "UTUTTTU": 16,
+        "UUTTTTU": 17
+      },
+      "seed": 43,
+      "sha256": "a3f82497467004545ff80f502dc0cad3da8ff9065b5de994bed2c0bff74875a2",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r1",
+      "draws": 806,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "9b8d1cdf99f6c680405d180dd91d37bd68cfe08df345cfb1179492fab3b381ec",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r1",
+      "draws": 806,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 93,
+        "UTUTU": 91,
+        "UUTTU": 72
+      },
+      "seed": 43,
+      "sha256": "2452cf9c14560f7002282634c06c6a711ab4ac59092b6d2c07c5cff70650a33b",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r3",
+      "draws": 717,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "26135a769df8a908e85202a60c65bc94643173fb4e04acf7e9a1b4861827cc09",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r3",
+      "draws": 717,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 30,
+        "TTUTTUU": 39,
+        "TTUTUTU": 17,
+        "TTUUTTU": 16,
+        "TUTTUTU": 17,
+        "TUTUTTU": 27,
+        "TUUTTTU": 24,
+        "UTTTUTU": 22,
+        "UTTUTTU": 27,
+        "UTUTTTU": 15,
+        "UUTTTTU": 22
+      },
+      "seed": 43,
+      "sha256": "7bb7b92402d8e9a96eb7d236e60808349bcc849aa61b8cdbd8c2383a2cff54a1",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r1",
+      "draws": 794,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "2d334957fa1cf3f8eae4f6cc5fe3ad3768fe1a94d91b4e89f223393add13aee9",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r1",
+      "draws": 794,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 72,
+        "UTUTU": 95,
+        "UUTTU": 89
+      },
+      "seed": 43,
+      "sha256": "202092260b672fe2a835a52aa91a78734e594e086262a2f797f55f20f35628b8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r3",
+      "draws": 799,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 43,
+      "sha256": "0b7b8b9825ce7cf3c08f30b7105f54e6d417f0088e32554731e1e7c18ec563ee",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r3",
+      "draws": 799,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 27,
+        "TTUTTUU": 57,
+        "TTUTUTU": 17,
+        "TTUUTTU": 17,
+        "TUTTUTU": 15,
+        "TUTUTTU": 28,
+        "TUUTTTU": 20,
+        "UTTTUTU": 11,
+        "UTTUTTU": 23,
+        "UTUTTTU": 24,
+        "UUTTTTU": 17
+      },
+      "seed": 43,
+      "sha256": "b47c6b64000263374b52df862626829f63ad008e1e87ad14006f94d764632695",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1596,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "57f064c3a803328e6d09a18e7f747906f24875415886d3c26a36a8c197fd6c2e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1596,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "cc191ac9ff5ce70f69b614e036939d1a2e0b56a87bf8b9b92d72d99ca338c6e2",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1596,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TUTUU": 256
+      },
+      "seed": 44,
+      "sha256": "4ac730bb9e61d14c9aa030602b02f8d9dcfc8458ac9d8f40884621d77f94391a",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r1",
+      "draws": 1596,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 82,
+        "UTUTU": 81,
+        "UUTTU": 93
+      },
+      "seed": 44,
+      "sha256": "fe8cfe392a3892ea332810b42114356245fab7c7fcd1edab20021c043977bdb3",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2499,
+      "layout": "block_first",
+      "patterns": {
+        "TTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "445f825d93cbf74f88ea9a1f9a7a9dff138c29a20971cac0f53ebc6dd0081755",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2499,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "b11c60f2d0ba40dfa077f9ed091f858c13de3b4b8eba9209503a76ff21077913",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2499,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTUTUU": 256
+      },
+      "seed": 44,
+      "sha256": "bc605e6d50531fe98106802822c595c12e3c96c6556e3b271663211f52e430d0",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2499,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "d4b9ff5384f28b451dfcd213d71bd690cee1776412e6986088986cc15893fe75",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r2",
+      "draws": 2499,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTUUTU": 49,
+        "TUTUTU": 37,
+        "TUUTTU": 37,
+        "UTTUTU": 43,
+        "UTUTTU": 41,
+        "UUTTTU": 49
+      },
+      "seed": 44,
+      "sha256": "0caf27999c5eadb3a25c6ca2481ab8067f9f42ce76a266b1604736cb5ee3672b",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3181,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "958699ceea24ca2cfd88053353c7da95f90502d0f7e0b0d1265e4a7ac3cad2a8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3181,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "1e0246027641ec36814ccac52cdfe9c79aafec3bb65c9ac18a76681450df2462",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3181,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTTUTUU": 256
+      },
+      "seed": 44,
+      "sha256": "ad4d6c5dca8019b8a6f5fcec177c6652b1077b1007031ffede30e0fc126cd2b7",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3181,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "416be3b54e9edef07f096d422da9bf83bf68360f6daa6a53c64db21057df3531",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r3",
+      "draws": 3181,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 36,
+        "TTUTTUU": 42,
+        "TTUTUTU": 21,
+        "TTUUTTU": 19,
+        "TUTTUTU": 26,
+        "TUTUTTU": 19,
+        "TUUTTTU": 18,
+        "UTTTUTU": 18,
+        "UTTUTTU": 19,
+        "UTUTTTU": 21,
+        "UUTTTTU": 17
+      },
+      "seed": 44,
+      "sha256": "1862ae02634c3d1002b1ea70068f6b8e9454b0b7f1671b4c1097140da8ac461e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4121,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "13029ac62335056e2f19acbb9ea0e3b8c70d98024d06762a9599d5699064edb8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4121,
+      "layout": "block_after_one_unrelated",
+      "patterns": {
+        "UTTTTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "9e5db7eb048438a8175bd39eb03a6ff5d794ff9182bb5a3aac63ca2a9ac42278",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4121,
+      "layout": "run_broken_before_latest",
+      "patterns": {
+        "TTTTUTUU": 256
+      },
+      "seed": 44,
+      "sha256": "4ae9598443ca64d580fc1cde1f5c371c0ddfaf10326fcd1c7ac95ba51ec0768f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4121,
+      "layout": "initial_then_run",
+      "patterns": {
+        "TUTTTTUU": 256
+      },
+      "seed": 44,
+      "sha256": "7d971020bc9ddffaca1cf37ea8ed13f92b80d2d45c7bb2964609ea393ca9d38f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "main_r4",
+      "draws": 4121,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTTUUTU": 10,
+        "TTTUTTUU": 37,
+        "TTTUTUTU": 9,
+        "TTTUUTTU": 11,
+        "TTUTTTUU": 31,
+        "TTUTTUTU": 12,
+        "TTUTUTTU": 11,
+        "TTUUTTTU": 20,
+        "TUTTTUTU": 10,
+        "TUTTUTTU": 21,
+        "TUTUTTTU": 12,
+        "TUUTTTTU": 14,
+        "UTTTTUTU": 12,
+        "UTTTUTTU": 15,
+        "UTTUTTTU": 11,
+        "UTUTTTTU": 10,
+        "UUTTTTTU": 10
+      },
+      "seed": 44,
+      "sha256": "108ab90b97e62f6197e0bdd857a52cdd467a77a4f1fb21e40dd33628776f6ebd",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r1",
+      "draws": 798,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "5892d7cf184ede0b15248f52b8ab9e423474ac51c5e90d4be8685e15b0e9feb9",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r1",
+      "draws": 798,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 86,
+        "UTUTU": 84,
+        "UUTTU": 86
+      },
+      "seed": 44,
+      "sha256": "63242718c01bed0ab6105f9c132f3c2a4eb9b3c395c64768fe58998e4f15118f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r3",
+      "draws": 775,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "67f6632d1e2215c74c7fc29ddd4bed506d153317fb9e8f543c4a408daf06941f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance12_r3",
+      "draws": 775,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 26,
+        "TTUTTUU": 54,
+        "TTUTUTU": 15,
+        "TTUUTTU": 26,
+        "TUTTUTU": 17,
+        "TUTUTTU": 19,
+        "TUUTTTU": 21,
+        "UTTTUTU": 15,
+        "UTTUTTU": 13,
+        "UTUTTTU": 24,
+        "UUTTTTU": 26
+      },
+      "seed": 44,
+      "sha256": "bc6dcbb51fb47eea9265062d279d077a561baff420c5096d0f501af823154689",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r1",
+      "draws": 814,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "0c97e521231e5edcd08b80930fe7b4bacda46ee2628d294c9981bd73ac15b1e7",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r1",
+      "draws": 814,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 75,
+        "UTUTU": 95,
+        "UUTTU": 86
+      },
+      "seed": 44,
+      "sha256": "260f26e2ac151f4d2934cdb7aa427afb24f379c493c1edde5c5f2d81280f85af",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r3",
+      "draws": 682,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "59fbbc1631f717a802c1a98b075c61ed21469ec8e46845e5fc80a8e88ed18976",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance16_r3",
+      "draws": 682,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 22,
+        "TTUTTUU": 52,
+        "TTUTUTU": 21,
+        "TTUUTTU": 15,
+        "TUTTUTU": 19,
+        "TUTUTTU": 22,
+        "TUUTTTU": 24,
+        "UTTTUTU": 23,
+        "UTTUTTU": 15,
+        "UTUTTTU": 27,
+        "UUTTTTU": 16
+      },
+      "seed": 44,
+      "sha256": "cb3c04bb1e64834f9f4f2eb9a7f08fe68cc3e891e6426a0fba649a9480b16433",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r1",
+      "draws": 798,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "8f557bb2179ae4702dbae9cf5b77de298d48b830e535fcff622e8f66329e70e8",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r1",
+      "draws": 798,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 91,
+        "UTUTU": 87,
+        "UUTTU": 78
+      },
+      "seed": 44,
+      "sha256": "3facbd55d694423c5bbab477626b6c7d74780e2953edb831467c49ab3d2c6a56",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r3",
+      "draws": 751,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "0a81ef67504fd0c574bfceb09e8482d11512289e9688f7f7a9d03025c9e817d5",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance20_r3",
+      "draws": 751,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 27,
+        "TTUTTUU": 52,
+        "TTUTUTU": 21,
+        "TTUUTTU": 14,
+        "TUTTUTU": 22,
+        "TUTUTTU": 27,
+        "TUUTTTU": 30,
+        "UTTTUTU": 18,
+        "UTTUTTU": 17,
+        "UTUTTTU": 19,
+        "UUTTTTU": 9
+      },
+      "seed": 44,
+      "sha256": "0653f37e0aea655786e7da8e3b670b425402e9b04429fbbcae73eb6c7c198c6e",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r1",
+      "draws": 831,
+      "layout": "block_first",
+      "patterns": {
+        "TTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "5da69e3f8722bc7e26523affa62eed63a825c1d5107fde68eee5e394db16b565",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r1",
+      "draws": 831,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TUUTU": 85,
+        "UTUTU": 86,
+        "UUTTU": 85
+      },
+      "seed": 44,
+      "sha256": "c2755b478487addc679ef88967911f6e69b16d74e2683bc3622ad5c2d3cac34f",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r3",
+      "draws": 813,
+      "layout": "block_first",
+      "patterns": {
+        "TTTTUUU": 256
+      },
+      "seed": 44,
+      "sha256": "d6ba8f59d9a93a7876743358789e7e73f68339a0d3b6b81d3c2065fdec40eeaa",
+      "train_overlap": 0
+    },
+    {
+      "cell": "distance24_r3",
+      "draws": 813,
+      "layout": "general_nonblock",
+      "patterns": {
+        "TTTUUTU": 21,
+        "TTUTTUU": 50,
+        "TTUTUTU": 27,
+        "TTUUTTU": 17,
+        "TUTTUTU": 14,
+        "TUTUTTU": 19,
+        "TUUTTTU": 26,
+        "UTTTUTU": 20,
+        "UTTUTTU": 17,
+        "UTUTTTU": 22,
+        "UUTTTTU": 23
+      },
+      "seed": 44,
+      "sha256": "58f3d258efad7c586d7aecf54e1b234ddfadac199aae16866237ef23bc7db386",
+      "train_overlap": 0
+    }
+  ],
+  "device": "cpu",
+  "examples_per_layout": 256,
+  "gpu": null,
+  "hypotheses": {
+    "H1_shortcut": "In main_r3, a model shows the shortcut if block_first latest accuracy is at least 20 points below general_nonblock. Confirmed if a majority of evaluated models show it (10 of 18 with joint models).",
+    "H2_error_identity": "Pooled over models and main_r2..r4, at least 80% of block_first errors return the first replacement.",
+    "H3_trained_layout_sanity": "In main_r1 (training distribution), block_first latest accuracy is at least 95% in all but at most one evaluated model.",
+    "H4_rule_specificity": "Among models showing the shortcut in main_r3, block_after_one_unrelated, run_broken_before_latest and initial_then_run are each within 10 points of general_nonblock in a majority of those models (the failure needs the unbroken run from slot 0).",
+    "H5_gap_control": "Open question, either result is reported: among models showing the shortcut, does the block_first deficit (>=20 points) persist at query distance 12 and 16, where filler separates memory from query? Persisting implicates the write run; vanishing implicates memory-query adjacency or absolute position."
+  },
+  "overlap_audit": true,
+  "purpose": "Layout-controlled confirmation of the block-first overwrite shortcut.\n\nDiscovery (research_notes/write_gate_mechanism_review_2026-11-17.md) found that trained overwrite models\nfail almost only when every write of the queried key precedes every unrelated write (\"block-first\").\nThis script tests that on fresh data with layouts fixed in equal numbers, using the unchanged v4\ngenerator conditioned on write order (rejection sampling), so examples differ from training only in\nlayout. Hypotheses and decision rules are written to protocol.json before any model is evaluated.\n\nNo training. Data seed offset 1300000 is new; confirmation offset 900000 stays untouched.\nPattern notation: T = a write of the queried key, U = an unrelated write, in memory order.\n",
+  "seed_offset": 1500000,
+  "thresholds": {
+    "shortcut_gap": 0.2,
+    "special_match": 0.1
+  },
+  "torch": "2.11.0+cu128"
+}
