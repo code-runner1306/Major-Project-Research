@@ -3,3 +3,38 @@ DONE armed_gdn L64 seed0 acc=1.0000 loss=0.0027 tok/s=75163
 RUN armed_gdn L64 p4 seed1 steps3000
 DONE armed_gdn L64 seed1 acc=0.9731 loss=0.0366 tok/s=75050
 RUN armed_gdn L64 p4 seed2 steps3000
+DONE armed_gdn L64 seed2 acc=0.0905 loss=6.7722 tok/s=74825
+RUN armed_gdn L64 p4 seed3 steps3000
+DONE armed_gdn L64 seed3 acc=0.1375 loss=5.4861 tok/s=75454
+RUN armed_gdn L64 p4 seed4 steps3000
+DONE armed_gdn L64 seed4 acc=0.5145 loss=2.6668 tok/s=70481
+RUN armed_gdn L64 p4 seed5 steps3000
+DONE armed_gdn L64 seed5 acc=0.0483 loss=7.6230 tok/s=73788
+RUN armed_gdn L64 p4 seed6 steps3000
+DONE armed_gdn L64 seed6 acc=0.0544 loss=7.3411 tok/s=73784
+RUN armed_gdn L64 p4 seed7 steps3000
+DONE armed_gdn L64 seed7 acc=0.0227 loss=7.9203 tok/s=74986
+RUN armed_gdn L64 p4 seed8 steps3000
+DONE armed_gdn L64 seed8 acc=0.9679 loss=0.1466 tok/s=75584
+RUN armed_gdn L64 p4 seed9 steps3000
+DONE armed_gdn L64 seed9 acc=0.0483 loss=7.1711 tok/s=74845
+RUN armed_gdn_scalar L64 p4 seed0 steps3000
+DONE armed_gdn_scalar L64 seed0 acc=0.0188 loss=7.9773 tok/s=78376
+RUN armed_gdn_scalar L64 p4 seed1 steps3000
+DONE armed_gdn_scalar L64 seed1 acc=0.9999 loss=0.0016 tok/s=77830
+RUN armed_gdn_scalar L64 p4 seed2 steps3000
+DONE armed_gdn_scalar L64 seed2 acc=0.0181 loss=7.9784 tok/s=77929
+RUN armed_gdn_scalar L64 p4 seed3 steps3000
+DONE armed_gdn_scalar L64 seed3 acc=0.9244 loss=0.2365 tok/s=78629
+RUN armed_gdn_scalar L64 p4 seed4 steps3000
+DONE armed_gdn_scalar L64 seed4 acc=0.0830 loss=6.3492 tok/s=78000
+RUN armed_gdn_scalar L64 p4 seed5 steps3000
+DONE armed_gdn_scalar L64 seed5 acc=0.0815 loss=6.1883 tok/s=79018
+RUN armed_gdn_scalar L64 p4 seed6 steps3000
+DONE armed_gdn_scalar L64 seed6 acc=0.8470 loss=0.1594 tok/s=77539
+RUN armed_gdn_scalar L64 p4 seed7 steps3000
+DONE armed_gdn_scalar L64 seed7 acc=0.9999 loss=0.0021 tok/s=77247
+RUN armed_gdn_scalar L64 p4 seed8 steps3000
+DONE armed_gdn_scalar L64 seed8 acc=0.0176 loss=7.9834 tok/s=77346
+RUN armed_gdn_scalar L64 p4 seed9 steps3000
+DONE armed_gdn_scalar L64 seed9 acc=0.9994 loss=0.0102 tok/s=77176

@@ -1,0 +1,30 @@
+{
+  "label": "armed_gdn_scalar",
+  "seq_len": 64,
+  "pairs": 4,
+  "seed": 4,
+  "n_queries": 4,
+  "curriculum": true,
+  "collision": true,
+  "curriculum_shape": "uniform",
+  "rebind_accuracy": 0.0413818359375,
+  "value_marginal_floor": 0.01852,
+  "d_model": 32,
+  "layers": 2,
+  "params": 45416,
+  "mamba2_d_state": null,
+  "amp": "fp32",
+  "steps": 3000,
+  "lr": 0.001,
+  "batch": 256,
+  "final_loss": 6.349168300628662,
+  "eval_accuracy": 0.0830078125,
+  "eval_samples": 8192,
+  "tok_s": 78000,
+  "git": {
+    "commit": "bf82979",
+    "branch": "maink",
+    "dirty": true,
+    "status_short": "M logs/E1.log\n M logs/E4.log\n M logs/E5.log\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed5.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed6.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed7.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed8.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed9.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed5.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed6.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed7.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed8.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed9.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE4_seed0.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE4_seed1.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE4_seed2.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE4_seed3.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE5_seed0.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE5_seed1.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE5_seed2.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE5_seed3.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed4.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed5.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed6.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed7.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed8.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed9.json\n?? results/mqar_probe/armed_gdn_scalar_k32_d32l1_gran_seed0.json\n?? results/mqar_probe/armed_gdn_scalar_k32_d32l1_gran_seed1.json"
+  }
+}

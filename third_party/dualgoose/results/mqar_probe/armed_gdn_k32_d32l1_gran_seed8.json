@@ -1,0 +1,28 @@
+{
+  "label": "armed_gdn",
+  "K": 32,
+  "seed": 8,
+  "seq_len": 72,
+  "d_model": 32,
+  "layers": 1,
+  "params": 27618,
+  "mamba2_d_state": null,
+  "amp": "fp32",
+  "rebind_accuracy": 0.04052734375,
+  "value_marginal_floor": 0.03846,
+  "table_floor": 0.03125,
+  "no_binding_floor": 0.06851,
+  "steps": 6000,
+  "lr": 0.001,
+  "batch": 256,
+  "final_loss": 0.04396405071020126,
+  "eval_accuracy": 0.99365234375,
+  "eval_samples": 2048,
+  "tok_s": 138206,
+  "git": {
+    "commit": "bf82979",
+    "branch": "maink",
+    "dirty": true,
+    "status_short": "M logs/E1.log\n M logs/E4.log\n M logs/E5.log\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed5.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed6.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed7.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed8.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE4_seed9.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed5.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed6.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed7.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed8.json\n?? results/long_retrieval/armed_gdn_L64p4_d32_granE5_seed9.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE4_seed0.json\n?? results/long_retrieval/armed_gdn_scalar_L64p4_d32_granE5_seed0.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed4.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed5.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed6.json\n?? results/mqar_probe/armed_gdn_k32_d32l1_gran_seed7.json"
+  }
+}
