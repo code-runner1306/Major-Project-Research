@@ -74,3 +74,49 @@ python confirm_block_layout.py --output research_results/layout_fix_confirmation
 The two sessions may run on different Kaggle machines. Each run records
 `initialization_manifest.json`; compare the `base_parameter_sha256` values for the same seed and
 variant across sessions before claiming that arms share their initial weights.
+
+## A4: varied distance and mixed rewrites together, on two separate single-T4 notebooks
+
+A0-A3 results and the reason for A4:
+[research_notes/layout_fix_results_2026-11-18.md](research_notes/layout_fix_results_2026-11-18.md).
+The A4 prediction (`P4_combined_arm`) was frozen in `run_layout_fix_study.py` before training, and every
+session copies it into `study_protocol.json`.
+
+A4 trains 6 models: scalar and channel-wise x seeds 42/43/44. Each notebook trains **one variant** with
+a single worker on one GPU, so **GPU T4 x1** is enough. Its three seeds train one after another, about
+3.2 hours per notebook. Use the same notebook cell as above, changing only the last line:
+
+- Notebook 1:
+
+```python
+subprocess.run(["bash", "run_kaggle_layout_fix.sh", "--arms", "A4_distance_and_rewrites",
+                "--variants", "scalar", "--push-results"], check=True)
+```
+
+- Notebook 2:
+
+```python
+subprocess.run(["bash", "run_kaggle_layout_fix.sh", "--arms", "A4_distance_and_rewrites",
+                "--variants", "channel-wise", "--push-results"], check=True)
+```
+
+Each notebook pushes to its own branch:
+- `research/layout-fix/layout-fix-v1/A4_distance_and_rewrites-scalar/<session>`
+- `research/layout-fix/layout-fix-v1/A4_distance_and_rewrites-channel-wise/<session>`
+
+Because the two variants train in different sessions, the runner records `pairing_check: deferred`
+rather than comparing them. The evaluation step checks their training-data and shared-initialization
+hashes instead.
+
+After both finish, fetch and restore both A4 branches as described above. The A0-A3 files are already
+in `output/layout_fix_study` on `maink`, but their checkpoints are not, because `*.pt` is ignored. If
+this checkout lacks them, restore the two A0-A3 branches too. Then evaluate **all five arms together**
+on new fresh data:
+
+```bash
+python confirm_block_layout.py --output research_results/layout_fix_a4_confirmation --device cuda --initializations --layout-fix-root output/layout_fix_study/layout-fix-v1 --arms A0_control A1_varied_distance A2_no_block_first A3_mixed_rewrites A4_distance_and_rewrites --seed-offset 1500000 --extra-distances 20 24
+```
+
+The earlier A0-A3 runs remain selectable after the A4 code changes:
+`study_configs/layout_fix_accepted_identities.json` records their source identity. The current code
+regenerates their seed-42 training data byte for byte, which was checked for all four arms.

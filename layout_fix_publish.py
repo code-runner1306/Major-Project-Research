@@ -83,8 +83,9 @@ class SessionPublisher:
         shutil.rmtree(self.staging, ignore_errors=True)
 
 
-def default_branch(protocol, arms, session_name):
-    return f'research/layout-fix/{protocol}/{"+".join(arms)}/{session_name}'
+def default_branch(protocol, arms, session_name, variants=('scalar', 'channel-wise')):
+    suffix = '' if len(variants) == 2 else f'-{variants[0]}'
+    return f'research/layout-fix/{protocol}/{"+".join(arms)}{suffix}/{session_name}'
 
 
 if __name__ == '__main__':

@@ -37,7 +37,13 @@ PREDICTIONS={
                   'Only A3 fixes: models need a signal separating second from latest write. None fixes: an '
                   'architecture or optimiser bias; prioritise mechanism localisation.',
     'evaluation':'confirm_block_layout.py with a new seed offset 1400000 and extra distances 20 and 24, after all '
-                 'training is complete; confirmation offset 900000 stays untouched.'}
+                 'training is complete; confirmation offset 900000 stays untouched.',
+    'P4_combined_arm':'Added 18 November 2026, after A0-A3 were evaluated and before A4 was trained. A4 (varied '
+                      'distance and mixed rewrites together) leaves at most 1 of 6 models meeting the H1 shortcut '
+                      'criterion, AND at most 1 of 6 models with a block_first deficit of 20 points or more versus '
+                      'general_nonblock at distance 12 with one rewrite. Secondary, descriptive: general_nonblock '
+                      'accuracy at 2-4 rewrites and unrelated retention relative to A0, A1 and A3. All five arms are '
+                      'evaluated together on fresh data at seed offset 1500000 with extra distances 20 and 24.'}
 VARIANTS=('scalar','channel-wise')
 
 
@@ -186,7 +192,7 @@ def coordinator(args):
             raise RuntimeError('Requested CUDA devices unavailable')
     torch.set_num_threads(1);torch.backends.cuda.matmul.allow_tf32=False
     protocol=dict(protocol=PROTOCOL,stage=args.stage,arms=args.arm,arm_definitions={a:ARMS[a] for a in args.arm},
-        seeds=args.seeds,initialization='default',predictions=PREDICTIONS,
+        seeds=args.seeds,variants=args.variants,initialization='default',predictions=PREDICTIONS,
         epochs=args.epochs,scheduler_epochs=64,source_hashes=identity(),
         torch=str(torch.__version__),devices=devices,cpu_smoke=args.cpu_smoke,
         confirmation_policy='layout confirmation after complete study at offset 1400000; never tune on it; offset 900000 untouched')
@@ -196,7 +202,7 @@ def coordinator(args):
     publisher=None
     if args.publish:
         from layout_fix_publish import SessionPublisher, default_branch
-        branch=args.publish_branch or default_branch(PROTOCOL,args.arm,args.output.name)
+        branch=args.publish_branch or default_branch(PROTOCOL,args.arm,args.output.name,args.variants)
         publisher=SessionPublisher(args.output,branch,args.publish_remote)
         status['publish_branch']=branch
         print('Results branch:',branch,flush=True)
@@ -228,7 +234,11 @@ def coordinator(args):
                 hardware=[] if args.cpu_smoke else [torch.cuda.get_device_name(int(d)) for d in devices])
             processes=[];logs=[];tick=time.monotonic()
             try:
-                for variant,device in zip(VARIANTS,devices if len(devices)==2 else devices*2):
+                # Both variants: one worker each (one per GPU if two devices). One variant: a single worker on
+                # the first device, so a notebook with one T4 can train its share of the study on its own.
+                placements=(zip(args.variants,devices if len(devices)==2 else devices*2) if len(args.variants)==2
+                            else [(args.variants[0],devices[0])])
+                for variant,device in placements:
                     log=(pair/(variant+'.log')).open('w',encoding='utf-8');logs.append(log)
                     command=[sys.executable,__file__,'--worker','--variant',variant,'--arm',arm,
                         '--seeds',str(seed),'--stage',args.stage,
@@ -241,11 +251,14 @@ def coordinator(args):
                     if time.monotonic()-start>args.max_seconds-120:raise TimeoutError('Session reserve reached')
                     time.sleep(.5)
                 if any(p.returncode for p in processes):raise RuntimeError('Worker failed; inspect pair logs')
-                manifests=[json.loads((pair/v/'data_manifests.json').read_text()) for v in VARIANTS]
-                if manifests[0]!=manifests[1]:raise RuntimeError('Paired data mismatch')
-                shared=[json.loads((pair/v/'initialization_manifest.json').read_text())['shared_parameter_sha256'] for v in VARIANTS]
-                if shared[0]!=shared[1]:raise RuntimeError('Paired shared backbone initialization mismatch')
-                state.update(status='complete',qualification_pass=all(json.loads((pair/v/'summary.json').read_text())['learning']['qualification_pass'] for v in VARIANTS))
+                if len(args.variants)==2:
+                    manifests=[json.loads((pair/v/'data_manifests.json').read_text()) for v in VARIANTS]
+                    if manifests[0]!=manifests[1]:raise RuntimeError('Paired data mismatch')
+                    shared=[json.loads((pair/v/'initialization_manifest.json').read_text())['shared_parameter_sha256'] for v in VARIANTS]
+                    if shared[0]!=shared[1]:raise RuntimeError('Paired shared backbone initialization mismatch')
+                else:
+                    state['pairing_check']='deferred: the other variant trains in a separate session; compare data and shared-initialization hashes when evaluating'
+                state.update(status='complete',variants=args.variants,qualification_pass=all(json.loads((pair/v/'summary.json').read_text())['learning']['qualification_pass'] for v in args.variants))
                 status['completed'].append(str(pair.relative_to(args.output)))
             except BaseException as error:
                 state.update(status='failed_or_incomplete',error=str(error));raise
@@ -310,6 +323,8 @@ def main():
     group=p.add_mutually_exclusive_group()
     group.add_argument('--seeds',nargs='+',type=int)
     group.add_argument('--seed-count',type=int)
+    p.add_argument('--variants',nargs='+',choices=VARIANTS,default=list(VARIANTS),
+                   help='Train one variant only to split a study across separate single-GPU sessions')
     p.add_argument('--start-seed',type=int,default=42)
     p.add_argument('--stage',choices=['explore'],default='explore')
     p.add_argument('--devices',default='0',help='0 for two workers sharing GPU0, or 0,1 for one per GPU')
@@ -329,6 +344,8 @@ def main():
     args.seeds=args.seeds or list(range(args.start_seed,args.start_seed+(args.seed_count or 3)))
     if any(s<0 for s in args.seeds) or len(set(args.seeds))!=len(args.seeds):p.error('Seeds must be unique nonnegative integers')
     if len(set(args.arm))!=len(args.arm):p.error('Arms must be unique')
+    if len(set(args.variants))!=len(args.variants):p.error('Variants must be unique')
+    args.variants=[v for v in VARIANTS if v in args.variants]
     if not 900<args.max_seconds<=39600:p.error('Workload ceiling must be 901..39600 seconds')
     if len(args.devices.split(',')) not in (1,2) or any(not d.isdigit() for d in args.devices.split(',')):p.error('Use --devices 0 or 0,1')
     if args.worker and (not args.variant or len(args.arm)!=1 or len(args.seeds)!=1):p.error('Worker requires one complete condition')
@@ -337,8 +354,8 @@ def main():
     if args.output is not None:args.output=args.output.resolve()
     if args.plan_only:
         print(json.dumps(dict(stage=args.stage,arms=args.arm,seeds=args.seeds,initialization='default',
-            models=2*len(args.arm)*len(args.seeds),epochs=args.epochs,scheduler_epochs=64,
-            estimated_hours=round(len(args.arm)*len(args.seeds)*57/60,1),devices=args.devices,output=str(args.output)),indent=2))
+            variants=args.variants,models=len(args.variants)*len(args.arm)*len(args.seeds),epochs=args.epochs,scheduler_epochs=64,
+            estimated_hours_t4=round(len(args.arm)*len(args.seeds)*65/60,1),devices=args.devices,output=str(args.output)),indent=2))
         return
     if args.check_control:
         check_control(args);return

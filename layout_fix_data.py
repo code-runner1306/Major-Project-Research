@@ -5,6 +5,7 @@ Each arm removes one cue that lets block-first overwrite examples be solved by p
   A1_varied_distance  query distance cycles over 8..16 instead of always 8
   A2_no_block_first   v4 data with block-first layouts rejected (all target writes before every unrelated write)
   A3_mixed_rewrites   rewrite count cycles over 1..3 instead of always 1
+  A4_distance_and_rewrites  both A1 and A3 changes at once (every distance x rewrite-count combination)
 Everything else (vocabulary, length, key count, two scored answers per example) is unchanged.
 recipe_data.py is deliberately not modified: its hash is part of every existing checkpoint's source identity.
 """
@@ -21,6 +22,8 @@ ARMS = {
     'A1_varied_distance': dict(query_distances=tuple(range(8, 17)), overwrite_counts=(1,), reject_block_first=False),
     'A2_no_block_first': dict(query_distances=(8,), overwrite_counts=(1,), reject_block_first=True),
     'A3_mixed_rewrites': dict(query_distances=(8,), overwrite_counts=(1, 2, 3), reject_block_first=False),
+    'A4_distance_and_rewrites': dict(query_distances=tuple(range(8, 17)), overwrite_counts=(1, 2, 3),
+                                     reject_block_first=False),
 }
 KEYS = 4
 

@@ -161,6 +161,9 @@ def evaluate(model, cell, device, batch):
 def select_layout_fix(root, seeds, arms, variants):
     """Complete layout-fix-v1 overwrite runs, keyed like select_runs: (family, seed, arm, variant)."""
     from run_layout_fix_study import identity
+    accepted_file = Path('study_configs/layout_fix_accepted_identities.json')
+    accepted = [identity()] + ([entry['source_hashes'] for entry in json.loads(accepted_file.read_text())['identities']]
+                               if accepted_file.exists() else [])
     selected = {}
     for path in root.rglob('summary.json'):
         summary = json.loads(path.read_text())
@@ -173,7 +176,7 @@ def select_layout_fix(root, seeds, arms, variants):
         if key in selected:
             raise ValueError(f'Duplicate layout-fix condition: {key}')
         if (summary.get('status') != 'complete' or cfg.get('epochs') != 16 or summary.get('accepted_optimizer_steps') != 3136
-                or cfg.get('source_hashes') != identity()):
+                or cfg.get('source_hashes') not in accepted):
             raise ValueError(f'Incomplete or incompatible layout-fix run: {path}')
         if not (path.parent / 'latest_checkpoint.pt').is_file():
             raise ValueError(f'Missing checkpoint: {path.parent}')
@@ -251,7 +254,8 @@ def main():
     parser.add_argument('--joint-root', type=Path)
     parser.add_argument('--joint-run-id', nargs='*', default=[])
     parser.add_argument('--layout-fix-root', type=Path, help='Also evaluate layout-fix-v1 runs (run_layout_fix_study.py)')
-    parser.add_argument('--arms', nargs='+', default=['A2_no_block_first', 'A1_varied_distance', 'A3_mixed_rewrites'])
+    parser.add_argument('--arms', nargs='+', default=['A0_control', 'A1_varied_distance', 'A2_no_block_first',
+                                                      'A3_mixed_rewrites', 'A4_distance_and_rewrites'])
     parser.add_argument('--seed-offset', type=int, default=SEED_OFFSET)
     parser.add_argument('--extra-distances', type=int, nargs='*', default=[])
     parser.add_argument('--output', type=Path, required=True)
