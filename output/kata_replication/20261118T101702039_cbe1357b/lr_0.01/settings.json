@@ -1,0 +1,31 @@
+{
+  "batch": 256,
+  "d_model": 128,
+  "early_stop": "stop when K=384 two-pass accuracy reaches 0.999",
+  "epochs": 32,
+  "gradient_clipping": 1.0,
+  "heads": 2,
+  "learning_rate": 0.01,
+  "optimizer": "AdamW(beta1=0.9,beta2=0.95,weight_decay=0.1 except A_log,dt_bias)",
+  "paper_row": {
+    "K=128": 0.853,
+    "K=256": 0.384,
+    "K=384": 0.217,
+    "K=64": 0.998,
+    "average": 0.613,
+    "model": "Gated DeltaNet, dh=64, 1,167,878 parameters"
+  },
+  "precision": "float32",
+  "protocol": "kata-replication-v1",
+  "schedule": "CosineAnnealingLR T_max=32 epochs, stepped per epoch, no warmup",
+  "seed": 42,
+  "torch": "2.11.0+cu128",
+  "train_examples": 100000,
+  "train_keys": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "vocabulary": 8192
+}

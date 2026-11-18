@@ -1,0 +1,269 @@
+{
+  "data": [
+    {
+      "cell": "two_pass_K4",
+      "examples": 512,
+      "keys": 4,
+      "length": 24,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K8",
+      "examples": 512,
+      "keys": 8,
+      "length": 48,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K16",
+      "examples": 512,
+      "keys": 16,
+      "length": 96,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K32",
+      "examples": 512,
+      "keys": 32,
+      "length": 192,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K64",
+      "examples": 256,
+      "keys": 64,
+      "length": 384,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K128",
+      "examples": 256,
+      "keys": 128,
+      "length": 768,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K256",
+      "examples": 256,
+      "keys": 256,
+      "length": 1536,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "two_pass_K384",
+      "examples": 256,
+      "keys": 384,
+      "length": 2304,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 2,
+      "train_overlap": 0
+    },
+    {
+      "cell": "one_pass_K4",
+      "examples": 512,
+      "keys": 4,
+      "length": 16,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 1,
+      "train_overlap": 0
+    },
+    {
+      "cell": "three_pass_K4",
+      "examples": 512,
+      "keys": 4,
+      "length": 32,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "four_pass_K4",
+      "examples": 512,
+      "keys": 4,
+      "length": 40,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 4,
+      "train_overlap": 0
+    },
+    {
+      "cell": "partial_third_K4",
+      "examples": 512,
+      "keys": 4,
+      "length": 28,
+      "oracle_failures": 0,
+      "partial_third": true,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "one_pass_K8",
+      "examples": 512,
+      "keys": 8,
+      "length": 32,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 1,
+      "train_overlap": 0
+    },
+    {
+      "cell": "three_pass_K8",
+      "examples": 512,
+      "keys": 8,
+      "length": 64,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "four_pass_K8",
+      "examples": 512,
+      "keys": 8,
+      "length": 80,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 4,
+      "train_overlap": 0
+    },
+    {
+      "cell": "partial_third_K8",
+      "examples": 512,
+      "keys": 8,
+      "length": 56,
+      "oracle_failures": 0,
+      "partial_third": true,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "one_pass_K16",
+      "examples": 512,
+      "keys": 16,
+      "length": 64,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 1,
+      "train_overlap": 0
+    },
+    {
+      "cell": "three_pass_K16",
+      "examples": 512,
+      "keys": 16,
+      "length": 128,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "four_pass_K16",
+      "examples": 512,
+      "keys": 16,
+      "length": 160,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 4,
+      "train_overlap": 0
+    },
+    {
+      "cell": "partial_third_K16",
+      "examples": 512,
+      "keys": 16,
+      "length": 112,
+      "oracle_failures": 0,
+      "partial_third": true,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "one_pass_K32",
+      "examples": 512,
+      "keys": 32,
+      "length": 128,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 1,
+      "train_overlap": 0
+    },
+    {
+      "cell": "three_pass_K32",
+      "examples": 512,
+      "keys": 32,
+      "length": 256,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 3,
+      "train_overlap": 0
+    },
+    {
+      "cell": "four_pass_K32",
+      "examples": 512,
+      "keys": 32,
+      "length": 320,
+      "oracle_failures": 0,
+      "partial_third": false,
+      "passes": 4,
+      "train_overlap": 0
+    },
+    {
+      "cell": "partial_third_K32",
+      "examples": 512,
+      "keys": 32,
+      "length": 224,
+      "oracle_failures": 0,
+      "partial_third": true,
+      "passes": 3,
+      "train_overlap": 0
+    }
+  ],
+  "device": "cuda",
+  "eval_offset": 1800000,
+  "paper_row": {
+    "K=128": 0.853,
+    "K=256": 0.384,
+    "K=384": 0.217,
+    "K=64": 0.998,
+    "average": 0.613,
+    "model": "Gated DeltaNet, dh=64, 1,167,878 parameters"
+  },
+  "predictions": {
+    "R1_replication": "Descriptive comparison of the selected learning rate (best mean accuracy over K=64,128,256,384, the paper's selection rule) with the paper row 0.998 / 0.853 / 0.384 / 0.217. We call the replication adequate if K=64 accuracy is at least 0.95.",
+    "R2_rewrite_shortcut": "Selected model: accuracy with three write passes (K in 4..32) is at least 20 points below two passes. Also reported for the other two learning rates.",
+    "R3_error_identity": "Pooled over the three learning rates, at least 50% of three-pass errors return the pass-2 (second) write.",
+    "R4_partial_third_pass": "Descriptive: with a third pass rewriting half of the keys, accuracy on rewritten keys versus keys left at their pass-2 value separates \"second write\" (fails rewritten keys) from \"value in the last block\" (fails keys absent from it) and from latest-write recall.",
+    "R5_single_pass": "Descriptive: accuracy with one write pass (plain MQAR, never seen in training).",
+    "evaluation": "eval_kata_replication.py after all three runs finish; fresh evaluation seed 1800000."
+  },
+  "purpose": "Evaluate the kata-replication-v1 runs: replication of KATA Table 2 (GDN, dh=64) and the rewrite-shortcut tests.\n\nCells (fresh data, seed + 1800000, overlap-checked against the training set):\n  replication: two write passes, K in {4, 8, 16, 32} (training range) and {64, 128, 256, 384} (the paper's columns)\n  shortcut:    K in {4, 8, 16, 32} with one pass, three passes, four passes, and a third pass for half of the keys\nEach wrong answer is attributed to the write of the queried key it came from (write 1, 2, ...), another key's value,\nor anything else. Predictions R1-R5 come from run_kata_replication.PREDICTIONS, frozen before training.\n",
+  "runs": {
+    "lr_0.001": "output\\kata_replication\\20261118T101702039_cbe1357b\\lr_0.001\\latest_checkpoint.pt",
+    "lr_0.003": "output\\kata_replication\\20261118T101702039_cbe1357b\\lr_0.003\\latest_checkpoint.pt",
+    "lr_0.01": "output\\kata_replication\\20261118T101702039_cbe1357b\\lr_0.01\\latest_checkpoint.pt"
+  },
+  "seed": 42
+}

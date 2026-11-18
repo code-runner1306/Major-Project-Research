@@ -1,0 +1,28 @@
+{
+  "concurrent": 3,
+  "cpu_smoke": false,
+  "learning_rates": [
+    0.001,
+    0.003,
+    0.01
+  ],
+  "paper_row": {
+    "K=128": 0.853,
+    "K=256": 0.384,
+    "K=384": 0.217,
+    "K=64": 0.998,
+    "average": 0.613,
+    "model": "Gated DeltaNet, dh=64, 1,167,878 parameters"
+  },
+  "predictions": {
+    "R1_replication": "Descriptive comparison of the selected learning rate (best mean accuracy over K=64,128,256,384, the paper's selection rule) with the paper row 0.998 / 0.853 / 0.384 / 0.217. We call the replication adequate if K=64 accuracy is at least 0.95.",
+    "R2_rewrite_shortcut": "Selected model: accuracy with three write passes (K in 4..32) is at least 20 points below two passes. Also reported for the other two learning rates.",
+    "R3_error_identity": "Pooled over the three learning rates, at least 50% of three-pass errors return the pass-2 (second) write.",
+    "R4_partial_third_pass": "Descriptive: with a third pass rewriting half of the keys, accuracy on rewritten keys versus keys left at their pass-2 value separates \"second write\" (fails rewritten keys) from \"value in the last block\" (fails keys absent from it) and from latest-write recall.",
+    "R5_single_pass": "Descriptive: accuracy with one write pass (plain MQAR, never seen in training).",
+    "evaluation": "eval_kata_replication.py after all three runs finish; fresh evaluation seed 1800000."
+  },
+  "protocol": "kata-replication-v1",
+  "seed": 42,
+  "torch": "2.11.0+cu128"
+}
