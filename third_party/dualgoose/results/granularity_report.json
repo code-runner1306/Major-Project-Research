@@ -1,0 +1,316 @@
+{
+  "predictions": {
+    "R0_reproduction": "Our armed_gdn reproduces the published cells: E1 mean within 0.05 of the upstream _h10 mean; E4 and E5 lock-in counts not significantly different from upstream (_h5_d4c 6/10, _h10ck 3/10; Fisher two-sided p >= 0.05). If R0 fails, G1-G4 are not interpreted.",
+    "G1_capacity": "E1: armed_gdn mean accuracy minus armed_gdn_scalar mean accuracy > 0, two-sided exact permutation test p < 0.05 over 10 vs 10 seeds. Both arms' rebinding accuracy must stay near the floors.",
+    "G2_distractors": "E4: armed_gdn lock-in rate >= armed_gdn_scalar lock-in rate; Fisher exact reported. No direction is assumed significant.",
+    "G3_collision": "E5: armed_gdn lock-in rate > armed_gdn_scalar lock-in rate, and among non-locked-in seeds the channel-wise arm's accuracy is not lower. Fisher exact reported.",
+    "G4_mechanism": "E6, only if G1 or G3 shows a channel-wise advantage: fixed_channel_mean keeps most of the original accuracy while token_channel_average loses more.",
+    "null_rule": "If G1-G3 all fail at 10 seeds: no detectable decay-granularity effect at constrained state in this harness. Thresholds are not changed after seeing results."
+  },
+  "verdicts": {
+    "R0_reproduction": {
+      "E1": true,
+      "E4": true,
+      "E5": true
+    },
+    "G1_capacity": {
+      "mean_difference": -0.016796874999999933,
+      "p": 0.0005953798523457966,
+      "confirmed": false
+    },
+    "G2_distractors": {
+      "lock_in": [
+        6,
+        6
+      ],
+      "fisher_p": 1.0,
+      "direction_holds": true
+    },
+    "G3_collision": {
+      "lock_in": [
+        3,
+        5
+      ],
+      "fisher_p": 0.6499166468206716,
+      "direction_holds": false,
+      "significant": false
+    },
+    "G4_mechanism_inputs": {
+      "E1": {
+        "original": 0.983,
+        "fixed_channel_mean": 0.4518,
+        "token_channel_average": 0.2619,
+        "fixed_scalar_mean": 0.2466
+      },
+      "E4": {
+        "original": 0.6647,
+        "fixed_channel_mean": 0.479,
+        "token_channel_average": 0.0177,
+        "fixed_scalar_mean": 0.0177
+      },
+      "E5": {
+        "original": 0.3857,
+        "fixed_channel_mean": 0.2167,
+        "token_channel_average": 0.0187,
+        "fixed_scalar_mean": 0.0187
+      }
+    }
+  },
+  "cells": {
+    "E1": {
+      "channel": {
+        "n": 10,
+        "mean": 0.9830078125,
+        "std": 0.024178354352889016,
+        "lock_in": 10,
+        "per_seed": [
+          0.979,
+          1.0,
+          0.999,
+          0.917,
+          0.995,
+          1.0,
+          0.997,
+          0.968,
+          0.994,
+          0.983
+        ],
+        "rebind_mean": 0.037255859375
+      },
+      "scalar": {
+        "n": 10,
+        "mean": 0.9998046875,
+        "std": 0.00023920798269366973,
+        "lock_in": 10,
+        "per_seed": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rebind_mean": 0.03642578125
+      },
+      "mean_difference": -0.016796874999999933,
+      "permutation_p": 0.0005953798523457966,
+      "lock_in_fisher_p": 1.0,
+      "reproduction": {
+        "upstream": {
+          "n": 10,
+          "mean": 0.98310546875,
+          "std": 0.024045261301646383,
+          "lock_in": 10,
+          "per_seed": [
+            0.979,
+            1.0,
+            0.999,
+            0.917,
+            0.995,
+            1.0,
+            0.997,
+            0.968,
+            0.994,
+            0.983
+          ],
+          "rebind_mean": 0.037255859375
+        },
+        "ours_channel": {
+          "n": 10,
+          "mean": 0.9830078125,
+          "std": 0.024178354352889016,
+          "lock_in": 10,
+          "per_seed": [
+            0.979,
+            1.0,
+            0.999,
+            0.917,
+            0.995,
+            1.0,
+            0.997,
+            0.968,
+            0.994,
+            0.983
+          ],
+          "rebind_mean": 0.037255859375
+        },
+        "mean_difference": -9.76562500000222e-05,
+        "lock_in_fisher_p": 1.0
+      }
+    },
+    "E4": {
+      "channel": {
+        "n": 10,
+        "mean": 0.66466064453125,
+        "std": 0.37002844418432507,
+        "lock_in": 6,
+        "per_seed": [
+          1.0,
+          0.995,
+          0.827,
+          0.986,
+          0.362,
+          0.419,
+          0.115,
+          0.037,
+          1.0,
+          0.905
+        ],
+        "rebind_mean": 0.037646484375
+      },
+      "scalar": {
+        "n": 10,
+        "mean": 0.5908935546875,
+        "std": 0.4611014355878917,
+        "lock_in": 6,
+        "per_seed": [
+          0.019,
+          1.0,
+          0.018,
+          1.0,
+          0.969,
+          0.065,
+          0.82,
+          1.0,
+          0.017,
+          1.0
+        ],
+        "rebind_mean": 0.02047119140625
+      },
+      "mean_difference": 0.07376708984374991,
+      "permutation_p": 0.7018662452098985,
+      "lock_in_fisher_p": 1.0,
+      "reproduction": {
+        "upstream": {
+          "n": 10,
+          "mean": 0.66793212890625,
+          "std": 0.3654426717158985,
+          "lock_in": 6,
+          "per_seed": [
+            1.0,
+            0.866,
+            0.883,
+            0.989,
+            0.362,
+            0.447,
+            0.12,
+            0.041,
+            1.0,
+            0.971
+          ],
+          "rebind_mean": null
+        },
+        "ours_channel": {
+          "n": 10,
+          "mean": 0.66466064453125,
+          "std": 0.37002844418432507,
+          "lock_in": 6,
+          "per_seed": [
+            1.0,
+            0.995,
+            0.827,
+            0.986,
+            0.362,
+            0.419,
+            0.115,
+            0.037,
+            1.0,
+            0.905
+          ],
+          "rebind_mean": 0.037646484375
+        },
+        "mean_difference": -0.003271484375000022,
+        "lock_in_fisher_p": 1.0
+      }
+    },
+    "E5": {
+      "channel": {
+        "n": 10,
+        "mean": 0.38572998046875,
+        "std": 0.41181561979020165,
+        "lock_in": 3,
+        "per_seed": [
+          1.0,
+          0.973,
+          0.09,
+          0.137,
+          0.515,
+          0.048,
+          0.054,
+          0.023,
+          0.968,
+          0.048
+        ],
+        "rebind_mean": 0.03323974609375
+      },
+      "scalar": {
+        "n": 10,
+        "mean": 0.49896240234375,
+        "std": 0.45773990579581925,
+        "lock_in": 5,
+        "per_seed": [
+          0.019,
+          1.0,
+          0.018,
+          0.924,
+          0.083,
+          0.082,
+          0.847,
+          1.0,
+          0.018,
+          0.999
+        ],
+        "rebind_mean": 0.0213623046875
+      },
+      "mean_difference": -0.11323242187499999,
+      "permutation_p": 0.6141289051505769,
+      "lock_in_fisher_p": 0.6499166468206716,
+      "reproduction": {
+        "upstream": {
+          "n": 10,
+          "mean": 0.38272705078125,
+          "std": 0.40450540978718463,
+          "lock_in": 3,
+          "per_seed": [
+            1.0,
+            0.932,
+            0.09,
+            0.149,
+            0.515,
+            0.047,
+            0.058,
+            0.023,
+            0.963,
+            0.05
+          ],
+          "rebind_mean": 0.032568359375
+        },
+        "ours_channel": {
+          "n": 10,
+          "mean": 0.38572998046875,
+          "std": 0.41181561979020165,
+          "lock_in": 3,
+          "per_seed": [
+            1.0,
+            0.973,
+            0.09,
+            0.137,
+            0.515,
+            0.048,
+            0.054,
+            0.023,
+            0.968,
+            0.048
+          ],
+          "rebind_mean": 0.03323974609375
+        },
+        "mean_difference": 0.003002929687499989,
+        "lock_in_fisher_p": 1.0
+      }
+    }
+  }
+}

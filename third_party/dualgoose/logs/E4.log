@@ -9,3 +9,32 @@ DONE armed_gdn L64 seed3 acc=0.9858 loss=0.6754 tok/s=75293
 RUN armed_gdn L64 p4 seed4 steps3000
 DONE armed_gdn L64 seed4 acc=0.3621 loss=4.4180 tok/s=70491
 RUN armed_gdn L64 p4 seed5 steps3000
+DONE armed_gdn L64 seed5 acc=0.4191 loss=4.1314 tok/s=73582
+RUN armed_gdn L64 p4 seed6 steps3000
+DONE armed_gdn L64 seed6 acc=0.1151 loss=6.7822 tok/s=73513
+RUN armed_gdn L64 p4 seed7 steps3000
+DONE armed_gdn L64 seed7 acc=0.0371 loss=7.7028 tok/s=74574
+RUN armed_gdn L64 p4 seed8 steps3000
+DONE armed_gdn L64 seed8 acc=1.0000 loss=0.0047 tok/s=75660
+RUN armed_gdn L64 p4 seed9 steps3000
+DONE armed_gdn L64 seed9 acc=0.9049 loss=0.8015 tok/s=74577
+RUN armed_gdn_scalar L64 p4 seed0 steps3000
+DONE armed_gdn_scalar L64 seed0 acc=0.0193 loss=7.9795 tok/s=78140
+RUN armed_gdn_scalar L64 p4 seed1 steps3000
+DONE armed_gdn_scalar L64 seed1 acc=1.0000 loss=0.0008 tok/s=77839
+RUN armed_gdn_scalar L64 p4 seed2 steps3000
+DONE armed_gdn_scalar L64 seed2 acc=0.0182 loss=7.9809 tok/s=77966
+RUN armed_gdn_scalar L64 p4 seed3 steps3000
+DONE armed_gdn_scalar L64 seed3 acc=0.9999 loss=0.0030 tok/s=78106
+RUN armed_gdn_scalar L64 p4 seed4 steps3000
+DONE armed_gdn_scalar L64 seed4 acc=0.9694 loss=0.2634 tok/s=78125
+RUN armed_gdn_scalar L64 p4 seed5 steps3000
+DONE armed_gdn_scalar L64 seed5 acc=0.0646 loss=7.3432 tok/s=78366
+RUN armed_gdn_scalar L64 p4 seed6 steps3000
+DONE armed_gdn_scalar L64 seed6 acc=0.8204 loss=0.2488 tok/s=77240
+RUN armed_gdn_scalar L64 p4 seed7 steps3000
+DONE armed_gdn_scalar L64 seed7 acc=1.0000 loss=0.0010 tok/s=77291
+RUN armed_gdn_scalar L64 p4 seed8 steps3000
+DONE armed_gdn_scalar L64 seed8 acc=0.0172 loss=7.9735 tok/s=77090
+RUN armed_gdn_scalar L64 p4 seed9 steps3000
+DONE armed_gdn_scalar L64 seed9 acc=1.0000 loss=0.0015 tok/s=77501

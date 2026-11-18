@@ -3,3 +3,38 @@ DONE armed_gdn K32 seed0 acc=0.9785 loss=0.1006 tok/s=137008
 RUN armed_gdn K32 seed1 steps6000
 DONE armed_gdn K32 seed1 acc=1.0000 loss=0.0007 tok/s=136933
 RUN armed_gdn K32 seed2 steps6000
+DONE armed_gdn K32 seed2 acc=0.9990 loss=0.0034 tok/s=136767
+RUN armed_gdn K32 seed3 steps6000
+DONE armed_gdn K32 seed3 acc=0.9170 loss=0.4746 tok/s=131384
+RUN armed_gdn K32 seed4 steps6000
+DONE armed_gdn K32 seed4 acc=0.9946 loss=0.0104 tok/s=133970
+RUN armed_gdn K32 seed5 steps6000
+DONE armed_gdn K32 seed5 acc=0.9995 loss=0.0083 tok/s=136513
+RUN armed_gdn K32 seed6 steps6000
+DONE armed_gdn K32 seed6 acc=0.9966 loss=0.0029 tok/s=136322
+RUN armed_gdn K32 seed7 steps6000
+DONE armed_gdn K32 seed7 acc=0.9683 loss=0.1682 tok/s=136156
+RUN armed_gdn K32 seed8 steps6000
+DONE armed_gdn K32 seed8 acc=0.9937 loss=0.0440 tok/s=138206
+RUN armed_gdn K32 seed9 steps6000
+DONE armed_gdn K32 seed9 acc=0.9829 loss=0.1269 tok/s=137212
+RUN armed_gdn_scalar K32 seed0 steps6000
+DONE armed_gdn_scalar K32 seed0 acc=1.0000 loss=0.0008 tok/s=141845
+RUN armed_gdn_scalar K32 seed1 steps6000
+DONE armed_gdn_scalar K32 seed1 acc=0.9995 loss=0.0014 tok/s=142210
+RUN armed_gdn_scalar K32 seed2 steps6000
+DONE armed_gdn_scalar K32 seed2 acc=1.0000 loss=0.0004 tok/s=142160
+RUN armed_gdn_scalar K32 seed3 steps6000
+DONE armed_gdn_scalar K32 seed3 acc=0.9995 loss=0.0066 tok/s=140678
+RUN armed_gdn_scalar K32 seed4 steps6000
+DONE armed_gdn_scalar K32 seed4 acc=1.0000 loss=0.0001 tok/s=140671
+RUN armed_gdn_scalar K32 seed5 steps6000
+DONE armed_gdn_scalar K32 seed5 acc=0.9995 loss=0.0045 tok/s=139437
+RUN armed_gdn_scalar K32 seed6 steps6000
+DONE armed_gdn_scalar K32 seed6 acc=1.0000 loss=0.0001 tok/s=195810
+RUN armed_gdn_scalar K32 seed7 steps6000
+DONE armed_gdn_scalar K32 seed7 acc=1.0000 loss=0.0005 tok/s=201887
+RUN armed_gdn_scalar K32 seed8 steps6000
+DONE armed_gdn_scalar K32 seed8 acc=1.0000 loss=0.0005 tok/s=192530
+RUN armed_gdn_scalar K32 seed9 steps6000
+DONE armed_gdn_scalar K32 seed9 acc=0.9995 loss=0.0008 tok/s=189994
