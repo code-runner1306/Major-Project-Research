@@ -258,61 +258,41 @@ def run(output: Path = OUT, figure: Path = FIGURE) -> None:
 
 
 def plot_results(rows: list[dict], figure: Path = FIGURE) -> None:
-    """Create a compact, single-column vector diagnostic for paper use.
-
-    The selected pair is calibrated/mean-decay seed 43, the useful matched
-    contrast in which the scalar checkpoint gets 24/64 answers and the
-    channel-wise checkpoint gets 63/64 on this deterministic 16-example
-    subset.  The complete per-seed coverage remains in results.json.
-    """
-    subset = [
-        row
-        for row in rows
-        if row["length"] == 1024
-        and row["seed"] == 43
-        and row["initialization"] == "calibrated"
-    ]
-    if len(subset) != 2:
-        return
-    colors = {"scalar": "#276FBF", "channel-wise": "#D1495B"}
-    labels = {"scalar": "scalar (24/64)", "channel-wise": "channel-wise (63/64)"}
-    fig, axes = plt.subplots(1, 2, figsize=(3.4, 1.85), constrained_layout=True)
-    ax0, ax1 = axes
-    for row in sorted(subset, key=lambda x: x["variant"]):
-        color = colors[row["variant"]]
-        xs = np.arange(1, len(row["layers"]) + 1)
-        product_log10 = np.array([item["log_product_p50"] / math.log(10.0) for item in row["layers"]])
-        product_lo = np.array([item["log_product_p10"] / math.log(10.0) for item in row["layers"]])
-        product_hi = np.array([item["log_product_p90"] / math.log(10.0) for item in row["layers"]])
-        ax0.plot(xs, product_log10, color=color, marker="o", linewidth=1.0, markersize=3,
-                 label=labels[row["variant"]])
-        if row["variant"] == "channel-wise":
-            ax0.fill_between(xs, product_lo, product_hi, color=color, alpha=0.16, linewidth=0)
-        alpha = np.array([item["alpha_p50"] for item in row["layers"]])
-        alpha_lo = np.array([item["alpha_p10"] for item in row["layers"]])
-        alpha_hi = np.array([item["alpha_p90"] for item in row["layers"]])
-        ax1.plot(xs, alpha, color=color, marker="o", linewidth=1.0, markersize=3,
-                 label=labels[row["variant"]])
-        if row["variant"] == "channel-wise":
-            ax1.fill_between(xs, alpha_lo, alpha_hi, color=color, alpha=0.16, linewidth=0)
-    ax0.set_title("960-filler product", fontsize=7)
-    ax0.set_ylabel(r"median $\log_{10}\prod\alpha$", fontsize=6.5)
-    ax0.set_xlabel("GDN layer")
-    ax0.set_xticks(range(1, 5))
-    ax0.tick_params(labelsize=6)
-    ax0.grid(axis="y", alpha=0.25, linewidth=0.4)
-    ax1.set_title(r"Filler $\alpha$", fontsize=7)
-    ax1.set_ylabel(r"median $\alpha$", fontsize=6.5)
-    ax1.set_xlabel("GDN layer")
-    ax1.set_xticks(range(1, 5))
-    ax1.tick_params(labelsize=6)
-    ax1.grid(axis="y", alpha=0.25, linewidth=0.4)
-    handles, legend_labels = ax0.get_legend_handles_labels()
-    ax0.legend(handles, legend_labels, fontsize=5.8, frameon=False, loc="lower left", handlelength=1.4)
-    fig.suptitle("Frozen MQAR, calibrated seed 43 (n=16)", fontsize=7.5)
-    figure.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(figure, format="pdf", bbox_inches="tight")
-    plt.close(fig)
+    """Draw all four seed and initialization pairs at length 1,024."""
+    selected = {(r["seed"], r["initialization"], r["variant"]): r
+                for r in rows if r["length"] == 1024}
+    floor = -8
+    colors = {"scalar": "#276FBF", "channel-wise": "#B63B52"}
+    with plt.rc_context({"font.size": 7}):
+        fig, axes = plt.subplots(2, 2, figsize=(3.48, 2.56), sharex=True, sharey=True)
+        for i, init in enumerate(("default", "calibrated")):
+            for j, seed in enumerate((43, 44)):
+                ax = axes[i, j]
+                xs = np.arange(1, 5)
+                counts = []
+                for variant in ("scalar", "channel-wise"):
+                    row = selected[seed, init, variant]
+                    counts.append(str(row["metrics"]["correct"]))
+                    quantiles = np.asarray([[item[f"log_product_p{k}"] for item in row["layers"]]
+                                            for k in (10, 50, 90)]) / math.log(10)
+                    lo, median, hi = np.maximum(quantiles, floor)
+                    color = colors[variant]
+                    ax.fill_between(xs, lo, hi, color=color, alpha=0.16, linewidth=0)
+                    ax.plot(xs, median, marker="o", color=color, ms=2.6, lw=0.9, label=variant)
+                name = "Mean decay" if init == "calibrated" else "Default"
+                ax.set_title(f"{name}, seed {seed} ({counts[0]}/{counts[1]})", fontsize=7)
+                ax.set_xticks(xs)
+                ax.set_yticks((-8, -4, 0))
+                ax.set_ylim(-8.35, 0.5)
+                ax.grid(axis="y", alpha=0.28, linewidth=0.45)
+        handles, labels = axes[0, 0].get_legend_handles_labels()
+        fig.legend(handles, labels, loc="upper center", ncol=2, frameon=False)
+        fig.supxlabel("GDN layer", y=0.025, fontsize=7)
+        fig.supylabel(r"$\log_{10}$ decay-only product", x=0.025, fontsize=7)
+        fig.subplots_adjust(left=0.16, right=0.98, bottom=0.15, top=0.84, hspace=0.44, wspace=0.20)
+        figure.parent.mkdir(parents=True, exist_ok=True)
+        fig.savefig(figure, format="pdf")
+        plt.close(fig)
 
 
 if __name__ == "__main__":
