@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+  font=\sffamily\small, node distance=5mm,
+  box/.style={draw=black!65, rounded corners=2pt, align=center, inner sep=4pt},
+  arr/.style={-{Latex[length=1.7mm]},semithick},
+]
+\node[box,fill=blue!7] (tokens) at (0,0) {Token IDs};
+\node[box,fill=blue!7] (embed) at (3,0) {Token embedding\\$8192 \times 128$};
+\node[box,fill=green!8] (blocks) at (6.3,0) {4 recurrent blocks\\one head per block};
+\node[box,fill=blue!7] (norm) at (9.2,0) {Final LayerNorm};
+\node[box,fill=blue!7] (logits) at (12.2,0) {Tied vocabulary\\projection};
+\draw[arr] (tokens) -- (embed);
+\draw[arr] (embed) -- (blocks);
+\draw[arr] (blocks) -- (norm);
+\draw[arr] (norm) -- (logits);
+
+\node[box,fill=blue!7] (input) at (0,-2.2) {Mixer input $x_t$\\after LayerNorm};
+\node[box,fill=blue!7,text width=29mm] (qkv) at (3,-2.2)
+  {Q/K/V projections\\causal depthwise conv\\kernel 4 + SiLU};
+\node[box,fill=orange!12,text width=30mm] (gates) at (3,-4.1)
+  {From $x_t$: decay $\alpha_t$\\1 or 128 values\\write gate $\beta_t$: 1 value};
+\node[box,fill=green!8,text width=44mm] (state) at (7.5,-2.95)
+  {Decay and delta update\\$\widetilde S_t=S_{t-1}D_t$\\
+   $S_t=\widetilde S_t+\beta_t(v_t-\widetilde S_t k_t)k_t^\top$\\
+   State: $256\times128$};
+\node[box,fill=blue!7,text width=28mm] (output) at (12.2,-2.95)
+  {Read $S_tq_t$\\RMS normalization\\SiLU gate from $x_t$\\output projection};
+\draw[arr] (input) -- (qkv);
+\draw[arr] (input.south) |- (gates.west);
+\draw[arr] (qkv.east) -- ++(0.32,0) |- ([yshift=4mm]state.west);
+\draw[arr] (gates.east) -- ++(0.32,0) |- ([yshift=-4mm]state.west);
+\draw[arr] (state) -- (output);
+\node[align=center,font=\sffamily\small] (detail) at (6.3,-5.05)
+  {Block backbone: residual additions, two LayerNorms, and an identity state mixer.};
+\node[draw=black!40,dashed,rounded corners=3pt,inner sep=6pt,
+  fit=(input)(qkv)(gates)(state)(output)(detail),
+  label={[font=\sffamily\bfseries\small]above:Inside one block}] {};
+\end{tikzpicture}

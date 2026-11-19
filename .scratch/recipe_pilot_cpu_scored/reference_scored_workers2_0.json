@@ -1,0 +1,28 @@
+{
+  "backend": "reference",
+  "batch": 2,
+  "checkpoint_bytes": 17018999,
+  "checkpoint_seconds": 0.014999999984866008,
+  "evaluation_512_examples_seconds": 5.953000000008615,
+  "last_loss": 7.841731548309326,
+  "loss_implementation": "scored",
+  "mean_step_seconds": 0.11749999999301508,
+  "measured_optimizer_steps": 2,
+  "optimizer_step_seconds": [
+    0.125,
+    0.10999999998603016
+  ],
+  "parameters": 1414018,
+  "peak_gpu_allocated_bytes": null,
+  "peak_gpu_reserved_bytes": null,
+  "precision": "float32",
+  "process_cpu_seconds_during_measurement": 0.21875,
+  "process_rss_bytes": 633831424,
+  "sequence_length": 64,
+  "setup_seconds": 2.359000000025844,
+  "status": "complete",
+  "total_seconds": 8.562000000005355,
+  "variant": "scalar",
+  "warmup_seconds": 0.0,
+  "warning": "Synthetic resident tensors measure implementation throughput, not retrieval learning."
+}

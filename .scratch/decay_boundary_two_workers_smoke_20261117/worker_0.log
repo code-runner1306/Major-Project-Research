@@ -1,0 +1,12 @@
+2 models; 36 evaluations; no training; publish=false
+1/36: overwrite_seed42_default_channel-wise/original/baseline accuracy=1.0000
+2/36: overwrite_seed42_default_channel-wise/original/load8 accuracy=1.0000
+3/36: overwrite_seed42_default_channel-wise/original/distance24 accuracy=0.7500
+4/36: overwrite_seed42_default_channel-wise/original/rewrites2 accuracy=1.0000
+5/36: overwrite_seed42_default_channel-wise/original/rewrites3 accuracy=1.0000
+6/36: overwrite_seed42_default_channel-wise/original/rewrites4 accuracy=0.7500
+7/36: overwrite_seed42_default_channel-wise/original/pair_obsolete_prefix accuracy=1.0000
+8/36: overwrite_seed42_default_channel-wise/original/pair_latest_value accuracy=1.0000
+9/36: overwrite_seed42_default_channel-wise/original/pair_rename_key accuracy=1.0000
+10/36: overwrite_seed42_default_channel-wise/static/baseline accuracy=1.0000
+11/36: overwrite_seed42_default_channel-wise/static/load8 accuracy=1.0000

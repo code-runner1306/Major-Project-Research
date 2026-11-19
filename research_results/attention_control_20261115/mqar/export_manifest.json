@@ -1,0 +1,85 @@
+{
+  "included": [
+    {
+      "path": "comparison_report.json",
+      "bytes": 15194,
+      "sha256": "d50dbf2560e5c51475afac021d15b61757c7eec611b594e78d31dacdcd3f0703"
+    },
+    {
+      "path": "mqar/attention/progress.json",
+      "bytes": 23799,
+      "sha256": "9a59ccaa822922256487ff2df321206fbd7ab7e6e6691f731b39d8f3243f3d60"
+    },
+    {
+      "path": "mqar/attention/settings.json",
+      "bytes": 2553,
+      "sha256": "064e5a0ba1e6c4e41c9edd48e6597d549e0650aca8451d121236f5388e7fc858"
+    },
+    {
+      "path": "mqar/attention/summary.json",
+      "bytes": 5854,
+      "sha256": "140c0db4cf48fa663f94ec087cec7a37b34b66f554c747cf54fd0d17662cec16"
+    },
+    {
+      "path": "mqar/attention/training_metrics.json",
+      "bytes": 185720,
+      "sha256": "06e8fcd569b73b43ceabf6d7292118cc61e81dde6cbde661d1783d597dcbb48c"
+    },
+    {
+      "path": "mqar/attention/validation_history.json",
+      "bytes": 1932,
+      "sha256": "198b6c6ef62b9f6db768b1a218e3d2c71581ee7957b5569d0672d74c3d3300b2"
+    },
+    {
+      "path": "mqar/gdn/progress.json",
+      "bytes": 23761,
+      "sha256": "03d8ee768d396e5622cf69228c5a1259951ae1a6ea720d32e7ab5a46ad6988bf"
+    },
+    {
+      "path": "mqar/gdn/settings.json",
+      "bytes": 2533,
+      "sha256": "08787cc12766c7824afc992f55d13face3daac1bfb90b8626c488c2e92be39fe"
+    },
+    {
+      "path": "mqar/gdn/summary.json",
+      "bytes": 5846,
+      "sha256": "8b51dc98b0638fc59a68aa2bece82f65bf56155fdfbefa50d8853e0185073b1e"
+    },
+    {
+      "path": "mqar/gdn/training_metrics.json",
+      "bytes": 174270,
+      "sha256": "183ea1ac9fceeb82dda6cab29e5e5008b4c5906bb498600d232ddc99d1e1b12d"
+    },
+    {
+      "path": "mqar/gdn/validation_history.json",
+      "bytes": 1917,
+      "sha256": "48d3abda27a612f2220296723cd12c676bd361e6deb1b44658135e4d51d09ba9"
+    },
+    {
+      "path": "mqar_attention.log",
+      "bytes": 23182,
+      "sha256": "4a71d04c2893488c3783ea1907e305c1693c044ae15acf8cc54f612fa869ed4c"
+    },
+    {
+      "path": "mqar_audit.json",
+      "bytes": 11878,
+      "sha256": "cfed2601ac99a84fa05aa103ebbcbcac3ce67828543da846c908226607588a5f"
+    },
+    {
+      "path": "mqar_gdn.log",
+      "bytes": 22844,
+      "sha256": "70a4816d84cff22a9a8a2dc2c7bf3d69cbae8a350a261628818965a6fe435b92"
+    },
+    {
+      "path": "session_status.json",
+      "bytes": 356,
+      "sha256": "95cacfa0dba34c485c28a5299562c24805ce9976691c9f281908fbc567acd413"
+    }
+  ],
+  "excluded": [
+    "mqar/attention/best_validation_checkpoint.pt",
+    "mqar/attention/final_checkpoint.pt",
+    "mqar/gdn/best_validation_checkpoint.pt",
+    "mqar/gdn/final_checkpoint.pt"
+  ]
+}

@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calibration: quick reference</title><link rel="stylesheet" href="../assets/lesson.css"><main>
+<div class="eyebrow">Research reference · 16 November 2026</div><h1>Five different things</h1>
+<table><tr><th>Term</th><th>Meaning in this experiment</th></tr>
+<tr><td>Decay, alpha</td><td>A multiplier applied to the previous memory state before its delta-rule update. Closer to one means less direct decay.</td></tr>
+<tr><td>Target</td><td>The initial mean decay we request. Layer targets correspond to diagnostic half-lives 16, 32, 64 and 128 tokens.</td></tr>
+<tr><td>Offset, dt_bias</td><td>An existing trainable number in the decay formula. We fit its starting value; it is not the half-life itself.</td></tr>
+<tr><td>Calibration</td><td>Before training: fit offsets on 256 training examples to match target means. No supervised loss optimization occurs in this step.</td></tr>
+<tr><td>Training</td><td>After calibration: optimize all learned parameters, including the offsets, to predict the correct answers.</td></tr></table>
+<p class="note">Calibration passed means the initial target means were reached. It does not mean training improved, the targets remained fixed, or usable memory has the specified lifetime.</p>
+<p><a href="../lessons/0001-what-calibration-means.html">Return to the lesson</a> · <a href="../RESEARCH_METHODOLOGY.md">Exact methodology</a></p></main></html>

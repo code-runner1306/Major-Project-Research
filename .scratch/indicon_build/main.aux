@@ -1,0 +1,84 @@
+\relax 
+\citation{yang2025gdn}
+\citation{kimi2025,hatamizadeh2026gdn2}
+\citation{das2026}
+\citation{vaswani2017attention}
+\citation{katharopoulos2020transformers}
+\citation{schlag2021linear}
+\citation{sun2023retnet}
+\citation{gu2024mamba}
+\citation{dao2024transformers,yang2024gla}
+\citation{yang2024delta}
+\citation{yang2025gdn}
+\citation{kimi2025,hatamizadeh2026gdn2}
+\citation{peng2025rwkv}
+\citation{arora2024zoology}
+\citation{boesch2026anatomy}
+\citation{das2026}
+\citation{ghaleb2026kata}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}Background and Related Work}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Fixed-state sequence models}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Gated recall and repeated writes}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Method}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Decay variants}{1}{}\protected@file@percent }
+\citation{loshchilov2019adamw}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Experiments}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Synthetic tasks and training controls}{2}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Fresh answer-free confirmation. Each seed contributes 2,048 MQAR answers and 1,024 overwrite answers (512 latest and 512 retention). Entries average three seeds (\%).}}{2}{}\protected@file@percent }
+\newlabel{tab:confirmation}{{I}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Initialization conditions}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-E}}External replication}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-F}}Analysis limits}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Results}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Synthetic recall and overwrite}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Gated DeltaNet block used in the controlled synthetic recipe. The comparison changes the granularity of the decay gate; the backbone, recurrent-state dimensions, and other block operations are shared.}}{3}{}\protected@file@percent }
+\newlabel{fig:architecture}{{1}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Evaluation cohorts for the fresh baseline, stress suite, Anatomy cells, and fixed-state filler extension.}}{3}{}\protected@file@percent }
+\newlabel{fig:methodology}{{2}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Length extrapolation from 64-token training}{3}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Overwrite stress endpoints. Wins count seed and initialization pairs with higher channel-wise accuracy. Mean and median give channel-wise minus scalar in percentage points.}}{3}{}\protected@file@percent }
+\newlabel{tab:stress-endpoint}{{II}{3}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Fixed-state MQAR filler extension. Each entry gives scalar/channel-wise exact-query accuracy (\%).}}{4}{}\protected@file@percent }
+\newlabel{tab:length}{{III}{4}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Scalar versus channel-wise results in the reproduced published harness.}}{4}{}\protected@file@percent }
+\newlabel{tab:published}{{IV}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Published fixed-state harness}{4}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Checkpoint interventions in the Anatomy harness. Entries are mean accuracy for the trained channel-wise arm after replacing its decay gates.}}{4}{}\protected@file@percent }
+\newlabel{tab:interventions}{{V}{4}}
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Static footprint and short optimizer-step timing for the chunked PyTorch implementation.}}{4}{}\protected@file@percent }
+\newlabel{tab:cost}{{VI}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Checkpoint interventions}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Measured runtime and resource footprint}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}Discussion}{4}{}\protected@file@percent }
+\citation{dao2024transformers}
+\citation{yang2024gla}
+\citation{yang2025gdn,yang2024delta}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Paired accuracy differences (channel-wise minus scalar). Synthetic points are paired differences in accuracy averaged across six MQAR conditions or nine overwrite conditions for each training seed and initialization. Anatomy points show differences for corresponding seeds within each cell. Positive values favor channel-wise decay.}}{5}{}\protected@file@percent }
+\newlabel{fig:cross-task-results}{{3}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Decay-only products over 960 inserted zeros for all four pairs. Titles give scalar/channel-wise correct counts out of 64. Lines show medians and bands span the 10th--90th percentiles across examples and gate coordinates. The display floor is 0.00000001.}}{5}{}\protected@file@percent }
+\newlabel{fig:filler-decay}{{4}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Threats to validity}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Quality and resource trade-off}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{5}{}\protected@file@percent }
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{yang2025gdn}{1}
+\bibcite{kimi2025}{2}
+\bibcite{hatamizadeh2026gdn2}{3}
+\bibcite{das2026}{4}
+\bibcite{vaswani2017attention}{5}
+\bibcite{katharopoulos2020transformers}{6}
+\bibcite{schlag2021linear}{7}
+\bibcite{sun2023retnet}{8}
+\bibcite{gu2024mamba}{9}
+\bibcite{dao2024transformers}{10}
+\bibcite{yang2024gla}{11}
+\bibcite{yang2024delta}{12}
+\bibcite{peng2025rwkv}{13}
+\bibcite{arora2024zoology}{14}
+\bibcite{boesch2026anatomy}{15}
+\bibcite{ghaleb2026kata}{16}
+\bibcite{loshchilov2019adamw}{17}
+\@writefile{toc}{\contentsline {section}{References}{6}{}\protected@file@percent }
+\gdef \@abspage@last{6}

@@ -1,0 +1,13 @@
+family,seed,initialization,variant,intervention,cell,pair_kind,latest_joint_correct,latest_changed_fraction,latest_transformed_accuracy,unrelated_joint_correct,unrelated_changed_fraction,latest_correct_after_given_correct_before,latest_baseline_correct_count,interpretation
+overwrite,42,default,channel-wise,original,pair_obsolete_prefix,obsolete_prefix,1.0,0.0,1.0,1.0,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,original,pair_latest_value,latest_value,1.0,1.0,1.0,1.0,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,original,pair_rename_key,rename_key,1.0,0.0,1.0,1.0,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,static,pair_obsolete_prefix,obsolete_prefix,1.0,0.0,1.0,1.0,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,static,pair_latest_value,latest_value,1.0,1.0,1.0,1.0,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,static,pair_rename_key,rename_key,1.0,0.0,1.0,1.0,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,mean,pair_obsolete_prefix,obsolete_prefix,1.0,0.0,1.0,0.5,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,mean,pair_latest_value,latest_value,1.0,1.0,1.0,0.5,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,channel-wise,mean,pair_rename_key,rename_key,1.0,0.0,1.0,0.5,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,scalar,original,pair_obsolete_prefix,obsolete_prefix,1.0,0.0,1.0,0.5,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,scalar,original,pair_latest_value,latest_value,1.0,1.0,1.0,0.5,0.0,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"
+overwrite,42,default,scalar,original,pair_rename_key,rename_key,1.0,0.0,1.0,0.5,0.5,1.0,2,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance"

@@ -1,0 +1,79 @@
+% Embedded TikZ fragment derived from assets/paper_diagrams/results/results_comparison_tikz.tex
+\definecolor{resultscalarblue}{HTML}{2563EB}
+\definecolor{resultchannelorange}{HTML}{F59E0B}
+\definecolor{resultink}{HTML}{1F2937}
+\definecolor{resultgridgray}{HTML}{D1D5DB}
+
+\begin{tikzpicture}[
+  font=\sffamily, x=1cm, y=1cm,
+  panel/.style={draw=gray!65, rounded corners=2pt, fill=white},
+  small/.style={font=\scriptsize, text=resultink},
+  tiny/.style={font=\tiny, text=resultink},
+  label/.style={font=\small, text=resultink},
+]
+\fill[white] (0,-1.55) rectangle (17,11.1);
+\node[anchor=west, font=\large\bfseries, text=resultink] at (0.2,10.75) {Scalar versus channel-wise decay: results across tasks and tests};
+\node[anchor=west, label] at (0.2,10.38) {No tested setting establishes a reliable small-model channel-wise advantage.};
+
+% Panel A: synthetic stress
+\draw[panel] (0.2,6.85) rectangle (8.0,10.1);
+\node[anchor=west, font=\bfseries\normalsize, text=resultink] at (0.5,9.78) {A. Synthetic held-out stress comparisons};
+\node[anchor=west, small] at (0.5,9.48) {Nine paired model comparisons per task; channel-wise better in:};
+\fill[resultchannelorange] (6.9,9.65) rectangle (7.15,9.9);\node[anchor=west, small] at (7.2,9.77) {channel-wise};
+\draw[->,>=Stealth,gray] (2.15,7.25) -- (2.15,9.1);
+\draw[->,>=Stealth,gray] (2.15,7.25) -- (7.55,7.25) node[below,small] {paired comparisons (out of 9)};
+\foreach \x/\v in {2.15/0,3.35/2,4.55/4,5.75/6,6.95/8,7.55/9}{\draw[resultgridgray] (\x,7.25) -- (\x,9.1);\node[tiny,below] at (\x,7.18) {\v};}
+\node[label,anchor=east] at (2.05,8.65) {MQAR};\node[tiny,anchor=east] at (2.05,8.4) {stress};
+\node[label,anchor=east] at (2.05,7.8) {Overwrite};\node[tiny,anchor=east] at (2.05,7.55) {stress};
+\fill[resultchannelorange] (2.15,8.55) rectangle (4.55,8.82);\node[small,anchor=west] at (4.62,8.68) {4/9};
+\fill[resultchannelorange] (2.15,7.7) rectangle (6.95,7.97);\node[small,anchor=west] at (7.02,7.83) {8/9};
+\node[tiny,anchor=west] at (2.2,8.3) {mean paired difference: +3.4 percentage points};
+\node[tiny,anchor=west] at (2.2,7.45) {mean paired difference: +3.2 percentage points};
+\node[tiny,anchor=west] at (0.5,7.0) {MQAR sign test p=1.0; overwrite sign test p=0.039. Exploratory, uncorrected.};
+
+% Panel B: Anatomy
+\draw[panel] (8.3,6.85) rectangle (16.8,10.1);
+\node[anchor=west, font=\bfseries\normalsize, text=resultink] at (8.6,9.78) {B. Reproduced Anatomy fixed-state harness};
+\node[anchor=west, small] at (8.6,9.48) {Mean accuracy; 10 seeds per gate type};
+\fill[resultscalarblue] (15.25,9.65) rectangle (15.5,9.9);\node[anchor=west,small] at (15.55,9.77) {scalar};
+\fill[resultchannelorange] (16.05,9.65) rectangle (16.3,9.9);\node[anchor=west,small] at (16.35,9.77) {channel-wise};
+\draw[->,>=Stealth,gray] (10.15,7.25) -- (10.15,9.1);
+\draw[->,>=Stealth,gray] (10.15,7.25) -- (16.35,7.25) node[below,small] {mean accuracy};
+\foreach \x/\v in {10.15/0,11.7/25,13.25/50,14.8/75,16.35/100}{\draw[resultgridgray] (\x,7.25) -- (\x,9.1);\node[tiny,below] at (\x,7.18) {\v};}
+\node[label,anchor=east] at (10.05,8.65) {E1};\node[tiny,anchor=east] at (10.05,8.4) {constrained};
+\node[label,anchor=east] at (10.05,7.95) {E4};\node[tiny,anchor=east] at (10.05,7.7) {haystack};
+\node[label,anchor=east] at (10.05,7.25) {E5};
+\fill[resultscalarblue] (10.15,8.55) rectangle (16.35,8.72);\fill[resultchannelorange] (10.15,8.75) rectangle (16.245,8.92);\node[tiny,anchor=west] at (16.4,8.64) {1.000};\node[tiny,anchor=west] at (16.3,8.84) {0.983};
+\fill[resultscalarblue] (10.15,7.85) rectangle (13.81,8.02);\fill[resultchannelorange] (10.15,8.05) rectangle (14.27,8.22);\node[tiny,anchor=west] at (13.88,7.94) {0.591};\node[tiny,anchor=west] at (14.34,8.14) {0.665};
+\fill[resultscalarblue] (10.15,7.35) rectangle (13.24,7.52);\fill[resultchannelorange] (10.15,7.55) rectangle (12.54,7.72);\node[tiny,anchor=west] at (13.31,7.44) {0.499};\node[tiny,anchor=west] at (12.61,7.64) {0.386};
+\node[tiny,anchor=west] at (8.6,7.0) {Lock-in counts scalar/channel: E1 10/10 / 10/10; E4 6/10 / 6/10; E5 5/10 / 3/10.};
+
+% Panel C: TinyStories
+\draw[panel] (0.2,2.2) rectangle (16.8,6.4);
+\node[anchor=west, font=\bfseries\normalsize, text=resultink] at (0.5,6.08) {C. TinyStories language modeling (descriptive)};
+\node[anchor=west, small] at (0.5,5.77) {Validation loss after 1,000 steps; short, unbalanced runs, not scaling evidence.};
+\fill[resultscalarblue] (14.75,5.95) rectangle (15.0,6.2);\node[anchor=west,small] at (15.05,6.08) {scalar};
+\fill[resultchannelorange] (15.65,5.95) rectangle (15.9,6.2);\node[anchor=west,small] at (15.95,6.08) {channel-wise};
+\draw[panel,fill=gray!3] (2.1,3.0) rectangle (16.0,5.35);
+\draw[resultgridgray] (2.1,4.55) -- (16.0,4.55);\draw[resultgridgray] (2.1,3.78) -- (16.0,3.78);
+\draw[resultgridgray] (5.8,3.0) -- (5.8,5.35);\draw[resultgridgray] (9.5,3.0) -- (9.5,5.35);\draw[resultgridgray] (12.8,3.0) -- (12.8,5.35);
+\node[small,anchor=west] at (2.35,5.03) {Scale / runs};\node[small,anchor=west] at (6.05,5.03) {Scalar validation loss};\node[small,anchor=west] at (9.75,5.03) {Channel-wise validation loss};\node[small,anchor=west] at (13.05,5.03) {Interpretation};
+\node[label,anchor=west] at (2.35,4.17) {30M (3 / 2)};\node[label,anchor=west] at (6.05,4.17) {2.366};\node[label,anchor=west] at (9.75,4.17) {2.378};\node[small,anchor=west] at (13.05,4.17) {scalar lower by 0.012};
+\node[label,anchor=west] at (2.35,3.4) {10M (1 / 1)};\node[label,anchor=west] at (6.05,3.4) {2.811};\node[label,anchor=west] at (9.75,3.4) {2.812};\node[small,anchor=west] at (13.05,3.4) {nearly identical};
+
+% Panel D: efficiency evidence
+\draw[panel] (0.2,0.25) rectangle (16.8,2.05);
+\node[anchor=west, font=\bfseries\normalsize, text=resultink] at (0.5,1.78) {D. Efficiency evidence (timing only)};
+\node[anchor=west, tiny] at (0.5,1.55) {Current 1.585M recipe, sequential A6000 50-step windows; timing-only, not a training/inference benchmark.};
+\draw[panel,fill=gray!3] (0.5,0.52) rectangle (9.1,1.35);
+\draw[resultgridgray] (0.5,1.05) -- (9.1,1.05);\draw[resultgridgray] (2.3,0.52) -- (2.3,1.35);\draw[resultgridgray] (4.35,0.52) -- (4.35,1.35);\draw[resultgridgray] (6.35,0.52) -- (6.35,1.35);
+\node[tiny,anchor=west] at (0.65,1.18) {Task};\node[tiny,anchor=west] at (2.45,1.18) {scalar s/step};\node[tiny,anchor=west] at (4.5,1.18) {channel s/step};\node[tiny,anchor=west] at (6.5,1.18) {relative $\\Delta$};
+\node[tiny,anchor=west] at (0.65,0.85) {MQAR};\node[tiny,anchor=west] at (2.45,0.85) {0.7620};\node[tiny,anchor=west] at (4.5,0.85) {0.7689};\node[tiny,anchor=west] at (6.5,0.85) {+0.91\%};
+\node[tiny,anchor=west] at (0.65,0.62) {Overwrite};\node[tiny,anchor=west] at (2.45,0.62) {0.7986};\node[tiny,anchor=west] at (4.5,0.62) {0.7926};\node[tiny,anchor=west] at (6.5,0.62) {-0.75\%};
+\node[small,anchor=west] at (9.45,1.2) {Architecture/resource facts};\node[tiny,anchor=west] at (9.45,0.92) {Channel-wise 1,651,456 vs scalar 1,585,416 parameters (+4.17\%).};\node[tiny,anchor=west] at (9.45,0.69) {Same recurrent state shape; comparable energy and peak memory unavailable.};
+
+\node[anchor=west, label, font=\bfseries] at (0.2,-0.05) {Reading the figure};
+\node[anchor=west, small] at (0.2,-0.36) {Channel-wise checkpoints can rely on channel diversity, but that reliance does not imply a training benefit.};
+\node[anchor=west, small] at (0.2,-0.66) {Across these tasks and tests, scalar decay was equal or slightly better overall. Metrics are not pooled across experiments.};
+\node[anchor=west, tiny] at (0.2,-1.08) {Sources: FINAL_SYNTHESIS_2026-11-18.md; overall_conclusion_check_2026-11-18.md; memory_stress_tests_20261117/REPORT.md; three_seed_confirmation_20261117/REPORT.md; granularity_report.md; RESEARCH_METHODOLOGY.md.};
+\end{tikzpicture}

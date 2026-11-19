@@ -1,0 +1,119 @@
+{
+  "examples": 16,
+  "interpretation": "Mean log-decay half-life and Softplus sensitivity; not full-state lifetime",
+  "layers": [
+    {
+      "A_log": [
+        [
+          -1.8937561511993408
+        ]
+      ],
+      "achieved_mean_log_decay": [
+        [
+          -0.043321697883018546
+        ]
+      ],
+      "achieved_sensitivity": [
+        [
+          0.24999999521122312
+        ]
+      ],
+      "layer": 0,
+      "log_decay_error": 9.019780339292183e-10,
+      "offsets": [
+        [
+          -1.0394279956817627
+        ]
+      ],
+      "sensitivity_error": 4.788776875042089e-09,
+      "target_half_life": 16.0,
+      "target_sensitivity": 0.25
+    },
+    {
+      "A_log": [
+        [
+          -4.1595845222473145
+        ]
+      ],
+      "achieved_mean_log_decay": [
+        [
+          -0.021660854116357448
+        ]
+      ],
+      "achieved_sensitivity": [
+        [
+          0.7500000028636543
+        ]
+      ],
+      "layer": 1,
+      "log_decay_error": 4.723859158006771e-09,
+      "offsets": [
+        [
+          1.061570167541504
+        ]
+      ],
+      "sensitivity_error": 2.86365431367841e-09,
+      "target_half_life": 32.0,
+      "target_sensitivity": 0.75
+    },
+    {
+      "A_log": [
+        [
+          -4.852528095245361
+        ]
+      ],
+      "achieved_mean_log_decay": [
+        [
+          -0.010830425701870308
+        ]
+      ],
+      "achieved_sensitivity": [
+        [
+          0.7500000110956911
+        ]
+      ],
+      "layer": 2,
+      "log_decay_error": 1.0056211627307299e-09,
+      "offsets": [
+        [
+          1.098379373550415
+        ]
+      ],
+      "sensitivity_error": 1.1095691143658826e-08,
+      "target_half_life": 64.0,
+      "target_sensitivity": 0.75
+    },
+    {
+      "A_log": [
+        [
+          -3.9729654788970947
+        ]
+      ],
+      "achieved_mean_log_decay": [
+        [
+          -0.005415212228154828
+        ]
+      ],
+      "achieved_sensitivity": [
+        [
+          0.25000000867580185
+        ]
+      ],
+      "layer": 3,
+      "log_decay_error": 1.1996974420835915e-10,
+      "offsets": [
+        [
+          -1.0956650972366333
+        ]
+      ],
+      "sensitivity_error": 8.675801854707288e-09,
+      "target_half_life": 128.0,
+      "target_sensitivity": 0.25
+    }
+  ],
+  "method": "joint-timescale-sensitivity-v1",
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens_sha256": "b19129bc03307b4f90e23758a0d07be2cc986edf4b2112ba44fdd50eb5c77bd9",
+  "wall_seconds": 0.09400000001187436
+}

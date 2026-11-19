@@ -1,0 +1,108 @@
+{
+  "architecture": "gdn",
+  "attention_positions": null,
+  "backbone": {
+    "attention_layout": "pure_gdn",
+    "d_ff": [
+      64,
+      64,
+      64
+    ],
+    "d_head": 8,
+    "d_model": 32,
+    "n_head": 4,
+    "n_layer": 3,
+    "name": "tiny"
+  },
+  "family": "mqar",
+  "learning_rate": 0.001,
+  "manifests": {
+    "confirmation": {
+      "examples": 32,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "5f2c06a8f7fa375cb7bfeeed562648ff11054036eb32b9822d19f4bf20393219",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 32,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          64
+        ],
+        "train_examples": 32,
+        "validation_examples": 16,
+        "vocabulary_size": 128
+      },
+      "seed": 300042,
+      "sequence_length": null,
+      "split": "held_out",
+      "task": "mqar"
+    },
+    "development": {
+      "examples": 16,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "f97ce584cfdada701c0dd41287e3f5846abeedf525ea372a689c3cf03ae114e9",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 32,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          64
+        ],
+        "train_examples": 32,
+        "validation_examples": 16,
+        "vocabulary_size": 128
+      },
+      "seed": 200042,
+      "sequence_length": null,
+      "split": "validation",
+      "task": "mqar"
+    },
+    "train": {
+      "examples": 32,
+      "generator_version": "mqar-overwrite-v4",
+      "hash": "b770d7e4bea0487dc12f0f4bdcac32d6b3b724e80ef9bb3d9b8e26be75a9183a",
+      "parameters": {
+        "generator_version": "mqar-overwrite-v4",
+        "held_out_examples": 32,
+        "key_counts": [
+          4
+        ],
+        "overwrite_counts": [
+          1
+        ],
+        "query_distances": [
+          8
+        ],
+        "sequence_lengths": [
+          64
+        ],
+        "train_examples": 32,
+        "validation_examples": 16,
+        "vocabulary_size": 128
+      },
+      "seed": 100042,
+      "sequence_length": null,
+      "split": "train",
+      "task": "mqar"
+    }
+  },
+  "model_parameters": 40332,
+  "seed": 42,
+  "steps": 2
+}

@@ -1,0 +1,28 @@
+2 models; 24 evaluations; no training; publish=false
+1/24: mqar_seed42_default_channel-wise/original/baseline accuracy=1.0000
+2/24: mqar_seed42_default_channel-wise/original/load8 accuracy=1.0000
+3/24: mqar_seed42_default_channel-wise/original/load12 accuracy=0.8333
+4/24: mqar_seed42_default_channel-wise/original/length128 accuracy=1.0000
+5/24: mqar_seed42_default_channel-wise/original/length128_load8 accuracy=1.0000
+6/24: mqar_seed42_default_channel-wise/original/length128_load12 accuracy=0.9583
+7/24: mqar_seed42_default_channel-wise/static/baseline accuracy=1.0000
+8/24: mqar_seed42_default_channel-wise/static/load8 accuracy=1.0000
+9/24: mqar_seed42_default_channel-wise/static/load12 accuracy=0.8750
+10/24: mqar_seed42_default_channel-wise/static/length128 accuracy=1.0000
+11/24: mqar_seed42_default_channel-wise/static/length128_load8 accuracy=1.0000
+12/24: mqar_seed42_default_channel-wise/static/length128_load12 accuracy=0.9583
+13/24: mqar_seed42_default_channel-wise/mean/baseline accuracy=1.0000
+14/24: mqar_seed42_default_channel-wise/mean/load8 accuracy=0.7500
+15/24: mqar_seed42_default_channel-wise/mean/load12 accuracy=0.5833
+16/24: mqar_seed42_default_channel-wise/mean/length128 accuracy=1.0000
+17/24: mqar_seed42_default_channel-wise/mean/length128_load8 accuracy=0.6250
+18/24: mqar_seed42_default_channel-wise/mean/length128_load12 accuracy=0.4167
+19/24: mqar_seed42_default_scalar/original/baseline accuracy=1.0000
+20/24: mqar_seed42_default_scalar/original/load8 accuracy=1.0000
+21/24: mqar_seed42_default_scalar/original/load12 accuracy=1.0000
+22/24: mqar_seed42_default_scalar/original/length128 accuracy=1.0000
+23/24: mqar_seed42_default_scalar/original/length128_load8 accuracy=1.0000
+24/24: mqar_seed42_default_scalar/original/length128_load12 accuracy=0.9167
+Complete: C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\.scratch\decay_boundary_two_workers_release_20261117\worker_1\REPORT.md
+2 models; 24 evaluations; no training; publish=false
+Complete: C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\.scratch\decay_boundary_two_workers_release_20261117\worker_1\REPORT.md

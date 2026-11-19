@@ -1,0 +1,12 @@
+{
+  "conservative_budget_seconds": null,
+  "family": "mqar",
+  "jobs": {
+    "channel-wise": 0,
+    "scalar": 0
+  },
+  "mode": "timing",
+  "source_revision": "f12e99125186642786fcdfae2514f1515ac38f2d",
+  "status": "complete",
+  "wall_seconds": 86.31204772499996
+}

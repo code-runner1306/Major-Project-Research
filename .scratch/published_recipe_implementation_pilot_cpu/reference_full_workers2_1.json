@@ -1,0 +1,31 @@
+{
+  "backend": "reference",
+  "batch": 2,
+  "checkpoint_bytes": 19909547,
+  "checkpoint_seconds": 0.03200000000651926,
+  "effective_batch": 2,
+  "evaluation_512_examples_seconds": 12.35899999999674,
+  "gradient_accumulation": 1,
+  "last_loss": 8.223823547363281,
+  "loss_implementation": "full",
+  "mean_step_seconds": 0.3044999999983702,
+  "measured_optimizer_steps": 2,
+  "model_recipe": "pinned-zoology-backbone-with-FLA-based-GDN-extension",
+  "optimizer_step_seconds": [
+    0.3279999999795109,
+    0.28100000001722947
+  ],
+  "parameters": 1651456,
+  "peak_gpu_allocated_bytes": null,
+  "peak_gpu_reserved_bytes": null,
+  "precision": "float32",
+  "process_cpu_seconds_during_measurement": 0.625,
+  "process_rss_bytes": 693231616,
+  "sequence_length": 64,
+  "setup_seconds": 2.297000000020489,
+  "status": "complete",
+  "total_seconds": 15.297000000020489,
+  "variant": "channel-wise",
+  "warmup_seconds": 0.0,
+  "warning": "Synthetic resident tensors measure implementation throughput, not retrieval learning."
+}

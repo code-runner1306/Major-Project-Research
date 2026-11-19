@@ -1,0 +1,24 @@
+[
+  {
+    "baseline_gap": 0.0,
+    "family": "mqar",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.0,
+    "stress_specific_gap": 0.0
+  },
+  {
+    "baseline_gap": 0.0,
+    "family": "overwrite",
+    "initialization": "default",
+    "interpretation": "Per-seed descriptive rule; require all three seeds, not a significance test",
+    "reliable_dynamic_only": false,
+    "seed": 42,
+    "seed_operational_reliance": false,
+    "stress_gap": 0.0,
+    "stress_specific_gap": 0.0
+  }
+]

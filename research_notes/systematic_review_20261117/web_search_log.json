@@ -1,0 +1,124 @@
+{
+  "date": "2026-11-17",
+  "queries": [
+    {
+      "id": "W01",
+      "query": "site:arxiv.org (\"Gated DeltaNet\" OR \"Kimi Delta\") (\"initialization\" OR \"calibration\")",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W02",
+      "query": "site:openreview.net (\"scalar\" \"channel-wise\") (\"decay\" OR \"gating\")",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W03",
+      "query": "site:proceedings.mlr.press (\"delta rule\" OR \"fast weights\") memory",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W04",
+      "query": "site:proceedings.neurips.cc (\"associative recall\" OR \"fast weights\")",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W05",
+      "query": "site:dl.acm.org \"linear attention\" \"associative\" memory",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W06",
+      "query": "site:ieeexplore.ieee.org \"linear attention\" \"gating\" memory",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W07",
+      "query": "site:aclanthology.org \"fast weights\" \"decay\"",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W08",
+      "query": "site:openreview.net \"associative recall\" \"overwrite\"",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W09",
+      "query": "\"mean decay\" \"Gated Delta\" calibration",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W10",
+      "query": "\"matched\" \"initial\" \"decay\" \"channel-wise\" attention",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W11",
+      "query": "\"MQAR\" \"overwrite\" \"calibration\"",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    },
+    {
+      "id": "W12",
+      "query": "\"first\" \"replacement\" \"overwrite\" \"DeltaNet\"",
+      "date": "2026-11-17",
+      "method": "web search; grouped results; not native publisher database",
+      "result_scope": "See thematic notes for retained primary-source follow-up; search absence is not proof of absence"
+    }
+  ],
+  "additional_queries": "Exact thematic queries and primary access follow-ups in history.md, ownhistory.md, gates_initialization.md, tasks_memory.md",
+  "access": [
+    {
+      "provider": "OpenAlex",
+      "status": "native search and verified-seed citation queries succeeded",
+      "details": "Exact request logs retained"
+    },
+    {
+      "provider": "Crossref",
+      "status": "native bibliographic queries succeeded",
+      "details": "Top 20 per query; high lexical noise"
+    },
+    {
+      "provider": "Semantic Scholar",
+      "status": "HTTP 429 on API probe",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=gated%20delta%20networks&limit=5&fields=title,year,url,externalIds"
+    },
+    {
+      "provider": "DBLP",
+      "status": "HTTP 500 on API probe",
+      "url": "https://dblp.org/search/publ/api?q=gated%20delta&format=json&h=5"
+    },
+    {
+      "provider": "ACM DL / IEEE Xplore",
+      "status": "site-restricted web discovery attempted; no native export or complete publisher-index search"
+    },
+    {
+      "provider": "OpenReview",
+      "status": "some pages browser-protected; primary indexed PDFs/TMLR/official results used where available"
+    },
+    {
+      "provider": "Google Scholar / Scopus / Web of Science",
+      "status": "not searched through native database exports"
+    }
+  ]
+}

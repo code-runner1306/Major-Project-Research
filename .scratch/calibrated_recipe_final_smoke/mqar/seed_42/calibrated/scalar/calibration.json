@@ -1,0 +1,95 @@
+{
+  "examples": 16,
+  "interpretation": "Mean-decay diagnostic targets, not measured full-state memory lifetimes",
+  "layers": [
+    {
+      "achieved_mean_decay": [
+        [
+          0.9576031937435738
+        ]
+      ],
+      "decay_std": [
+        [
+          0.001850530127000874
+        ]
+      ],
+      "layer": 0,
+      "maximum_error": 8.6954999867217e-08,
+      "offsets": [
+        [
+          -3.417677879333496
+        ]
+      ],
+      "target_half_life": 16.0,
+      "target_mean_decay": 0.9576032806985737
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9785720098163736
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0014174639097894555
+        ]
+      ],
+      "layer": 1,
+      "maximum_error": 5.227132648943922e-08,
+      "offsets": [
+        [
+          -5.628852844238281
+        ]
+      ],
+      "target_half_life": 32.0,
+      "target_mean_decay": 0.9785720620877001
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9892279805780326
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0006468821333917587
+        ]
+      ],
+      "layer": 2,
+      "maximum_error": 3.261594283543445e-08,
+      "offsets": [
+        [
+          -6.210613250732422
+        ]
+      ],
+      "target_half_life": 64.0,
+      "target_mean_decay": 0.9892280131939755
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9945994629407298
+        ]
+      ],
+      "decay_std": [
+        [
+          0.00027303332866578377
+        ]
+      ],
+      "layer": 3,
+      "maximum_error": 3.945709659003427e-08,
+      "offsets": [
+        [
+          -5.66925048828125
+        ]
+      ],
+      "target_half_life": 128.0,
+      "target_mean_decay": 0.9945994234836332
+    }
+  ],
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens": 512,
+  "tokens_sha256": "772b4bf9c2c30bc743e12970c82fc5c178e8a9cf83d70440ab1a3f21356c7a87",
+  "wall_seconds": 0.31199999999807915
+}

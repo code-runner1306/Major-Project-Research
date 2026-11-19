@@ -1,0 +1,287 @@
+{
+  "audits": [],
+  "protocol": {
+    "batch": 2,
+    "checkpoint_selection": [
+      {
+        "family": "mqar",
+        "initialization": "default",
+        "path": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\channel-wise\\latest_checkpoint.pt",
+        "seed": 42,
+        "sha256": "f988b37daf1c2ce676cd96c4c6dc6eeb11361371bd677afd1064ce865f5b68a5",
+        "variant": "channel-wise"
+      },
+      {
+        "family": "mqar",
+        "initialization": "default",
+        "path": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\scalar\\latest_checkpoint.pt",
+        "seed": 42,
+        "sha256": "510a079d243e2549c22d07e4416fc179f38065b4a7abb6b64fe1b6c2d3423aa2",
+        "variant": "scalar"
+      }
+    ],
+    "cpu_smoke": true,
+    "device": "cpu",
+    "evaluator_sources": {
+      "config.py": "65f7091291561f32dc16a094882fc3043c1a1f25cf748de0383d4abc49730dad",
+      "confirm_recipe_study.py": "8dd7711e24ea85dc9a53f44e6ba896439647a7851cced0e7c0669aa17cff7c17",
+      "evaluate_decay_boundary.py": "12225414c3619ccf45afa139ab0c33b5b1461d29b32c6fff1aa6703f1d3cfd3f",
+      "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+      "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+      "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+      "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+      "recurrence.py": "87d205bdbaf529fc6e804c1e6b2270a7e25660418e1942133122c537a0c49db1",
+      "retrieval.py": "17015695c5531067dcbf26be519eaa99c2bdbadb2beb0587cb9617758b70e94c",
+      "stress_recipe_checkpoints.py": "f0bf0a3c9316f02c2eb0caf69dd8ae9f293fe816db815229d8918426b74e7c72",
+      "stronger_gate_tests.py": "954517ef9e11905871f4a1efc36101c5e1600e586cf12ed936b0f24bb375a180"
+    },
+    "examples": 2,
+    "families": [
+      "mqar",
+      "overwrite"
+    ],
+    "fit_examples": 2,
+    "initializations": [
+      "default"
+    ],
+    "mqar_cells": [
+      [
+        "baseline",
+        64,
+        4
+      ],
+      [
+        "load8",
+        64,
+        8
+      ],
+      [
+        "load12",
+        64,
+        12
+      ],
+      [
+        "length128",
+        128,
+        4
+      ],
+      [
+        "length128_load8",
+        128,
+        8
+      ],
+      [
+        "length128_load12",
+        128,
+        12
+      ]
+    ],
+    "overwrite_cells": [
+      [
+        "baseline",
+        4,
+        8,
+        1
+      ],
+      [
+        "load8",
+        8,
+        8,
+        1
+      ],
+      [
+        "distance24",
+        4,
+        24,
+        1
+      ],
+      [
+        "rewrites2",
+        4,
+        8,
+        2
+      ],
+      [
+        "rewrites3",
+        4,
+        8,
+        3
+      ],
+      [
+        "rewrites4",
+        4,
+        8,
+        4
+      ]
+    ],
+    "paired_tests": [
+      "obsolete_prefix",
+      "latest_value",
+      "rename_key"
+    ],
+    "phase": "discovery",
+    "protocol": "dynamic-decay-boundary-discovery-v1",
+    "publish": false,
+    "reserved_confirmation_offset": 900000,
+    "seed_offset": 700000,
+    "seeds": [
+      42
+    ],
+    "worker_index": 1,
+    "workers": 2
+  },
+  "results": [
+    {
+      "cell": "baseline",
+      "family": "mqar",
+      "initialization": "default",
+      "intervention": "original",
+      "metrics": {
+        "correct": 8,
+        "data_sha256": "ebee0d8fe6904fc70d94e23dcdba69f089c115ec01c8f0026475f7b96d683ed4",
+        "evaluated_examples": 2,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 0.0011680247262120247,
+        "stale_value_error_rate": null,
+        "total": 8,
+        "unrelated_association_retention": null
+      },
+      "prediction_sha256": "55c8f65adef71cdc224203aa4385938b2a93c94860cb92882555d633a5a84a65",
+      "seed": 42,
+      "variant": "channel-wise",
+      "wall_seconds": 0.0629999999946449
+    },
+    {
+      "cell": "load8",
+      "family": "mqar",
+      "initialization": "default",
+      "intervention": "original",
+      "metrics": {
+        "correct": 16,
+        "data_sha256": "4c0b119765284bcdbba73495adc6428fd17b4e1986ee562c7e8dcf2a41f58852",
+        "evaluated_examples": 2,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 0.01673882082104683,
+        "stale_value_error_rate": null,
+        "total": 16,
+        "unrelated_association_retention": null
+      },
+      "prediction_sha256": "499cf78e9b624b4bba1424695aa1370b3eb5c9d7c15481f5c7f59d2ef7ecf557",
+      "seed": 42,
+      "variant": "channel-wise",
+      "wall_seconds": 0.046999999991385266
+    },
+    {
+      "cell": "load12",
+      "family": "mqar",
+      "initialization": "default",
+      "intervention": "original",
+      "metrics": {
+        "correct": 20,
+        "data_sha256": "e57e97e38aba5a26a6a913bdd480744b2788683a0c7803926062d1988f1439ad",
+        "evaluated_examples": 2,
+        "exact_query_accuracy": 0.8333333333333334,
+        "example_accuracy": 0.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 0.8181818181818182,
+        "latest_value_accuracy": null,
+        "loss": 0.6753793557484945,
+        "stale_value_error_rate": null,
+        "total": 24,
+        "unrelated_association_retention": null
+      },
+      "prediction_sha256": "98600855228a22760a239144253745add66db2f4a734dd5aea9da8fcb5275bff",
+      "seed": 42,
+      "variant": "channel-wise",
+      "wall_seconds": 0.0629999999946449
+    },
+    {
+      "cell": "length128",
+      "family": "mqar",
+      "initialization": "default",
+      "intervention": "original",
+      "metrics": {
+        "correct": 8,
+        "data_sha256": "d37b45c76d6c4b2f116a2f5b0a12ddcd0739bfd0074b6db9c37960d29ccf050d",
+        "evaluated_examples": 2,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 0.001221529208123684,
+        "stale_value_error_rate": null,
+        "total": 8,
+        "unrelated_association_retention": null
+      },
+      "prediction_sha256": "55c8f65adef71cdc224203aa4385938b2a93c94860cb92882555d633a5a84a65",
+      "seed": 42,
+      "variant": "channel-wise",
+      "wall_seconds": 0.09400000001187436
+    },
+    {
+      "cell": "length128_load8",
+      "family": "mqar",
+      "initialization": "default",
+      "intervention": "original",
+      "metrics": {
+        "correct": 16,
+        "data_sha256": "d1203e5275bd67dcf92945294febe20784d3a039e6002dd585abaa93d655c261",
+        "evaluated_examples": 2,
+        "exact_query_accuracy": 1.0,
+        "example_accuracy": 1.0,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 1.0,
+        "latest_value_accuracy": null,
+        "loss": 0.015807723626494408,
+        "stale_value_error_rate": null,
+        "total": 16,
+        "unrelated_association_retention": null
+      },
+      "prediction_sha256": "731ab9179d89d278b1d1da589928cb35c123c65a00902b9cce949933b025b1d1",
+      "seed": 42,
+      "variant": "channel-wise",
+      "wall_seconds": 0.09400000001187436
+    },
+    {
+      "cell": "length128_load12",
+      "family": "mqar",
+      "initialization": "default",
+      "intervention": "original",
+      "metrics": {
+        "correct": 23,
+        "data_sha256": "8ff536af8a7255d9e9eb2ecf360f6a7b6b40d9c15da3475431fb4bbe0ad0478f",
+        "evaluated_examples": 2,
+        "exact_query_accuracy": 0.9583333333333334,
+        "example_accuracy": 0.5,
+        "first_query_accuracy": 1.0,
+        "history_conditioning": "answer_free",
+        "later_query_accuracy": 0.9545454545454546,
+        "latest_value_accuracy": null,
+        "loss": 0.633868416150411,
+        "stale_value_error_rate": null,
+        "total": 24,
+        "unrelated_association_retention": null
+      },
+      "prediction_sha256": "ae48334144c3797132f23196504536b620d703678aa2c55f8c33afeefb350da5",
+      "seed": 42,
+      "variant": "channel-wise",
+      "wall_seconds": 0.07800000000861473
+    }
+  ],
+  "status": "running",
+  "wall_seconds": 1.25
+}

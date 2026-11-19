@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="950" viewBox="0 0 1200 950" role="img" aria-labelledby="title desc">
+  <title id="title">Results summary for scalar and channel-wise Gated DeltaNet decay</title>
+  <desc id="desc">Three panels summarize synthetic stress comparisons, the reproduced Anatomy fixed-state harness, and descriptive TinyStories language-model results. Metrics remain separate by experiment.</desc>
+  <style>
+    .ink { fill:#1f2937; font-family:Arial, Helvetica, sans-serif; }
+    .title { font-size:26px; font-weight:700; }
+    .paneltitle { font-size:19px; font-weight:700; }
+    .body { font-size:15px; }
+    .small { font-size:13px; }
+    .tiny { font-size:12px; }
+    .grid { stroke:#d1d5db; stroke-width:1; }
+    .axis { stroke:#6b7280; stroke-width:1.2; }
+    .scalar { fill:#2563eb; }
+    .channel { fill:#f59e0b; }
+    .good { fill:#15803d; }
+    .panel { fill:#ffffff; stroke:#9ca3af; stroke-width:1.2; }
+  </style>
+  <rect width="1200" height="790" fill="#ffffff"/>
+  <text x="40" y="40" class="ink title">Scalar versus channel-wise decay: results across tasks and tests</text>
+  <text x="40" y="66" class="ink body">The measured outcomes are heterogeneous; no tested setting establishes a reliable small-model channel-wise advantage.</text>
+
+  <!-- Synthetic stress comparisons -->
+  <rect x="40" y="92" width="530" height="275" rx="7" class="panel"/>
+  <text x="60" y="121" class="ink paneltitle">A. Synthetic held-out stress comparisons</text>
+  <text x="60" y="143" class="ink small">Nine paired model comparisons per task; channel-wise better in:</text>
+  <rect x="455" y="112" width="12" height="12" class="scalar"/><text x="473" y="123" class="ink small">scalar</text>
+  <rect x="455" y="132" width="12" height="12" class="channel"/><text x="473" y="143" class="ink small">channel-wise</text>
+  <line x1="168" y1="188" x2="500" y2="188" class="axis"/><line x1="168" y1="188" x2="168" y2="314" class="axis"/>
+  <line x1="242" y1="188" x2="242" y2="314" class="grid"/><line x1="316" y1="188" x2="316" y2="314" class="grid"/><line x1="390" y1="188" x2="390" y2="314" class="grid"/><line x1="464" y1="188" x2="464" y2="314" class="grid"/><line x1="500" y1="188" x2="500" y2="314" class="grid"/>
+  <text x="164" y="332" class="ink tiny">0</text><text x="232" y="332" class="ink tiny">2</text><text x="306" y="332" class="ink tiny">4</text><text x="380" y="332" class="ink tiny">6</text><text x="454" y="332" class="ink tiny">8</text><text x="490" y="332" class="ink tiny">9</text>
+  <text x="73" y="213" class="ink body">MQAR</text><text x="73" y="232" class="ink tiny">stress</text><text x="73" y="273" class="ink body">Overwrite</text><text x="73" y="292" class="ink tiny">stress</text>
+  <rect x="168" y="198" width="147.8" height="16" class="channel"/><text x="322" y="211" class="ink small">4/9</text>
+  <rect x="168" y="258" width="295.6" height="16" class="channel"/><text x="470" y="271" class="ink small">8/9</text>
+  <text x="168" y="232" class="ink tiny">mean paired difference: +3.4 percentage points</text><text x="168" y="292" class="ink tiny">mean paired difference: +3.2 percentage points</text>
+  <text x="60" y="356" class="ink tiny">MQAR sign test p=1.0; overwrite sign test p=0.039. Exploratory, uncorrected comparisons.</text>
+
+  <!-- Published harness -->
+  <rect x="590" y="92" width="570" height="275" rx="7" class="panel"/>
+  <text x="610" y="121" class="ink paneltitle">B. Reproduced Anatomy fixed-state harness</text>
+  <text x="610" y="143" class="ink small">Mean accuracy; 10 seeds per gate type</text>
+  <rect x="1002" y="112" width="12" height="12" class="scalar"/><text x="1020" y="123" class="ink small">scalar</text><rect x="1002" y="132" width="12" height="12" class="channel"/><text x="1020" y="143" class="ink small">channel-wise</text>
+  <line x1="720" y1="178" x2="1130" y2="178" class="axis"/><line x1="720" y1="178" x2="720" y2="316" class="axis"/>
+  <line x1="822" y1="178" x2="822" y2="316" class="grid"/><line x1="925" y1="178" x2="925" y2="316" class="grid"/><line x1="1027" y1="178" x2="1027" y2="316" class="grid"/><line x1="1130" y1="178" x2="1130" y2="316" class="grid"/>
+  <text x="715" y="333" class="ink tiny">0</text><text x="812" y="333" class="ink tiny">25</text><text x="915" y="333" class="ink tiny">50</text><text x="1017" y="333" class="ink tiny">75</text><text x="1116" y="333" class="ink tiny">100%</text>
+  <text x="635" y="202" class="ink body">E1</text><text x="635" y="220" class="ink tiny">constrained</text><text x="635" y="251" class="ink body">E4</text><text x="635" y="269" class="ink tiny">haystack</text><text x="635" y="300" class="ink body">E5</text><text x="635" y="318" class="ink tiny">collision</text>
+  <rect x="720" y="188" width="410" height="12" class="scalar"/><text x="1135" y="199" class="ink tiny">1.000</text><rect x="720" y="203" width="403.0" height="12" class="channel"/><text x="1128" y="214" class="ink tiny">0.983</text>
+  <rect x="720" y="237" width="242.3" height="12" class="scalar"/><text x="968" y="248" class="ink tiny">0.591</text><rect x="720" y="252" width="272.7" height="12" class="channel"/><text x="998" y="263" class="ink tiny">0.665</text>
+  <rect x="720" y="286" width="204.6" height="12" class="scalar"/><text x="930" y="297" class="ink tiny">0.499</text><rect x="720" y="301" width="158.3" height="12" class="channel"/><text x="884" y="312" class="ink tiny">0.386</text>
+  <text x="610" y="356" class="ink tiny">Lock-in counts (scalar / channel): E1 10/10 / 10/10; E4 6/10 / 6/10; E5 5/10 / 3/10.</text>
+
+  <!-- TinyStories -->
+  <rect x="40" y="395" width="1120" height="260" rx="7" class="panel"/>
+  <text x="60" y="425" class="ink paneltitle">C. TinyStories language modeling (descriptive)</text>
+  <text x="60" y="448" class="ink small">Validation loss after 1,000 steps; runs are short and unbalanced, so these values are not scaling evidence.</text>
+  <rect x="1017" y="417" width="12" height="12" class="scalar"/><text x="1035" y="428" class="ink small">scalar</text><rect x="1080" y="417" width="12" height="12" class="channel"/><text x="1098" y="428" class="ink small">channel-wise</text>
+  <rect x="140" y="478" width="940" height="124" fill="#f9fafb" stroke="#d1d5db"/>
+  <line x1="140" y1="520" x2="1080" y2="520" class="grid"/><line x1="140" y1="561" x2="1080" y2="561" class="grid"/>
+  <line x1="390" y1="478" x2="390" y2="602" class="grid"/><line x1="620" y1="478" x2="620" y2="602" class="grid"/><line x1="850" y1="478" x2="850" y2="602" class="grid"/>
+  <text x="160" y="503" class="ink small" font-weight="700">Scale / runs</text><text x="430" y="503" class="ink small" font-weight="700">Scalar validation loss</text><text x="660" y="503" class="ink small" font-weight="700">Channel-wise validation loss</text><text x="890" y="503" class="ink small" font-weight="700">Interpretation</text>
+  <text x="160" y="545" class="ink body">30M (3 / 2)</text><text x="430" y="545" class="ink body">2.366</text><text x="660" y="545" class="ink body">2.378</text><text x="890" y="545" class="ink small">scalar lower by 0.012</text>
+  <text x="160" y="587" class="ink body">10M (1 / 1)</text><text x="430" y="587" class="ink body">2.811</text><text x="660" y="587" class="ink body">2.812</text><text x="890" y="587" class="ink small">nearly identical</text>
+
+  <!-- Efficiency evidence -->
+  <rect x="40" y="680" width="1120" height="155" rx="7" class="panel"/>
+  <text x="60" y="710" class="ink paneltitle">D. Efficiency evidence (timing only)</text>
+  <text x="60" y="731" class="ink tiny">Current 1.585M recipe, sequential A6000 50-step windows; timing-only, not a training/inference benchmark.</text>
+  <rect x="60" y="746" width="610" height="66" fill="#f9fafb" stroke="#d1d5db"/>
+  <line x1="60" y1="769" x2="670" y2="769" class="grid"/><line x1="190" y1="746" x2="190" y2="812" class="grid"/><line x1="340" y1="746" x2="340" y2="812" class="grid"/><line x1="480" y1="746" x2="480" y2="812" class="grid"/>
+  <text x="72" y="762" class="ink tiny" font-weight="700">Task</text><text x="205" y="762" class="ink tiny" font-weight="700">scalar s/step</text><text x="355" y="762" class="ink tiny" font-weight="700">channel s/step</text><text x="495" y="762" class="ink tiny" font-weight="700">relative Δ</text>
+  <text x="72" y="786" class="ink tiny">MQAR</text><text x="205" y="786" class="ink tiny">0.7620</text><text x="355" y="786" class="ink tiny">0.7689</text><text x="495" y="786" class="ink tiny">+0.91%</text>
+  <text x="72" y="806" class="ink tiny">Overwrite</text><text x="205" y="806" class="ink tiny">0.7986</text><text x="355" y="806" class="ink tiny">0.7926</text><text x="495" y="806" class="ink tiny">−0.75%</text>
+  <text x="720" y="760" class="ink small">Architecture/resource facts</text><text x="720" y="783" class="ink tiny">• Channel-wise: 1,651,456 parameters; scalar: 1,585,416 (+4.17%).</text><text x="720" y="802" class="ink tiny">• Recurrent state shape is the same for both variants.</text><text x="720" y="821" class="ink tiny">• Comparable energy and peak-memory measurements: unavailable.</text>
+
+  <text x="40" y="875" class="ink body" font-weight="700">Reading the figure</text><text x="40" y="899" class="ink small">Channel-wise gates can be useful to a trained model: checkpoint interventions show reliance on channel diversity.</text><text x="40" y="921" class="ink small">That reliance does not imply a training benefit: across these tasks and tests, scalar decay was equal or slightly better overall.</text><text x="40" y="947" class="ink tiny">Sources: FINAL_SYNTHESIS_2026-11-18.md; overall_conclusion_check_2026-11-18.md; memory_stress_tests_20261117/REPORT.md; three_seed_confirmation_20261117/REPORT.md; granularity_report.md; RESEARCH_METHODOLOGY.md.</text>
+</svg>

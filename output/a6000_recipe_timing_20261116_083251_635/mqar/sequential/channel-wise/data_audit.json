@@ -1,0 +1,10 @@
+{
+  "checks": 64,
+  "counterfactual_failures": 0,
+  "key_free_first_value_accuracy": 0.25,
+  "key_free_last_value_accuracy": 0.25,
+  "label_mismatches": 0,
+  "passed": true,
+  "scope": "specified label/query-key/copy checks only; not trained learnability",
+  "train_development_content_overlap": 0
+}

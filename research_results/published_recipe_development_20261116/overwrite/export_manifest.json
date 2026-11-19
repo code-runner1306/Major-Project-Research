@@ -1,0 +1,73 @@
+{
+  "included": [
+    {
+      "path": "channel-wise/data_audit.json",
+      "bytes": 6988,
+      "sha256": "f8d0ea904489f4fc933d1d428f4e428e6bff3eb455dd21979a923c0b237506c4"
+    },
+    {
+      "path": "channel-wise/data_manifests.json",
+      "bytes": 2111,
+      "sha256": "9038337ca5dca2cb9ef4507007ea1aeac33848496d236a790e32aaea4a8a3497"
+    },
+    {
+      "path": "channel-wise/development_curve.json",
+      "bytes": 83160,
+      "sha256": "12f7ddef8a29992991b1b3dc61ffd8bb70ba6e2127111c182d65d4297a2058de"
+    },
+    {
+      "path": "channel-wise/settings.json",
+      "bytes": 1845,
+      "sha256": "afc880dc22dd57235ac6979e5d5eb2a8d27b8ca61f0a48964b5210437c4f5e61"
+    },
+    {
+      "path": "channel-wise/summary.json",
+      "bytes": 301684,
+      "sha256": "25511b1c7956e49e3bb0d7a830fef86f7bc1862b204dc0f10a81f2e160440879"
+    },
+    {
+      "path": "channel-wise.log",
+      "bytes": 81196,
+      "sha256": "38541f8b0cc872f4d011b84a000629724e2faac1c3ab06d2f9031e7d7b8ac89d"
+    },
+    {
+      "path": "scalar/data_audit.json",
+      "bytes": 6988,
+      "sha256": "f8d0ea904489f4fc933d1d428f4e428e6bff3eb455dd21979a923c0b237506c4"
+    },
+    {
+      "path": "scalar/data_manifests.json",
+      "bytes": 2111,
+      "sha256": "9038337ca5dca2cb9ef4507007ea1aeac33848496d236a790e32aaea4a8a3497"
+    },
+    {
+      "path": "scalar/development_curve.json",
+      "bytes": 83876,
+      "sha256": "23001039a1562b9b0cef537491f79acb9eb87786a5573969cd02dfdc2e2cf13b"
+    },
+    {
+      "path": "scalar/settings.json",
+      "bytes": 1845,
+      "sha256": "afc880dc22dd57235ac6979e5d5eb2a8d27b8ca61f0a48964b5210437c4f5e61"
+    },
+    {
+      "path": "scalar/summary.json",
+      "bytes": 302109,
+      "sha256": "9277753558b43329775e5fd4a4244e7684abd536f41ab13b9759010ac300e512"
+    },
+    {
+      "path": "scalar.log",
+      "bytes": 80412,
+      "sha256": "a4708cf7c0199b10727b149e15dd2588cb3e6153e2ab52c74dc356e5c82f4a2a"
+    },
+    {
+      "path": "session_status.json",
+      "bytes": 345,
+      "sha256": "e57c304851e2de3f036552f187e246bc58f29d1cf25eb8e02cac109a700b56d3"
+    }
+  ],
+  "excluded": [
+    "channel-wise/latest_checkpoint.pt",
+    "scalar/latest_checkpoint.pt"
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "cases": {
+    "baseline": {
+      "audit": {
+        "checks": 8,
+        "counterfactual_failures": 0,
+        "key_free_first_value_accuracy": 0.25,
+        "key_free_last_value_accuracy": 0.25,
+        "label_mismatches": 0,
+        "passed": true,
+        "scope": "specified label/query-key/copy checks only; not trained learnability"
+      },
+      "identity": {
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "seed": 700042,
+        "sha256": "ebee0d8fe6904fc70d94e23dcdba69f089c115ec01c8f0026475f7b96d683ed4",
+        "shape": [
+          2,
+          64
+        ],
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "length128": {
+      "audit": {
+        "checks": 8,
+        "counterfactual_failures": 0,
+        "key_free_first_value_accuracy": 0.25,
+        "key_free_last_value_accuracy": 0.25,
+        "label_mismatches": 0,
+        "passed": true,
+        "scope": "specified label/query-key/copy checks only; not trained learnability"
+      },
+      "identity": {
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 4,
+        "seed": 700042,
+        "sha256": "d37b45c76d6c4b2f116a2f5b0a12ddcd0739bfd0074b6db9c37960d29ccf050d",
+        "shape": [
+          2,
+          128
+        ],
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "length128_load12": {
+      "audit": {
+        "checks": 24,
+        "counterfactual_failures": 0,
+        "key_free_first_value_accuracy": 0.08333333333333333,
+        "key_free_last_value_accuracy": 0.08333333333333333,
+        "label_mismatches": 0,
+        "passed": true,
+        "scope": "specified label/query-key/copy checks only; not trained learnability"
+      },
+      "identity": {
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 12,
+        "seed": 700042,
+        "sha256": "8ff536af8a7255d9e9eb2ecf360f6a7b6b40d9c15da3475431fb4bbe0ad0478f",
+        "shape": [
+          2,
+          128
+        ],
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "length128_load8": {
+      "audit": {
+        "checks": 16,
+        "counterfactual_failures": 0,
+        "key_free_first_value_accuracy": 0.125,
+        "key_free_last_value_accuracy": 0.125,
+        "label_mismatches": 0,
+        "passed": true,
+        "scope": "specified label/query-key/copy checks only; not trained learnability"
+      },
+      "identity": {
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 8,
+        "seed": 700042,
+        "sha256": "d1203e5275bd67dcf92945294febe20784d3a039e6002dd585abaa93d655c261",
+        "shape": [
+          2,
+          128
+        ],
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "load12": {
+      "audit": {
+        "checks": 24,
+        "counterfactual_failures": 0,
+        "key_free_first_value_accuracy": 0.08333333333333333,
+        "key_free_last_value_accuracy": 0.08333333333333333,
+        "label_mismatches": 0,
+        "passed": true,
+        "scope": "specified label/query-key/copy checks only; not trained learnability"
+      },
+      "identity": {
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 12,
+        "seed": 700042,
+        "sha256": "e57e97e38aba5a26a6a913bdd480744b2788683a0c7803926062d1988f1439ad",
+        "shape": [
+          2,
+          64
+        ],
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    },
+    "load8": {
+      "audit": {
+        "checks": 16,
+        "counterfactual_failures": 0,
+        "key_free_first_value_accuracy": 0.125,
+        "key_free_last_value_accuracy": 0.125,
+        "label_mismatches": 0,
+        "passed": true,
+        "scope": "specified label/query-key/copy checks only; not trained learnability"
+      },
+      "identity": {
+        "generator": "pinned-zoology-mqar-memory-bounded",
+        "keys": 8,
+        "seed": 700042,
+        "sha256": "4c0b119765284bcdbba73495adc6428fd17b4e1986ee562c7e8dcf2a41f58852",
+        "shape": [
+          2,
+          64
+        ],
+        "split": "stress",
+        "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+      },
+      "train_overlap": 0
+    }
+  },
+  "family": "mqar",
+  "seed": 42,
+  "smoke_only": true
+}

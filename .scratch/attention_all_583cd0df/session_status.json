@@ -1,0 +1,13 @@
+{
+  "jobs": {
+    "mqar/attention": 0,
+    "mqar/gdn": 0,
+    "overwrite/attention": 0,
+    "overwrite/gdn": 0
+  },
+  "limit_seconds": 39600,
+  "reserve_seconds": 600,
+  "source_revision": "52ef83070a3c7b86cd81cdd29b9b9df7f46d429a",
+  "status": "complete",
+  "wall_seconds": 30.52893149998272
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "development_answer_accuracy": 0.0,
+    "elapsed_seconds": 0.38414300000295043,
+    "loss": 4.910845518112183,
+    "perplexity": 135.75418090820312,
+    "step": 2,
+    "steps": 2
+  }
+]

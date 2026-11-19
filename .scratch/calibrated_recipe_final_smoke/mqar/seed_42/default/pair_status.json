@@ -1,0 +1,25 @@
+{
+  "cpu_smoke": true,
+  "family": "mqar",
+  "hardware": [],
+  "initialization": "default",
+  "qualification_pass": false,
+  "seed": 42,
+  "source_hashes": {
+    "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+    "recipe_calibration.py": "66d48e1f16c4a43adc9e1823de239bcd1a8631a9405ea40e2297e1e6e4caceee",
+    "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+    "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+    "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+    "run_published_recipe.py": "9193690b114a715cd5b1f589983610a937c6ca49a2cf564402d6ac9ad9c11802",
+    "run_recipe_study.py": "62e1f0d5219b6a182e77ce3ba9003db33429b9c931273a3ff1c74403bffc8ceb",
+    "study_configs/calibrated_recipe_study.json": "c5d79910440d56694fe30588a0e4f57320f7bc6595cff206bb4eabe69951617e",
+    "third_party/zoology_iclr24/attention.py": "a3de37342c13e279e75ebe5748f8826b28b005686cc5c968c135afbab4855e94",
+    "third_party/zoology_iclr24/compat.py": "b67b5c7a7b3f493f2113bb71bcb74f14ca3e1ed32ce98619f7cddc2a75e6c9ec",
+    "third_party/zoology_iclr24/model.py": "5f96689ebff76b30a64f793aa7deb9e31c9236c8ae4f148c773b3eb9f8943313"
+  },
+  "stage": "explore",
+  "status": "complete",
+  "torch": "2.11.0+cu128",
+  "wall_seconds": 16.17199999999866
+}

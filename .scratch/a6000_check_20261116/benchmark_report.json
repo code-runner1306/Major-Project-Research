@@ -1,0 +1,97 @@
+{
+  "benchmark_wall_seconds": 123.7190000000046,
+  "comparisons": {
+    "mqar": {
+      "parallel": {
+        "benchmark_wall_seconds": 28.952999999994063,
+        "conservative_pair_training_seconds": 961.6683999999426,
+        "end_to_end_optimizer_steps_per_second": 0.13815494076609747,
+        "estimated_pair_training_seconds": 45.790999999968335
+      },
+      "recommended_mode_by_projected_pair_time": "parallel",
+      "sequential": {
+        "benchmark_wall_seconds": 43.54699999999866,
+        "conservative_pair_training_seconds": 1874.3672000002784,
+        "end_to_end_optimizer_steps_per_second": 0.09185477759662257,
+        "estimated_pair_training_seconds": 55.11000000018248
+      }
+    },
+    "overwrite": {
+      "parallel": {
+        "benchmark_wall_seconds": 10.89100000000326,
+        "conservative_pair_training_seconds": 940.674000000066,
+        "end_to_end_optimizer_steps_per_second": 0.3672757322558813,
+        "estimated_pair_training_seconds": 31.921000000111235
+      },
+      "recommended_mode_by_projected_pair_time": "parallel",
+      "sequential": {
+        "benchmark_wall_seconds": 26.51600000000326,
+        "conservative_pair_training_seconds": 1884.5900000013412,
+        "end_to_end_optimizer_steps_per_second": 0.15085231558302564,
+        "estimated_pair_training_seconds": 63.83100000116974
+      }
+    }
+  },
+  "cpu_smoke": true,
+  "gpu": null,
+  "interpretation": "Timing only; no learned accuracy qualification. Workers run sequentially on device 0.",
+  "jobs": {
+    "mqar/parallel/channel-wise": {
+      "conservative_seconds": 961.6683999999426,
+      "estimated_seconds": 45.790999999968335,
+      "mean_step_seconds": 0.1640000000006694,
+      "optimizer_steps": 64
+    },
+    "mqar/parallel/scalar": {
+      "conservative_seconds": 949.5959999998042,
+      "estimated_seconds": 38.39799999985553,
+      "mean_step_seconds": 0.10900000000037835,
+      "optimizer_steps": 64
+    },
+    "mqar/sequential/channel-wise": {
+      "conservative_seconds": 948.388400000165,
+      "estimated_seconds": 35.983000000109314,
+      "mean_step_seconds": 0.24999999999636202,
+      "optimizer_steps": 64
+    },
+    "mqar/sequential/scalar": {
+      "conservative_seconds": 925.9788000001136,
+      "estimated_seconds": 19.127000000073167,
+      "mean_step_seconds": 0.10900000000401633,
+      "optimizer_steps": 64
+    },
+    "overwrite/parallel/channel-wise": {
+      "conservative_seconds": 940.674000000066,
+      "estimated_seconds": 31.921000000111235,
+      "mean_step_seconds": 0.2029999999977008,
+      "optimizer_steps": 64
+    },
+    "overwrite/parallel/scalar": {
+      "conservative_seconds": 928.8231999999728,
+      "estimated_seconds": 21.8739999999234,
+      "mean_step_seconds": 0.125,
+      "optimizer_steps": 64
+    },
+    "overwrite/sequential/channel-wise": {
+      "conservative_seconds": 942.4920000005397,
+      "estimated_seconds": 33.95000000050641,
+      "mean_step_seconds": 0.21049999999740976,
+      "optimizer_steps": 64
+    },
+    "overwrite/sequential/scalar": {
+      "conservative_seconds": 942.0980000008014,
+      "estimated_seconds": 29.881000000663335,
+      "mean_step_seconds": 0.1640000000006694,
+      "optimizer_steps": 64
+    }
+  },
+  "source_hashes": {
+    "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+    "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+    "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+    "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+    "run_published_recipe.py": "9193690b114a715cd5b1f589983610a937c6ca49a2cf564402d6ac9ad9c11802"
+  },
+  "status": "complete",
+  "torch": "2.11.0+cu128"
+}

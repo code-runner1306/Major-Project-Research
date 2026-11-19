@@ -1,0 +1,766 @@
+Does Channel-Wise Decay Improve Associative
+Recall in Small Gated DeltaNets?
+Mayank Mehta, Michelle Aloz, Amrita Pati, and Sujata Deshmukh
+Department of Computer Engineering
+Fr. Conceicao Rodrigues College of Engineering
+Mumbai, India
+Abstract—Channel-wise decay gives each key coordinate in
+a Gated DeltaNet its own forgetting factor. We compare this
+design with scalar decay under matched training conditions on
+synthetic recall and overwrite tasks, and extend three published
+ﬁxed-state test cells with matched scalar models. Fresh baseline
+accuracy was near ceiling, while the ranking changed with the
+task and metric under stress. In the constrained-state cell, scalar
+decay had 1.68 percentage points higher mean accuracy and
+both variants reached lock-in in all ten runs. Channel-wise decay
+had an exploratory advantage on latest-value retrieval across
+overwrite stress conditions. A ﬁxed-state diagnostic with ﬁller
+extending recall examples to 1,024 tokens exposed large seed-
+speciﬁc failures in both gate types. Across the tested tasks and
+training budgets, channel-wise decay did not yield a consistent
+recall advantage.
+Index Terms—Gated DeltaNet, associative recall, linear atten-
+tion, recurrent memory, decay granularity, synthetic benchmarks
+I. INTRODUCTION
+Efﬁcient sequence models often replace the growing key–
+value cache of attention with a ﬁxed-size recurrent state. Gated
+DeltaNet combines a data-dependent forgetting factor with a
+delta-rule update, which corrects the stored association when
+a key is observed again [1]. Implementations differ in the
+granularity of the decay: the original GDN uses scalar decay
+per head, while Kimi Delta Attention uses channel-wise decay
+[2]. Greater granularity is a plausible way to allocate different
+retention timescales within one head, and recent large-scale
+architectures use it [3].
+Whether this ﬂexibility improves associative recall in small
+matched models is a distinct empirical question. Large hybrid
+models differ in many factors besides decay granularity, while
+associative-recall benchmarks can be sensitive to model state
+size, training recipe, and data layout. Prior controlled work has
+already compared decay designs in language modeling, so a
+scalar-versus-channel-wise comparison alone is not a novelty
+claim [4]. This study instead reports a controlled, small-model
+comparison alongside a published-harness reproduction and
+measurements of training time and model footprint.
+The paper asks: Does channel-wise decay provide a reli-
+able recall advantage over scalar decay in the small Gated
+DeltaNets tested here? The contributions are:
+• A matched comparison of scalar and channel-wise decay
+on small synthetic recall and overwrite tasks, including
+held-out stress cells and decay interventions.
+• A reproduction and scalar-versus-channel-wise extension
+of three cells from a published ﬁxed-state associative-
+recall harness, with ten seeds per variant.
+We also report model footprint and short sequential optimizer-
+step measurements.
+II. BACKGROUND AND RELATED WORK
+A. Fixed-state sequence models
+The Transformer stores context explicitly through attention
+[5]. Linear attention can instead accumulate feature products
+in a recurrent matrix whose dimensions are ﬁxed with respect
+to sequence length [6]. This representation connects to fast
+weight programmers, which use one stream of activations to
+write weights that another stream reads [7]. A delta write
+corrects the state prediction for the current key. For an exact
+repeated key, that correction directly addresses the difference
+between the current read and the desired value. The same
+update can affect related keys when they occupy overlapping
+directions.
+Fixed-state alternatives differ in their update and retention
+mechanisms. RetNet uses retention with head-dependent de-
+cay [8]. Mamba uses input-dependent state space parameters
+[9], and state space duality explains how some state space
+computations can be expressed through structured attention
+operators [10]. Gated linear attention and parallel delta-rule
+algorithms provide related routes to efﬁcient computation [11],
+[12]. Mamba-2 restricts the diagonal transition used in Mamba
+to a scalar times the identity within each head. GLA applies a
+vector gate to the key coordinates of the state. These separate
+architectures illustrate the two design choices. Our comparison
+varies decay within a single delta-rule family, with the state
+shape and correction rule held ﬁxed.
+B. Gated recall and repeated writes
+GDN augments a recurrent fast-weight memory with for-
+getting and delta-rule correction [1]. Kimi Linear introduces
+channel-wise decay through Kimi Delta Attention, and Gated
+DeltaNet-2 further separates erase and write control [2], [3].
+RWKV-7 combines vector-valued decay with a generalized
+delta update [13]. This is a precedent for the combination, with
+an update and parameterization distinct from the controlled
+channel-wise GDN arm.
+Associative-recall evaluations include Multi-Query Asso-
+ciative Recall (MQAR), introduced in the Zoology study of
+
+efﬁcient language models [14]. Recent work emphasizes the
+roles of state constraints, interference, and training curricula
+in ﬁxed-state recall [15]. We ﬁrst reproduce the published
+channel-wise arm and then add scalar decay in the same
+harness.
+The closest controlled study compares multiple decay and
+write mechanisms across model sizes and language-model
+datasets [4]. Accordingly, this paper makes no priority claim
+for comparing scalar and channel-wise decay. We exam-
+ine how gate granularity affects recall across synthetic task
+conditions in small models. Kernelized linear attention also
+evaluates recall and repeated-key overwrites under constrained
+state capacity [16]. That setting motivates distinguishing the
+latest value for a written key from the continued availability of
+unrelated values. An aggregate overwrite score can combine
+those outcomes even when they respond differently to load or
+training.
+III. METHOD
+A. Decay variants
+Let St be the recurrent memory, kt the key, and vt the value
+at step t. A simpliﬁed delta-rule update with decay is
+eSt = St−1Dt,
+St = eSt + βt
+vt −eStkt
+
+k⊤
+t ,
+(1)
+where Dt = αtI for scalar decay and Dt = diag(αt) for
+channel-wise decay. The compared variants use the same task
+and model implementation within each experiment; only the
+speciﬁed decay parameterization changes. Unless otherwise
+stated, reported results are from small models with approx-
+imately 1.6M parameters on synthetic recall tasks. Language-
+model measurements are reported separately and are not
+treated as scale evidence.
+For the synthetic recipe in Fig. 1, the vocabulary has
+8,192 symbols and the residual width is 128. Each of four
+blocks has one recurrent head with key width 128 and value
+width 256. The query, key, and value projections pass through
+depthwise causal convolutions with kernel width four and
+a SiLU activation. Queries and keys are normalized before
+the state computation. After reading the updated state, the
+block applies root mean square normalization, multiplies by
+a learned input-dependent output gate, and projects to the
+residual width. The vocabulary projection shares the token
+embedding weights. The backbone uses residual additions and
+LayerNorm, with an identity state mixer.
+The gate is computed as
+αt = exp
+
+−exp(Alog) softplus(Wαxt + b)
+
+,
+(2)
+where scalar gating yields one decay per head and channel-
+wise gating yields one decay per key coordinate. For any ﬁxed
+key column, decay acts across the full value dimension. Both
+variants use a scalar write gate βt per head. The controlled
+comparison retains the natural parameter overhead of the wider
+decay projection.
+B. Experiments
+Paired scalar and channel-wise models were assessed on
+MQAR and overwrite stress cells across three seeds and
+three initialization conditions. Channel interventions on trained
+channel-wise checkpoints tested whether performance de-
+pended on channel differences; these are checkpoint interven-
+tions, not independently trained static-gate baselines.
+We also reproduced three cells from the public “Anatomy of
+Associative Recall” harness before running scalar models with
+matched seeds and commands. The cells were constrained-
+state recall (E1), distractor haystack (E4), and collision keys
+(E5), each with ten seeds. Reproduction checks were frozen
+against the published channel-wise results. Outcomes include
+mean accuracy and the cell-speciﬁc lock-in count; the metrics
+are not interchangeable.
+C. Synthetic tasks and training controls
+Figure 2 summarizes the evaluation. MQAR presents key–
+value pairs followed by queries about previously seen keys.
+The base cell uses sequences of length 64 and four asso-
+ciations. The overwrite task presents a key with an initial
+value and a later replacement, then queries both the updated
+association and an unrelated one. We score exact answers at
+query positions and examine unrelated retention separately.
+For answer-free overwrite evaluation, earlier gold answers are
+erased from the input. This isolates one source of leakage
+while preserving the speciﬁed query layout.
+The paired runs share data order and the initialization of
+common parameters within each seed. The 16-epoch default
+and calibrated matrix uses seeds 42–44 and 3,136 completed
+optimizer updates per checkpoint. Training uses 100,000 ex-
+amples, FP32, and AdamW [17], with batches of up to 512
+examples accumulated in microbatches of up to 32. The initial
+learning rate is 10−8/3 (approximately 2.15×10−3). It follows
+an epoch-level cosine schedule with a 64-epoch horizon, zero
+ﬂoor, and no warmup. Weight decay is 0.1, with the decay
+rates and offsets exempt. A nonﬁnite loss or gradient aborts
+the run. The update count records actual AdamW calls. The
+ﬁxed endpoint gives both gate types the same update budget.
+For the fresh endpoint check, each task and seed uses 512
+examples with the same realization across the paired models.
+Exact duplicates with regenerated training, development, and
+previous conﬁrmation examples were excluded by the overlap
+audit.
+D. Initialization conditions
+Default initialization retains the recipe’s sampled timescales.
+The mean-decay condition ﬁts the offset of each gate using
+training activations so its empirical mean decay equals 2−1/h,
+with successive block targets h ∈{16, 32, 64, 128}. These tar-
+gets describe isolated constant-decay factors. Memory survival
+in the full model also depends on later writes, interference,
+and readout. Matching decay at initialization reduces a source
+of variation when comparing granularity, and the ﬁtted pa-
+rameters remain trainable. The joint condition ﬁts offset and
+rate to target mean log decay and mean Softplus sensitivity.
+
+Architecture used in the controlled synthetic experiments
+small recipe adaptation
+Token IDs
+[B, T]
+Word embedding
+8192 x 128
+learnable
+4 Transformer blocks
+sequence mixer = GDN
+state mixer = Identity
+Final LayerNorm
+d = 128
+Tied LM head
+128 -> 8192 logits
+No learned position table (max_position_embeddings = 0)
+tied input/output weights
+one pinned TransformerBlock
+The block keeps the Zoology backbone's LayerNorm and residual structure; the GDN mixer is the controlled architectural variable.
+LayerNorm 1
+d = 128
+RecipeGDN
+input x_t
+Residual
++ skip input
+LayerNorm 2
+d = 128
+Identity
+state mixer
+Block output
+to next block
+Q / K / V
+bias-free linear
+depthwise conv k=4 + SiLU
+Decay alpha
+scalar: alpha_t [H, 1]
+channel: alpha_t [H, 128]
+Write beta
+sigmoid
+beta_t [H, 1]
+Value-by-key recurrence
+D_t = alpha_t I (scalar) or diag(alpha_t)
+S~_t = S_(t-1) D_t
+S_t = S~_t + beta_t (v_t - S~_t k_t) k_t^T
+readout: S_t q_t
+Output gate
+SiLU(g_proj)
+norm + o_proj
+same normalized x_t
+Q/K L2-normalized; V width 256
+Fig. 1. Gated DeltaNet block used in the controlled synthetic recipe. The comparison changes the granularity of the decay gate; the backbone, recurrent-state
+dimensions, and other block operations are shared.
+METHODOLOGY: SCALAR VS CHANNEL-WISE DECAY
+scalar Dt = αtI  ↔  channel-wise Dt = diag(αt)  |  same backbone/task budget  |  paired within seed
+Fresh baseline
+MQAR + overwrite
+2 initializations
+paired scalar/channel
+Original stress
+held-out recall cells
+3 initializations
+original stress protocol
+Anatomy harness
+E1 / E4 / E5
+10 paired seeds per cell
+published fixed-state tests
+Filler extension
+Lengths: 64 / 256 / 1,024
+2 initializations × 3 seeds
+frozen-checkpoint diagnostic
+Outcomes: exact recall accuracy, lock-in/error patterns and gate-intervention sensitivity; fresh or held-out examples are used where specified.
+Scope: small synthetic GDNs; the four blocks are analyzed as separate paired comparisons.
+Fig. 2. Evaluation cohorts for the fresh baseline, stress suite, Anatomy cells, and ﬁxed-state ﬁller extension.
+These choices probe whether a change in initialization alters
+the apparent advantage of either gate type.
+E. External replication
+The three Anatomy cells probe different conditions. E1
+uses a constrained matrix state, E4 adds distractors to long
+retrieval, and E5 stresses recall when keys collide. The scalar
+extension runs with the corresponding seeds 0–9 and cell
+settings. E1 has 32 associations, key width 32, one layer,
+and 6,000 optimizer steps. E4 and E5 have sequence length
+64, four pairs, two layers, two heads, and 3,000 steps. E5
+includes a rebinding control. The original harness arm uses
+a separate decay value per key coordinate in the executable.
+We deﬁne the comparison by that implementation and keep
+the cell conﬁgurations distinct from our synthetic recipe. We
+report mean accuracy for each cell and lock-in counts where
+relevant. Lock-in requires ﬁnal accuracy of at least 0.90 for
+E1 and 0.80 for E4 and E5. This count complements mean
+accuracy, which is inﬂuenced by the size of both successes
+and failures.
+F. Analysis limits
+Seed-level comparisons are reported where available. The
+overwrite-stress gate comparison was exploratory and uncor-
+rected for multiple comparisons. The work was not designed
+
+TABLE I
+FRESH ANSWER-FREE CONFIRMATION BY INITIALIZATION. MEANS ARE
+PERCENTAGES OVER THREE SEEDS.
+Condition
+MQAR
+Overwrite
+Retention
+Scalar, default
+99.93
+99.32
+98.63
+Channel-wise, default
+99.97
+98.80
+97.66
+Scalar, mean decay
+99.90
+97.98
+95.96
+Channel-wise, mean decay
+99.98
+97.36
+94.86
+as an equivalence study; a nonsigniﬁcant difference is not
+evidence that the variants are equivalent.
+IV. RESULTS
+A. Synthetic recall and overwrite
+Table I shows fresh endpoint accuracy for the default and
+mean-decay conditions. MQAR is close to ceiling for both
+gate types. The joint runs enter the separate stress suite.
+The pooled latest-value accuracy was 99.95% across the 12
+overwrite checkpoints. Most residual errors concerned the
+unrelated association.
+Scalar decay has higher mean overwrite and retention accu-
+racy under both initializations in Table I. The direction varies
+within seed pairs. Under mean-decay initialization, scalar leads
+by 6.54 points on seed 42 and channel-wise leads by 3.71
+points on seed 43.
+The overwrite stress result measures a different endpoint.
+Table I scores both query types on fresh examples with four
+associations, one rewrite, and the nominal eight-token query
+gap. The separate stress-suite summary averages latest-value
+accuracy across nine conditions: six baseline and shift cells
+(base task, increased load, longer query distance, and two
+to four rewrites) and three paired update diagnostics. It also
+includes joint initialization. Channel-wise decay led in eight
+of nine pairs by a mean of 3.17 percentage points on that
+endpoint. Restricting this comparison to the six baseline and
+shift cells gives eight of nine pairs and 3.39 points. Scoring
+both queries across the full nine-condition suite changes the
+count to ﬁve of nine. The exploratory latest-value result
+therefore cannot be read as a general improvement in overwrite
+and retention. The paired points in Fig. 3 show the effect of the
+task, seed, and initialization. On MQAR, channel-wise decay
+led in four of nine pairs in the six-cell mean, with the positive
+average driven by a single low-performing scalar run.
+B. Query-distance extension at ﬁxed state size
+The original MQAR stress suite varied length from 64
+to 128 and increased the number of stored associations in
+separate cells. To isolate a longer delay, we evaluated the 12
+default and mean-decay MQAR checkpoints at lengths 64,
+256, and 1,024. For each training seed, 256 new examples
+retained the same four associations, query order, and answers
+across all lengths. Inserting 192 or 960 ﬁller tokens after the
+writes moved every query by that amount. State dimensions
+and checkpoint weights were ﬁxed. The base examples passed
+an exact training-overlap audit, and labels were checked
+TABLE II
+FIXED-STATE MQAR FILLER EXTENSION. EACH ENTRY GIVES
+SCALAR/CHANNEL-WISE EXACT-QUERY ACCURACY (%).
+Init., seed
+64
+256
+1,024
+Default, 42
+100.00/100.00
+100.00/100.00
+100.00/100.00
+Default, 43
+100.00/100.00
+100.00/99.90
+100.00/99.90
+Default, 44
+100.00/100.00
+100.00/29.39
+99.90/24.90
+Default, mean
+100.00/100.00
+100.00/76.43
+99.97/74.93
+Mean decay, 42
+100.00/99.90
+99.90/99.90
+99.90/99.80
+Mean decay, 43
+100.00/99.80
+100.00/99.90
+31.45/98.44
+Mean decay, 44
+99.90/100.00
+99.90/99.90
+0.00/99.90
+Mean decay, mean
+99.97/99.90
+99.93/99.90
+43.78/99.38
+TABLE III
+SCALAR VERSUS CHANNEL-WISE RESULTS IN THE REPRODUCED
+PUBLISHED HARNESS.
+Cell
+Metric
+Scalar
+Channel
+E1
+Mean accuracy
+1.000
+0.983
+E1
+Lock-in count
+10/10
+10/10
+E4
+Lock-in
+6/10
+6/10
+E4
+Mean accuracy
+0.591
+0.665
+E5
+Lock-in
+5/10
+3/10
+E5
+Mean accuracy
+0.499
+0.386
+against the memory preﬁx at each length. This post hoc test
+measures extrapolation across a ﬁller gap after short-context
+training. Training at long context and selective retention under
+continuing writes remain separate questions.
+Table II shows the results. At 1,024 tokens, the channel-
+wise minus scalar mean differences were -25.03 and +55.60
+percentage points for default and mean-decay initialization,
+respectively. Across checkpoints, accuracy ranged from 0.00%
+to 100.00%. The default channel-wise model at seed 44 fell to
+24.90%, while the mean-decay scalar models at seeds 43 and
+44 fell to 31.45% and 0.00%, respectively. All three had near-
+perfect accuracy at 64 tokens. This test exposes strong failures
+in both gate types and a ranking that depends on initialization
+and seed. Filler can itself produce state updates, so the test
+cannot isolate the learned decay factors as the cause of these
+failures.
+C. Published ﬁxed-state harness
+The published-harness reproduction passed all three pre-
+speciﬁed checks. Results are summarized in Table III. In
+E1, scalar mean accuracy was 1.68 percentage points higher
+(p = 0.000595 in the reported two-sided permutation test
+over seed scores). Both arms reached lock-in in all ten runs.
+The difference concerns accuracy near the ceiling, with no
+observed difference on the success criterion. E4 tied on the
+prespeciﬁed lock-in count even though channel-wise mean ac-
+curacy was higher. E5’s observed lock-in counts favored scalar,
+but the difference was uncertain (Fisher’s exact p = 0.650).
+The ranking varies with the cell and metric.
+D. Checkpoint interventions
+Post-training gate interventions showed that channel-wise
+checkpoints used channel diversity: averaging their channel
+
+Scalar versus channel-wise decay: results across tasks and tests
+The measured outcomes are heterogeneous; no tested setting establishes a reliable small-model channel-wise advantage.
+A. Synthetic paired differences
+Channel-wise minus scalar, percentage points; one dot per seed / initialization
+-20
+-10
+0
+10
+20
+30
+40
+MQAR
+mean +3.42 pp; 4/9
+Overwrite
+mean +3.17 pp; 8/9
+default
+calibrated
+joint
+B. Anatomy harness paired differences
+Channel-wise minus scalar accuracy, percentage points; 10 seeds per cell
+-100
+-50
+0
+50
+100
+E1
+-1.68
+E4
++7.38
+E5
+-11.32
+Open circles show the mean difference.
+Percentage points. Positive values favor channel-wise decay. Open circles mark descriptive means.
+Fig. 3. Paired accuracy differences (channel-wise minus scalar). Synthetic points are paired differences in accuracy averaged across six MQAR conditions or
+nine overwrite conditions for each training seed and initialization. Anatomy points show differences for corresponding seeds within each cell. Positive values
+favor channel-wise decay.
+gates caused large accuracy drops, including E4 and E5
+accuracy near 0.02. This does not establish a performance
+advantage of channel-wise decay. Independently trained scalar
+models reached comparable or better results in these cells,
+indicating that the same task can be solved by different learned
+mechanisms.
+Additional held-out diagnostics covered 36 trained check-
+points and 540 evaluations across default, mean-decay-
+matched, and joint-initialization conditions. No prespeciﬁed
+per-seed comparison established that input-dependent decay
+was necessary. On 12-association MQAR, replacing dynamic
+channel gates with ﬁxed per-channel values left accuracy close
+to the original in all three initialization conditions (87.78% vs.
+87.33% for default, 94.57% vs. 94.80% for mean-alpha, and
+91.83% vs. 92.21% for joint). Averaging the channel gates to
+one shared value per token was substantially more damaging.
+These interventions estimate how trained checkpoints depend
+on their gates. The training comparison estimates the effect of
+changing the available gate coordinates during learning.
+The two replacements in Table IV expose different forms
+of reliance. A ﬁxed mean per channel retains variation across
+key coordinates while removing token variation. A per-token
+average retains variation across tokens while sharing one
+decay across the coordinates. On E4 and E5, the second
+intervention reduced accuracy to about the harness’s value-
+marginal ﬂoor of 1/54 for a blind guess among eligible values.
+The equality between the two collapsed conditions is at the
+reported precision. On E1, even the ﬁxed per-channel mean
+lost over half the original accuracy, so replacing the original
+gates is also consequential in that cell. These contrasts help
+TABLE IV
+CHECKPOINT INTERVENTIONS IN THE ANATOMY HARNESS. ENTRIES ARE
+MEAN ACCURACY FOR THE TRAINED CHANNEL-WISE ARM AFTER
+REPLACING ITS DECAY GATES.
+Intervention
+E1
+E4
+E5
+Original dynamic gate
+0.9830
+0.6647
+0.3857
+Fixed mean per channel
+0.4518
+0.4790
+0.2167
+Per-token channel average
+0.2619
+0.0177
+0.0187
+Fixed scalar mean
+0.2466
+0.0177
+0.0187
+Value-marginal ﬂoor
+—
+0.0185
+0.0185
+explain why the separately trained scalar arm can perform
+well even when forcing a channel-wise checkpoint to use one
+shared value damages its recall.
+As descriptive context, TinyStories [18] validation loss at
+1,000 steps was 2.366 for scalar (n = 3) and 2.378 for
+channel-wise (n = 2) in the 30M conﬁguration.
+E. Measured runtime and resource footprint
+Table V summarizes the available resource measurements.
+The current four-layer recipe contains 1,585,416 trainable
+parameters with scalar decay and 1,651,456 with channel-wise
+decay, a 66,040-parameter (4.17%) increase. At FP32 weight
+storage this is approximately 6.34 MB versus 6.61 MB. Both
+variants use the same recurrent-state shape: four value-by-
+key matrices of size 256 × 128 per sequence, or 512 KiB in
+total at FP32. Thus, channel-wise decay increases learned gate
+parameters but does not increase the persistent recurrent-state
+dimensions in this comparison.
+
+TABLE V
+STATIC FOOTPRINT AND SHORT OPTIMIZER-STEP TIMING FOR THE
+CHUNKED PYTORCH IMPLEMENTATION.
+Measurement
+Scalar
+Channel-wise
+MQAR, A6000 (s/step)
+0.7620
+0.7689
+Overwrite, A6000 (s/step)
+0.7986
+0.7926
+Trainable parameters
+1,585,416
+1,651,456
+State (KiB/sequence, FP32)
+512
+512
+The sequential timing uses the chunked PyTorch imple-
+mentation on one RTX A6000-12Q proﬁle. The table gives
+means over 50 optimizer steps per variant with the same task
+protocol and batch size. Differences were below one percent
+and favored different variants across tasks.
+F. Overwrite layout diagnostic
+In a separate follow-up on one custom overwrite generator,
+all six control models (three per gate type) met the shortcut
+criterion on a fresh test. The models often returned an obsolete
+value when all writes to the queried key appeared before
+unrelated writes. When training varied both query distance and
+rewrite count, all six retrained models cleared the criteria for
+the shortcut and for sensitivity to query distance on a second
+fresh test. This observation applies to the generator and layouts
+tested.
+V. DISCUSSION
+Across these experiments, gate granularity alone did not
+predict recall reliability. In E1, the near-ceiling accuracy dif-
+ference left the lock-in outcome unchanged. Across overwrite
+stress conditions, channel-wise decay had an exploratory edge
+on latest-value accuracy. The E4 mean-accuracy difference
+and task-dependent results rule out a blanket claim that scalar
+decay dominates. The training-seed counts and task coverage
+limit the precision of these contrasts.
+A. Threats to validity
+The principal limitations are the small model size, short
+training budgets, and use of synthetic tasks. The ﬁller-
+extension sweep stresses elapsed retention at ﬁxed load. It
+leaves open whether channel-speciﬁc timescales help when
+a long sequence contains both new writes and old associa-
+tions that must remain accessible. The exploratory overwrite
+comparison has uncorrected multiplicity and partially shared
+data across paired models. Finally, checkpoint gate averaging
+measures reliance of already-trained models on gate diversity,
+not the value of training a new static-channel architecture.
+B. Quality and resource trade-off
+For L single-head blocks with residual width dmodel and key
+width dk, widening the decay projection adds Ldmodel(dk−1)
+weights. The learned rates and offsets add 2L(dk −1) pa-
+rameters. Both widths equal 128 in our recipe, giving 66,040
+additional parameters over four blocks at the same recurrent
+state size.
+A shared decay also simpliﬁes the transition algebra. In
+the structured state space duality (SSD) formulation used by
+Mamba-2, the scalar-identity transition gives one decaying
+factor per head for each pair of positions. This permits a
+block decomposition that uses dense matrix multiplications
+within chunks and passes recurrent state across chunks [10].
+GLA’s vector gate gives coordinate-speciﬁc decay products.
+Its implementation uses secondary tiling within chunks to
+recover tensor-core work for part of that computation [11].
+These are implementation examples from distinct recurrences.
+Scalar decay also simpliﬁes the decay component in GDN,
+whose delta correction still has to be computed [1], [12]. This
+algebra motivates testing simpler scalar kernels in workloads
+where recall is comparable. The brief A6000 measurements
+do not establish an optimized kernel speed ranking.
+VI. CONCLUSION
+In the small Gated DeltaNets and tasks evaluated, channel-
+wise decay did not provide a consistent associative-recall
+advantage over scalar decay. A reproduced published harness
+showed scalar-favoring constrained-state accuracy, a lock-in tie
+in the haystack cell, and an uncertain collision result. Channel-
+wise decay increased the parameter count while leaving the
+recurrent-state size ﬁxed. The shared decay factor may sim-
+plify kernel design. The ﬁxed-state length extension reveals
+large failures in both gate types, with the direction of the
+mean contrast reversing across initialization conditions. The
+experiments leave open the effect of training under mixed short
+and long retention demands.
+REFERENCES
+[1] S. Yang, J. Kautz, and A. Hatamizadeh, “Gated delta networks:
+Improving Mamba2 with delta rule,” in International Conference
+on
+Learning
+Representations,
+2025.
+[Online].
+Available:
+https:
+//arxiv.org/abs/2412.06464
+[2] Kimi Team, Y. Zhang, Z. Lin, X. Yao et al., “Kimi Linear: An expres-
+sive, efﬁcient attention architecture,” arXiv preprint arXiv:2510.26692,
+2025. [Online]. Available: https://arxiv.org/abs/2510.26692
+[3] A. Hatamizadeh, Y. Choi, and J. Kautz, “Gated deltanet-2: Decoupling
+erase and write in linear attention,” arXiv preprint arXiv:2605.22791,
+2026. [Online]. Available: https://arxiv.org/abs/2605.22791
+[4] S. Das, “Delta-rule writes in linear attention: A controlled factorial study
+of decay design,” Transactions on Machine Learning Research, 2026.
+[Online]. Available: https://openreview.net/forum?id=FdXB4u27LD
+[5] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N.
+Gomez, Ł. Kaiser, and I. Polosukhin, “Attention is all you need,” in
+Advances in Neural Information Processing Systems, 2017. [Online].
+Available: https://arxiv.org/abs/1706.03762
+[6] A. Katharopoulos, A. Vyas, N. Pappas, and F. Fleuret, “Transformers
+are RNNs: Fast autoregressive transformers with linear attention,”
+in International Conference on Machine Learning, 2020. [Online].
+Available: https://proceedings.mlr.press/v119/katharopoulos20a.html
+[7] I. Schlag, K. Irie, and J. Schmidhuber, “Linear transformers are secretly
+fast weight programmers,” in International Conference on Machine
+Learning, 2021. [Online]. Available: https://proceedings.mlr.press/v139/
+schlag21a.html
+[8] Y. Sun, L. Dong, S. Huang, S. Ma, Y. Xia, J. Xue, J. Wang, and F. Wei,
+“Retentive network: A successor to transformer for large language
+models,” arXiv preprint arXiv:2307.08621, 2023. [Online]. Available:
+https://arxiv.org/abs/2307.08621
+[9] A. Gu and T. Dao, “Mamba: Linear-time sequence modeling with
+selective state spaces,” in Conference on Language Modeling, 2024.
+[Online]. Available: https://arxiv.org/abs/2312.00752
+
+[10] T. Dao and A. Gu, “Transformers are SSMs: Generalized models
+and
+efﬁcient
+algorithms
+through
+structured
+state
+space
+duality,”
+in International Conference on Machine Learning, 2024. [Online].
+Available: https://arxiv.org/abs/2405.21060
+[11] S. Yang, B. Wang, Y. Shen, R. Panda, and Y. Kim, “Gated
+linear attention transformers with hardware-efﬁcient training,” in
+International
+Conference
+on
+Machine
+Learning,
+2024.
+[Online].
+Available: https://proceedings.mlr.press/v235/yang24ab.html
+[12] S. Yang, B. Wang, Y. Zhang, Y. Shen, and Y. Kim, “Parallelizing linear
+transformers with the delta rule over sequence length,” in Advances
+in Neural Information Processing Systems, 2024. [Online]. Available:
+https://arxiv.org/abs/2406.06484
+[13] B. Peng, R. Zhang, D. Goldstein, E. Alcaide, X. Du, H. Hou, J. Lin,
+J. Liu, J. Lu, W. Merrill, G. Song, K. Tan, S. Utpala, N. Wilce, J. S.
+Wind, T. Wu, D. Wuttke, and C. Zhou-Zheng, “RWKV-7 "goose" with
+expressive dynamic state evolution,” arXiv preprint arXiv:2503.14456,
+2025. [Online]. Available: https://arxiv.org/abs/2503.14456
+[14] S. Arora, S. Eyuboglu, A. Timalsina, I. Johnson, M. Poli, J. Zou,
+A. Rudra, and C. Ré, “Zoology: Measuring and improving recall in
+efﬁcient language models,” in International Conference on Learning
+Representations,
+2024.
+[Online].
+Available:
+https://openreview.net/
+forum?id=LY3ukUANko
+[15] J. Boesch and A. Wee, “Anatomy of associative recall in ﬁxed-state
+recurrences: A matched-state decomposition, an interference wall, and
+a curriculum that breaks it,” arXiv preprint arXiv:2609.16183, 2026.
+[Online]. Available: https://arxiv.org/abs/2609.16183
+[16] A. Ghriss and S. Chakraborty, “Kernelized linear attention: Breaking the
+capacity wall with symmetric cones,” arXiv preprint arXiv:2607.17419,
+2026. [Online]. Available: https://arxiv.org/abs/2607.17419
+[17] I. Loshchilov and F. Hutter, “Decoupled weight decay regularization,” in
+International Conference on Learning Representations, 2019. [Online].
+Available: https://arxiv.org/abs/1711.05101
+[18] R. Eldan and Y. Li, “TinyStories: How small can language models
+be and still speak coherent english?” arXiv preprint arXiv:2305.07759,
+2023. [Online]. Available: https://arxiv.org/abs/2305.07759

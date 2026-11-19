@@ -1,0 +1,29 @@
+2 models; 24 evaluations; no training; publish=false
+1/24: mqar_seed42_default_channel-wise/original/baseline accuracy=1.0000
+2/24: mqar_seed42_default_channel-wise/original/load8 accuracy=1.0000
+3/24: mqar_seed42_default_channel-wise/original/load12 accuracy=0.8333
+4/24: mqar_seed42_default_channel-wise/original/length128 accuracy=1.0000
+5/24: mqar_seed42_default_channel-wise/original/length128_load8 accuracy=1.0000
+6/24: mqar_seed42_default_channel-wise/original/length128_load12 accuracy=0.9583
+Traceback (most recent call last):
+  File "C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\evaluate_decay_boundary.py", line 380, in run
+    atomic_write_json(args.output/'results.json',report)
+  File "C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\artifacts.py", line 70, in atomic_write_json
+    os.replace(temporary_name, target)
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.scratch\\decay_boundary_two_workers_smoke_20261117\\worker_1\\.results.json.7zx8axv1.tmp' -> 'C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.scratch\\decay_boundary_two_workers_smoke_20261117\\worker_1\\results.json'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\evaluate_decay_boundary.py", line 536, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\evaluate_decay_boundary.py", line 533, in main
+    else:run(args)
+         ^^^^^^^^^
+  File "C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\evaluate_decay_boundary.py", line 392, in run
+    atomic_write_json(args.output/'results.json',report);summarize(report,args.output)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\artifacts.py", line 70, in atomic_write_json
+    os.replace(temporary_name, target)
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.scratch\\decay_boundary_two_workers_smoke_20261117\\worker_1\\.results.json.xokd9uxb.tmp' -> 'C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\.scratch\\decay_boundary_two_workers_smoke_20261117\\worker_1\\results.json'

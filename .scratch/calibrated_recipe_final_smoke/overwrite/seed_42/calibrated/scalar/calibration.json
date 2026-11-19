@@ -1,0 +1,95 @@
+{
+  "examples": 16,
+  "interpretation": "Mean-decay diagnostic targets, not measured full-state memory lifetimes",
+  "layers": [
+    {
+      "achieved_mean_decay": [
+        [
+          0.9576032354597507
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0029510972490761163
+        ]
+      ],
+      "layer": 0,
+      "maximum_error": 4.5238823020987695e-08,
+      "offsets": [
+        [
+          -3.3903980255126953
+        ]
+      ],
+      "target_half_life": 16.0,
+      "target_mean_decay": 0.9576032806985737
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.978572071578999
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0012040980767824053
+        ]
+      ],
+      "layer": 1,
+      "maximum_error": 9.491298857966513e-09,
+      "offsets": [
+        [
+          -5.624818801879883
+        ]
+      ],
+      "target_half_life": 32.0,
+      "target_mean_decay": 0.9785720620877001
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9892279978811926
+        ]
+      ],
+      "decay_std": [
+        [
+          0.0005251483201064124
+        ]
+      ],
+      "layer": 2,
+      "maximum_error": 1.5312782819520976e-08,
+      "offsets": [
+        [
+          -6.259002685546875
+        ]
+      ],
+      "target_half_life": 64.0,
+      "target_mean_decay": 0.9892280131939755
+    },
+    {
+      "achieved_mean_decay": [
+        [
+          0.9945994860618294
+        ]
+      ],
+      "decay_std": [
+        [
+          0.00029481132323807305
+        ]
+      ],
+      "layer": 3,
+      "maximum_error": 6.257819618049609e-08,
+      "offsets": [
+        [
+          -5.696754455566406
+        ]
+      ],
+      "target_half_life": 128.0,
+      "target_mean_decay": 0.9945994234836332
+    }
+  ],
+  "passed": true,
+  "source": "first training examples; labels unused",
+  "tokens": 512,
+  "tokens_sha256": "b19129bc03307b4f90e23758a0d07be2cc986edf4b2112ba44fdd50eb5c77bd9",
+  "wall_seconds": 0.15600000000267755
+}

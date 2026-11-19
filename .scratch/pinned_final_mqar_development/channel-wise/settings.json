@@ -1,0 +1,42 @@
+{
+  "adaptations": [
+    "GDN mixer extension",
+    "V4 overwrite extension",
+    "stable paired GDN initialization",
+    "microbatch gradient accumulation",
+    "fixed budget instead of per-model early stopping",
+    "validation512 by default instead of published3000",
+    "separate future confirmation set"
+  ],
+  "backend": "reference",
+  "effective_batch": 8,
+  "epochs": 2,
+  "family": "mqar",
+  "fla_reference_revision": "2705ab8ee9a9086bcfa6d079858e4281e01215a1",
+  "gradient_clipping": null,
+  "learning_rate": 0.0021544346900318843,
+  "length": 32,
+  "microbatch": 2,
+  "optimizer": "AdamW",
+  "precision": "float32",
+  "scheduler": "CosineAnnealingLR stepped per complete epoch; no warmup",
+  "seed": 42,
+  "source_hashes": {
+    "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+    "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+    "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+    "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+    "run_published_recipe.py": "9193690b114a715cd5b1f589983610a937c6ca49a2cf564402d6ac9ad9c11802",
+    "third_party/zoology_iclr24/attention.py": "3ddd94de336dd5ea9865e2d897bca9d04644f77d1d755a9c2bf18d371e054a44",
+    "third_party/zoology_iclr24/compat.py": "b67b5c7a7b3f493f2113bb71bcb74f14ca3e1ed32ce98619f7cddc2a75e6c9ec",
+    "third_party/zoology_iclr24/model.py": "b810ee15d41292cb4b8844476da7a1f50e9ea279425934d7b357092a09845cea"
+  },
+  "timescale_parameter_weight_decay": 0.0,
+  "torch_version": "2.11.0+cu128",
+  "train_examples": 32,
+  "validation_examples": 16,
+  "validation_interval": "each epoch and at the end of the timing window",
+  "vocabulary": 128,
+  "weight_decay": 0.1,
+  "width": 16
+}

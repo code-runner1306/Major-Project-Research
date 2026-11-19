@@ -1,0 +1,14 @@
+{
+  "cutoff": "2026-11-17",
+  "discovery_title_keys": 954,
+  "selected_primary_records": 46,
+  "evidence_A": 13,
+  "evidence_B": 33,
+  "title_screening": {
+    "catalog_only_not_selected": 903,
+    "exclude_title_scope": 20,
+    "primary_followed_up": 31
+  },
+  "catalog_citation_edges": 1051,
+  "caveat": "Discovery title keys are not full papers read; conference/preprint aliases may remain. No completeness guarantee."
+}

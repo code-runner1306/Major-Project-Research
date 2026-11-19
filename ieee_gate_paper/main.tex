@@ -1,0 +1,93 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx,textcomp,xcolor,booktabs}
+\begin{document}
+\title{Does Channel-Wise Decay Improve Associative Recall in Small Gated DeltaNets?}
+\author{\IEEEauthorblockN{Mayank Mehta, Michelle Aloz, Amrita Pati, and Dr. Sujata Deshmukh}
+\IEEEauthorblockA{\textit{Fr. Conceicao Rodrigues College of Engineering}}}
+\maketitle
+\begin{abstract}
+A Gated DeltaNet can apply a shared decay factor within a memory head or learn separate factors for its key channels. We test whether finer decay improves associative recall and whether models trained with it depend on channel variation. Across ten seeds in a reproduced fixed-state retrieval harness, scalar decay achieved perfect constrained-state recall in every run, compared with 98.3\% mean accuracy for channel-wise decay. Both designs reached the success threshold in six distractor-haystack runs. With colliding keys, five scalar and three channel-wise runs reached the threshold. Nevertheless, averaging decay across channels in trained channel-wise models reduced mean haystack accuracy from 66.5\% to 1.8\%. In a separate keyed-overwrite study, both designs learned a positional retrieval strategy that ordinary validation concealed. Varying query distance and rewrite count during training cleared both measured failure criteria across six models. These results distinguish reliance on a fitted gate from its benefit during learning and identify a retrieval error shared by both designs in one generator family.
+\end{abstract}
+\begin{IEEEkeywords}associative recall, recurrent memory, gated delta networks, memory interference\end{IEEEkeywords}
+\section{Introduction}
+When a sequence contains several updates to a record, a model must identify its current value while preserving other records. A fixed-size recurrent memory compresses all of these associations into a shared state. Gated DeltaNet combines a decay operation with a key-directed correction~\cite{gdn}. Kimi Delta Attention permits separate decay factors along the key dimension~\cite{kimi}. This flexibility gives the model more ways to retain information. Whether optimization discovers a better retrieval strategy with that freedom is an empirical question.
+
+We distinguish two comparisons. Training a scalar and a channel-wise model from scratch measures the benefit of adding gate resolution under a fixed protocol. Replacing a gate after training measures how much the fitted model depends on it. A large loss under the second intervention is compatible with similar outcomes under the first. We examine both questions in three conditions of a published fixed-state recall harness~\cite{anatomy}. We also investigate a failure shared by both designs: on some layouts a model returns a predictable obsolete value despite near-perfect development accuracy. Five training-data conditions test which aspects of the layout sustain that behavior.
+\section{Background and Related Work}
+With key coordinates as rows of the state matrix $S$, a gated delta update can be written as
+\begin{align}
+M_t &= D_t S_{t-1},\\
+S_t &= M_t+\beta_t k_t(v_t-M_t^\top k_t)^\top .
+\end{align}
+The key $k_t$ addresses a write, $v_t$ is its target and $\beta_t$ controls the correction. Scalar decay uses $D_t=\alpha_t I$ within each head. Channel-wise decay uses $D_t=\mathrm{diag}(\boldsymbol{\alpha}_t)$. Both variants retain the key-directed edit. Their recurrent-state dimensions can match even when their projection parameter counts differ.
+
+Das~\cite{das} compared decay designs and delta writes under fixed language-model training budgets. The delta write supplied the largest observed performance separation. Our comparison retains the delta write and examines task-specific recall, variability across training seeds, and inference-time reliance on channel differences. Zoology~\cite{zoo} introduced multi-query associative recall (MQAR) as a diagnostic for efficient language models. Boesch and Wee~\cite{anatomy} separated capacity, interference and curriculum effects in fixed-state recurrences. KATA~\cite{kata} examines the role of key geometry in retrieval capacity. These studies motivate distinguishing recall at a fixed key load from learning to replace an obsolete value.
+\section{Experimental Design}
+\subsection{Reference-harness comparison}
+We reproduced the reference arm at source revision \texttt{8ca624a}. Its inspected implementation applies separate decay factors to key channels. In the scalar arm the decay projection produces a shared factor within each head. Both arms retain the reference short convolution and bidirectional processing. Consequently, these tests concern the harness's retrieval architecture rather than strictly streaming inference.
+
+E1 tests constrained-state MQAR with 32 associations, width 32, one layer and 6,000 training steps. E4 uses length-64 haystacks, four pairs, two layers, two heads, dense supervision and a uniform distance curriculum. E5 adds distractors that reuse table keys with conflicting values. E5 rewards retrieval of the original binding; the separate overwrite study rewards the latest write. E4 and E5 used 3,000 steps and batches of 256. Ten seeds per cell and design yield 60 training runs.
+
+We fixed the reproduction criteria and primary gate predictions before scalar training. E1 compares mean accuracy with a two-sided exact permutation test across runs. E4 and E5 compare the number of seeds reaching the long-retrieval accuracy threshold of 0.8 (lock-in) using two-sided Fisher exact tests. The E4 prediction allowed a tie; E1 and E5 predicted a channel-wise advantage.
+\subsection{Post-training interventions}
+On each channel-wise checkpoint we evaluated three replacements for its learned decay. A fixed mean for each channel preserves persistent differences among channels. Averaging across channels at each token preserves token-dependent scalar variation. A single fixed scalar removes both. The frozen plan made confirmatory interpretation conditional on a channel-wise advantage in E1 or E5. Neither prerequisite held, so these interventions are descriptive.
+\subsection{Overwrite and layout controls}
+On our approximately 1.6M-parameter synthetic models, three seeds crossed with default, mean-decay-matched and joint initialization yield nine gate comparisons per task. Pairs sharing a seed also share data. In a block-first overwrite sequence, all writes to the queried key occur before the unrelated writes. If a key receives $a,b,c$, the first replacement is $b$ and the latest value is $c$. Training with one rewrite makes these two rules observationally indistinguishable. Adding another rewrite separates them.
+
+We evaluated 18 existing overwrite checkpoints on fresh layout-stratified examples. The prespecified shortcut criterion was a block-first deficit of at least 20 percentage points relative to general layouts at three rewrites. We subsequently trained five conditions, each comprising both gate designs at seeds 42--44. A0 retained the original generator. A1 varied query distance over 8--16. A2 removed block-first examples. A3 mixed one, two and three rewrites. A4 combined distance and rewrite variation. A0--A3 used matched initial weights within seed and gate and trained for 3,136 updates. The final evaluation covered all 30 checkpoints with 256 fresh examples per layout cell. A0--A3 had also been evaluated at a different data offset. Re-evaluation tests sensitivity to sampled examples while retaining the original training seeds.
+\section{Results}
+\begin{table}[t]\centering\caption{Reference harness. Each entry summarizes ten seeds per design.}\label{t1}
+\begin{tabular}{lrrr}\toprule Endpoint&Scalar&Channel-wise&$p$\\\midrule
+E1 mean accuracy&1.000&.983&.00060\\
+E4 successful seeds&6/10&6/10&1.000\\
+E4 mean accuracy&.591&.665&---\\
+E5 successful seeds&5/10&3/10&.650\\
+E5 mean accuracy&.499&.386&---\\\bottomrule\end{tabular}\end{table}
+\subsection{Gate granularity and training success}
+All three reproduction checks passed. Individual E1 accuracies matched the published reference within 0.0005. E4 and E5 reproduced the published counts of six and three successful seeds, respectively. Matching counts permit differences in individual accuracies.
+
+Table~\ref{t1} shows that every scalar E1 run reached perfect accuracy, whereas the weakest channel-wise run reached 0.917. This result reverses the predicted advantage. On E4, the designs tied on successful seeds, but channel-wise models averaged 7.4 points higher. Several unsuccessful scalar runs remained near chance. E5 favored scalar numerically on both endpoints; the count comparison was inconclusive. Across the three primary endpoints there was no consistent channel-wise advantage. The seed counts limit inferences about equivalence.
+\begin{table}[t]\centering\caption{Mean accuracy after replacing decay in trained channel-wise models.}\label{t2}
+\begin{tabular}{lrrr}\toprule Decay at evaluation&E1&E4&E5\\\midrule
+Original&.983&.665&.386\\
+Fixed mean per channel&.452&.479&.217\\
+Channel average per token&.262&.018&.019\\
+Fixed scalar mean&.247&.018&.019\\\bottomrule\end{tabular}\end{table}
+\subsection{Dependence on learned channel diversity}
+On E4, retaining fixed individual channel means preserved 47.9\% accuracy, whereas averaging the channels at each token left 1.8\% (Table~\ref{t2}). E1 also degraded when each channel was fixed, indicating that token variation contributed in this condition. The independently trained scalar E1 arm nevertheless reached perfect recall. Imposing a shared gate on a fitted model and allowing its other weights to adapt to shared gating during training therefore produce materially different outcomes.
+\subsection{Latest-value recall and error identity}
+Final development accuracy in the synthetic study was approximately 99--100\% for both designs. Channel-wise won four of nine paired MQAR stress comparisons and eight of nine overwrite stress comparisons. Its mean overwrite edge was approximately 3.2 points. This result is exploratory, uncorrected for multiple comparisons, and based on pairs that share data seeds.
+
+All 18 legacy overwrite checkpoints achieved at least 95\% on the one-rewrite block-first layout, yet 16 met the shortcut criterion at three rewrites. Of 11,702 block-first errors at two through four rewrites, 11,366 (97.1\%) returned the first replacement. When filler shifted the sequence, models sometimes returned an unrelated value occupying a previously informative position. The identity of that error gives stronger evidence of positional retrieval than a decline in accuracy alone.
+\begin{table}[t]\centering\caption{Final fresh layout evaluation. H1 counts models meeting the shortcut criterion. General is latest-value accuracy on general layouts at two to four rewrites.}\label{t3}
+\begin{tabular}{lrrr}\toprule Training change&H1&General&Unrelated recall\\\midrule
+A0 Original&6/6&97.2\%&97.3\%\\
+A1 Vary distance&3/6&87.4\%&97.7\%\\
+A2 Remove block-first&4/6&98.3\%&92.9\%\\
+A3 Mix rewrites&0/6&99.7\%&96.5\%\\
+A4 Vary both&0/6&100.0\%&99.6\%\\\bottomrule\end{tabular}\end{table}
+Table~\ref{t3} separates two failure modes. Varying distance alone cleared the distance failure but reduced general-layout accuracy. Mixing rewrites cleared the rewrite criterion in six models, yet left a 52-point deficit at distance 12. Removing the layout left a 66-point distance deficit, close to the control's 67 points. A4 cleared both measured failures and achieved the highest rounded general-layout and unrelated-key recall. A0--A3 agreed in shortcut counts across both fresh evaluations. A4 appeared only in the later evaluation.
+\subsection{Boundary checks}
+On the upstream Zoology MQAR generator, 14 existing models produced one weak signal that did not track a fixed position. A second control reconstructed the KATA overwrite layout from its published description. None of the three fitted models showed the rewrite shortcut. These were three learning rates at one seed. At 64 keys the selected rate reached 0.995 accuracy versus the published 0.998, but at 384 keys it reached 0.119 versus 0.217. Agreement at low load therefore understates the replication gap. A fixed number of training writes was insufficient by itself to reproduce our positional failure.
+
+On TinyStories~\cite{tiny}, after 1,000 steps at approximately 30M parameters, measured validation loss averaged 2.366 nats for scalar (three seeds) and 2.378 for channel-wise (two recorded measurements). At approximately 10M parameters, single-seed losses were 2.811 and 2.812. No 55M run was available. These short comparisons are descriptive and cannot resolve scaling behavior.
+\section{Discussion and Limitations}
+Constrained-state retrieval supplies the clearest architectural result. Increasing decay granularity did not improve learning under this protocol, despite the strong dependence of channel-wise checkpoints on channel variation. The haystack shows why both reliability and mean performance deserve attention: threshold crossings measure how frequently a successful model is obtained, whereas average accuracy also describes partial learning among unsuccessful seeds.
+
+The overwrite study identifies a limitation of benchmark-level gate comparisons. Two retrieval rules agreed within a subpopulation of training examples. Both architectures could exploit that ambiguity. Changing the layout and identifying the obsolete answer revealed which rule a model followed. The external controls restrict this conclusion to the generator family in which the answer-predictive position was observed.
+
+The reference harness uses bidirectional processing and short contexts. The synthetic training study uses three seeds per arm, and a second fresh evaluation does not increase the number of independent fits. Post-training replacement may induce internal distribution shift. The interventions establish reliance but cannot identify the representation learned independently by scalar models. A future causal selective-reset experiment could vary the number of associations invalidated by one instruction while holding total memory load fixed. The present experiments provide no result for that proposed test.
+\section{Conclusion}
+Channel-wise decay provided no consistent associative-recall advantage in the small Gated DeltaNets tested. Scalar decay achieved the strongest constrained-state result; channel-wise achieved higher mean haystack accuracy at the same success count. Trained channel-wise networks nevertheless depended strongly on channel variation. In a separate overwrite study, both designs learned a positional strategy hidden by ordinary validation. Taken together, the experiments support evaluating decay granularity through independent training, targeted interventions and layouts that distinguish competing retrieval rules.
+\begin{thebibliography}{9}
+\bibitem{gdn} S. Yang, J. Kautz, and A. Hatamizadeh, \emph{Gated Delta Networks: Improving Mamba2 with Delta Rule}, arXiv:2412.06464, 2024.
+\bibitem{kimi} Kimi Team, \emph{Kimi Linear: An Expressive, Efficient Attention Architecture}, arXiv:2510.26692, 2025.
+\bibitem{anatomy} J. Boesch and A. Wee, \emph{Anatomy of Associative Recall in Fixed-State Recurrences: A Matched-State Decomposition, an Interference Wall, and a Curriculum That Breaks It}, arXiv:2609.16183, 2026.
+\bibitem{das} S. Das, \emph{Delta-Rule Writes in Linear Attention: A Controlled Factorial Study of Decay Design}, Trans. Mach. Learn. Res., 2026.
+\bibitem{zoo} S. Arora et al., \emph{Zoology: Measuring and Improving Recall in Efficient Language Models}, arXiv:2312.04927, 2023.
+\bibitem{kata} A. Ghriss and S. Chakraborty, \emph{Kernelized Linear Attention: Breaking the Capacity Wall with Symmetric Cones}, arXiv:2607.17419, 2026.
+\bibitem{tiny} R. Eldan and Y. Li, \emph{TinyStories: How Small Can Language Models Be and Still Speak Coherent English?}, arXiv:2305.07759, 2023.
+\end{thebibliography}
+\end{document}

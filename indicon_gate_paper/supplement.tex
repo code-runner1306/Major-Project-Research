@@ -1,0 +1,28 @@
+\documentclass[conference,onecolumn]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{url}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\title{Supplement: Does Channel-Wise Decay Improve Associative Recall in Small Gated DeltaNets?}
+\author{Mayank Mehta, Michelle Aloz, Amrita Pati, and Sujata Deshmukh}
+\begin{document}
+\maketitle
+
+\section*{A. Independent replay and checkpoint identity}
+Two replays used the saved 16-epoch MQAR models, training seed 44 and evaluation generator seed 1950044. In each cell, 256 examples supplied 1,024 answers. Independent forwards reproduced 301/1,024 correct for default channel-wise decay at 256 tokens and 0/1,024 for mean-decay scalar at 1,024 tokens. The oracle found zero label mismatches, and all scored logits were finite. SHA-256 hashes for all 12 local MQAR checkpoints agreed with the length sweep and fresh confirmation records.
+
+In the zero-accuracy cell, 907 predictions fell in the key half of the vocabulary, including 289 stored keys. The other 117 fell in the value half. None were filler IDs. The median top-1 probability was 0.74\%, and 3 of 1,024 predictions reached 50\% probability. The two replay archives contain input tokens, labels, query positions, predictions, top-two logits, and repeated predictions.
+
+\section*{B. Exact E1 test}
+The two-sided paired test enumerated sign assignments to the ten differences in correct counts. Eight of 1,024 assignments had an absolute sum at least as large as observed ($p=0.0078125$). The two-sided pooled test enumerated assignments of the 20 counts into groups of ten. There were 110 extreme assignments among 184,756 ($p=0.00059538$). Each count used 2,048 queries.
+
+\section*{C. Distribution of final-layer products}
+Figure~\ref{fig:histogram} uses 2,048 example-coordinate products per seed (16 examples, 128 key coordinates) for the mean-decay channel-wise checkpoints. Each product uses the 960 inserted token-0 positions at length 1,024. These are products of the measured decay gates along observed trajectories. Delta writes and readout are outside this calculation. Below 0.10 were 56.2\% and 53.6\% of products for seeds 43 and 44, respectively. At or above 0.90 were 10.6\% and 2.2\%. These high-product tails coexist with successful recall in both seeds and differ in size. The histograms do not establish two discrete timescale populations or identify the coordinates that stored a specific association.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=4.7in]{figures/filler_product_histogram.pdf}
+\caption{Final-layer decay-only products for the two mean-decay channel-wise checkpoints. Each panel shows one seed.}
+\label{fig:histogram}
+\end{figure}
+\end{document}

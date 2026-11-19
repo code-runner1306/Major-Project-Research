@@ -1,0 +1,28 @@
+\begin{tikzpicture}[
+  font=\sffamily\small,
+  box/.style={draw=black!65,rounded corners=2pt,align=center,inner sep=5pt},
+  lane/.style={box,fill=blue!6,text width=35mm,minimum height=14mm},
+  arr/.style={-{Latex[length=1.7mm]},semithick},
+]
+\node[box,fill=green!8,text width=81mm] (setup) at (6.6,0)
+  {\textbf{Compare scalar and channel-wise decay}\\
+   Match the backbone and task protocol within each comparison};
+\node[lane] (synthetic) at (0,-2.0)
+  {\textbf{Synthetic recall}\\MQAR and overwrite stress\\3 seeds per initialization};
+\node[lane] (anatomy) at (4.4,-2.0)
+  {\textbf{Anatomy harness}\\E1, E4, and E5\\10 seeds per gate type};
+\node[lane] (tiny) at (8.8,-2.0)
+  {\textbf{TinyStories}\\10M and 30M variants\\1,000 optimizer steps};
+\node[lane] (cost) at (13.2,-2.0)
+  {\textbf{Training cost}\\Step timing and\\static model footprint};
+\draw (setup.south) -- (6.6,-0.95);
+\draw (0,-0.95) -- (13.2,-0.95);
+\foreach \x/\study in {0/synthetic,4.4/anatomy,8.8/tiny,13.2/cost}
+  \draw[arr] (\x,-0.95) -- (\study.north);
+\node[box,fill=orange!10,text width=70mm] (gate) at (2.2,-3.85)
+  {\textbf{Checkpoint interventions}\\Modify decay at evaluation to measure gate reliance};
+\draw[arr] (synthetic.south) -- ([xshift=-20mm]gate.north);
+\draw[arr] (anatomy.south) -- ([xshift=20mm]gate.north);
+\node[box,fill=blue!6,text width=70mm] at (11,-3.85)
+  {\textbf{Report each task on its own metric}\\Accuracy, lock-in, validation loss, or runtime};
+\end{tikzpicture}

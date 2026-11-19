@@ -1,0 +1,177 @@
+{
+  "cases": [
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 7.62939453125e-06,
+          "normalized_l2": 2.5023376792887575e-07
+        },
+        "beta_grad": {
+          "max_absolute": 9.5367431640625e-06,
+          "normalized_l2": 4.405063691592659e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 8.940696716308594e-08,
+          "normalized_l2": 1.2151804185123183e-07
+        },
+        "k_grad": {
+          "max_absolute": 7.62939453125e-06,
+          "normalized_l2": 2.9888224162277766e-07
+        },
+        "output": {
+          "max_absolute": 4.76837158203125e-07,
+          "normalized_l2": 2.750022929376428e-07
+        },
+        "q_grad": {
+          "max_absolute": 1.049041748046875e-05,
+          "normalized_l2": 3.316343679671263e-07
+        },
+        "state": {
+          "max_absolute": 8.940696716308594e-08,
+          "normalized_l2": 1.268483345029381e-07
+        },
+        "v_grad": {
+          "max_absolute": 5.960464477539062e-07,
+          "normalized_l2": 2.757082597781846e-07
+        }
+      },
+      "variant": "scalar",
+      "zero_gate": false
+    },
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 1.049041748046875e-05,
+          "normalized_l2": 4.978942911293416e-07
+        },
+        "beta_grad": {
+          "max_absolute": 5.7220458984375e-06,
+          "normalized_l2": 2.5995990426963544e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 8.940696716308594e-08,
+          "normalized_l2": 9.940698930677172e-08
+        },
+        "k_grad": {
+          "max_absolute": 5.7220458984375e-06,
+          "normalized_l2": 2.7876799890691473e-07
+        },
+        "output": {
+          "max_absolute": 9.5367431640625e-07,
+          "normalized_l2": 2.6878620928982855e-07
+        },
+        "q_grad": {
+          "max_absolute": 1.1444091796875e-05,
+          "normalized_l2": 3.1051857263264537e-07
+        },
+        "state": {
+          "max_absolute": 5.960464477539063e-08,
+          "normalized_l2": 1.1537261457306158e-07
+        },
+        "v_grad": {
+          "max_absolute": 7.152557373046875e-07,
+          "normalized_l2": 2.7378590061744035e-07
+        }
+      },
+      "variant": "scalar",
+      "zero_gate": true
+    },
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 3.337860107421875e-06,
+          "normalized_l2": 3.215658921362774e-07
+        },
+        "beta_grad": {
+          "max_absolute": 3.814697265625e-06,
+          "normalized_l2": 1.6511113187789306e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 1.2395791770813958e-07
+        },
+        "k_grad": {
+          "max_absolute": 8.58306884765625e-06,
+          "normalized_l2": 2.666267846507253e-07
+        },
+        "output": {
+          "max_absolute": 7.152557373046875e-07,
+          "normalized_l2": 2.4310861590493005e-07
+        },
+        "q_grad": {
+          "max_absolute": 1.33514404296875e-05,
+          "normalized_l2": 3.1102277375794074e-07
+        },
+        "state": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 1.174900958744729e-07
+        },
+        "v_grad": {
+          "max_absolute": 1.430511474609375e-06,
+          "normalized_l2": 2.4715183144508046e-07
+        }
+      },
+      "variant": "channel-wise",
+      "zero_gate": false
+    },
+    {
+      "errors": {
+        "alpha_grad": {
+          "max_absolute": 3.0994415283203125e-06,
+          "normalized_l2": 2.889910319936462e-07
+        },
+        "beta_grad": {
+          "max_absolute": 3.814697265625e-06,
+          "normalized_l2": 2.2783312658702926e-07
+        },
+        "initial_state_grad": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 9.685015811555786e-08
+        },
+        "k_grad": {
+          "max_absolute": 7.62939453125e-06,
+          "normalized_l2": 2.528527431877592e-07
+        },
+        "output": {
+          "max_absolute": 5.960464477539062e-07,
+          "normalized_l2": 2.3699480777850113e-07
+        },
+        "q_grad": {
+          "max_absolute": 1.1444091796875e-05,
+          "normalized_l2": 2.92564436676912e-07
+        },
+        "state": {
+          "max_absolute": 1.1920928955078125e-07,
+          "normalized_l2": 1.1150311962637716e-07
+        },
+        "v_grad": {
+          "max_absolute": 5.364418029785156e-07,
+          "normalized_l2": 2.270096075562833e-07
+        }
+      },
+      "variant": "channel-wise",
+      "zero_gate": true
+    }
+  ],
+  "chunk_size": 16,
+  "model_trajectory": {
+    "cases": [
+      {
+        "max_parameter_absolute_error": 9.162910282611847e-05,
+        "max_parameter_normalized_l2_error": 8.256582077592611e-05,
+        "optimizer_steps": 5,
+        "variant": "scalar"
+      },
+      {
+        "max_parameter_absolute_error": 1.8123537302017212e-05,
+        "max_parameter_normalized_l2_error": 1.131912267737789e-05,
+        "optimizer_steps": 5,
+        "variant": "channel-wise"
+      }
+    ],
+    "comparison": "reference/full logits vs chunked/scored-token loss",
+    "passed": true
+  },
+  "passed": true,
+  "precision": "float32"
+}

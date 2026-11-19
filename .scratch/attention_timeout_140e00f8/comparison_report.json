@@ -1,0 +1,27 @@
+{
+  "families": {
+    "mqar": {
+      "finding": "Incomplete: do not infer an architecture result.",
+      "runs": {
+        "attention": {
+          "status": "incomplete"
+        },
+        "gdn": {
+          "status": "incomplete"
+        }
+      }
+    },
+    "overwrite": {
+      "finding": "Incomplete: do not infer an architecture result.",
+      "runs": {
+        "attention": {
+          "status": "incomplete"
+        },
+        "gdn": {
+          "status": "incomplete"
+        }
+      }
+    }
+  },
+  "purpose": "four-key attention positive-control diagnostic"
+}

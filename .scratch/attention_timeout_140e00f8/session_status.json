@@ -1,0 +1,9 @@
+{
+  "error": "Time reserve reached; saving partial evidence",
+  "jobs": {},
+  "limit_seconds": 2,
+  "reserve_seconds": 1,
+  "source_revision": "52ef83070a3c7b86cd81cdd29b9b9df7f46d429a",
+  "status": "incomplete",
+  "wall_seconds": 1.334315299987793
+}

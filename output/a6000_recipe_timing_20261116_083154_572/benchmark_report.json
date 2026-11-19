@@ -1,0 +1,58 @@
+{
+  "benchmark_wall_seconds": 80.31300000000192,
+  "comparisons": {
+    "mqar": {
+      "parallel": {
+        "benchmark_wall_seconds": 28.735000000000582,
+        "conservative_pair_training_seconds": 946.9227999995725,
+        "end_to_end_optimizer_steps_per_second": 0.13920306246737146,
+        "estimated_pair_training_seconds": 34.5589999995791
+      },
+      "recommended_mode_by_projected_pair_time": "parallel",
+      "sequential": {
+        "benchmark_wall_seconds": 29.593000000000757,
+        "conservative_pair_training_seconds": 1865.3972000001231,
+        "end_to_end_optimizer_steps_per_second": 0.13516710032777676,
+        "estimated_pair_training_seconds": 48.09700000012526
+      }
+    }
+  },
+  "cpu_smoke": true,
+  "gpu": null,
+  "interpretation": "Timing only; no learned accuracy qualification. Workers run sequentially on device 0.",
+  "jobs": {
+    "mqar/parallel/channel-wise": {
+      "conservative_seconds": 946.9227999995725,
+      "estimated_seconds": 34.5589999995791,
+      "mean_step_seconds": 0.24200000000200816,
+      "optimizer_steps": 64
+    },
+    "mqar/parallel/scalar": {
+      "conservative_seconds": 938.3872000001371,
+      "estimated_seconds": 27.488000000128523,
+      "mean_step_seconds": 0.16349999999874854,
+      "optimizer_steps": 64
+    },
+    "mqar/sequential/channel-wise": {
+      "conservative_seconds": 933.5967999999644,
+      "estimated_seconds": 26.007999999972526,
+      "mean_step_seconds": 0.15650000000096043,
+      "optimizer_steps": 64
+    },
+    "mqar/sequential/scalar": {
+      "conservative_seconds": 931.8004000001587,
+      "estimated_seconds": 22.089000000152737,
+      "mean_step_seconds": 0.11699999999837019,
+      "optimizer_steps": 64
+    }
+  },
+  "source_hashes": {
+    "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+    "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+    "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+    "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+    "run_published_recipe.py": "9193690b114a715cd5b1f589983610a937c6ca49a2cf564402d6ac9ad9c11802"
+  },
+  "status": "complete",
+  "torch": "2.11.0+cu128"
+}

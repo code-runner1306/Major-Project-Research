@@ -1,0 +1,222 @@
+[
+  {
+    "provider": "OpenAlex search",
+    "query": "Gated Delta Networks",
+    "url": "https://api.openalex.org/works?search=Gated+Delta+Networks&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:48.391053+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 109270
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "Kimi Linear",
+    "url": "https://api.openalex.org/works?search=Kimi+Linear&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:50.143847+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 9036
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "DAMI Dual Axis Memory Initialization",
+    "url": "https://api.openalex.org/works?search=DAMI+Dual+Axis+Memory+Initialization&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:51.749286+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 94
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "Delta Rule Writes Linear Attention Controlled Factorial Decay Design",
+    "url": "https://api.openalex.org/works?search=Delta+Rule+Writes+Linear+Attention+Controlled+Factorial+Decay+Design&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:53.996979+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 292
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "Kernelized Linear Attention Symmetric Cones",
+    "url": "https://api.openalex.org/works?search=Kernelized+Linear+Attention+Symmetric+Cones&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:55.697559+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 14938
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "How Linear Attention Remembers",
+    "url": "https://api.openalex.org/works?search=How+Linear+Attention+Remembers&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:57.027200+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 324134
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "linear attention gate initialization calibration",
+    "url": "https://api.openalex.org/works?search=linear+attention+gate+initialization+calibration&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:06:58.823520+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 53901
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "multi query associative recall overwrite",
+    "url": "https://api.openalex.org/works?search=multi+query+associative+recall+overwrite&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:00.321501+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 3258
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "fast weight memory delta rule",
+    "url": "https://api.openalex.org/works?search=fast+weight+memory+delta+rule&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:01.726997+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 41759
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "chrono initialization recurrent networks",
+    "url": "https://api.openalex.org/works?search=chrono+initialization+recurrent+networks&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:03.014485+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 2541
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "linear attention static channel decay",
+    "url": "https://api.openalex.org/works?search=linear+attention+static+channel+decay&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:04.247428+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 65938
+  },
+  {
+    "provider": "OpenAlex search",
+    "query": "associative memory repeated overwrite retention",
+    "url": "https://api.openalex.org/works?search=associative+memory+repeated+overwrite+retention&per_page=20&filter=to_publication_date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:05.846298+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 2003
+  },
+  {
+    "provider": "Crossref search",
+    "query": "Linear Transformers Are Secretly Fast Weight Programmers",
+    "url": "https://api.crossref.org/works?query.bibliographic=Linear+Transformers+Are+Secretly+Fast+Weight+Programmers&rows=20&filter=until-pub-date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:06.506277+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 1152455
+  },
+  {
+    "provider": "Crossref search",
+    "query": "Can recurrent neural networks warp time",
+    "url": "https://api.crossref.org/works?query.bibliographic=Can+recurrent+neural+networks+warp+time&rows=20&filter=until-pub-date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:08.702799+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 4559973
+  },
+  {
+    "provider": "Crossref search",
+    "query": "Using Fast Weights to Attend to the Recent Past",
+    "url": "https://api.crossref.org/works?query.bibliographic=Using+Fast+Weights+to+Attend+to+the+Recent+Past&rows=20&filter=until-pub-date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:10.731605+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 6300837
+  },
+  {
+    "provider": "Crossref search",
+    "query": "Zoology Measuring and Improving Recall in Efficient Language Models",
+    "url": "https://api.crossref.org/works?query.bibliographic=Zoology+Measuring+and+Improving+Recall+in+Efficient+Language+Models&rows=20&filter=until-pub-date%3A2026-11-17",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:13.527027+00:00",
+    "status": "ok",
+    "returned": 20,
+    "reported_total": 3892147
+  },
+  {
+    "provider": "OpenAlex forward citations",
+    "query": "cites Gated Delta Networks: Improving Mamba2 with Delta Rule",
+    "url": "https://api.openalex.org/works?filter=cites%3AW4405254248%2Cto_publication_date%3A2026-11-17&per_page=100",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:16.908490+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 343
+  },
+  {
+    "provider": "OpenAlex forward citations",
+    "query": "cites Enhancing Deepfake Detection Efficiency via Kimi Linear Attention on CNN Architectures: An Empirical Study on FaceForensics++",
+    "url": "https://api.openalex.org/works?filter=cites%3AW7225893765%2Cto_publication_date%3A2026-11-17&per_page=100",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:19.157262+00:00",
+    "status": "ok",
+    "returned": 0,
+    "reported_total": 0
+  },
+  {
+    "provider": "OpenAlex forward citations",
+    "query": "cites DAMI: Dual-Axis Memory Initialization for Enhanced Long-Context Retrieval in Gated Linear Attention",
+    "url": "https://api.openalex.org/works?filter=cites%3AW7225105925%2Cto_publication_date%3A2026-11-17&per_page=100",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:19.533502+00:00",
+    "status": "ok",
+    "returned": 0,
+    "reported_total": 0
+  },
+  {
+    "provider": "OpenAlex forward citations",
+    "query": "cites ATMA: Long-Context Language Modeling via Polar Attention and Gated-Delta Compression Memory",
+    "url": "https://api.openalex.org/works?filter=cites%3AW7165869004%2Cto_publication_date%3A2026-11-17&per_page=100",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:20.022889+00:00",
+    "status": "ok",
+    "returned": 1,
+    "reported_total": 1
+  },
+  {
+    "provider": "OpenAlex forward citations",
+    "query": "cites Kernelized Linear Attention: Breaking the Capacity Wall with Symmetric Cones",
+    "url": "https://api.openalex.org/works?filter=cites%3AW7169835299%2Cto_publication_date%3A2026-11-17&per_page=100",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:20.904290+00:00",
+    "status": "ok",
+    "returned": 4,
+    "reported_total": 4
+  },
+  {
+    "provider": "OpenAlex forward citations",
+    "query": "cites How Linear Attention Remembers",
+    "url": "https://api.openalex.org/works?filter=cites%3AW7214795438%2Cto_publication_date%3A2026-11-17&per_page=100",
+    "cutoff": "2026-11-17",
+    "retrieved_utc": "2026-11-17T06:07:21.709363+00:00",
+    "status": "ok",
+    "returned": 0,
+    "reported_total": 0
+  }
+]

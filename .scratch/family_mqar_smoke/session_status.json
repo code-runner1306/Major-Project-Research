@@ -1,0 +1,14 @@
+{
+  "families": [
+    "mqar"
+  ],
+  "jobs": {
+    "mqar/attention": 0,
+    "mqar/gdn": 0
+  },
+  "limit_seconds": 39600,
+  "reserve_seconds": 600,
+  "source_revision": "39106eb50199d873b57a7d001f37705747030463",
+  "status": "complete",
+  "wall_seconds": 57.375
+}

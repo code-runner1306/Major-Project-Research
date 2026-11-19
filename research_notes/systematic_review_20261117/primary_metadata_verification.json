@@ -1,0 +1,1364 @@
+[
+  {
+    "arxiv_id": "1511.06422",
+    "url": "https://arxiv.org/abs/1511.06422",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "All you need is a good init"
+      ],
+      "citation_author": [
+        "Mishkin, Dmytro",
+        "Matas, Jiri"
+      ],
+      "citation_date": [
+        "2015/11/19"
+      ],
+      "citation_online_date": [
+        "2016/02/19"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/1511.06422"
+      ],
+      "citation_arxiv_id": [
+        "1511.06422"
+      ],
+      "citation_abstract": [
+        "Layer-sequential unit-variance (LSUV) initialization - a simple method for weight initialization for deep net learning - is proposed. The method consists of the two steps. First, pre-initialize weights of each convolution or inner-product layer with orthonormal matrices. Second, proceed from the first to the final layer, normalizing the variance of the output of each layer to be equal to one. Experiment with different activation functions (maxout, ReLU-family, tanh) show that the proposed initialization leads to learning of very deep nets that (i) produces networks with test accuracy better or equal to standard methods and (ii) is at least as fast as the complex schemes proposed specifically for very deep nets such as FitNets (Romero et al. (2015)) and Highway (Srivastava et al. (2015)). Performance is evaluated on GoogLeNet, CaffeNet, FitNets and Residual nets and the state-of-the-art, or very close to it, is achieved on the MNIST, CIFAR-10/100 and ImageNet datasets."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "1804.11188",
+    "url": "https://arxiv.org/abs/1804.11188",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Can recurrent neural networks warp time?"
+      ],
+      "citation_author": [
+        "Tallec, Corentin",
+        "Ollivier, Yann"
+      ],
+      "citation_date": [
+        "2018/03/23"
+      ],
+      "citation_online_date": [
+        "2018/03/23"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/1804.11188"
+      ],
+      "citation_arxiv_id": [
+        "1804.11188"
+      ],
+      "citation_abstract": [
+        "Successful recurrent models such as long short-term memories (LSTMs) and gated recurrent units (GRUs) use ad hoc gating mechanisms. Empirically these models have been found to improve the learning of medium to long term temporal dependencies and to help with vanishing gradient issues. We prove that learnable gates in a recurrent model formally provide quasi- invariance to general time transformations in the input data. We recover part of the LSTM architecture from a simple axiomatic approach. This result leads to a new way of initializing gate biases in LSTMs and GRUs. Ex- perimentally, this new chrono initialization is shown to greatly improve learning of long term dependencies, with minimal implementation effort."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "1910.09890",
+    "url": "https://arxiv.org/abs/1910.09890",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Improving the Gating Mechanism of Recurrent Neural Networks"
+      ],
+      "citation_author": [
+        "Gu, Albert",
+        "Gulcehre, Caglar",
+        "Paine, Tom Le",
+        "Hoffman, Matt",
+        "Pascanu, Razvan"
+      ],
+      "citation_date": [
+        "2019/10/22"
+      ],
+      "citation_online_date": [
+        "2020/06/18"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/1910.09890"
+      ],
+      "citation_arxiv_id": [
+        "1910.09890"
+      ],
+      "citation_abstract": [
+        "Gating mechanisms are widely used in neural network models, where they allow gradients to backpropagate more easily through depth or time. However, their saturation property introduces problems of its own. For example, in recurrent models these gates need to have outputs near 1 to propagate information over long time-delays, which requires them to operate in their saturation regime and hinders gradient-based learning of the gate mechanism. We address this problem by deriving two synergistic modifications to the standard gating mechanism that are easy to implement, introduce no additional hyperparameters, and improve learnability of the gates when they are close to saturation. We show how these changes are related to and improve on alternative recently proposed gating mechanisms such as chrono initialization and Ordered Neurons. Empirically, our simple gating mechanisms robustly improve the performance of recurrent models on a range of applications, including synthetic memorization tasks, sequential image classification, language modeling, and reinforcement learning, particularly when long-term dependencies are involved."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2006.16236",
+    "url": "https://arxiv.org/abs/2006.16236",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention"
+      ],
+      "citation_author": [
+        "Katharopoulos, Angelos",
+        "Vyas, Apoorv",
+        "Pappas, Nikolaos",
+        "Fleuret, Fran\u00e7ois"
+      ],
+      "citation_date": [
+        "2020/06/29"
+      ],
+      "citation_online_date": [
+        "2020/08/31"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2006.16236"
+      ],
+      "citation_arxiv_id": [
+        "2006.16236"
+      ],
+      "citation_abstract": [
+        "Transformers achieve remarkable performance in several tasks but due to their quadratic complexity, with respect to the input's length, they are prohibitively slow for very long sequences. To address this limitation, we express the self-attention as a linear dot-product of kernel feature maps and make use of the associativity property of matrix products to reduce the complexity from $\\mathcal{O}\\left(N^2\\right)$ to $\\mathcal{O}\\left(N\\right)$, where $N$ is the sequence length. We show that this formulation permits an iterative implementation that dramatically accelerates autoregressive transformers and reveals their relationship to recurrent neural networks. Our linear transformers achieve similar performance to vanilla transformers and they are up to 4000x faster on autoregressive prediction of very long sequences."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2011.07831",
+    "url": "https://arxiv.org/abs/2011.07831",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Learning Associative Inference Using Fast Weight Memory"
+      ],
+      "citation_author": [
+        "Schlag, Imanol",
+        "Munkhdalai, Tsendsuren",
+        "Schmidhuber, J\u00fcrgen"
+      ],
+      "citation_date": [
+        "2020/11/16"
+      ],
+      "citation_online_date": [
+        "2021/02/23"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2011.07831"
+      ],
+      "citation_arxiv_id": [
+        "2011.07831"
+      ],
+      "citation_abstract": [
+        "Humans can quickly associate stimuli to solve problems in novel contexts. Our novel neural network model learns state representations of facts that can be composed to perform such associative inference. To this end, we augment the LSTM model with an associative memory, dubbed Fast Weight Memory (FWM). Through differentiable operations at every step of a given input sequence, the LSTM updates and maintains compositional associations stored in the rapidly changing FWM weights. Our model is trained end-to-end by gradient descent and yields excellent performance on compositional language reasoning problems, meta-reinforcement-learning for POMDPs, and small-scale word-level language modelling."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2103.13076",
+    "url": "https://arxiv.org/abs/2103.13076",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Finetuning Pretrained Transformers into RNNs"
+      ],
+      "citation_author": [
+        "Kasai, Jungo",
+        "Peng, Hao",
+        "Zhang, Yizhe",
+        "Yogatama, Dani",
+        "Ilharco, Gabriel",
+        "Pappas, Nikolaos",
+        "Mao, Yi",
+        "Chen, Weizhu",
+        "Smith, Noah A."
+      ],
+      "citation_date": [
+        "2021/03/24"
+      ],
+      "citation_online_date": [
+        "2021/09/20"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2103.13076"
+      ],
+      "citation_arxiv_id": [
+        "2103.13076"
+      ],
+      "citation_abstract": [
+        "Transformers have outperformed recurrent neural networks (RNNs) in natural language generation. But this comes with a significant computational cost, as the attention mechanism's complexity scales quadratically with sequence length. Efficient transformer variants have received increasing interest in recent works. Among them, a linear-complexity recurrent variant has proven well suited for autoregressive generation. It approximates the softmax attention with randomized or heuristic feature maps, but can be difficult to train and may yield suboptimal accuracy. This work aims to convert a pretrained transformer into its efficient recurrent counterpart, improving efficiency while maintaining accuracy. Specifically, we propose a swap-then-finetune procedure: in an off-the-shelf pretrained transformer, we replace the softmax attention with its linear-complexity recurrent alternative and then finetune. With a learned feature map, our approach provides an improved tradeoff between efficiency and accuracy over the standard transformer and other recurrent variants. We also show that the finetuning process has lower training cost relative to training these recurrent variants from scratch. As many models for natural language tasks are increasingly dependent on large-scale pretrained transformers, this work presents a viable approach to improving inference efficiency without repeating the expensive pretraining process."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2111.00396",
+    "url": "https://arxiv.org/abs/2111.00396",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Efficiently Modeling Long Sequences with Structured State Spaces"
+      ],
+      "citation_author": [
+        "Gu, Albert",
+        "Goel, Karan",
+        "R\u00e9, Christopher"
+      ],
+      "citation_date": [
+        "2021/10/31"
+      ],
+      "citation_online_date": [
+        "2022/08/05"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2111.00396"
+      ],
+      "citation_arxiv_id": [
+        "2111.00396"
+      ],
+      "citation_abstract": [
+        "A central goal of sequence modeling is designing a single principled model that can address sequence data across a range of modalities and tasks, particularly on long-range dependencies. Although conventional models including RNNs, CNNs, and Transformers have specialized variants for capturing long dependencies, they still struggle to scale to very long sequences of $10000$ or more steps. A promising recent approach proposed modeling sequences by simulating the fundamental state space model (SSM) \\( x'(t) = Ax(t) + Bu(t), y(t) = Cx(t) + Du(t) \\), and showed that for appropriate choices of the state matrix \\( A \\), this system could handle long-range dependencies mathematically and empirically. However, this method has prohibitive computation and memory requirements, rendering it infeasible as a general sequence modeling solution. We propose the Structured State Space sequence model (S4) based on a new parameterization for the SSM, and show that it can be computed much more efficiently than prior approaches while preserving their theoretical strengths. Our technique involves conditioning \\( A \\) with a low-rank correction, allowing it to be diagonalized stably and reducing the SSM to the well-studied computation of a Cauchy kernel. S4 achieves strong empirical results across a diverse range of established benchmarks, including (i) 91\\% accuracy on sequential CIFAR-10 with no data augmentation or auxiliary losses, on par with a larger 2-D ResNet, (ii) substantially closing the gap to Transformers on image and language modeling tasks, while performing generation $60\\times$ faster (iii) SoTA on every task from the Long Range Arena benchmark, including solving the challenging Path-X task of length 16k that all prior work fails on, while being as efficient as all competitors."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2312.04927",
+    "url": "https://arxiv.org/abs/2312.04927",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Zoology: Measuring and Improving Recall in Efficient Language Models"
+      ],
+      "citation_author": [
+        "Arora, Simran",
+        "Eyuboglu, Sabri",
+        "Timalsina, Aman",
+        "Johnson, Isys",
+        "Poli, Michael",
+        "Zou, James",
+        "Rudra, Atri",
+        "R\u00e9, Christopher"
+      ],
+      "citation_date": [
+        "2023/12/08"
+      ],
+      "citation_online_date": [
+        "2023/12/08"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2312.04927"
+      ],
+      "citation_arxiv_id": [
+        "2312.04927"
+      ],
+      "citation_abstract": [
+        "Attention-free language models that combine gating and convolutions are growing in popularity due to their efficiency and increasingly competitive performance. To better understand these architectures, we pretrain a suite of 17 attention and \"gated-convolution\" language models, finding that SoTA gated-convolution architectures still underperform attention by up to 2.1 perplexity points on the Pile. In fine-grained analysis, we find 82% of the gap is explained by each model's ability to recall information that is previously mentioned in-context, e.g. \"Hakuna Matata means no worries Hakuna Matata it means no\" $\\rightarrow$ \"??\". On this task, termed \"associative recall\", we find that attention outperforms gated-convolutions by a large margin: a 70M parameter attention model outperforms a 1.4 billion parameter gated-convolution model on associative recall. This is surprising because prior work shows gated convolutions can perfectly solve synthetic tests for AR capability. To close the gap between synthetics and real language, we develop a new formalization of the task called multi-query associative recall (MQAR) that better reflects actual language. We perform an empirical and theoretical study of MQAR that elucidates differences in the parameter-efficiency of attention and gated-convolution recall. Informed by our analysis, we evaluate simple convolution-attention hybrids and show that hybrids with input-dependent sparse attention patterns can close 97.4% of the gap to attention, while maintaining sub-quadratic scaling. Our code is accessible at: https://github.com/HazyResearch/zoology."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2312.06635",
+    "url": "https://arxiv.org/abs/2312.06635",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Gated Linear Attention Transformers with Hardware-Efficient Training"
+      ],
+      "citation_author": [
+        "Yang, Songlin",
+        "Wang, Bailin",
+        "Shen, Yikang",
+        "Panda, Rameswar",
+        "Kim, Yoon"
+      ],
+      "citation_date": [
+        "2023/12/11"
+      ],
+      "citation_online_date": [
+        "2024/08/27"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2312.06635"
+      ],
+      "citation_arxiv_id": [
+        "2312.06635"
+      ],
+      "citation_abstract": [
+        "Transformers with linear attention allow for efficient parallel training but can simultaneously be formulated as an RNN with 2D (matrix-valued) hidden states, thus enjoying linear-time inference complexity. However, linear attention generally underperforms ordinary softmax attention. Moreover, current implementations of linear attention lack I/O-awareness and are thus slower than highly optimized implementations of softmax attention. This work describes a hardware-efficient algorithm for linear attention that trades off memory movement against parallelizability. The resulting implementation, dubbed FLASHLINEARATTENTION, is faster than FLASHATTENTION-2 (Dao, 2023) as a standalone layer even on short sequence lengths (e.g., 1K). We then generalize this algorithm to a more expressive variant of linear attention with data-dependent gates. When used as a replacement for the standard attention layer in Transformers, the resulting gated linear attention (GLA) Transformer is found to perform competitively against the LLaMA-architecture Transformer (Touvron et al., 2023) as well recent linear-time-inference baselines such as RetNet (Sun et al., 2023a) and Mamba (Gu & Dao, 2023) on moderate-scale language modeling experiments. GLA Transformer is especially effective at length generalization, enabling a model trained on 2K to generalize to sequences longer than 20K without significant perplexity degradations. For training speed, the GLA Transformer has higher throughput than a similarly-sized Mamba model."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2402.18510",
+    "url": "https://arxiv.org/abs/2402.18510",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "RNNs are not Transformers (Yet): The Key Bottleneck on In-context Retrieval"
+      ],
+      "citation_author": [
+        "Wen, Kaiyue",
+        "Dang, Xingyu",
+        "Lyu, Kaifeng"
+      ],
+      "citation_date": [
+        "2024/02/28"
+      ],
+      "citation_online_date": [
+        "2024/12/06"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2402.18510"
+      ],
+      "citation_arxiv_id": [
+        "2402.18510"
+      ],
+      "citation_abstract": [
+        "This paper investigates the gap in representation powers of Recurrent Neural Networks (RNNs) and Transformers in the context of solving algorithmic problems. We focus on understanding whether RNNs, known for their memory efficiency in handling long sequences, can match the performance of Transformers, particularly when enhanced with Chain-of-Thought (CoT) prompting. Our theoretical analysis reveals that CoT improves RNNs but is insufficient to close the gap with Transformers. A key bottleneck lies in the inability of RNNs to perfectly retrieve information from the context, even with CoT: for several tasks that explicitly or implicitly require this capability, such as associative recall and determining if a graph is a tree, we prove that RNNs are not expressive enough to solve the tasks while Transformers can solve them with ease. Conversely, we prove that adopting techniques to enhance the in-context retrieval capability of RNNs, including Retrieval-Augmented Generation (RAG) and adding a single Transformer layer, can elevate RNNs to be capable of solving all polynomial-time solvable problems with CoT, hence closing the representation gap with Transformers."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2404.06654",
+    "url": "https://arxiv.org/abs/2404.06654",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "RULER: What's the Real Context Size of Your Long-Context Language Models?"
+      ],
+      "citation_author": [
+        "Hsieh, Cheng-Ping",
+        "Sun, Simeng",
+        "Kriman, Samuel",
+        "Acharya, Shantanu",
+        "Rekesh, Dima",
+        "Jia, Fei",
+        "Zhang, Yang",
+        "Ginsburg, Boris"
+      ],
+      "citation_date": [
+        "2024/04/09"
+      ],
+      "citation_online_date": [
+        "2024/08/06"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2404.06654"
+      ],
+      "citation_arxiv_id": [
+        "2404.06654"
+      ],
+      "citation_abstract": [
+        "The needle-in-a-haystack (NIAH) test, which examines the ability to retrieve a piece of information (the \"needle\") from long distractor texts (the \"haystack\"), has been widely adopted to evaluate long-context language models (LMs). However, this simple retrieval-based test is indicative of only a superficial form of long-context understanding. To provide a more comprehensive evaluation of long-context LMs, we create a new synthetic benchmark RULER with flexible configurations for customized sequence length and task complexity. RULER expands upon the vanilla NIAH test to encompass variations with diverse types and quantities of needles. Moreover, RULER introduces new task categories multi-hop tracing and aggregation to test behaviors beyond searching from context. We evaluate 17 long-context LMs with 13 representative tasks in RULER. Despite achieving nearly perfect accuracy in the vanilla NIAH test, almost all models exhibit large performance drops as the context length increases. While these models all claim context sizes of 32K tokens or greater, only half of them can maintain satisfactory performance at the length of 32K. Our analysis of Yi-34B, which supports context length of 200K, reveals large room for improvement as we increase input length and task complexity. We open source RULER to spur comprehensive evaluation of long-context LMs."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2406.06484",
+    "url": "https://arxiv.org/abs/2406.06484",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Parallelizing Linear Transformers with the Delta Rule over Sequence Length"
+      ],
+      "citation_author": [
+        "Yang, Songlin",
+        "Wang, Bailin",
+        "Zhang, Yu",
+        "Shen, Yikang",
+        "Kim, Yoon"
+      ],
+      "citation_date": [
+        "2024/06/10"
+      ],
+      "citation_online_date": [
+        "2025/01/15"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2406.06484"
+      ],
+      "citation_arxiv_id": [
+        "2406.06484"
+      ],
+      "citation_abstract": [
+        "Transformers with linear attention (i.e., linear transformers) and state-space models have recently been suggested as a viable linear-time alternative to transformers with softmax attention. However, these models still underperform transformers especially on tasks that require in-context retrieval. While more expressive variants of linear transformers which replace the additive update in linear transformers with the delta rule (DeltaNet) have been found to be more effective at associative recall, existing algorithms for training such models do not parallelize over sequence length and are thus inefficient to train on modern hardware. This work describes a hardware-efficient algorithm for training linear transformers with the delta rule, which exploits a memory-efficient representation for computing products of Householder matrices. This algorithm allows us to scale up DeltaNet to standard language modeling settings. We train a 1.3B model for 100B tokens and find that it outperforms recent linear-time baselines such as Mamba and GLA in terms of perplexity and zero-shot performance on downstream tasks. We also experiment with two hybrid models which combine DeltaNet layers with (1) sliding-window attention layers every other layer or (2) two global attention layers, and find that these hybrids outperform strong transformer baselines."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2407.05483",
+    "url": "https://arxiv.org/abs/2407.05483",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Just read twice: closing the recall gap for recurrent language models"
+      ],
+      "citation_author": [
+        "Arora, Simran",
+        "Timalsina, Aman",
+        "Singhal, Aaryan",
+        "Spector, Benjamin",
+        "Eyuboglu, Sabri",
+        "Zhao, Xinyi",
+        "Rao, Ashish",
+        "Rudra, Atri",
+        "R\u00e9, Christopher"
+      ],
+      "citation_date": [
+        "2024/07/07"
+      ],
+      "citation_online_date": [
+        "2024/07/07"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2407.05483"
+      ],
+      "citation_arxiv_id": [
+        "2407.05483"
+      ],
+      "citation_abstract": [
+        "Recurrent large language models that compete with Transformers in language modeling perplexity are emerging at a rapid rate (e.g., Mamba, RWKV). Excitingly, these architectures use a constant amount of memory during inference. However, due to the limited memory, recurrent LMs cannot recall and use all the information in long contexts leading to brittle in-context learning (ICL) quality. A key challenge for efficient LMs is selecting what information to store versus discard. In this work, we observe the order in which information is shown to the LM impacts the selection difficulty. To formalize this, we show that the hardness of information recall reduces to the hardness of a problem called set disjointness (SD), a quintessential problem in communication complexity that requires a streaming algorithm (e.g., recurrent model) to decide whether inputted sets are disjoint. We empirically and theoretically show that the recurrent memory required to solve SD changes with set order, i.e., whether the smaller set appears first in-context. Our analysis suggests, to mitigate the reliance on data order, we can put information in the right order in-context or process prompts non-causally. Towards that end, we propose: (1) JRT-Prompt, where context gets repeated multiple times in the prompt, effectively showing the model all data orders. This gives $11.0 \\pm 1.3$ points of improvement, averaged across $16$ recurrent LMs and the $6$ ICL tasks, with $11.9\\times$ higher throughput than FlashAttention-2 for generation prefill (length $32$k, batch size $16$, NVidia H100). We then propose (2) JRT-RNN, which uses non-causal prefix-linear-attention to process prompts and provides $99\\%$ of Transformer quality at $360$M params., $30$B tokens and $96\\%$ at $1.3$B params., $50$B tokens on average across the tasks, with $19.2\\times$ higher throughput for prefill than FA2."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2412.06464",
+    "url": "https://arxiv.org/abs/2412.06464",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Gated Delta Networks: Improving Mamba2 with Delta Rule"
+      ],
+      "citation_author": [
+        "Yang, Songlin",
+        "Kautz, Jan",
+        "Hatamizadeh, Ali"
+      ],
+      "citation_date": [
+        "2024/12/09"
+      ],
+      "citation_online_date": [
+        "2025/03/06"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2412.06464"
+      ],
+      "citation_arxiv_id": [
+        "2412.06464"
+      ],
+      "citation_abstract": [
+        "Linear Transformers have gained attention as efficient alternatives to standard Transformers, but their performance in retrieval and long-context tasks has been limited. To address these limitations, recent work has explored two distinct mechanisms: gating for adaptive memory control and the delta update rule for precise memory modifications. We observe that these mechanisms are complementary: gating enables rapid memory erasure while the delta rule facilitates targeted updates. Building on this insight, we introduce the gated delta rule and develop a parallel training algorithm optimized for modern hardware. Our proposed architecture, Gated DeltaNet, consistently surpasses existing models like Mamba2 and DeltaNet across multiple benchmarks, including language modeling, common-sense reasoning, in-context retrieval, length extrapolation, and long-context understanding. We further enhance performance by developing hybrid architectures that combine Gated DeltaNet layers with sliding window attention or Mamba2 layers, achieving both improved training efficiency and superior task performance."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2501.00658",
+    "url": "https://arxiv.org/abs/2501.00658",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Understanding and Mitigating Bottlenecks of State Space Models through the Lens of Recency and Over-smoothing"
+      ],
+      "citation_author": [
+        "Wang, Peihao",
+        "Cai, Ruisi",
+        "Wang, Yuehao",
+        "Zhu, Jiajun",
+        "Srivastava, Pragya",
+        "Wang, Zhangyang",
+        "Li, Pan"
+      ],
+      "citation_date": [
+        "2024/12/31"
+      ],
+      "citation_online_date": [
+        "2025/03/11"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2501.00658"
+      ],
+      "citation_arxiv_id": [
+        "2501.00658"
+      ],
+      "citation_abstract": [
+        "Structured State Space Models (SSMs) have emerged as alternatives to transformers. While SSMs are often regarded as effective in capturing long-sequence dependencies, we rigorously demonstrate that they are inherently limited by strong recency bias. Our empirical studies also reveal that this bias impairs the models' ability to recall distant information and introduces robustness issues. Our scaling experiments then discovered that deeper structures in SSMs can facilitate the learning of long contexts. However, subsequent theoretical analysis reveals that as SSMs increase in depth, they exhibit another inevitable tendency toward over-smoothing, e.g., token representations becoming increasingly indistinguishable. This fundamental dilemma between recency and over-smoothing hinders the scalability of existing SSMs. Inspired by our theoretical findings, we propose to polarize two channels of the state transition matrices in SSMs, setting them to zero and one, respectively, simultaneously addressing recency bias and over-smoothing. Experiments demonstrate that our polarization technique consistently enhances the associative recall accuracy of long-range tokens and unlocks SSMs to benefit further from deeper architectures. All source codes are released at https://github.com/VITA-Group/SSM-Bottleneck."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2508.19029",
+    "url": "https://arxiv.org/abs/2508.19029",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Revisiting associative recall in modern recurrent models"
+      ],
+      "citation_author": [
+        "Okpekpe, Destiny",
+        "Orvieto, Antonio"
+      ],
+      "citation_date": [
+        "2025/08/26"
+      ],
+      "citation_online_date": [
+        "2025/10/10"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2508.19029"
+      ],
+      "citation_arxiv_id": [
+        "2508.19029"
+      ],
+      "citation_abstract": [
+        "Despite the advantageous subquadratic complexity of modern recurrent deep learning models -- such as state-space models (SSMs) -- recent studies have highlighted their potential shortcomings compared to transformers on reasoning and memorization tasks. In this paper, we dive deeper into one of such benchmarks: associative recall (AR), which has been shown to correlate well with language modeling performance, and inspect in detail the effects of scaling and optimization issues in recently proposed token mixing strategies. We first demonstrate that, unlike standard transformers, the choice of learning rate plays a critical role in the performance of modern recurrent models: an issue that can severely affect reported performance in previous works and suggests further research is needed to stabilize training. Next, we show that recurrent and attention-based models exhibit contrasting benefits when scaling in width as opposed to depth, with attention being notably unable to solve AR when limited to a single layer. We then further inspect 1-layer transformers, revealing that despite their poor performance, their training dynamics surprisingly resemble the formation of induction heads, a phenomenon previously observed only in their 2-layer counterparts. Finally, through architectural ablations, we study how components affects Transformer and Mamba's performance and optimization stability."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2510.26692",
+    "url": "https://arxiv.org/abs/2510.26692",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Kimi Linear: An Expressive, Efficient Attention Architecture"
+      ],
+      "citation_author": [
+        "Kimi Team",
+        "Zhang, Yu",
+        "Lin, Zongyu",
+        "Yao, Xingcheng",
+        "Hu, Jiaxi",
+        "Meng, Fanqing",
+        "Liu, Chengyin",
+        "Men, Xin",
+        "Yang, Songlin",
+        "Li, Zhiyuan",
+        "Li, Wentao",
+        "Lu, Enzhe",
+        "Liu, Weizhou",
+        "Chen, Yanru",
+        "Xu, Weixin",
+        "Yu, Longhui",
+        "Wang, Yejie",
+        "Fan, Yu",
+        "Zhong, Longguang",
+        "Yuan, Enming",
+        "Zhang, Dehao",
+        "Zhang, Yizhi",
+        "Liu, T. Y.",
+        "Wang, Haiming",
+        "Fang, Shengjun",
+        "He, Weiran",
+        "Liu, Shaowei",
+        "Li, Yiwei",
+        "Su, Jianlin",
+        "Qiu, Jiezhong",
+        "Pang, Bo",
+        "Yan, Junjie",
+        "Jiang, Zhejun",
+        "Huang, Weixiao",
+        "Yin, Bohong",
+        "You, Jiacheng",
+        "Wei, Chu",
+        "Wang, Zhengtao",
+        "Hong, Chao",
+        "Chen, Yutian",
+        "Chen, Guanduo",
+        "Wang, Yucheng",
+        "Zheng, Huabin",
+        "Wang, Feng",
+        "Liu, Yibo",
+        "Dong, Mengnan",
+        "Zhang, Zheng",
+        "Pan, Siyuan",
+        "Wu, Wenhao",
+        "Wu, Yuhao",
+        "Guan, Longyu",
+        "Tao, Jiawen",
+        "Fu, Guohong",
+        "Xu, Xinran",
+        "Wang, Yuzhi",
+        "Lai, Guokun",
+        "Wu, Yuxin",
+        "Zhou, Xinyu",
+        "Yang, Zhilin",
+        "Du, Yulun"
+      ],
+      "citation_date": [
+        "2025/10/30"
+      ],
+      "citation_online_date": [
+        "2025/11/01"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2510.26692"
+      ],
+      "citation_arxiv_id": [
+        "2510.26692"
+      ],
+      "citation_abstract": [
+        "We introduce Kimi Linear, a hybrid linear attention architecture that, for the first time, outperforms full attention under fair comparisons across various scenarios -- including short-context, long-context, and reinforcement learning (RL) scaling regimes. At its core lies Kimi Delta Attention (KDA), an expressive linear attention module that extends Gated DeltaNet with a finer-grained gating mechanism, enabling more effective use of limited finite-state RNN memory. Our bespoke chunkwise algorithm achieves high hardware efficiency through a specialized variant of the Diagonal-Plus-Low-Rank (DPLR) transition matrices, which substantially reduces computation compared to the general DPLR formulation while remaining more consistent with the classical delta rule. We pretrain a Kimi Linear model with 3B activated parameters and 48B total parameters, based on a layerwise hybrid of KDA and Multi-Head Latent Attention (MLA). Our experiments show that with an identical training recipe, Kimi Linear outperforms full MLA with a sizeable margin across all evaluated tasks, while reducing KV cache usage by up to 75% and achieving up to 6 times decoding throughput for a 1M context. These results demonstrate that Kimi Linear can be a drop-in replacement for full attention architectures with superior performance and efficiency, including tasks with longer input and output lengths. To support further research, we open-source the KDA kernel and vLLM implementations, and release the pre-trained and instruction-tuned model checkpoints."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2602.02195",
+    "url": "https://arxiv.org/abs/2602.02195",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "State Rank Dynamics in Linear Attention LLMs"
+      ],
+      "citation_author": [
+        "Sun, Ao",
+        "Zhang, Hongtao",
+        "Zhou, Heng",
+        "Ma, Yixuan",
+        "Qin, Yiran",
+        "Su, Tongrui",
+        "Liu, Yan",
+        "Ma, Zhanyu",
+        "Xu, Jun",
+        "Gao, Jiuchong",
+        "Hao, Jinghua",
+        "He, Renqing"
+      ],
+      "citation_date": [
+        "2026/02/02"
+      ],
+      "citation_online_date": [
+        "2026/02/02"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2602.02195"
+      ],
+      "citation_arxiv_id": [
+        "2602.02195"
+      ],
+      "citation_abstract": [
+        "Linear Attention Large Language Models (LLMs) offer a compelling recurrent formulation that compresses context into a fixed-size state matrix, enabling constant-time inference. However, the internal dynamics of this compressed state remain largely opaque. In this work, we present a comprehensive study on the runtime state dynamics of state-of-the-art Linear Attention models. We uncover a fundamental phenomenon termed State Rank Stratification, characterized by a distinct spectral bifurcation among linear attention heads: while one group maintains an effective rank oscillating near zero, the other exhibits rapid growth that converges to an upper bound. Extensive experiments across diverse inference contexts reveal that these dynamics remain strikingly consistent, indicating that the identity of a head,whether low-rank or high-rank,is an intrinsic structural property acquired during pre-training, rather than a transient state dependent on the input data. Furthermore, our diagnostic probes reveal a surprising functional divergence: low-rank heads are indispensable for model reasoning, whereas high-rank heads exhibit significant redundancy. Leveraging this insight, we propose Joint Rank-Norm Pruning, a zero-shot strategy that achieves a 38.9\\% reduction in KV-cache overhead while largely maintaining model accuracy."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2604.07658",
+    "url": "https://arxiv.org/abs/2604.07658",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Optimal Decay Spectra for Linear Recurrences"
+      ],
+      "citation_author": [
+        "Cao, Yang"
+      ],
+      "citation_date": [
+        "2026/04/08"
+      ],
+      "citation_online_date": [
+        "2026/04/08"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.07658"
+      ],
+      "citation_arxiv_id": [
+        "2604.07658"
+      ],
+      "citation_abstract": [
+        "Linear recurrent models offer linear-time sequence processing but often suffer from suboptimal long-range memory. We trace this to the decay spectrum: for $N$ channels, random initialization collapses the minimum spectral gap to $O(N^{-2})$, yielding sub-exponential error $\\exp(-\\Omega(N/\\log N))$; linear spacing avoids collapse but degrades to $\\exp(-O(N/\\sqrt{T}))$, practically algebraic over long contexts. We introduce Position-Adaptive Spectral Tapering (PoST), an architecture-agnostic framework combining two mechanisms: (1) Spectral Reparameterization, which structurally enforces geometrically spaced log-decay rates, proven minimax optimal at rate $O(\\exp(-cN/\\log T))$; and (2) Position-Adaptive Scaling, the provably unique mechanism that eliminates the scale mismatch of static spectra (where only $N\\log t/\\log T$ of $N$ channels are effective at position $t$) by stretching the spectrum to the actual dependency range, sharpening the rate to $O(\\exp(-cN/\\log t))$. This scaling natively induces fractional invariance: the impulse response becomes scale-free, with channels interpolating between relative and absolute temporal coordinates. PoST integrates into any diagonal linear recurrence without overhead. We instantiate it across Mamba-2, RWKV-7, Gated DeltaNet, Gated Linear Attention, and RetNet. Pre-training at 180M-440M scales shows consistent zero-shot language modeling improvements, significant long-context retrieval gains for Mamba-2 (MQAR and NIAH), and competitive or improved performance across other architectures. Code: https://github.com/SiLifen/PoST."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2604.19021",
+    "url": "https://arxiv.org/abs/2604.19021",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "FG$^2$-GDN: Enhancing Long-Context Gated Delta Networks with Doubly Fine-Grained Control"
+      ],
+      "citation_author": [
+        "Sun, Pingwei",
+        "Hu, Yuxuan",
+        "Tan, Jianchao",
+        "Wang, Xue",
+        "Zhang, Jiaqi",
+        "Lu, Yifan",
+        "Sun, Yerui",
+        "Xie, Yuchen",
+        "Cai, Xunliang"
+      ],
+      "citation_date": [
+        "2026/04/21"
+      ],
+      "citation_online_date": [
+        "2026/08/31"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.19021"
+      ],
+      "citation_arxiv_id": [
+        "2604.19021"
+      ],
+      "citation_abstract": [
+        "Linear attention mechanisms have emerged as promising alternatives to softmax attention, offering linear-time complexity during inference. Recent advances such as Gated DeltaNet (GDN) and Kimi Delta Attention (KDA) have demonstrated that the delta rule, an online gradient descent update, enables superior associative recall compared to simple additive updates. While KDA refined the coarse head-wise decay gate into channel-wise decay, the learning rate $\\beta_t$ in the delta update remains a scalar, limiting the model's capacity for dimension-specific adaptation. We introduce FG$^2$-GDN, which replaces the scalar $\\beta_t$ with a channel-wise vector analogous to the transition from SGD to per-coordinate adaptive optimizers such as AdaGrad and Adam. We further propose FG$^2$-GDN+, which decouples the scaling for keys and values, enabling independent control of erasure strength and write strength. Experiments on synthetic and real-world benchmarks show that FG$^2$-GDN and its variant improve associative recall and long-context understanding over GDN and KDA, with comparable computational efficiency."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2605.10795",
+    "url": "https://arxiv.org/abs/2605.10795",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Factual recall in linear associative memories: sharp asymptotics and mechanistic insights"
+      ],
+      "citation_author": [
+        "Giorlandino, Alessio",
+        "Goldt, Sebastian",
+        "Maillard, Antoine"
+      ],
+      "citation_date": [
+        "2026/05/11"
+      ],
+      "citation_online_date": [
+        "2026/11/04"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2605.10795"
+      ],
+      "citation_arxiv_id": [
+        "2605.10795"
+      ],
+      "citation_abstract": [
+        "Large language models excel at factual recall, yet the fundamental limits of storing input--output associations with neural networks remain unclear. We study these limits in a minimal setting: a linear associative memory that maps $p$ input embeddings in $\\mathbb{R}^d$ to their $d$-dimensional targets via a linear layer, requiring each mapped input to score its own target above all other outputs. Since all inputs compete for the same outputs, these constraints are strongly correlated, which makes the storage capacity $p_c$ --- the largest number of associations that can be stored --- hard to characterise. We address this in three steps. First, we introduce a decoupled model, in which each input competes with its own independent set of outputs, and provide numerical and analytical evidence that it is equivalent to the original model, both in capacity and in the structure of the learnt solution. Second, using tools from statistical physics, we show that the decoupled model has capacity $p_c \\log p_c / d^2 = 1/2$, extend this computation to linear two-layer networks, and go beyond the capacity by predicting the spectrum of the learnt weights and the storage mechanism. The latter explains how the optimal solution outperforms a na\\\"ive Hebbian rule: rather than boosting input--output alignments with broad fluctuations, it raises the correct scores just above the extreme-value threshold set by the competing outputs. Third, we prove the decoupled model's capacity thresholds rigorously, including in the non-convex two-layer case; combined with a recent proof for the original model, this shows that both models have the same capacity for full-rank weights. These findings give a sharp characterisation of factual storage in linear networks, and suggest decoupling as a general tool for memorisation and learning problems in which each input must be matched to one of an extensive number of outputs."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2605.11196",
+    "url": "https://arxiv.org/abs/2605.11196",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Variational Linear Attention: Stable Associative Memory for Long-Context Transformers"
+      ],
+      "citation_author": [
+        "Pandey, Vishal",
+        "Singh, Gopal"
+      ],
+      "citation_date": [
+        "2026/05/11"
+      ],
+      "citation_online_date": [
+        "2026/05/11"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2605.11196"
+      ],
+      "citation_arxiv_id": [
+        "2605.11196"
+      ],
+      "citation_abstract": [
+        "Linear attention reduces the quadratic cost of softmax attention to $\\mathcal{O}(T)$, but its memory state grows as $\\mathcal{O}(T)$ in Frobenius norm, causing progressive interference between stored associations. We introduce \\textbf{Variational Linear Attention} (VLA), which reframes the memory update as an online regularised least-squares problem with an adaptive penalty matrix maintained via the Sherman-Morrison rank-1 formula. We prove that normalising the write direction to unit length gives the recurrence Jacobian spectral norm exactly $1$ for all sequence lengths and head dimensions (Proposition 2), and that the state norm is self-limiting under bounded inputs (Proposition 1). Empirically, VLA reduces $\\|S_t\\|_F$ by $109\\times$ relative to standard linear attention at $T{=}1{,}000$, achieves near-perfect exact-match accuracy on multi-query associative recall within the effective per-head memory regime ($n_\\text{pairs} < d_h$), maintaining substantially higher retrieval performance than DeltaNet and standard linear attention under increasing memory load, and maintains 62\\% accuracy at the per-head capacity boundary. A Triton-fused kernel achieves $14\\times$ speedup over sequential Python and $\\mathcal{O}(T)$ scaling, crossing below softmax attention latency at approximately 43\\,000 tokens."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2605.22791",
+    "url": "https://arxiv.org/abs/2605.22791",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Gated DeltaNet-2: Decoupling Erase and Write in Linear Attention"
+      ],
+      "citation_author": [
+        "Hatamizadeh, Ali",
+        "Choi, Yejin",
+        "Kautz, Jan"
+      ],
+      "citation_date": [
+        "2026/05/21"
+      ],
+      "citation_online_date": [
+        "2026/11/06"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2605.22791"
+      ],
+      "citation_arxiv_id": [
+        "2605.22791"
+      ],
+      "citation_abstract": [
+        "Linear attention replaces the unbounded cache of softmax attention with a fixed-size recurrent state, reducing sequence mixing to linear time and decoding to constant memory. The hard part is not just what to forget, but how to edit this compressed memory without scrambling existing associations. Delta-rule models subtract the current read before writing a new value, and Kimi Delta Attention (KDA) sharpens forgetting with channel-wise decay. But the active edit still uses a single scalar gate to control two different things: how much old content to erase on the key side and how much new content to commit on the value side. We introduce Gated DeltaNet-2, which generalizes both Gated DeltaNet and KDA by inheriting adaptive forgetting and channel-wise decay while addressing their shared limitation, the scalar tie between erasing and writing. Gated Delta Rule-2 separates these roles with a channel-wise erase gate b_t and a channel-wise write gate w_t, reducing to KDA when both gates collapse to the same scalar and to Gated DeltaNet when the decay also collapses. We derive a fast-weight update view, a chunkwise WY algorithm with channel-wise decay absorbed into asymmetric erase factors, and a gate-aware backward pass that preserves efficient parallel training. At 1.3B parameters trained on 100B FineWeb-Edu tokens, Gated DeltaNet-2 achieves the strongest overall results among Mamba-2, Gated DeltaNet, KDA, and Mamba-3 variants across language modeling, commonsense reasoning, and retrieval. Its advantage is most pronounced on long-context RULER needle-in-a-haystack benchmarks, where it improves the evaluated multi-key retrieval setting and remains strong in both recurrent and hybrid settings. Code is available at https://github.com/NVlabs/GatedDeltaNet-2."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2605.31163",
+    "url": "https://arxiv.org/abs/2605.31163",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Memory by Design: Bayesian Layers for Sequence Modeling"
+      ],
+      "citation_author": [
+        "Dowling, Matthew",
+        "Jeon, Hyungju",
+        "Savin, Cristina",
+        "Park, Il Memming"
+      ],
+      "citation_date": [
+        "2026/05/29"
+      ],
+      "citation_online_date": [
+        "2026/10/14"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2605.31163"
+      ],
+      "citation_arxiv_id": [
+        "2605.31163"
+      ],
+      "citation_abstract": [
+        "We introduce the \\emph{design-model framework}: a way to derive efficient recurrent sequence maps from explicit assumptions about memory. A design model writes evidence into memory by exact Bayesian filtering; a query- dependent readout produces a predictive distribution whose mean is the layer output. In our linear-Gaussian instantiation, the \\emph{Bayesian Layer} propagates both a mean and a covariance: the covariance tracks uncertainty over stored associations, steering writes toward uncertain directions, attenuating gains as evidence accumulates, and preserving confident memories. The same framework unifies several sub-quadratic recurrences: linear attention, GLA, and Mamba-2/SSD are exact filters under a latent-input design model, whereas DeltaNet and related Delta-rule models are covariance-reset reductions of the Bayesian Layer's design model. Restoring covariance propagation yields closed-form predictions for retrieval dynamics, which we verify empirically, and improves robustness beyond the training regime in controlled collision studies, learned associative recall, and the Zoology MQAR benchmark. Training from scratch on WikiText-103 under matched state budgets lowers perplexity on associative-recall hits. Distilling Bayesian Layers into a pretrained 340M Gated DeltaNet improves RULER long-context retrieval over a matched-compute control, at a 2.5--2.7\\% held-out perplexity cost."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2606.04048",
+    "url": "https://arxiv.org/abs/2606.04048",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Unlocking Feature Learning in Gated Delta Networks at Scale"
+      ],
+      "citation_author": [
+        "Liu, Yifeng",
+        "Gu, Quanquan"
+      ],
+      "citation_date": [
+        "2026/06/02"
+      ],
+      "citation_online_date": [
+        "2026/06/02"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2606.04048"
+      ],
+      "citation_arxiv_id": [
+        "2606.04048"
+      ],
+      "citation_abstract": [
+        "Training and scaling Large Language Models demand enormous computational resources, motivating both efficient sub-quadratic architectures and principled hyperparameter tuning methods. While the Maximal Update Parametrization ($\\mu$P) has enabled zero-shot hyperparameter transfer for standard Transformers, its extension to linear models, particularly those with structured state transitions and complicated architectures, remains largely unexplored. By rigorously propagating coordinate-size estimates through the forward pass, gating mechanisms, and recurrent state dynamics, we derive the scaling rules for Gated Delta Network. Experiments on language-model pre-training confirm that our configurations enable stable learning-rate transfer across model widths under both AdamW and SGD, whereas standard parametrization fails to transfer, validating the correctness and practical utility of our analysis."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2606.16429",
+    "url": "https://arxiv.org/abs/2606.16429",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Taylor-Calibrate: Principled Initialization for Hybrid Linear Attention Distillation"
+      ],
+      "citation_author": [
+        "Zhou, Zhongzhu",
+        "Wu, Qingyang",
+        "Wang, Junxiong",
+        "Mishra, Mayank",
+        "Song, Shuaiwen Leon",
+        "Athiwaratkun, Ben",
+        "Xu, Chenfeng"
+      ],
+      "citation_date": [
+        "2026/06/15"
+      ],
+      "citation_online_date": [
+        "2026/06/15"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2606.16429"
+      ],
+      "citation_arxiv_id": [
+        "2606.16429"
+      ],
+      "citation_abstract": [
+        "Hybrid linear attention models offer an appealing path to faster long-context inference: they reduce the quadratic cost and KV-cache burden of full softmax attention while retaining much of the quality of Transformer models. A practical way to obtain such models is to convert a pretrained Transformer instead of pretraining a new architecture from scratch, but this conversion is still brittle. Simply copying the teacher attention projections into a Gated DeltaNet (GDN) student does not specify the new recurrent decay, write, and output-gating dynamics. As a result, the converted model often starts in a poor dynamical regime and must spend many distillation tokens repairing initialization rather than learning the remaining teacher behavior. We propose Taylor-Calibrate, a lightweight initialization method for hybrid GDN students. The method uses Taylor-guided teacher attention statistics to set the value projection, memory timescale, write gates, and output gate, then applies a short per-layer alignment step to match each converted layer to the teacher output. Across four teacher settings and three retained-layer policies, Taylor-Calibrate gives substantially stronger zero-shot students, with up to an 88x improvement in a representative ablation, and reaches matched recovery targets with 4.9x--9.2x fewer training tokens than naive conversion."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2607.07953",
+    "url": "https://arxiv.org/abs/2607.07953",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Linear Attention Architectures: Mechanisms, Trade-offs, and Cross-Layer Routing"
+      ],
+      "citation_author": [
+        "Cerruti, Tommaso",
+        "Rieder, Tim",
+        "Rowlands, George",
+        "Jin, Lingfeng",
+        "Schlag, Imanol"
+      ],
+      "citation_date": [
+        "2026/07/08"
+      ],
+      "citation_online_date": [
+        "2026/07/08"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2607.07953"
+      ],
+      "citation_arxiv_id": [
+        "2607.07953"
+      ],
+      "citation_abstract": [
+        "Self-attention lets each token retrieve information from the full context, but its quadratic cost in sequence length limits training and inference at long context. This paper presents a comparative study of softmax attention and four recent recurrent linear-attention architectures: DeltaNet, Gated DeltaNet, Kimi Delta Attention, and Gated DeltaNet-2. We express these mechanisms in a common recurrent-memory notation, making explicit how they differ in expressivity, memory decay, erase and write control, training throughput, and implementation complexity. Our experiments center on 350M-parameter models trained for 15B tokens, and include optimizer and learning-rate comparisons, hybrid-versus-pure stack comparisons, sequence-length runtime measurements, larger DeltaNet runs at 1.3B and 3B parameters, and a small set of downstream evaluations. The reported speed results measure training throughput and iteration time; we do not provide an empirical inference-speed benchmark. Within the reported 350M-parameter, 15B-token sweep, Kimi Delta Attention with Muon reaches the lowest final validation loss, a pure Gated DeltaNet stack trained with AdamW has the highest normalized training throughput, hybrid stacks generally improve loss at a throughput cost, and Muon consistently lowers final validation loss relative to AdamW in the matched architecture settings we evaluate. We introduce and evaluate lightweight cross-layer routing mechanisms for DeltaNet-style memories. The most natural DeltaNet-inspired formulation, forwarding a lower layer's delta-rule write error into the next layer's value target, does not improve over matched baselines. Routing into the aligned hidden stream and forwarding the write value instead yields a modest improvement in the matched runs we report: Cross-Layer Value Routing (CLVR) lowers final validation loss for both DeltaNet and Gated DeltaNet."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2607.17419",
+    "url": "https://arxiv.org/abs/2607.17419",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Kernelized Linear Attention: Breaking the Capacity Wall with Symmetric Cones"
+      ],
+      "citation_author": [
+        "Ghriss, Ayoub",
+        "Chakraborty, Sourav"
+      ],
+      "citation_date": [
+        "2026/07/19"
+      ],
+      "citation_online_date": [
+        "2026/07/19"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2607.17419"
+      ],
+      "citation_arxiv_id": [
+        "2607.17419"
+      ],
+      "citation_abstract": [
+        "Linear attention promises constant-time recurrent inference but degrades sharply on associative recall. We formulate attention recall as a spherical-packing problem and introduce Kernelized Linear Attention Activations (KATA), a framework whose feature maps are derived from first principles by certifying nonnegative attention weights through a self-dual homogeneous cone. Building on this observation, we show that rank-one positive semi-definite (PSD) features offer a favorable capacity--interference tradeoff. KATA recovers a parameter-free convex output gate and characterizes associative capacity through the Welch interference floor. For tolerances above this floor, KATA enlarges the state without adding parameters and admits spherical codes with exponentially many keys in the projection dimension. We implement KATA as fused Triton kernels at two operating points: a flash-attention-style forward up to ${\\sim}1.6\\times$ FlashAttention-2 throughput, and an exact $O(T)$ chunked-state form that reaches ${\\sim}11\\times$ FlashAttention-2 forward throughput at $131$k tokens. An associative scan of the first-order feature lowers the inter-chunk recurrence depth to $O(\\log(T/C))$ for chunk size $C$ and averages ${\\sim}2.4\\times$ the throughput of a matched sequential linear-attention baseline. On long-range MQAR and repeated-key overwrite, several KATA variants outperform Gated DeltaNet, with parameter counts and state sizes reported alongside accuracy. Induction preserves near-perfect recall, while kernel benchmarks show that the maps can be implemented efficiently. KATA retains $0.985$ MQAR at a $16\\times$ out-of-distribution length, approaching the softmax with roughly one quarter of the KV-cache entries. Experiments on 340M-parameter LLMs reveal a feature-dependent fluency trade-off and clarify how positional embeddings, delta rules, and decay gates interact with feature geometry."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2608.13668",
+    "url": "https://arxiv.org/abs/2608.13668",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "The Query Knows What to Forget: A Second Erase Direction for Linear Attention"
+      ],
+      "citation_author": [
+        "Gupta, Dhruman",
+        "Das, Aritra",
+        "Gupta, Debayan"
+      ],
+      "citation_date": [
+        "2026/08/13"
+      ],
+      "citation_online_date": [
+        "2026/08/13"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2608.13668"
+      ],
+      "citation_arxiv_id": [
+        "2608.13668"
+      ],
+      "citation_abstract": [
+        "Linear attention keeps a state of fixed size. At long context, many stored items share this state, and interference between them degrades retrieval. Gated DeltaNet-2 (GDN-2), like every delta-rule model before it, derives its erase vector from the key of the current token. However, the interference in its reads is measured through the query, and the erase step cannot reach it. We introduce the Query-derived Erase Direction (QED). QED adds a second erase direction derived from the query and orthogonal to the key. In the fast-weight view, a key-directed delta edit cannot change the key-orthogonal part of a read. It uses the editable part to cancel old-state content measured along the query. It also improves retrieval at every length past the training window, and it about doubles the usable context length on S-NIAH-1."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2608.30386",
+    "url": "https://arxiv.org/abs/2608.30386",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "DASC: Decay-Aware State Compression for Hybrid Linear-Attention Serving"
+      ],
+      "citation_author": [
+        "Yu, Yanqi",
+        "Sun, Pingwei",
+        "Tan, Jianchao",
+        "Zhang, Tao",
+        "Xie, Yuchen",
+        "Cai, Xunliang",
+        "Liu, Yao"
+      ],
+      "citation_date": [
+        "2026/08/31"
+      ],
+      "citation_online_date": [
+        "2026/10/09"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2608.30386"
+      ],
+      "citation_arxiv_id": [
+        "2608.30386"
+      ],
+      "citation_abstract": [
+        "Hybrid linear-attention architectures have recently scaled to large open-weight models, offering quality competitive with full attention while substantially reducing key/value (KV) cache growth. However, their in-place recurrent-state updates complicate cache management: prefix reuse requires state checkpoints alongside full-attention KV, while storing state checkpoints in full increases memory pressure, leading to more evictions and repeated prefill. By analyzing the decay structure of Gated DeltaNet (GDN) and Kimi Delta Attention (KDA), we find that different heads and channels retain prefix information over markedly different timescales, which we term \\emph{retention horizons}. This variation suggests substantial compression potential in persistent state checkpoints. Building on this observation, we introduce \\emph{Decay-Aware State Compression} (DASC), which derives retention horizons from model weights, selects long-horizon state units, and packs them into a ragged state checkpoint layout. To integrate efficiently with tensor-parallel inference engines, DASC furtherly balances compressed state checkpoints across TP ranks. On reuse, DASC either zero-fills omitted units or refreshes them from a bounded suffix with additional compute cost. Across retrieval and end-to-end reasoning benchmarks on Kimi-Linear, conservative DASC configurations remain close to full caching while compressing KDA recurrent state checkpoints by $2.63\\times$. Under fixed state checkpoint memory budgets, the resulting capacity gains reduce mean Time to First Token (TTFT) by 42.6\\% and improve input throughput by 68.4\\%. At larger compression ratio, suffix refresh recovers much of the accuracy lost to more aggressive omission, at the cost of additional replay computation. Qwen with GDN exhibits a similar quality--efficiency trend, showing that DASC extends from channel-wise KDA to head-wise GDN."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2609.12814",
+    "url": "https://arxiv.org/abs/2609.12814",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "RunningTensor: Generalizing Linear Attention to Higher-Order Recurrent States"
+      ],
+      "citation_author": [
+        "Herranz-Celotti, Luca",
+        "Guigue, Vincent"
+      ],
+      "citation_date": [
+        "2026/09/11"
+      ],
+      "citation_online_date": [
+        "2026/09/11"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2609.12814"
+      ],
+      "citation_arxiv_id": [
+        "2609.12814"
+      ],
+      "citation_abstract": [
+        "Linear attention and state-space models provide linear-time sequence modeling, but their recurrent memory remains a second-order tensor (a matrix), limiting the order of interactions that can be represented in the state. We introduce the RunningTensor, which generalizes this memory to an order-$o$ tensor, updated by a rank-1 outer product and read by contracting against $o-1$ vector queries. Order $2$ recovers linear attention; we study order $3$ as a proof of concept, retaining both recurrent and parallel forms while remaining linear in sequence length $T$ and improving working memory capacity from $\\mathcal{O}(W^2)$ to $\\mathcal{O}(W^o)$. On synthetic multi-query associative recall, RunningTensor outperforms linear-attention and SSM baselines. After pretraining, it also improves performance on language-understanding and non-synthetic retrieval tasks, suggesting that higher-order recurrent state can provide useful additional memory capacity beyond matrix-valued state."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2609.16183",
+    "url": "https://arxiv.org/abs/2609.16183",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Anatomy of Associative Recall in Fixed-State Recurrences: A Matched-State Decomposition, an Interference Wall, and a Curriculum That Breaks It"
+      ],
+      "citation_author": [
+        "Boesch, Julian",
+        "Wee, Andrew"
+      ],
+      "citation_date": [
+        "2026/09/14"
+      ],
+      "citation_online_date": [
+        "2026/09/14"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2609.16183"
+      ],
+      "citation_arxiv_id": [
+        "2609.16183"
+      ],
+      "citation_abstract": [
+        "Fixed-state recurrences--linear attention and state-space models--are reported to lag behind attention on associative recall, but whole-architecture comparisons cannot say which ingredient is responsible. We decompose masked multi-query recall at a fixed state budget along three single-knob axes: a short causal convolution, the transition structure (rank-1 delta rule vs. diagonal), and decay. The convolution dominates (~+0.5 recall in both families under matched training): comparisons that pit convolution-free cells against a convolution-equipped Mamba measure the missing convolution, not the recurrence. The rank-1 transition beats its diagonal ablation by +0.19/+0.32 at 16/32 pairs, but the margin shrinks to +0.03 once both cells carry the convolution, and a state-matched Mamba-2 ties the unarmed rank-1 cell: no class claim survives. Cells that solve 32-pair recall degrade gracefully with load yet fall to chance retrieving 4 pairs from a distractor haystack--flat across lengths and transitions. Interference under sparse supervision, not capacity: a distance curriculum takes the unchanged architecture from 0.021 to 1.000. Training is a lock-in lottery--a seed either locks in or does not--and the curriculum is the lever. Lock-in rises from 1/10 to 7/10 (p=0.02); dense supervision adds nothing; at L=256 a shaped ramp reopens a boundary the uniform curriculum cannot (4/5 vs. 0/9); and at L=512, where the ramp collapses (0/6), gating it on measured accuracy locks in 6/6 (p=0.001). Bidirectional denoiser cells, reading the query before the haystack, show no measurable advantage over causal training (ten seeds), and collision-key retrieval needs two layers. Arming for recall is free on an S_5 state-tracking guardrail--the armed cell is significantly better at every depth (p<=0.0044). These replace \"recurrent models are bad at recall\" with a measured decomposition and two cheap interventions."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2609.16540",
+    "url": "https://arxiv.org/abs/2609.16540",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "On the Importance of Gating: Memorization vs. In-Context Learning in State Space Models"
+      ],
+      "citation_author": [
+        "Tong, William L.",
+        "Lotfi, Aryo",
+        "Abbe, Emmanuel",
+        "Vaggelakos, Kostas",
+        "Banna, Vishnu",
+        "Littwin, Etai",
+        "Susskind, Josh",
+        "Pehlevan, Cengiz",
+        "Malach, Eran"
+      ],
+      "citation_date": [
+        "2026/09/15"
+      ],
+      "citation_online_date": [
+        "2026/09/15"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2609.16540"
+      ],
+      "citation_arxiv_id": [
+        "2609.16540"
+      ],
+      "citation_abstract": [
+        "State Space Models (SSMs) have emerged as a compelling alternative to Transformers, enabling sequence modeling with constant memory and linear compute. Although SSMs exhibit reasonable performance and favorable computational characteristics, they continue to lag behind Transformers on tasks that require in-context learning and precise retrieval, slowing their adoption for large-scale language modeling. In this work, we demonstrate that both the success and failure of SSMs in these domains can be explained by studying the role of the gating mechanism, a prevalent component in modern recurrent networks. Specifically, we show through theory and experiments that this gating mechanism causes SSMs to first learn an in-weights \"memorization\" solution, while delaying, or even preventing, convergence to a correct in-context learning solution. Importantly, this happens even in cases where there are no fundamental limitations due to the architecture or its memory capacity. On the other hand, we find that gating is often beneficial for improving generalization to long sequence lengths. Our results illuminate the crucial role of the gating mechanism in shaping both the training dynamics and generalization of SSMs, and provide a basis for understanding and improving linear-time models."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2609.24797",
+    "url": "https://arxiv.org/abs/2609.24797",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Complex KDA: Understanding and Enhancing the Expressivity of Kimi Delta Attention"
+      ],
+      "citation_author": [
+        "Siems, Julien",
+        "Grazzi, Riccardo",
+        "P\u00f6ppel, Korbinian",
+        "Singh, Jaisidh",
+        "Zela, Arber",
+        "Carstensen, Timur",
+        "Jitsev, Jenia",
+        "Hutter, Frank",
+        "Cevher, Volkan",
+        "Orvieto, Antonio",
+        "Klein, Aaron"
+      ],
+      "citation_date": [
+        "2026/09/21"
+      ],
+      "citation_online_date": [
+        "2026/09/21"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2609.24797"
+      ],
+      "citation_arxiv_id": [
+        "2609.24797"
+      ],
+      "citation_abstract": [
+        "Linear RNNs based on the delta-rule enable efficient sequence modeling, but their linear updates with a low-rank correction constrain their expressivity. Prior work has shown that composing two delta-rule transitions in a single recurrent update can model a 2D rotation, but this increases the rank and the cost of the updates compared to a single transition. We show that Kimi Delta Attention (KDA) can realize 2D rotations by combining a single delta-rule transformation with a second reflection supplied by its channel-wise gate. This requires extending the parameter ranges of KDA by combining two existing range extensions: allowing gates in $[-1,1]$ and the delta-rule coefficient $\\beta$ in $[0,2]$. We call the resulting model Complex KDA (CKDA). It preserves KDA's stability and efficiency, with transitions that remain diagonal-plus-rank-one and non-expansive, while reaching the state-tracking expressivity of DeltaProduct$_2$. We characterize the expressivity of CKDA and prove that every orthogonal diagonal-plus-rank-one matrix is exactly a CKDA transition matrix. A single CKDA layer can track every finite group isomorphic to a subgroup of $\\mathrm{SO}(3)$, and many state-tracking results use one fewer layer for CKDA compared to other diagonal-plus-rank-one Linear RNNs. Empirically, combining both extensions yields the strongest length extrapolation among tested KDA range settings on $S_3$, $S_4$, and periodic audio continuation. In language modeling, CKDA outperforms Transformers and other linear RNNs, obtains similar results to a KDA baseline, and shows promising scaling behavior. Our code is open source at https://github.com/OpenEuroLLM/ComplexKDA and our models are available at https://huggingface.co/collections/openeurollm/complexkda."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2609.25802",
+    "url": "https://arxiv.org/abs/2609.25802",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Latest Exact Match Attention"
+      ],
+      "citation_author": [
+        "Br\u00f6samle, Moritz"
+      ],
+      "citation_date": [
+        "2026/09/22"
+      ],
+      "citation_online_date": [
+        "2026/09/22"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2609.25802"
+      ],
+      "citation_arxiv_id": [
+        "2609.25802"
+      ],
+      "citation_abstract": [
+        "We introduce latest exact match attention (LEMA), an attention variant for transformers where queries and keys are binarized and each query attends only to the latest exactly matching key. We prove that LEMA transformers with chain of thought can simulate word-RAMs, as was recently shown for the less restrictive rightmost hard attention. In contrast to prior hard attention variants, the restriction to exact matches enables an efficient converse direction: word-RAMs can simulate LEMA transformers at a cost per token independent of the context length. Together, these results yield a close correspondence between the two computational models in terms of both compute and memory. Beyond the theory, we propose a training method for LEMA transformers that handles their non-differentiable operations with a straight-through estimator for the binarization and a soft attention surrogate annealed towards LEMA. On a synthetic associative recall task, LEMA models trained this way use their growing state to store and recall a large number of associations, outperforming gated DeltaNet (GDN) with its fixed state size. As a first scaling test, we train LEMA language models with up to 834 million parameters. They match softmax transformers of around half their size in loss and, on repeated rare phrases and a needle-retrieval task, remain behind softmax transformers but recall across longer distances than GDN models of comparable size. Finally, we implement dictionary-based inference for LEMA transformers and show constant generation speed comparable to GDN despite their growing state, with the dictionaries residing in main memory rather than VRAM. Code is available at https://github.com/moritzbroe/latest_exact_match_attention."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2609.33093",
+    "url": "https://arxiv.org/abs/2609.33093",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "How Linear Attention Remembers"
+      ],
+      "citation_author": [
+        "Lee, Kichang",
+        "Park, JaeYeon",
+        "Kim, Songkuk",
+        "Ko, JeongGil"
+      ],
+      "citation_date": [
+        "2026/09/27"
+      ],
+      "citation_online_date": [
+        "2026/09/27"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2609.33093"
+      ],
+      "citation_arxiv_id": [
+        "2609.33093"
+      ],
+      "citation_abstract": [
+        "Linear attention replaces the growing key--value (KV) cache of standard attention with a fixed-size recurrent state, substantially reducing memory growth with context length. This efficiency, however, changes how past information is stored: many tokens must share and repeatedly update the same memory. We study how this recurrent state functions as a memory system. Using an analytical decomposition together with controlled causal interventions in pretrained GLA and GDN models, we trace how recalled information is written, retained, and later accessed. We find that fact-specific information enters recurrent memory through concentrated, content-dependent writes and is later accessed through concentrated query-time read pathways. Multiple facts can remain selectively accessible within the same state, yet their internal representations exhibit cross-fact causal coupling rather than independent KV-like storage. As memory load increases, both recall and targeted editability degrade, whereas elapsed context alone has a substantially smaller effect within the tested regime. Causal interventions on subsequent writes further show that interference is shaped by their overlap with existing memory. Finally, in hybrid architectures that combine recurrent layers with full attention, the runtime memory directly supporting recall shifts predominantly to the full-attention KV state. Together, these results reveal how fixed-size recurrent memory supports selective recall despite shared storage, while exposing the interference and capacity limits that distinguish it from token-addressable KV memory."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2610.00232",
+    "url": "https://arxiv.org/abs/2610.00232",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Constant-Memory Recall: Learned Associations in a Fixed Matrix State"
+      ],
+      "citation_author": [
+        "Larson, Samuel"
+      ],
+      "citation_date": [
+        "2026/09/23"
+      ],
+      "citation_online_date": [
+        "2026/09/23"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2610.00232"
+      ],
+      "citation_arxiv_id": [
+        "2610.00232"
+      ],
+      "citation_abstract": [
+        "Fixed-size recurrent memory limits storage growth during inference, but successful recall depends on the task and training. We study a small DeltaNet variant with fixed token-specific key biases, trained to remember 32 new key-value pairings per sequence. With 32 KiB of recurrent matrix state, it achieves 99.95% mean accuracy across three training seeds when choosing among the sequence's values. Recall remains near perfect when filler extends the pre-query context to 1,798 tokens without adding pairings. Zeroing the first memory block removes this recall. An exploratory 48-pair test remains near chance after one quarter of the primary training budget and does not locate a capacity limit. Parameter-matched vector and Transformer baselines remain near chance, including the Transformer after additional training searches. This unresolved baseline failure prevents a memory-efficiency comparison."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2610.41994",
+    "url": "https://arxiv.org/abs/2610.41994",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "DAMI: Dual-Axis Memory Initialization for Enhanced Long-Context Retrieval in Gated Linear Attention"
+      ],
+      "citation_author": [
+        "Feng, Zhangchi",
+        "Jiang, Harry",
+        "Luo, Yangyifei",
+        "Zhang, Ray",
+        "Zhang, Richong"
+      ],
+      "citation_date": [
+        "2026/10/30"
+      ],
+      "citation_online_date": [
+        "2026/11/03"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2610.41994"
+      ],
+      "citation_arxiv_id": [
+        "2610.41994"
+      ],
+      "citation_abstract": [
+        "Linear attention scales linearly with sequence length, but its finite-state memory can limit long-context retrieval. In gated linear recurrences, memory retention depends on state decay, which is shaped jointly by gate parameters A_log and dt_bias and by input activations. In controlled Gated DeltaNet (GDN) experiments, both parameters remain highly correlated with their initial values after training, highlighting the importance of initialization. Therefore, we introduce Dual-Axis Memory Initialization (DAMI), which jointly configures these parameters before training. DAMI assigns geometric timescales across heads for varied retrieval distances and a low-high-low input-sensitivity profile across layers. A small activation sample calibrates the GDN-family implementation to match both behavioral targets without adding trainable parameters. Across GDN, KDA, GDN2, Mamba-2, and RWKV-7, DAMI improves average RULER-style retrieval accuracy by 5.29 to 16.71 percentage points over the corresponding random-initialization baselines. Performance on language modeling, commonsense reasoning, and 2K real-world retrieval remains broadly comparable to those baselines. Our code is available at https://speedai.com/research/dami."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2611.04449",
+    "url": "https://arxiv.org/abs/2611.04449",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Near-Zero Token Embeddings Silently Stall Training in Gated Sequence Models"
+      ],
+      "citation_author": [
+        "Liu, Xin",
+        "Sun, Boyuan",
+        "Wang, Yuxin",
+        "Song, Haoran",
+        "Zhao, Mingjian",
+        "Liu, Mengyu"
+      ],
+      "citation_date": [
+        "2026/11/03"
+      ],
+      "citation_online_date": [
+        "2026/11/03"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2611.04449"
+      ],
+      "citation_arxiv_id": [
+        "2611.04449"
+      ],
+      "citation_abstract": [
+        "Among 291 surveyed open-weight language model repositories (280 distinct embedding tables), 52.6% of untied gated and hybrid checkpoints (20/38) contain reachable input embeddings with norms below $10^{-6}$, compared with 0% of weight-tied models. Such near-zero rows can arise during pretraining when unseen rare or template tokens receive zero input gradients while AdamW weight decay shrinks untied embeddings. In tested Transformer configurations, non-initial positions or a BOS token prevent this failure mode. In gated sequence models (Mamba, Gated DeltaNet, xLSTM), a near-zero token can amplify input-embedding gradients by more than 30 orders of magnitude (up to 35). At zero input, current-token readout factors (SiLU gates or linear queries) vanish, suppressing historical-state readout. Residual RMS values can then fall below the square root of the RMSNorm floor across consecutive layers, causing Pre-RMSNorm to amplify backward gradients by up to $10^3$ per layer. When a gradient entry exceeds $1.84 \\times 10^{19}$, FP32 global-norm clipping in PyTorch, Hugging Face Trainer, and FSDP2 can overflow to infinity and zero the current batch's gradients. In Telugu continual pretraining of Nemotron-3-Nano-4B, this discards updates on approximately 20% of steps and leaves triggered rows frozen. We propose two remedies. For released checkpoints, GroupClip decouples input-embedding clipping using a 64-bit or rescaled norm; its rescaled implementation eliminates update loss and heals triggered rows in one step with negligible measured end-to-end overhead. For pretraining, GateFloor ($\\mathrm{SiLU}(z) + \\delta$, $\\delta \\in [0.01, 0.1]$) keeps the gate positive at zero input, reducing near-zero gradients by 28 orders of magnitude in experiments up to 370M parameters, with perplexity comparable to the baseline."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  },
+  {
+    "arxiv_id": "2611.08376",
+    "url": "https://arxiv.org/abs/2611.08376",
+    "status": "verified metadata",
+    "metadata": {
+      "citation_title": [
+        "Muir: Linear Attention with Sensitivity-Allocated Gating and Matched-Filter Readout"
+      ],
+      "citation_author": [
+        "Gangavarapu, Tushaar",
+        "Tabak, Gil",
+        "Schaefer, Clemens JS"
+      ],
+      "citation_date": [
+        "2026/11/05"
+      ],
+      "citation_online_date": [
+        "2026/11/05"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2611.08376"
+      ],
+      "citation_arxiv_id": [
+        "2611.08376"
+      ],
+      "citation_abstract": [
+        "Linear attention compresses context into a fixed-size key-value state for linear-time training and constant-memory inference. Gated delta-rule models decay this state and erase its prediction for an incoming key before writing a new value; Gated DeltaNet-2 (GDN-2) generalizes this with channel-wise decay and decoupled, full-rank erase and write gates. However, we show that state updates are far less sensitive to erasure than to writes: key activation and unit normalization concentrate key energy onto a sparse subset of channels, whereas value writes scale all channels, so the erase gate can be parameterized at lower rank. Furthermore, slow-decaying state rows accumulate much larger norms than fast rows, dominating unweighted readout and forcing stronger write-time erasure to suppress interference. Guided by this analysis, we introduce Muir, which fuses all gates into a sensitivity-allocated low-rank projection, re-weights state rows with a matched-filter readout gate, and reinvests the saved parameters in a wider feed-forward network. Because standard chunkwise algorithms become numerically unstable at the large chunk sizes needed to saturate wide matrix units, we design a parallel update for stable, efficient training. Across 166M-1.34B parameters, Muir lowers perplexity by 1.8-2.0% over GDN-2 and 2.5-3.6% over Transformer, raises commonsense accuracy by up to 1.9 points, and improves extractive recall over GDN-2. At 1.34B, Muir outperforms both baselines on multi-hop and multi-needle recall, extrapolates 2,560x from its 4K training length to 10M-token streams without perplexity drift, and maintains near-100% passkey retrieval to 1M tokens with static readout. Muir achieves these gains while matching GDN-2 throughput, reaching its 100B-token validation loss 1.2x faster, and training 2.7x faster than Transformer at 32K."
+      ]
+    },
+    "evidence": "metadata only; see thematic notes for abstract/full-text assessment"
+  }
+]

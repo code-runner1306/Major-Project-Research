@@ -1,0 +1,76 @@
+[
+  {
+    "answer_free": {
+      "correct": 0,
+      "data_sha256": "b8836af13ae19fda54f3a8a17ebf6bda9ea12e5aea0c1776b94122e87b28cea8",
+      "evaluated_examples": 16,
+      "exact_query_accuracy": 0.0,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "history_conditioning": "answer_free",
+      "later_query_accuracy": 0.0,
+      "latest_value_accuracy": 0.0,
+      "loss": 4.851247787475586,
+      "stale_value_error_rate": 0.0,
+      "total": 32,
+      "unrelated_association_retention": 0.0
+    },
+    "epoch": 1,
+    "learning_rate": 0.0021544346900318843,
+    "step": 1,
+    "teacher_forced": {
+      "correct": 0,
+      "data_sha256": "b8836af13ae19fda54f3a8a17ebf6bda9ea12e5aea0c1776b94122e87b28cea8",
+      "evaluated_examples": 16,
+      "exact_query_accuracy": 0.0,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "history_conditioning": "teacher_forced",
+      "later_query_accuracy": 0.0,
+      "latest_value_accuracy": 0.0,
+      "loss": 4.850777626037598,
+      "stale_value_error_rate": 0.0,
+      "total": 32,
+      "unrelated_association_retention": 0.0
+    },
+    "train_loss": 4.866762638092041,
+    "validation_seconds": 0.0940000000045984
+  },
+  {
+    "answer_free": {
+      "correct": 0,
+      "data_sha256": "b8836af13ae19fda54f3a8a17ebf6bda9ea12e5aea0c1776b94122e87b28cea8",
+      "evaluated_examples": 16,
+      "exact_query_accuracy": 0.0,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "history_conditioning": "answer_free",
+      "later_query_accuracy": 0.0,
+      "latest_value_accuracy": 0.0,
+      "loss": 4.854511737823486,
+      "stale_value_error_rate": 0.0,
+      "total": 32,
+      "unrelated_association_retention": 0.0
+    },
+    "epoch": 2,
+    "learning_rate": 0.0021531371345632645,
+    "step": 2,
+    "teacher_forced": {
+      "correct": 0,
+      "data_sha256": "b8836af13ae19fda54f3a8a17ebf6bda9ea12e5aea0c1776b94122e87b28cea8",
+      "evaluated_examples": 16,
+      "exact_query_accuracy": 0.0,
+      "example_accuracy": 0.0,
+      "first_query_accuracy": 0.0,
+      "history_conditioning": "teacher_forced",
+      "later_query_accuracy": 0.0,
+      "latest_value_accuracy": 0.0,
+      "loss": 4.853557109832764,
+      "stale_value_error_rate": 0.0,
+      "total": 32,
+      "unrelated_association_retention": 0.0
+    },
+    "train_loss": 4.804365634918213,
+    "validation_seconds": 0.10899999999674037
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "cuda_build": "12.8",
+  "device": "cpu",
+  "gpu": null,
+  "pid": 10796,
+  "publish": false,
+  "torch": "2.11.0+cu128",
+  "worker_index": 0,
+  "workers": 2
+}

@@ -1,0 +1,88 @@
+{
+  "best_validation_secondary": {
+    "development_answer_accuracy": 0.0,
+    "elapsed_seconds": 0.38414300000295043,
+    "loss": 4.910845518112183,
+    "perplexity": 135.75418090820312,
+    "step": 2,
+    "steps": 2
+  },
+  "final_checkpoint": {
+    "accepted_optimizer_steps": 2,
+    "completed_steps": 2,
+    "path": "final_checkpoint.pt",
+    "processed_tokens": 4032,
+    "sha256": "70cdfc781bf99d5252a887429b965907ee15cf335086b8b5d34f857c2aeb0cc5"
+  },
+  "final_validation": {
+    "elapsed_seconds": 0.01572999998461455,
+    "loss": 4.910845518112183,
+    "perplexity": 135.75418090820312,
+    "steps": 2
+  },
+  "training": {
+    "accepted_microbatches": 8,
+    "accepted_optimizer_steps": 2,
+    "accepted_processed_tokens": 4032,
+    "clipped_gradient_norms": [
+      1.0,
+      1.0
+    ],
+    "curriculum": [],
+    "fixed_optimizer_steps": 2,
+    "lr_scheduler": {
+      "name": "OneCycleLR",
+      "pct_start": 0.95
+    },
+    "microbatches": 8,
+    "optimizer_step_seconds": [
+      0.07616669998969883,
+      0.05980600000475533
+    ],
+    "precision_contract": {
+      "grad_scaler_enabled": false,
+      "model_forward_autocast": false,
+      "recurrence_input_dtype": "autocast",
+      "state_accumulator_dtype": "float32"
+    },
+    "processed_tokens": 4032,
+    "rejected_optimizer_attempts": 0,
+    "stability_events": [],
+    "train_losses": [
+      19.454644203186035,
+      19.422007083892822
+    ],
+    "training_tokens_per_second": 7535.313371395796,
+    "unclipped_gradient_norms": [
+      1.2178820371627808,
+      1.2118923664093018
+    ],
+    "wall_time_seconds": 0.5350806000060402
+  },
+  "training_energy": {
+    "average_watts": null,
+    "device": {
+      "cuda_runtime": null,
+      "device_type": "cpu"
+    },
+    "duration_seconds": 0.535025899996981,
+    "joules": null,
+    "joules_per_million_training_tokens": null,
+    "method": null,
+    "peak_watts": null,
+    "reason": "CUDA/NVML is unavailable on this device",
+    "sampling_interval_seconds": null,
+    "supported": false,
+    "token_count": 0.004032
+  },
+  "validation_history": [
+    {
+      "development_answer_accuracy": 0.0,
+      "elapsed_seconds": 0.38414300000295043,
+      "loss": 4.910845518112183,
+      "perplexity": 135.75418090820312,
+      "step": 2,
+      "steps": 2
+    }
+  ]
+}

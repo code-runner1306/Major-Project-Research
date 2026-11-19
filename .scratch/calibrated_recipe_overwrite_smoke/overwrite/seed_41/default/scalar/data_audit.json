@@ -1,0 +1,258 @@
+{
+  "baselines": {
+    "final_two_values": {
+      "accuracy": 0.375,
+      "correct": 12,
+      "total": 32
+    },
+    "first_value": {
+      "accuracy": 0.0625,
+      "correct": 2,
+      "total": 32
+    },
+    "keyed_last_write_oracle": {
+      "accuracy": 1.0,
+      "correct": 32,
+      "total": 32
+    },
+    "last_value": {
+      "accuracy": 0.25,
+      "correct": 8,
+      "total": 32
+    },
+    "most_recent_value": {
+      "accuracy": 0.25,
+      "correct": 8,
+      "total": 32
+    },
+    "no_memory_frequency": {
+      "accuracy": 0.0625,
+      "correct": 2,
+      "total": 32
+    },
+    "query_ordinal_frequency": {
+      "accuracy": 0.0625,
+      "correct": 2,
+      "total": 32
+    }
+  },
+  "by_difficulty_cell": {
+    "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":33}": {
+      "final_two_values": {
+        "accuracy": 0.5,
+        "correct": 8,
+        "total": 16
+      },
+      "first_value": {
+        "accuracy": 0.125,
+        "correct": 2,
+        "total": 16
+      },
+      "keyed_last_write_oracle": {
+        "accuracy": 1.0,
+        "correct": 16,
+        "total": 16
+      },
+      "last_value": {
+        "accuracy": 0.5,
+        "correct": 8,
+        "total": 16
+      },
+      "most_recent_value": {
+        "accuracy": 0.5,
+        "correct": 8,
+        "total": 16
+      },
+      "no_memory_frequency": {
+        "accuracy": 0.0625,
+        "correct": 1,
+        "total": 16
+      },
+      "query_ordinal_frequency": {
+        "accuracy": 0.0625,
+        "correct": 1,
+        "total": 16
+      }
+    },
+    "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":33}": {
+      "final_two_values": {
+        "accuracy": 0.25,
+        "correct": 4,
+        "total": 16
+      },
+      "first_value": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 16
+      },
+      "keyed_last_write_oracle": {
+        "accuracy": 1.0,
+        "correct": 16,
+        "total": 16
+      },
+      "last_value": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 16
+      },
+      "most_recent_value": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "total": 16
+      },
+      "no_memory_frequency": {
+        "accuracy": 0.0625,
+        "correct": 1,
+        "total": 16
+      },
+      "query_ordinal_frequency": {
+        "accuracy": 0.0625,
+        "correct": 1,
+        "total": 16
+      }
+    }
+  },
+  "chance_expectation": {
+    "final_two_values": "min(2 / distinct_memory_values, 1)",
+    "first_value": "1 / distinct_memory_values",
+    "keyed_last_write_oracle": 1.0,
+    "last_value": "1 / distinct_memory_values",
+    "most_recent_value": "1 / distinct_memory_values",
+    "no_memory_frequency": 0.022135416666666668,
+    "query_ordinal_frequency": {
+      "0": 0.03515625,
+      "1": 0.03125
+    }
+  },
+  "completeness": {
+    "incomplete_checks": 0,
+    "oracle_checks": 32,
+    "oracle_mismatches": 0
+  },
+  "counterfactual_query_key_audit": {
+    "by_difficulty_cell": {
+      "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":33}": {
+        "checks": 16,
+        "incomplete": 0,
+        "mismatches": 0,
+        "passes": 16
+      },
+      "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":33}": {
+        "checks": 16,
+        "incomplete": 0,
+        "mismatches": 0,
+        "passes": 16
+      }
+    },
+    "checks": 32,
+    "incomplete": 0,
+    "method": "replace query key while preserving the causal memory prefix",
+    "mismatches": 0,
+    "pass": true,
+    "passes": 32,
+    "target_source": "independent last-write token-prefix scan"
+  },
+  "evaluated_examples": 16,
+  "example_indices_sha256": "b9ad7606160a067ebb4fb2935c415d51dc1dea3fb8aba28a42f5734a2f88e14a",
+  "frequency_fit": {
+    "observed_value_tokens": 1536,
+    "ordinal_majority_chance": {
+      "0": 0.03515625,
+      "1": 0.03125
+    },
+    "ordinal_prediction": {
+      "0": 98,
+      "1": 72
+    },
+    "prediction": 98,
+    "source_examples": 256,
+    "source_split": "train",
+    "value_count": 64
+  },
+  "generator_manifest": {
+    "examples": 16,
+    "generator_version": "mqar-overwrite-v4",
+    "hash": "9242e0731c1d1aa3e0da78ee0ff2f71b6c48b3095df9bcc19ccbf0f9677aff0a",
+    "parameters": {
+      "generator_version": "mqar-overwrite-v4",
+      "held_out_examples": 3000,
+      "key_counts": [
+        4
+      ],
+      "overwrite_counts": [
+        1
+      ],
+      "query_distances": [
+        8
+      ],
+      "sequence_lengths": [
+        33
+      ],
+      "train_examples": 100000,
+      "validation_examples": null,
+      "vocabulary_size": 128
+    },
+    "seed": 200041,
+    "sequence_length": null,
+    "split": "validation",
+    "task": "overwrite"
+  },
+  "input_independence": "baselines inspect emitted token prefixes and training labels only; no labels are fed into model inputs",
+  "oracle_audit": {
+    "independent_last_write_oracle": "causal token-prefix scan",
+    "pass": true,
+    "target_checks": 32,
+    "target_mismatches": 0
+  },
+  "overwrite_error_contract": {
+    "latest_value_accuracy_denominator": "latest answers only",
+    "other_latest_value_error_denominator": "latest answers only; incorrect and not stale",
+    "stale_value_error_denominator": "latest answers only; prediction equals any prior value for that key",
+    "unrelated_association_retention_denominator": "unrelated answers only"
+  },
+  "passed": true,
+  "shortcut_criterion": {
+    "all_cells_pass": true,
+    "baseline_names": [
+      "first_value",
+      "last_value",
+      "most_recent_value",
+      "final_two_values",
+      "no_memory_frequency",
+      "query_ordinal_frequency"
+    ],
+    "by_cell": {
+      "{\"key_count\":4,\"overwrite_count\":0,\"requested_query_distance\":8,\"sequence_length\":33}": {
+        "incomplete_checks": 0,
+        "max_key_free_accuracy": 0.5,
+        "pass": true,
+        "threshold": 0.9
+      },
+      "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":33}": {
+        "incomplete_checks": 0,
+        "max_key_free_accuracy": 0.25,
+        "pass": true,
+        "threshold": 0.9
+      }
+    },
+    "max_accuracy": 0.9,
+    "scope": "shortcut_audit_only; does not qualify a trained model or research protocol"
+  },
+  "stale_latest_diagnostic": {
+    "by_difficulty_cell": {
+      "{\"key_count\":4,\"overwrite_count\":1,\"requested_query_distance\":8,\"sequence_length\":33}": {
+        "checks": 16,
+        "incomplete": 0,
+        "matches_current_latest": 0
+      }
+    },
+    "checks": 16,
+    "incomplete": 0,
+    "matches_current_latest": 0,
+    "method": "copy the previous value for the queried key from the causal token prefix",
+    "status": "complete"
+  },
+  "status": "complete",
+  "task": "overwrite",
+  "train_development_content_overlap": 0
+}

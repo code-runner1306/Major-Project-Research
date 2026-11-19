@@ -1,0 +1,33 @@
+{
+  "batch": 32,
+  "calibration_positions": [
+    0,
+    256
+  ],
+  "conditioning": "original inputs for training corpora; previous gold answers erased for answer_free",
+  "corpora": [
+    "calibration_training",
+    "independent_training",
+    "independent_answer_free"
+  ],
+  "correlation_sample_seed": 90210,
+  "correlation_sample_tokens": 1024,
+  "device": "cpu",
+  "dropout": false,
+  "gradients": false,
+  "independent_positions": [
+    256,
+    512
+  ],
+  "interpretation": "Descriptive gate behavior; decay half-lives and diversity are not measured memory lifetimes or causal explanations",
+  "models": 24,
+  "quantile_sample_max": 16384,
+  "quantile_sample_seed": 90211,
+  "sensitivity": "absolute d_alpha/d_raw = absolute d_alpha/d_dt_bias, not a full loss gradient",
+  "source": "first512 examples of exact regenerated full100k training pool; no confirmation examples used",
+  "states": [
+    "initial",
+    "final"
+  ],
+  "statistics": "means,standard deviations,extrema,fractions exact; large-tensor quantiles use fixed subsample"
+}

@@ -1,0 +1,241 @@
+{
+  "branch": "research/layout-fix/layout-fix-v1/A4_distance_and_rewrites-scalar/20261118T035958Z_bede5390",
+  "files": [
+    {
+      "bytes": 4663,
+      "path": "A4_distance_and_rewrites/seed_42/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1866,
+      "path": "A4_distance_and_rewrites/seed_42/pair_status.json",
+      "sha256": "0377b3c3974929cfa241040a5ce404d6825cd2754ed46dedd24dffc48bad8f46",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7034,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/data_audit.json",
+      "sha256": "1d50ebd7320d10061e403f06bad3c5876782d2fe5b311c3051c4fd57ebd622df",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4632,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/data_manifests.json",
+      "sha256": "3d6bd8eb111ad0b6935876205977dc1de1c63d3f18dbb4741837ddcbad356d89",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 30142,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/development_curve.json",
+      "sha256": "7d964aafea0398ddb20133b56f162178a9c2da634b0cbd1a05fa732939286c71",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/initialization_manifest.json",
+      "sha256": "bc1af2b2a881644bcb535a7bcb33d5217dadb693ff8dd4001a59eba598ee6b76",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373712,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/latest_checkpoint.pt",
+      "sha256": "47d4d6a03d91c5227fd3b4e76f343397537e5430aeaeb3f16bfe673b3faae600",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2124,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/settings.json",
+      "sha256": "777a143fe12d914ddc1c5b38aba9739290b6be161c471d49cd841eefde47a529",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 80021,
+      "path": "A4_distance_and_rewrites/seed_42/scalar/summary.json",
+      "sha256": "7fa3c3924dc9d6e12bd2a471cc03e9800057e00488f907f3396f5339c96964e0",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 28191,
+      "path": "A4_distance_and_rewrites/seed_42/scalar.log",
+      "sha256": "535c76303561d22662ceddf9bdc3b150330f15967fb2c7cf889d0aca6bd47dcf",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3710,
+      "path": "A4_distance_and_rewrites/seed_42/study_protocol.json",
+      "sha256": "ab0f8ebc475bdf52118c0ef891989d05a2cf180282ff86632815360df8f4780d",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "A4_distance_and_rewrites/seed_43/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1866,
+      "path": "A4_distance_and_rewrites/seed_43/pair_status.json",
+      "sha256": "0e8a56321f9e1da70989e6f3152051dd8ce9ee172e2a79abaa97ce5cdd625c88",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7026,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/data_audit.json",
+      "sha256": "bcc0fca34a2fa8d66df3981208b349f055ac00403a35636553ded53862fce511",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4632,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/data_manifests.json",
+      "sha256": "8b6ae61c29685dd201457a5fd4b5b2c09dadfa3b0b60548ff2cbc26b41be7346",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 30077,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/development_curve.json",
+      "sha256": "efb4481c3eb7cf95107d78ab7fae466152a358780a978012623460a09d91bf71",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/initialization_manifest.json",
+      "sha256": "551200c8684c3972d535244e989d5450f08d6f29e718691408c95a5efb7ae343",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373712,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/latest_checkpoint.pt",
+      "sha256": "e061708f3331e3953897fa4bc83e5224548680473a74797bc787a2b161f31174",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2124,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/settings.json",
+      "sha256": "bf682cb344a323f88e7ec209e0bfa637ed98bb42cba1e9fc75f7bfab4305416a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 80140,
+      "path": "A4_distance_and_rewrites/seed_43/scalar/summary.json",
+      "sha256": "bda5cde61e63f24dd2b03cd2efe2cc70af3e277cdaec3ef369c452abcf952ebf",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 28126,
+      "path": "A4_distance_and_rewrites/seed_43/scalar.log",
+      "sha256": "fbe532b02309008cc174542ebd82f6655f5975b9fa713c76c2c09c6c3ff6b8b0",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3710,
+      "path": "A4_distance_and_rewrites/seed_43/study_protocol.json",
+      "sha256": "ab0f8ebc475bdf52118c0ef891989d05a2cf180282ff86632815360df8f4780d",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "A4_distance_and_rewrites/seed_44/numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 1865,
+      "path": "A4_distance_and_rewrites/seed_44/pair_status.json",
+      "sha256": "16723acce78ba05e20411ea155decf02cc288206855eb96a6483a2c869187707",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 75,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/calibration.json",
+      "sha256": "f701a0069f58299d47c0253d943583f5594946ba2a90e6f8d448879e9aeca895",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 7027,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/data_audit.json",
+      "sha256": "bded67ed9ea62e05f97dc6c9aa3c3bdb827862d84778af35f8e7dd8d16bb2edd",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4632,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/data_manifests.json",
+      "sha256": "b7a847a65293723622f00001f716508e7610db6960f498cbec08d40e7224a0b4",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 30393,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/development_curve.json",
+      "sha256": "2a4cac64ae8b5ab0f5553f39691294c7506c5f0442761957888c64a698104add",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 195,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/initialization_manifest.json",
+      "sha256": "cfdb0658e7e88682bd08cd24ce1927ef478770a337a0b1b14e47c24f03e71930",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 6373712,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/latest_checkpoint.pt",
+      "sha256": "c5d138f32ef577b8dffd6ad3b1cffb09b72ca5691483f116b7e8671c8ee0266d",
+      "weights_only_checkpoint": true
+    },
+    {
+      "bytes": 2124,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/settings.json",
+      "sha256": "0864b911d1caf516067ca522fcd7e29195bd51f85aaa9c167f7278feee480d99",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 80123,
+      "path": "A4_distance_and_rewrites/seed_44/scalar/summary.json",
+      "sha256": "e72f9ceee0d699a6b868056da216bab4c48d2db11c32dc762059347cab6286d5",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 28442,
+      "path": "A4_distance_and_rewrites/seed_44/scalar.log",
+      "sha256": "da74923b390508db6082c3c60b440fc600d8ba6077f63ba3ccff8c6218a9fa0e",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3710,
+      "path": "A4_distance_and_rewrites/seed_44/study_protocol.json",
+      "sha256": "ab0f8ebc475bdf52118c0ef891989d05a2cf180282ff86632815360df8f4780d",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4663,
+      "path": "numerical_qualification.json",
+      "sha256": "982f3b52d975c60f6efa3a10e61e1649b5c55780566d382d8e67b83fba56bba7",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 4194,
+      "path": "session_status.json",
+      "sha256": "f04a2ee26ebc335232b7e1f6c66767606a457d74161599a8273316f34dd07a2a",
+      "weights_only_checkpoint": false
+    },
+    {
+      "bytes": 3710,
+      "path": "study_protocol.json",
+      "sha256": "ab0f8ebc475bdf52118c0ef891989d05a2cf180282ff86632815360df8f4780d",
+      "weights_only_checkpoint": false
+    }
+  ],
+  "note": "Checkpoints are weights-only copies (no optimizer state); local session files are unchanged.",
+  "session": "20261118T035958Z_bede5390"
+}

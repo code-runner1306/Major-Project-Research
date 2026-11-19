@@ -1,0 +1,67 @@
+{
+  "seed": 42,
+  "family": "gated_deltanet",
+  "settings": {
+    "device": "cuda:0",
+    "steps": 3000,
+    "batch": 256,
+    "eval_batches": 8,
+    "out": "/kaggle/working/selective-reset-20261118T135144Z"
+  },
+  "training_seconds": 339.863873805,
+  "parameters": 49732,
+  "accuracy": {
+    "1": {
+      "noop_target": 0.0,
+      "noop_survivor": 0.0,
+      "noop_rewrite": 0.95166015625,
+      "noop_absent": 1.0,
+      "noop_joint": 0.0,
+      "reset_target": 1.0,
+      "stale_value_returned": 0.0,
+      "reset_survivor": 0.0,
+      "reset_rewrite": 0.95849609375,
+      "reset_absent": 1.0,
+      "reset_joint": 0.0
+    },
+    "2": {
+      "noop_target": 0.0,
+      "noop_survivor": 0.0,
+      "noop_rewrite": 0.93896484375,
+      "noop_absent": 1.0,
+      "noop_joint": 0.0,
+      "reset_target": 1.0,
+      "stale_value_returned": 0.0,
+      "reset_survivor": 0.0,
+      "reset_rewrite": 0.947265625,
+      "reset_absent": 1.0,
+      "reset_joint": 0.0
+    },
+    "4": {
+      "noop_target": 0.0,
+      "noop_survivor": 0.0,
+      "noop_rewrite": 0.951171875,
+      "noop_absent": 0.99951171875,
+      "noop_joint": 0.0,
+      "reset_target": 1.0,
+      "stale_value_returned": 0.0,
+      "reset_survivor": 0.0,
+      "reset_rewrite": 0.9453125,
+      "reset_absent": 0.99951171875,
+      "reset_joint": 0.0
+    },
+    "8": {
+      "noop_target": 0.0,
+      "noop_survivor": 0.00048828125,
+      "noop_rewrite": 0.90673828125,
+      "noop_absent": 0.9931640625,
+      "noop_joint": 0.0,
+      "reset_target": 1.0,
+      "stale_value_returned": 0.0,
+      "reset_survivor": 0.0,
+      "reset_rewrite": 0.89306640625,
+      "reset_absent": 0.998046875,
+      "reset_joint": 0.0
+    }
+  }
+}

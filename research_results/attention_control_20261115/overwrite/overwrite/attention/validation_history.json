@@ -1,0 +1,82 @@
+[
+  {
+    "development_answer_accuracy": 0.0,
+    "elapsed_seconds": 3.6161555829999656,
+    "loss": 8.235368967056274,
+    "perplexity": 3772.030517578125,
+    "step": 200,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.0078125,
+    "elapsed_seconds": 3.683514892000005,
+    "loss": 7.654712557792664,
+    "perplexity": 2110.568603515625,
+    "step": 400,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.05859375,
+    "elapsed_seconds": 3.6816257649999784,
+    "loss": 7.178551137447357,
+    "perplexity": 1311.0074462890625,
+    "step": 600,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.1484375,
+    "elapsed_seconds": 3.545422059000032,
+    "loss": 6.554306328296661,
+    "perplexity": 702.261962890625,
+    "step": 800,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.36328125,
+    "elapsed_seconds": 3.7182560080000258,
+    "loss": 5.863731414079666,
+    "perplexity": 352.0352783203125,
+    "step": 1000,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.546875,
+    "elapsed_seconds": 3.6732058489999417,
+    "loss": 5.0764836966991425,
+    "perplexity": 160.209716796875,
+    "step": 1200,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.62890625,
+    "elapsed_seconds": 3.518680449000044,
+    "loss": 4.545788869261742,
+    "perplexity": 94.23472595214844,
+    "step": 1400,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.6171875,
+    "elapsed_seconds": 3.5949654949999967,
+    "loss": 4.285104379057884,
+    "perplexity": 72.61011505126953,
+    "step": 1600,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.640625,
+    "elapsed_seconds": 3.837208775000022,
+    "loss": 4.134532883763313,
+    "perplexity": 62.460411071777344,
+    "step": 1800,
+    "steps": 16
+  },
+  {
+    "development_answer_accuracy": 0.640625,
+    "elapsed_seconds": 3.602827701000024,
+    "loss": 4.104497388005257,
+    "perplexity": 60.612274169921875,
+    "step": 2000,
+    "steps": 16
+  }
+]

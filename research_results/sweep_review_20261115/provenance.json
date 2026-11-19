@@ -1,0 +1,62 @@
+[
+  {
+    "family": "mqar",
+    "lr": 0.001,
+    "train": 0.16015625,
+    "dev": 0.0,
+    "hours": 2.5026140219691664,
+    "shortcut_pass": true,
+    "branch": "origin/sweep/mqar_20261115T005729Z",
+    "commit": "0c037a53c5bec0227037afa0371ef3289f460103"
+  },
+  {
+    "family": "mqar",
+    "lr": 0.003,
+    "train": 0.00390625,
+    "dev": 0.0,
+    "hours": 2.5044102901675,
+    "shortcut_pass": true,
+    "branch": "origin/sweep/mqar_20261115T005729Z",
+    "commit": "0c037a53c5bec0227037afa0371ef3289f460103"
+  },
+  {
+    "family": "mqar",
+    "lr": 0.0003,
+    "train": 0.30078125,
+    "dev": 0.0,
+    "hours": 2.4983473991369443,
+    "shortcut_pass": true,
+    "branch": "origin/sweep/mqar_20261115T005729Z",
+    "commit": "0c037a53c5bec0227037afa0371ef3289f460103"
+  },
+  {
+    "family": "overwrite",
+    "lr": 0.001,
+    "train": 0.91015625,
+    "dev": 0.8828125,
+    "hours": 2.6264625791122223,
+    "shortcut_pass": false,
+    "branch": "origin/sweep/overwrite_20261115T005818Z",
+    "commit": "361ab2aff4f2d7de86a19a8eac973f865625df60"
+  },
+  {
+    "family": "overwrite",
+    "lr": 0.003,
+    "train": 0.59765625,
+    "dev": 0.36328125,
+    "hours": 2.556311288876944,
+    "shortcut_pass": false,
+    "branch": "origin/sweep/overwrite_20261115T005818Z",
+    "commit": "361ab2aff4f2d7de86a19a8eac973f865625df60"
+  },
+  {
+    "family": "overwrite",
+    "lr": 0.0003,
+    "train": 0.2890625,
+    "dev": 0.0,
+    "hours": 2.645892874130278,
+    "shortcut_pass": false,
+    "branch": "origin/sweep/overwrite_20261115T005818Z",
+    "commit": "361ab2aff4f2d7de86a19a8eac973f865625df60"
+  }
+]

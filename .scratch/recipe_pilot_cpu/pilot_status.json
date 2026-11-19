@@ -1,0 +1,11 @@
+{
+  "candidate_source_sha256": "89ec12af2b2ef7c15c626494a56cd079cee9fa78e407274e3c20f7fb1d176923",
+  "error": "Tensor-likes are not close!\n\nMismatched elements: 1 / 1048576 (0.0%)\nGreatest absolute difference: 2.4752691388130188e-05 at index (4501, 92) (up to 2e-05 allowed)\nGreatest relative difference: 0.0010851504048332572 at index (4501, 92) (up to 0.0002 allowed)",
+  "gpus": [],
+  "phases": [],
+  "purpose": "Numerical and timing qualification only; no learned accuracy claim",
+  "source_revision": "658852d265a91e2be2121105a2e858965f16f6fe",
+  "status": "failed_or_incomplete",
+  "torch": "2.11.0+cu128",
+  "wall_seconds": 5.532000000006519
+}

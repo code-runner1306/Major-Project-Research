@@ -1,0 +1,137 @@
+{
+  "candidate_source_sha256": "89ec12af2b2ef7c15c626494a56cd079cee9fa78e407274e3c20f7fb1d176923",
+  "gpus": [],
+  "phases": [
+    {
+      "backend": "reference",
+      "cpu_percent_mean": 26.8,
+      "end_to_end_measured_steps_per_second": 0.3062083747991763,
+      "phase_wall_seconds": 13.062999999994645,
+      "workers": 2,
+      "workers_summary": [
+        {
+          "backend": "reference",
+          "batch": 2,
+          "checkpoint_bytes": 17017773,
+          "checkpoint_seconds": 0.046999999991385266,
+          "evaluation_512_examples_seconds": 5.953000000008615,
+          "last_loss": 7.841731548309326,
+          "mean_step_seconds": 0.13300000000162981,
+          "measured_optimizer_steps": 2,
+          "optimizer_step_seconds": [
+            0.125,
+            0.14100000000325963
+          ],
+          "parameters": 1414018,
+          "peak_gpu_allocated_bytes": null,
+          "peak_gpu_reserved_bytes": null,
+          "precision": "float32",
+          "process_cpu_seconds_during_measurement": 0.265625,
+          "process_rss_bytes": 648798208,
+          "sequence_length": 64,
+          "setup_seconds": 2.3280000000086147,
+          "status": "complete",
+          "total_seconds": 8.594000000011874,
+          "variant": "scalar",
+          "warmup_seconds": 0.0,
+          "warning": "Synthetic resident tensors measure implementation throughput, not retrieval learning."
+        },
+        {
+          "backend": "reference",
+          "batch": 2,
+          "checkpoint_bytes": 17410989,
+          "checkpoint_seconds": 0.01600000000325963,
+          "evaluation_512_examples_seconds": 6.094000000011874,
+          "last_loss": 7.842155456542969,
+          "mean_step_seconds": 0.132499999992433,
+          "measured_optimizer_steps": 2,
+          "optimizer_step_seconds": [
+            0.139999999984866,
+            0.125
+          ],
+          "parameters": 1446784,
+          "peak_gpu_allocated_bytes": null,
+          "peak_gpu_reserved_bytes": null,
+          "precision": "float32",
+          "process_cpu_seconds_during_measurement": 0.25,
+          "process_rss_bytes": 680579072,
+          "sequence_length": 64,
+          "setup_seconds": 2.3440000000118744,
+          "status": "complete",
+          "total_seconds": 8.719000000011874,
+          "variant": "channel-wise",
+          "warmup_seconds": 0.0,
+          "warning": "Synthetic resident tensors measure implementation throughput, not retrieval learning."
+        }
+      ]
+    },
+    {
+      "backend": "chunked",
+      "cpu_percent_mean": 28.845454545454544,
+      "end_to_end_measured_steps_per_second": 0.36055525509245706,
+      "phase_wall_seconds": 11.094000000011874,
+      "workers": 2,
+      "workers_summary": [
+        {
+          "backend": "chunked",
+          "batch": 2,
+          "checkpoint_bytes": 17017441,
+          "checkpoint_seconds": 0.046000000002095476,
+          "evaluation_512_examples_seconds": 3.2820000000065193,
+          "last_loss": 7.841731548309326,
+          "mean_step_seconds": 0.054499999998370185,
+          "measured_optimizer_steps": 2,
+          "optimizer_step_seconds": [
+            0.062000000005355105,
+            0.046999999991385266
+          ],
+          "parameters": 1414018,
+          "peak_gpu_allocated_bytes": null,
+          "peak_gpu_reserved_bytes": null,
+          "precision": "float32",
+          "process_cpu_seconds_during_measurement": 0.109375,
+          "process_rss_bytes": 621895680,
+          "sequence_length": 64,
+          "setup_seconds": 2.2969999999913853,
+          "status": "complete",
+          "total_seconds": 5.73399999999674,
+          "variant": "scalar",
+          "warmup_seconds": 0.0,
+          "warning": "Synthetic resident tensors measure implementation throughput, not retrieval learning."
+        },
+        {
+          "backend": "chunked",
+          "batch": 2,
+          "checkpoint_bytes": 17410657,
+          "checkpoint_seconds": 0.014999999984866008,
+          "evaluation_512_examples_seconds": 4.594000000011874,
+          "last_loss": 7.842155456542969,
+          "mean_step_seconds": 0.07050000000162981,
+          "measured_optimizer_steps": 2,
+          "optimizer_step_seconds": [
+            0.07800000000861473,
+            0.0629999999946449
+          ],
+          "parameters": 1446784,
+          "peak_gpu_allocated_bytes": null,
+          "peak_gpu_reserved_bytes": null,
+          "precision": "float32",
+          "process_cpu_seconds_during_measurement": 0.125,
+          "process_rss_bytes": 625475584,
+          "sequence_length": 64,
+          "setup_seconds": 2.312000000005355,
+          "status": "complete",
+          "total_seconds": 7.062000000005355,
+          "variant": "channel-wise",
+          "warmup_seconds": 0.0,
+          "warning": "Synthetic resident tensors measure implementation throughput, not retrieval learning."
+        }
+      ]
+    }
+  ],
+  "purpose": "Numerical and timing qualification only; no learned accuracy claim",
+  "source_revision": "658852d265a91e2be2121105a2e858965f16f6fe",
+  "status": "complete",
+  "torch": "2.11.0+cu128",
+  "wall_seconds": 28.735000000015134
+}

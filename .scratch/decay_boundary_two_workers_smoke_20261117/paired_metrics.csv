@@ -1,0 +1,4 @@
+family,seed,initialization,variant,intervention,cell,interpretation,latest_baseline_correct_count,latest_changed_fraction,latest_correct_after_given_correct_before,latest_joint_correct,latest_transformed_accuracy,pair_kind,unrelated_changed_fraction,unrelated_joint_correct
+overwrite,42,default,channel-wise,original,pair_latest_value,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance",2,1.0,1.0,1.0,1.0,latest_value,0.0,1.0
+overwrite,42,default,channel-wise,original,pair_obsolete_prefix,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance",2,0.0,1.0,1.0,1.0,obsolete_prefix,0.0,1.0
+overwrite,42,default,channel-wise,original,pair_rename_key,"Agreement alone is not correctness; latest_value expects change, other pairs expect invariance",2,0.0,1.0,1.0,1.0,rename_key,0.0,1.0

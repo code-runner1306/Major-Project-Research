@@ -1,0 +1,130 @@
+{
+  "batch": 2,
+  "checkpoint_selection": [
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\channel-wise\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "f988b37daf1c2ce676cd96c4c6dc6eeb11361371bd677afd1064ce865f5b68a5",
+      "variant": "channel-wise"
+    },
+    {
+      "family": "mqar",
+      "initialization": "default",
+      "path": "C:\\Users\\Mayank Mehta\\Projects\\PythonProjects\\Major-Project-Research\\output\\calibrated_recipe_study\\matched-decay-v1\\20261116T163655786_18ee1476\\mqar\\seed_42\\default\\scalar\\latest_checkpoint.pt",
+      "seed": 42,
+      "sha256": "510a079d243e2549c22d07e4416fc179f38065b4a7abb6b64fe1b6c2d3423aa2",
+      "variant": "scalar"
+    }
+  ],
+  "cpu_smoke": true,
+  "device": "cpu",
+  "evaluator_sources": {
+    "config.py": "65f7091291561f32dc16a094882fc3043c1a1f25cf748de0383d4abc49730dad",
+    "confirm_recipe_study.py": "8dd7711e24ea85dc9a53f44e6ba896439647a7851cced0e7c0669aa17cff7c17",
+    "evaluate_decay_boundary.py": "c166c8a78f855d4ea9e80be150fa7c9398d3633f96ba1ee4ec50b50d86eb360d",
+    "experimental_chunked_recurrence.py": "3a36ac7078db17b4009df2dacbfb14c7567f945e6690dfe382f54666f2e42096",
+    "recipe_data.py": "2266f6c86b177c5f44f32c3dfaa70c4fdc03bc97a3161aa2f59c8d8199f895ec",
+    "recipe_evaluation.py": "fdbf8a14aae38a0f94190af755f60413bd8ca35237cf1c1b6230aaa0f17acd55",
+    "recipe_model.py": "061127a1badc399769600c54884e4b7d9ab6260eab25d7deee86b9aae49c167f",
+    "recurrence.py": "87d205bdbaf529fc6e804c1e6b2270a7e25660418e1942133122c537a0c49db1",
+    "retrieval.py": "17015695c5531067dcbf26be519eaa99c2bdbadb2beb0587cb9617758b70e94c",
+    "stress_recipe_checkpoints.py": "f0bf0a3c9316f02c2eb0caf69dd8ae9f293fe816db815229d8918426b74e7c72",
+    "stronger_gate_tests.py": "954517ef9e11905871f4a1efc36101c5e1600e586cf12ed936b0f24bb375a180"
+  },
+  "examples": 2,
+  "families": [
+    "mqar",
+    "overwrite"
+  ],
+  "fit_examples": 2,
+  "initializations": [
+    "default"
+  ],
+  "mqar_cells": [
+    [
+      "baseline",
+      64,
+      4
+    ],
+    [
+      "load8",
+      64,
+      8
+    ],
+    [
+      "load12",
+      64,
+      12
+    ],
+    [
+      "length128",
+      128,
+      4
+    ],
+    [
+      "length128_load8",
+      128,
+      8
+    ],
+    [
+      "length128_load12",
+      128,
+      12
+    ]
+  ],
+  "overwrite_cells": [
+    [
+      "baseline",
+      4,
+      8,
+      1
+    ],
+    [
+      "load8",
+      8,
+      8,
+      1
+    ],
+    [
+      "distance24",
+      4,
+      24,
+      1
+    ],
+    [
+      "rewrites2",
+      4,
+      8,
+      2
+    ],
+    [
+      "rewrites3",
+      4,
+      8,
+      3
+    ],
+    [
+      "rewrites4",
+      4,
+      8,
+      4
+    ]
+  ],
+  "paired_tests": [
+    "obsolete_prefix",
+    "latest_value",
+    "rename_key"
+  ],
+  "phase": "discovery",
+  "protocol": "dynamic-decay-boundary-discovery-v1",
+  "publish": false,
+  "reserved_confirmation_offset": 900000,
+  "seed_offset": 700000,
+  "seeds": [
+    42
+  ],
+  "worker_index": 1,
+  "workers": 2
+}

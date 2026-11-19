@@ -1,0 +1,116 @@
+[
+  {
+    "query": "DOI seed 10.48550/arxiv.2412.06464",
+    "url": "https://api.openalex.org/works/https://doi.org/10.48550/arxiv.2412.06464",
+    "retrieved_utc": "2026-11-17T06:09:47.496571+00:00",
+    "status": "ok",
+    "title": "Gated Delta Networks: Improving Mamba2 with Delta Rule",
+    "id": "https://openalex.org/W4405254248"
+  },
+  {
+    "query": "cites Gated Delta Networks: Improving Mamba2 with Delta Rule",
+    "page": 1,
+    "url": "https://api.openalex.org/works?filter=cites%3AW4405254248%2Cto_publication_date%3A2026-11-17&per_page=100&page=1",
+    "retrieved_utc": "2026-11-17T06:09:48.199454+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 343
+  },
+  {
+    "query": "cites Gated Delta Networks: Improving Mamba2 with Delta Rule",
+    "page": 2,
+    "url": "https://api.openalex.org/works?filter=cites%3AW4405254248%2Cto_publication_date%3A2026-11-17&per_page=100&page=2",
+    "retrieved_utc": "2026-11-17T06:09:50.100442+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 343
+  },
+  {
+    "query": "cites Gated Delta Networks: Improving Mamba2 with Delta Rule",
+    "page": 3,
+    "url": "https://api.openalex.org/works?filter=cites%3AW4405254248%2Cto_publication_date%3A2026-11-17&per_page=100&page=3",
+    "retrieved_utc": "2026-11-17T06:09:51.776950+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 343
+  },
+  {
+    "query": "cites Gated Delta Networks: Improving Mamba2 with Delta Rule",
+    "page": 4,
+    "url": "https://api.openalex.org/works?filter=cites%3AW4405254248%2Cto_publication_date%3A2026-11-17&per_page=100&page=4",
+    "retrieved_utc": "2026-11-17T06:09:54.088554+00:00",
+    "status": "ok",
+    "returned": 43,
+    "reported_total": 343
+  },
+  {
+    "query": "DOI seed 10.48550/arxiv.2510.26692",
+    "url": "https://api.openalex.org/works/https://doi.org/10.48550/arxiv.2510.26692",
+    "retrieved_utc": "2026-11-17T06:09:55.802459+00:00",
+    "status": "ok",
+    "title": "Kimi Linear: An Expressive, Efficient Attention Architecture",
+    "id": "https://openalex.org/W7103188877"
+  },
+  {
+    "query": "cites Kimi Linear: An Expressive, Efficient Attention Architecture",
+    "page": 1,
+    "url": "https://api.openalex.org/works?filter=cites%3AW7103188877%2Cto_publication_date%3A2026-11-17&per_page=100&page=1",
+    "retrieved_utc": "2026-11-17T06:09:56.786233+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 311
+  },
+  {
+    "query": "cites Kimi Linear: An Expressive, Efficient Attention Architecture",
+    "page": 2,
+    "url": "https://api.openalex.org/works?filter=cites%3AW7103188877%2Cto_publication_date%3A2026-11-17&per_page=100&page=2",
+    "retrieved_utc": "2026-11-17T06:09:59.138505+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 311
+  },
+  {
+    "query": "cites Kimi Linear: An Expressive, Efficient Attention Architecture",
+    "page": 3,
+    "url": "https://api.openalex.org/works?filter=cites%3AW7103188877%2Cto_publication_date%3A2026-11-17&per_page=100&page=3",
+    "retrieved_utc": "2026-11-17T06:10:01.368928+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 311
+  },
+  {
+    "query": "cites Kimi Linear: An Expressive, Efficient Attention Architecture",
+    "page": 4,
+    "url": "https://api.openalex.org/works?filter=cites%3AW7103188877%2Cto_publication_date%3A2026-11-17&per_page=100&page=4",
+    "retrieved_utc": "2026-11-17T06:10:03.685925+00:00",
+    "status": "ok",
+    "returned": 11,
+    "reported_total": 311
+  },
+  {
+    "query": "DOI seed 10.48550/arxiv.2312.04927",
+    "url": "https://api.openalex.org/works/https://doi.org/10.48550/arxiv.2312.04927",
+    "retrieved_utc": "2026-11-17T06:10:04.712369+00:00",
+    "status": "ok",
+    "title": "Zoology: Measuring and Improving Recall in Efficient Language Models",
+    "id": "https://openalex.org/W4389599535"
+  },
+  {
+    "query": "cites Zoology: Measuring and Improving Recall in Efficient Language Models",
+    "page": 1,
+    "url": "https://api.openalex.org/works?filter=cites%3AW4389599535%2Cto_publication_date%3A2026-11-17&per_page=100&page=1",
+    "retrieved_utc": "2026-11-17T06:10:05.166865+00:00",
+    "status": "ok",
+    "returned": 100,
+    "reported_total": 167
+  },
+  {
+    "query": "cites Zoology: Measuring and Improving Recall in Efficient Language Models",
+    "page": 2,
+    "url": "https://api.openalex.org/works?filter=cites%3AW4389599535%2Cto_publication_date%3A2026-11-17&per_page=100&page=2",
+    "retrieved_utc": "2026-11-17T06:10:07.598113+00:00",
+    "status": "ok",
+    "returned": 67,
+    "reported_total": 167
+  }
+]

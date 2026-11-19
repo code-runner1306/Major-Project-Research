@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What we mean by calibration</title><link rel="stylesheet" href="../assets/lesson.css">
+<script src="../assets/decay-lesson.js" defer></script><main>
+<div class="eyebrow">Lesson 1 · Your gating experiment</div><h1>Choose the starting forgetting behavior.</h1>
+<p>That is what <strong>calibration</strong> means here. Before answer-prediction training starts, we adjust existing gate offsets so their average decay on training inputs reaches a chosen target. This is initialization calibration, not probability-confidence calibration.</p>
+<h2>1. First understand the multiplier</h2>
+<p>The model stores memory as numbers. On each token, its gate multiplies the previous memory by alpha, then the delta rule updates it. A factor of 0.95 keeps 95% in this decay operation; 0.99 keeps 99%. Small differences compound.</p>
+<div class="card" data-decay-lab><strong>Isolated decay demonstration</strong>
+<label>Constant multiplier: <output data-alpha></output><input aria-label="Decay multiplier" name="alpha" type="range" min="0.9" max="0.999" step="0.001" value="0.958"></label>
+<label>Number of steps: <output data-steps></output><input aria-label="Number of steps" name="steps" type="range" min="1" max="128" step="1" value="16"></label>
+<p>Starting from 100 units, remaining after decay alone: <output data-retained></output></p><div class="bar"><span></span></div>
+<p class="muted">Toy calculation: 100 × alpha<sup>steps</sup>. This omits writes, interference and readout. It is not a predicted retrieval accuracy.</p></div>
+<p>Scalar gating applies one multiplier across a head's memory state. Our channel-wise variant has 128 controls per layer, one per key-coordinate column. These coordinates are learned numbers, not named slots for individual facts.</p>
+<h2>2. The actual change we make</h2>
+<ol><li>Create the model with its normal seeded initialization.</li><li>Take the first 256 training examples, without reading labels.</li><li>Turn dropout off and observe the gate inputs.</li><li>Adjust only each existing <code>dt_bias</code> offset until its mean alpha reaches the layer target. Earlier layers are fitted first.</li><li>Restore training mode and RNG state, then train all parameters normally.</li></ol>
+<table><tr><th>Layer</th><th>Requested diagnostic half-life</th><th>Requested mean alpha</th></tr>
+<tr><td>1</td><td>16 tokens</td><td>0.957603</td></tr><tr><td>2</td><td>32 tokens</td><td>0.978572</td></tr>
+<tr><td>3</td><td>64 tokens</td><td>0.989228</td></tr><tr><td>4</td><td>128 tokens</td><td>0.994599</td></tr></table>
+<p>The same layer target applies to scalar and every channel. We are matching their <em>initial averages</em>, not forcing identical gate functions. After training starts, the gates may move away from those targets.</p>
+<p>Actual seed42 scalar offsets were approximately −3.4121, −6.0972, −6.2659 and −5.6897. Notice that these are not 16, 32, 64 and 128. The model's other rate and projection parameters determine which offsets produce the requested mean.</p>
+<p class="note">The half-life is derived from constant decay: alpha<sup>h</sup> = 1/2. Our real alpha changes with inputs, and memory also receives writes. A target of 16 does not promise “the model remembers half the answers after 16 tokens.”</p>
+<h2>3. Did our calibration work?</h2>
+<p><strong>As a fitting operation, yes.</strong> Both seeds reached all requested mean decays with maximum errors below 0.0000001. Only the offsets changed during fitting; model capacity did not increase. The implementation and numerical checks passed.</p>
+<p><strong>As a way to improve learning, not consistently.</strong> The following is the retention learning-curve score over epochs1–16, expressed on a 0–100 scale. It measures how well unrelated associations were preserved during learning, not only at the endpoint.</p>
+<table><tr><th>Condition</th><th>Seed42</th><th>Seed43</th></tr><tr><td>Scalar default</td><td>79.04</td><td>97.06</td></tr>
+<tr><td>Scalar calibrated</td><td>85.77</td><td>83.35</td></tr><tr><td>Channel default</td><td>73.05</td><td>99.92</td></tr>
+<tr><td>Channel calibrated</td><td>66.61</td><td>84.62</td></tr></table>
+<p>Calibration helped scalar in seed42 but hurt it in seed43. It slowed channel-wise retention learning in both. Therefore a correctly fitted initial target is not automatically a better starting point for learning. Two seeds do not yet explain the mechanism or establish a universal ranking.</p>
+<h2>4. Check the distinction</h2>
+<div class="card" data-question data-success="Correct. Calibration sets the starting offsets before normal training; those offsets can change during training." data-retry="Try again: our procedure fits the initial offsets, then normal answer-prediction training begins.">
+<p>When are the offsets calibrated?</p><button data-correct="true">Before training starts</button><button>After training finishes</button><p class="feedback" aria-live="polite"></p></div>
+<div class="card" data-question data-success="Correct. We verified the fit. Whether the model improved requires separate learning and evaluation results." data-retry="Try again: matching a requested mean is not the same as predicting answers more accurately.">
+<p>The mean alpha reached its target, but retrieval became worse. Which claim is supported?</p><button>The model improved</button><button data-correct="true">The fit succeeded</button><p class="feedback" aria-live="polite"></p></div>
+<h2>Read and revisit</h2>
+<p>Start with our <a href="../RESEARCH_METHODOLOGY.md">methodology</a> and <a href="../recipe_calibration.py">actual calibration implementation</a>. The <a href="https://arxiv.org/abs/2412.06464">original Gated Delta Networks paper</a> explains why decay gates and targeted writes play different roles; our target-fitting treatment is an extension.</p>
+<p>Results source: <a href="../research_notes/calibrated_overwrite_two_seed_review_2026-11-16.md">checked two-seed review</a>. Keep the <a href="../reference/calibration-glossary.html">five-term reference</a> for later.</p>
+<p class="note">Ask me a follow-up about whichever step remains unclear. Next time, try explaining “the fit succeeded” versus “training improved” from memory before rereading.</p>
+</main></html>

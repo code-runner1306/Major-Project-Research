@@ -1,0 +1,33 @@
+{
+  "snapshot_commit": "226235b",
+  "snapshot_commit_time_ist": "2026-11-17 14:24:10 +05:30",
+  "completed_joint_models": 8,
+  "partial_mqar_seed44_epochs": {
+    "scalar": 11,
+    "channel-wise": 10
+  },
+  "pending_models": [
+    "overwrite/seed44/scalar",
+    "overwrite/seed44/channel-wise"
+  ],
+  "measured_pair_seconds": {
+    "mqar": [
+      3418.358087599976,
+      3449.296655199956
+    ],
+    "overwrite": [
+      3415.056288899854,
+      3420.7184894999955
+    ]
+  },
+  "remaining_mqar_seconds": 1287.6852642749873,
+  "remaining_overwrite_seconds": 3417.8873891999247,
+  "total_remaining_seconds_from_uploaded_epochs": 4705.572653474912,
+  "projected_total_six_pairs_seconds": 20555.144281799672,
+  "caveats": [
+    "Snapshot, not live monitoring",
+    "Partial console logs trail saved development curves; not an atomic export",
+    "Assumes uninterrupted run, same throughput, and no concurrent GPU evaluation",
+    "No uploaded model checkpoint files; this review uses reports only"
+  ]
+}

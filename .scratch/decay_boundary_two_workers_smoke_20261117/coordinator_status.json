@@ -1,0 +1,7 @@
+{
+  "error": "Evaluation worker failed; inspect worker logs",
+  "publish": false,
+  "status": "failed_or_interrupted",
+  "wall_seconds": 17.187999999994645,
+  "workers": 2
+}
