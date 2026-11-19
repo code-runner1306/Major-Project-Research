@@ -1,0 +1,32 @@
+{
+  "alpha_definition": "exp(-exp(A_log) * softplus(a_proj(x) + dt_bias))",
+  "batch": 8,
+  "checkpoint_root": "output\\calibrated_recipe_study",
+  "description": "Decay-only alpha probe on frozen checkpoints from the 64-token MQAR training study.",
+  "device": "cpu",
+  "examples_per_seed": 16,
+  "filler_token": 0,
+  "filler_token_is_present_in_training_queries": true,
+  "generator_seed_offset": 1950000,
+  "initializations": [
+    "default",
+    "calibrated"
+  ],
+  "interpretation_guardrail": "alpha products omit beta writes and therefore do not alone imply state retention",
+  "lengths": [
+    256,
+    1024
+  ],
+  "prefix_tokens_before_filler": 8,
+  "seeds": [
+    43,
+    44
+  ],
+  "source_training_length": 64,
+  "summary": "per-layer alpha values and sum(log(alpha)) product over inserted filler only",
+  "torch": "2.10.0+cpu",
+  "variants": [
+    "scalar",
+    "channel-wise"
+  ]
+}

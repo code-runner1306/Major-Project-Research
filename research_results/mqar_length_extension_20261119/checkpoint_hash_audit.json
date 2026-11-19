@@ -1,0 +1,117 @@
+{
+  "status": "complete",
+  "algorithm": "SHA-256",
+  "confirmation_source": "research_results/three_seed_confirmation_20261117/confirmation_results.json",
+  "sweep_source": "research_results/mqar_length_extension_20261119/verified_results.json",
+  "matches": 12,
+  "rows": [
+    {
+      "seed": 42,
+      "initialization": "calibrated",
+      "variant": "channel-wise",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T163655786_18ee1476/mqar/seed_42/calibrated/channel-wise/latest_checkpoint.pt",
+      "fresh_sha256": "a5cd17e0f209ed25601dc064f22060c854dd7113174c17601d09dec94cb8a845",
+      "sweep_sha256": "a5cd17e0f209ed25601dc064f22060c854dd7113174c17601d09dec94cb8a845",
+      "actual_sha256": "a5cd17e0f209ed25601dc064f22060c854dd7113174c17601d09dec94cb8a845"
+    },
+    {
+      "seed": 42,
+      "initialization": "calibrated",
+      "variant": "scalar",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T163655786_18ee1476/mqar/seed_42/calibrated/scalar/latest_checkpoint.pt",
+      "fresh_sha256": "ba210eefd1670779e0cad113846a466f345a7dd1ce2817bd363f4c9e9541dfa8",
+      "sweep_sha256": "ba210eefd1670779e0cad113846a466f345a7dd1ce2817bd363f4c9e9541dfa8",
+      "actual_sha256": "ba210eefd1670779e0cad113846a466f345a7dd1ce2817bd363f4c9e9541dfa8"
+    },
+    {
+      "seed": 42,
+      "initialization": "default",
+      "variant": "channel-wise",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T163655786_18ee1476/mqar/seed_42/default/channel-wise/latest_checkpoint.pt",
+      "fresh_sha256": "f988b37daf1c2ce676cd96c4c6dc6eeb11361371bd677afd1064ce865f5b68a5",
+      "sweep_sha256": "f988b37daf1c2ce676cd96c4c6dc6eeb11361371bd677afd1064ce865f5b68a5",
+      "actual_sha256": "f988b37daf1c2ce676cd96c4c6dc6eeb11361371bd677afd1064ce865f5b68a5"
+    },
+    {
+      "seed": 42,
+      "initialization": "default",
+      "variant": "scalar",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T163655786_18ee1476/mqar/seed_42/default/scalar/latest_checkpoint.pt",
+      "fresh_sha256": "510a079d243e2549c22d07e4416fc179f38065b4a7abb6b64fe1b6c2d3423aa2",
+      "sweep_sha256": "510a079d243e2549c22d07e4416fc179f38065b4a7abb6b64fe1b6c2d3423aa2",
+      "actual_sha256": "510a079d243e2549c22d07e4416fc179f38065b4a7abb6b64fe1b6c2d3423aa2"
+    },
+    {
+      "seed": 43,
+      "initialization": "calibrated",
+      "variant": "channel-wise",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T182836285_a90d6582/mqar/seed_43/calibrated/channel-wise/latest_checkpoint.pt",
+      "fresh_sha256": "78dc57dea15cbb221625b8303dd18b844f33ab97084ad98d0e89b422a9841bb1",
+      "sweep_sha256": "78dc57dea15cbb221625b8303dd18b844f33ab97084ad98d0e89b422a9841bb1",
+      "actual_sha256": "78dc57dea15cbb221625b8303dd18b844f33ab97084ad98d0e89b422a9841bb1"
+    },
+    {
+      "seed": 43,
+      "initialization": "calibrated",
+      "variant": "scalar",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T182836285_a90d6582/mqar/seed_43/calibrated/scalar/latest_checkpoint.pt",
+      "fresh_sha256": "96c7185770add557402661fea102526d76a59b013c6b8556f7a816660bca7656",
+      "sweep_sha256": "96c7185770add557402661fea102526d76a59b013c6b8556f7a816660bca7656",
+      "actual_sha256": "96c7185770add557402661fea102526d76a59b013c6b8556f7a816660bca7656"
+    },
+    {
+      "seed": 43,
+      "initialization": "default",
+      "variant": "channel-wise",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T182836285_a90d6582/mqar/seed_43/default/channel-wise/latest_checkpoint.pt",
+      "fresh_sha256": "e782c25cd8e49b651d525dbb5402fb431ec38cdcaa355497be41592bcc9510d4",
+      "sweep_sha256": "e782c25cd8e49b651d525dbb5402fb431ec38cdcaa355497be41592bcc9510d4",
+      "actual_sha256": "e782c25cd8e49b651d525dbb5402fb431ec38cdcaa355497be41592bcc9510d4"
+    },
+    {
+      "seed": 43,
+      "initialization": "default",
+      "variant": "scalar",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T182836285_a90d6582/mqar/seed_43/default/scalar/latest_checkpoint.pt",
+      "fresh_sha256": "d14534d89578584cc66b0f5fe82d2aa5697ac05c3179b9917042cc77333b555c",
+      "sweep_sha256": "d14534d89578584cc66b0f5fe82d2aa5697ac05c3179b9917042cc77333b555c",
+      "actual_sha256": "d14534d89578584cc66b0f5fe82d2aa5697ac05c3179b9917042cc77333b555c"
+    },
+    {
+      "seed": 44,
+      "initialization": "calibrated",
+      "variant": "channel-wise",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T202031370_b2b7bb85/mqar/seed_44/calibrated/channel-wise/latest_checkpoint.pt",
+      "fresh_sha256": "c07f6b4c3a2ff014fcc883b62bca481c15e7f20fdda5fb33d8d311264f0a8c01",
+      "sweep_sha256": "c07f6b4c3a2ff014fcc883b62bca481c15e7f20fdda5fb33d8d311264f0a8c01",
+      "actual_sha256": "c07f6b4c3a2ff014fcc883b62bca481c15e7f20fdda5fb33d8d311264f0a8c01"
+    },
+    {
+      "seed": 44,
+      "initialization": "calibrated",
+      "variant": "scalar",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T202031370_b2b7bb85/mqar/seed_44/calibrated/scalar/latest_checkpoint.pt",
+      "fresh_sha256": "ec1b09abe1546d79739b11d071333dd3ce5e0bd75eabff5c7d1cb17495f6dae1",
+      "sweep_sha256": "ec1b09abe1546d79739b11d071333dd3ce5e0bd75eabff5c7d1cb17495f6dae1",
+      "actual_sha256": "ec1b09abe1546d79739b11d071333dd3ce5e0bd75eabff5c7d1cb17495f6dae1"
+    },
+    {
+      "seed": 44,
+      "initialization": "default",
+      "variant": "channel-wise",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T202031370_b2b7bb85/mqar/seed_44/default/channel-wise/latest_checkpoint.pt",
+      "fresh_sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b",
+      "sweep_sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b",
+      "actual_sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b"
+    },
+    {
+      "seed": 44,
+      "initialization": "default",
+      "variant": "scalar",
+      "checkpoint": "output/calibrated_recipe_study/matched-decay-v1/20261116T202031370_b2b7bb85/mqar/seed_44/default/scalar/latest_checkpoint.pt",
+      "fresh_sha256": "70425d8ff27862dc9ac4aa273e3a1ab3765a845b51a2832762dd08ecd279cf14",
+      "sweep_sha256": "70425d8ff27862dc9ac4aa273e3a1ab3765a845b51a2832762dd08ecd279cf14",
+      "actual_sha256": "70425d8ff27862dc9ac4aa273e3a1ab3765a845b51a2832762dd08ecd279cf14"
+    }
+  ]
+}

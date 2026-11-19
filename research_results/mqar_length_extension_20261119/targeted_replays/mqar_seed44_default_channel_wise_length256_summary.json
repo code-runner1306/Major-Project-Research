@@ -1,0 +1,411 @@
+{
+  "accuracy": 0.2939453125,
+  "all_logits_finite": true,
+  "answers": 1024,
+  "checkpoint": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\channel-wise\\latest_checkpoint.pt",
+  "checkpoint_sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b",
+  "correct": 301,
+  "data_manifest": {
+    "generator": "pinned-zoology-mqar-memory-bounded",
+    "injected_filler": 192,
+    "seed": 1950044,
+    "sha256": "91c26497be1576b31e75c1d0c98c4af13c1749775ad1ea1d57e1493ab2549be5",
+    "shape": [
+      256,
+      256
+    ],
+    "upstream_revision": "de4e258784224e09909c257ff3ea040f089ed660"
+  },
+  "examples": 256,
+  "filler_protocol": {
+    "evaluation_length": 256,
+    "filler_token_seen_in_training_generator": true,
+    "inserted_after_prefix_tokens": 8,
+    "inserted_filler_count": 192,
+    "inserted_filler_token": 0,
+    "training_length": 64
+  },
+  "initialization": "default",
+  "label_audit": {
+    "checks": 1024,
+    "counterfactual_failures": 0,
+    "key_free_first_value_accuracy": 0.25,
+    "key_free_last_value_accuracy": 0.25,
+    "label_mismatches": 0,
+    "passed": true,
+    "scope": "specified label/query-key/copy checks only; not trained learnability"
+  },
+  "length": 256,
+  "nonfinite_logit_count": 0,
+  "prediction_category_counts": {
+    "correct_target": 301,
+    "memory_value": 76,
+    "other_vocabulary_token": 647
+  },
+  "prediction_token_band_counts": {
+    "value_band_4096_to_8191": 1024
+  },
+  "predictions_repeat_exactly": true,
+  "prior_length_extension_row": {
+    "checkpoint": "output\\calibrated_recipe_study\\matched-decay-v1\\20261116T202031370_b2b7bb85\\mqar\\seed_44\\default\\channel-wise\\latest_checkpoint.pt",
+    "checkpoint_sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b",
+    "correct": 301,
+    "data_sha256": "91c26497be1576b31e75c1d0c98c4af13c1749775ad1ea1d57e1493ab2549be5",
+    "evaluated_examples": 256,
+    "exact_query_accuracy": 0.2939453125,
+    "example_accuracy": 0.0,
+    "first_query_accuracy": 1.0,
+    "history_conditioning": "answer_free",
+    "initialization": "default",
+    "later_query_accuracy": 0.05859375,
+    "latest_value_accuracy": null,
+    "length": 256,
+    "loss": 5.20207017660141,
+    "seed": 44,
+    "stale_value_error_rate": null,
+    "total": 1024,
+    "unrelated_association_retention": null,
+    "variant": "channel-wise"
+  },
+  "queries_per_example": 4,
+  "seed": 44,
+  "table_i_checkpoint_hash_match": true,
+  "table_i_checkpoint_path_match": true,
+  "table_i_checkpoint_sha256": "9e2dab60ccbfeb40fd285fca255b946b1fdc4b6bc07dbf90ff87763904e2ae4b",
+  "training_length": 64,
+  "variant": "channel-wise",
+  "wrong_confidence": {
+    "count": 723,
+    "margin_median": 0.24285078048706055,
+    "top1_probability_max": 0.13670894503593445,
+    "top1_probability_median": 0.008904092013835907,
+    "top1_probability_min": 0.002976051764562726,
+    "wrong_with_margin_at_least_2": 3,
+    "wrong_with_probability_at_least_0_5": 0
+  },
+  "wrong_prediction_examples_first_32": [
+    {
+      "category": "memory_value",
+      "example_index": 0,
+      "prediction": 4941,
+      "sequence_position": 224,
+      "target": 4377,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.19251108169555664,
+      "top1_token_probability": 0.012002832256257534
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 0,
+      "prediction": 7924,
+      "sequence_position": 230,
+      "target": 7662,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.242218017578125,
+      "top1_token_probability": 0.01625910773873329
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 1,
+      "prediction": 5710,
+      "sequence_position": 222,
+      "target": 5697,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.27649450302124023,
+      "top1_token_probability": 0.012679426930844784
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 1,
+      "prediction": 4109,
+      "sequence_position": 238,
+      "target": 5260,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.04143857955932617,
+      "top1_token_probability": 0.003949569538235664
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 1,
+      "prediction": 5710,
+      "sequence_position": 244,
+      "target": 5460,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.10670661926269531,
+      "top1_token_probability": 0.01244334876537323
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 2,
+      "prediction": 6509,
+      "sequence_position": 210,
+      "target": 8048,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.5738744735717773,
+      "top1_token_probability": 0.01440398208796978
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 2,
+      "prediction": 4998,
+      "sequence_position": 242,
+      "target": 4592,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.09532499313354492,
+      "top1_token_probability": 0.005031714215874672
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 3,
+      "prediction": 7924,
+      "sequence_position": 224,
+      "target": 4625,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.2746100425720215,
+      "top1_token_probability": 0.008359241299331188
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 3,
+      "prediction": 6886,
+      "sequence_position": 226,
+      "target": 5203,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.3345341682434082,
+      "top1_token_probability": 0.007537950295954943
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 3,
+      "prediction": 7129,
+      "sequence_position": 242,
+      "target": 6514,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.06337451934814453,
+      "top1_token_probability": 0.004600015003234148
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 4,
+      "prediction": 6886,
+      "sequence_position": 204,
+      "target": 6192,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.1202702522277832,
+      "top1_token_probability": 0.00549800181761384
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 4,
+      "prediction": 5566,
+      "sequence_position": 224,
+      "target": 7760,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.2512016296386719,
+      "top1_token_probability": 0.009887346997857094
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 4,
+      "prediction": 5710,
+      "sequence_position": 246,
+      "target": 7626,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.4225015640258789,
+      "top1_token_probability": 0.010446750558912754
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 5,
+      "prediction": 5911,
+      "sequence_position": 208,
+      "target": 5922,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.05740213394165039,
+      "top1_token_probability": 0.006136690732091665
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 5,
+      "prediction": 5809,
+      "sequence_position": 222,
+      "target": 4812,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.15749025344848633,
+      "top1_token_probability": 0.006857983767986298
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 5,
+      "prediction": 6509,
+      "sequence_position": 236,
+      "target": 4382,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.3399362564086914,
+      "top1_token_probability": 0.011995102278888226
+    },
+    {
+      "category": "memory_value",
+      "example_index": 6,
+      "prediction": 7899,
+      "sequence_position": 222,
+      "target": 6498,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.11470985412597656,
+      "top1_token_probability": 0.006474470719695091
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 6,
+      "prediction": 6509,
+      "sequence_position": 228,
+      "target": 7899,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.13753175735473633,
+      "top1_token_probability": 0.010625354014337063
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 6,
+      "prediction": 7227,
+      "sequence_position": 236,
+      "target": 5142,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.042237281799316406,
+      "top1_token_probability": 0.007658207323402166
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 7,
+      "prediction": 7924,
+      "sequence_position": 224,
+      "target": 5085,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.008253097534179688,
+      "top1_token_probability": 0.009603158570826054
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 7,
+      "prediction": 7759,
+      "sequence_position": 226,
+      "target": 8168,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.5052485466003418,
+      "top1_token_probability": 0.010912133380770683
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 7,
+      "prediction": 6509,
+      "sequence_position": 234,
+      "target": 6885,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.6678972244262695,
+      "top1_token_probability": 0.005712052341550589
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 8,
+      "prediction": 7807,
+      "sequence_position": 202,
+      "target": 5523,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.9536170959472656,
+      "top1_token_probability": 0.012228820472955704
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 8,
+      "prediction": 7924,
+      "sequence_position": 206,
+      "target": 6805,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.1616663932800293,
+      "top1_token_probability": 0.005765819456428289
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 8,
+      "prediction": 6509,
+      "sequence_position": 248,
+      "target": 6452,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.4790802001953125,
+      "top1_token_probability": 0.010297875851392746
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 9,
+      "prediction": 6509,
+      "sequence_position": 232,
+      "target": 7253,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.8406901359558105,
+      "top1_token_probability": 0.012425554916262627
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 9,
+      "prediction": 6509,
+      "sequence_position": 244,
+      "target": 7359,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.9011664390563965,
+      "top1_token_probability": 0.01623193360865116
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 9,
+      "prediction": 6509,
+      "sequence_position": 254,
+      "target": 6755,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.2189960479736328,
+      "top1_token_probability": 0.012741398997604847
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 10,
+      "prediction": 6886,
+      "sequence_position": 208,
+      "target": 5031,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.36951351165771484,
+      "top1_token_probability": 0.009751427918672562
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 10,
+      "prediction": 5272,
+      "sequence_position": 224,
+      "target": 4295,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.15858078002929688,
+      "top1_token_probability": 0.0034658682998269796
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 11,
+      "prediction": 5710,
+      "sequence_position": 218,
+      "target": 5512,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.019698619842529297,
+      "top1_token_probability": 0.012585603632032871
+    },
+    {
+      "category": "other_vocabulary_token",
+      "example_index": 11,
+      "prediction": 6968,
+      "sequence_position": 220,
+      "target": 6904,
+      "token_band": "value_band_4096_to_8191",
+      "top1_margin": 0.7693824768066406,
+      "top1_token_probability": 0.01270216889679432
+    }
+  ],
+  "wrong_prediction_token_band_counts": {
+    "value_band_4096_to_8191": 723
+  }
+}

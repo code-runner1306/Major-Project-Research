@@ -1,0 +1,24 @@
+{
+  "batch": 8,
+  "checkpoint_endpoint": "16 epochs / 3136 optimizer steps",
+  "description": "Post hoc frozen-checkpoint evaluation. Insert filler zeros after the four key/value writes.",
+  "device": "cpu",
+  "examples_per_seed": 256,
+  "generator_seed_offset": 1950000,
+  "initializations": [
+    "default",
+    "calibrated"
+  ],
+  "lengths": [
+    64,
+    256,
+    1024
+  ],
+  "metric": "exact answer-token accuracy",
+  "torch": "2.10.0+cpu",
+  "training_seeds": [
+    42,
+    43,
+    44
+  ]
+}
