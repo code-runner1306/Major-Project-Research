@@ -1,0 +1,9 @@
+# Huggingface download metadata for the TinyStories validation split (not needed at runtime).
+server/data/tinystories/.cache/
+
+# The TinyStories parquet and tiktoken cache are kept: the root .gitignore excludes tinystories/, so re-include them.
+!server/data/tinystories/
+!server/data/tinystories/data/
+!server/data/tinystories/data/*.parquet
+!server/data/tinystories/tiktoken_cache/
+!server/data/tinystories/tiktoken_cache/*

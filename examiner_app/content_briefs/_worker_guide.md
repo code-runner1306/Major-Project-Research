@@ -1,0 +1,33 @@
+# Worker guide: building one experiment page
+
+You build ONE experiment page of `examiner_app/` (a localhost lab-console app explaining a Gated DeltaNet research project to a layperson-tech examiner). Several other workers build other pages at the same time, so **stay inside the files you own** (listed in your task). Read first: `examiner_app/SPEC.md` (ground rules, "Writing rules", "Slides, not scrolling"), `GLOSSARY.md`, and the finished reference page `examiner_app/web/src/pages/ShortcutPage.tsx` with `pages/shortcut/*` and `server/shortcut.py` (how a page, its components and its API are shaped). Reuse `web/src/components/*` (Takeaway, MoreDetail, Panels, WhatThisShows, Term, CodeWalkthrough, AnimatedBars, AnimatedLines, Heatmap, TokenStrip, Stat, StatusChip, Unavailable, useApi).
+
+## Files you may create or edit
+- `examiner_app/server/routers/<id>.py` : a FastAPI `APIRouter` named `router` (auto-included by app.py; do NOT edit app.py). Prefix your URLs `/api/<id>/...`. You may add helper modules `examiner_app/server/<id>_data.py`.
+- `examiner_app/server/tests/test_<id>.py` : tests for your endpoints (pytest, FastAPI TestClient; see existing tests).
+- `examiner_app/web/src/pages/<PageName>Page.tsx` (a stub exists, replace it) and a folder `examiner_app/web/src/pages/<pageFolder>/` for components + css.
+- `examiner_app/content_briefs/<id>.md` : your verified-facts brief (write it FIRST, from the real files).
+- NEVER edit: `web/src/experiments.ts`, `glossary.ts`, `api.ts`, `types.ts`, `pages/index.ts`, `layouts/*`, `components/*`, `server/app.py`, other pages, or any research code/launchers/JSON in the repo root (source-hash pinning: moving or editing them breaks reproducibility). Never write into `output/` or `research_results/`. If you need a glossary term, a status change, or a shared-component change, put it in your final report instead.
+
+## Facts discipline (most important)
+- Every number, name and claim on the page must come from a saved artifact in the repo (result CSV/JSON/markdown, checkpoints), read by your API at request time or read once and cached in a data file you generate under `server/data/<id>_*.json` (generate by a script you keep in `server/` so it is reproducible). Never type a number into the UI.
+- Prose notes in `research_notes/` and the `*.md` write-ups sometimes disagree with the result files: **result files win**. If two sources disagree, use the file and mention it in your report.
+- If you cannot verify a fact, leave it out and say so in the report. Do not guess or invent.
+- Do not copy or retrain research code. Import repo modules via the repo root on `sys.path` as `server/app.py` does. Checkpoints are loaded with the helpers in `server/checkpoints.py` and `analyze_write_gate.load(...)`.
+- Use SPEC vocabulary exactly: "decay granularity", "scalar decay", "channel-wise decay", "decay gate (α)", "write gate (β)", "recurrent state", "arm", "run".
+
+## Page shape
+- Export `<PageName>Page({ def }: PageProps)` that renders `<ExperimentPage def sections />` with six sections in this order: `question`, `model`, `code`, `results`, `inside`, `try` (the section ids are fixed). Each section = `{id, title, explain, visual}`. The page is a slide deck: each slide must fit in 1280×720 (sidebar visible, no page scroll). More than one visual in a section → use `<Panels>` (internal tabs).
+- Writing rules: explain = one `<Takeaway>` (≤15 words) + at most 2 short sentences; everything else inside `<MoreDetail>`; `<WhatThisShows>` ≤20 words; no protocol/run identifiers in visible prose; plain English first; a technical person with no knowledge of this field must follow it. "Too much text" was explicit user feedback: be brief.
+- `question`: the research question and why it matters, with a small visual. `model`: what model/setup the experiment used and what differs from the baseline, with a diagram. `code`: a `CodeWalkthrough` over the real source (use `/api/code` and `/api/code/lines`; check line ranges and `match` strings against the file; pick the dataset generator, the place the model/setting differs, what it does). `results`: the saved results as animated charts (AnimatedBars/AnimatedLines or d3) with a hypothesis/result framing; results must flow/animate on first view. `inside`: what is happening inside the model, shown visually and honestly (real tensors/gates/predictions from the checkpoint if a checkpoint exists locally and the experiment is "live"; otherwise a faithful visualisation of the saved diagnostic data). `try`: if local checkpoints exist for this experiment, a live "try it" (POST endpoint running the real checkpoint on CPU, serialised with a lock like app.py's `_lock`); if not, show `<Unavailable>` ("Models unavailable on this machine") plus a browsable view of the saved results instead.
+- Use CSS variables from `web/src/theme.css` (Swiss theme); put page CSS in your folder; prefix class names with your page id to avoid collisions. Respect reduced motion. Wrap nothing in your own error boundary (layouts do it).
+- Fetch with `useApi`, and use the retrying-while-the-server-starts pattern as in the other pages (see `pages/dataset/shared.tsx` `useRetrying` / `WaitingForServer`).
+
+## Verification (before you report)
+1. Port: start your OWN API instance for testing: from `examiner_app/server` run `..\..\.venv\Scripts\python.exe -m uvicorn app:app --port <your port>` in the background (your port is given in the task; the shared dev server on 8765 may be stale, never stop or restart it, never run `preview_start`/`preview_stop`, never use the browser tools: another worker or the lead owns the browser). Exercise every endpoint with curl/PowerShell and check the JSON against the source files by an independent read.
+2. `pytest` for your tests: `..\..\.venv\Scripts\python.exe -m pytest tests/test_<id>.py -q` from `examiner_app/server`.
+3. Type-check only your files: from `examiner_app/web` run `npx tsc -b` and read only errors in YOUR files (other workers' files may be mid-edit and show errors; ignore those). Fix yours.
+4. Reread your page code once for: numbers typed in by hand, invented claims, text longer than the rules allow, section visuals that cannot fit 1280×720, and missing loading/error/unavailable states.
+
+## Final report (concise)
+List: files created; endpoints; the facts you verified and where from; conflicts between sources; anything unverified or left out; the experiment's true status (`live` / `results` / `unavailable`) and any glossary terms you needed but did not add; a one-line headline stat if the hero would benefit (computed, with its source). Do NOT commit anything.

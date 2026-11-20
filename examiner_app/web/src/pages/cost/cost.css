@@ -1,0 +1,257 @@
+/* Cost and runtime page. Class names are prefixed cost-. Theme tokens only (no hex). Square corners, 2px rules. */
+
+.cost-remote {
+  transition: opacity 0.2s ease;
+}
+.cost-pending {
+  opacity: 0.6;
+}
+
+.cost-h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cost-small {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cost-panel {
+  min-width: 0;
+}
+
+/* Captions keep their natural height inside a visual; only the chart or code box takes the remaining space. */
+.deck-slide__visual > .what-this-shows {
+  flex: none;
+}
+
+/* Code slide: the code box takes the remaining height and scrolls inside itself, never the slide. */
+.cost-code {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+}
+.cost-code__box {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.cost-code__box > .viz-code {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* The shared code body is a grid; its single row must be bounded so the code block scrolls inside the box. */
+.cost-code__box .viz-code__body {
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.cost-code__box .viz-code__main {
+  min-height: 0;
+}
+.cost-code__box .viz-code__block {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Hardware label inline with a panel heading (saves a line on the Inside slide). */
+.cost-hw-inline {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-left: 4px solid var(--border-strong);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.cost-hw-inline--a6000 {
+  border-left-color: var(--accent);
+}
+
+/* Hardware tags: the colour bar says which machine; the text names it exactly as the saved file does. */
+.cost-hw {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  padding-left: 8px;
+  border-left: 6px solid var(--border-strong);
+}
+.cost-hw--a6000 {
+  border-left-color: var(--accent);
+}
+.cost-hw span {
+  color: var(--text-muted);
+}
+
+/* Question */
+.cost-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  align-items: flex-end;
+}
+
+/* Model: gate cells, arch columns, share bars */
+.cost-gate {
+  display: grid;
+  gap: 14px;
+}
+.cost-arch-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.cost-arch {
+  border: 2px solid var(--border);
+  padding: 12px 14px;
+}
+.cost-arch h4 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+}
+.cost-arch-count {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.cost-arch-count span {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.cost-arch-weights {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+}
+.cost-cells {
+  display: grid;
+  gap: 2px;
+  margin: 6px 0;
+}
+.cost-cell {
+  width: 10px;
+  height: 10px;
+  background: var(--c-scalar);
+}
+.cost-arch--channel .cost-cell {
+  background: var(--c-channel);
+}
+
+.cost-share {
+  display: grid;
+  gap: 6px;
+}
+.cost-share-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 110px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+.cost-share-track {
+  position: relative;
+  height: 18px;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+}
+.cost-share-base {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--text-muted);
+}
+.cost-share-extra {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--accent);
+}
+.cost-share-value {
+  font-family: var(--font-mono);
+  text-align: right;
+}
+
+.cost-sum {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  font-size: 0.9rem;
+}
+.cost-sum-total {
+  font-weight: 600;
+}
+
+.cost-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  font-size: 0.9rem;
+}
+.cost-state-note {
+  color: var(--text-muted);
+}
+
+/* Results: energy and memory table */
+.cost-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.cost-table th,
+.cost-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--border);
+}
+.cost-table thead th {
+  border-bottom-color: var(--border-strong);
+}
+.cost-table-other th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Try it */
+.cost-try {
+  display: grid;
+  gap: 18px;
+}
+.cost-try-form {
+  display: grid;
+  grid-template-columns: minmax(300px, 2.2fr) repeat(4, minmax(110px, 1fr));
+  gap: 12px;
+}
+.cost-try-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.cost-try-form select,
+.cost-try-form input {
+  font: inherit;
+  padding: 6px 8px;
+  border: 2px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 0;
+}
+.cost-try-out {
+  display: grid;
+  gap: 6px;
+  border-top: 2px solid var(--border);
+  padding-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cost-remote {
+    transition: none;
+  }
+}

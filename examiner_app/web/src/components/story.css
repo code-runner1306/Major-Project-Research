@@ -1,0 +1,219 @@
+/* Writing-rules components: takeaway line, collapsed detail drawer, stat callouts, slide panels. Theme tokens only. */
+
+.takeaway {
+  margin: 0 0 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.3;
+  max-width: 48ch;
+}
+
+/* ---------- MoreDetail: a drawer over the right side of the slide (it scrolls inside, it never pushes content down) ---------- */
+
+.more-detail {
+  position: static;
+  margin-top: 12px;
+}
+
+.more-detail__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.more-detail__toggle:hover {
+  background: var(--surface-2);
+}
+
+.more-detail__toggle:focus-visible,
+.more-detail__close:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.more-detail__mark {
+  display: inline-block;
+  width: 12px;
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+.more-detail__drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: min(440px, 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--surface);
+  border-left: 2px solid var(--text);
+}
+
+.more-detail__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--border);
+}
+
+.more-detail__title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.more-detail__close {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  color: var(--text);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.more-detail__close:hover {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.more-detail__inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 18px;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.more-detail__inner p {
+  margin: 0;
+}
+
+/* ---------- Stat callouts ---------- */
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 8px;
+  border-top: 2px solid var(--border);
+}
+
+.stat__value {
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat.is-bad .stat__value {
+  color: var(--accent);
+}
+
+.stat__label {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+/* ---------- Panels: small internal tabs, one visual at a time ---------- */
+
+.panels {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.panels__tabs {
+  flex: none;
+  display: inline-flex;
+  align-self: flex-start;
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin-bottom: 10px;
+  border: 2px solid var(--border);
+}
+
+.panels__tab {
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  color: var(--text);
+  background: var(--surface);
+  border: 0;
+  border-right: 2px solid var(--border);
+  cursor: pointer;
+}
+
+.panels__tab:last-child {
+  border-right: 0;
+}
+
+.panels__tab:hover {
+  background: var(--surface-2);
+}
+
+.panels__tab[aria-selected='true'] {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.panels__tab:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.panels__viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.panels__panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .more-detail__toggle {
+    transition: none;
+  }
+}

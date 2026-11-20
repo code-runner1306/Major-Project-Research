@@ -1,0 +1,26 @@
+/* Fallback box for a failed section or page. Swiss palette: square corners, 2px rule, no shadow. */
+.section-error {
+  border: 2px solid var(--border);
+  border-left: 8px solid var(--accent);
+  background: var(--surface-2);
+  padding: 14px 16px;
+  margin: 12px 0;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+.section-error p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.section-error strong {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.section-error a {
+  color: var(--text);
+  font-weight: 600;
+}

@@ -1,0 +1,144 @@
+/* ---------- Layout C: chapters ---------- */
+.chapters {
+  min-width: 0;
+}
+
+.hero {
+  padding: 56px 48px 36px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  max-width: 900px;
+}
+
+.hero-grid {
+  display: grid;
+  /* 1200px and up: one-sentence 1.2fr, analogy 1fr, headline 0.8fr (never narrower than 240px). */
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(240px, 0.8fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.hero-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 650;
+}
+
+.hero-lede {
+  font-size: 1.15rem;
+  color: var(--text);
+  margin: 0;
+}
+
+.hero .analogy-box {
+  margin: 0;
+}
+
+.hero-stat {
+  min-width: 170px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  background: var(--bg);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.chapter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 8px 32px;
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+
+.chapter {
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.chapter:hover {
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+.chapter.active {
+  background: var(--text);
+  color: var(--on-accent);
+}
+
+.band {
+  scroll-margin-top: 52px;
+  padding: 64px 48px;
+  background: var(--bg);
+}
+
+.band.band-alt {
+  background: var(--surface-2);
+}
+
+.band-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.band h2 {
+  font-size: 1.7rem;
+  margin: 0 0 14px;
+}
+
+.band .explain {
+  max-width: 760px;
+  margin-bottom: 26px;
+}
+
+/* Breakpoints (documented in SPEC.md): 1199 hero goes two columns; 899 sidebar becomes a drawer behind
+   a top bar; 759 hero stacks to one column. */
+@media (max-width: 1199px) {
+  .hero-grid {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+
+  .hero-stat {
+    grid-column: 1 / -1;
+  }
+}
+
+/* The slim top bar (hamburger) exists only in narrow mode. */
+
+@media (max-width: 899px) {
+  .chapter-bar { top: 52px; }
+  .band { scroll-margin-top: 110px; padding: 40px 20px; }
+  .hero { padding: 36px 20px 24px; }
+}
+
+@media (max-width: 759px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+}

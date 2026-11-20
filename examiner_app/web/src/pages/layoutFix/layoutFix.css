@@ -1,0 +1,820 @@
+/* Layout fix A0-A4 page. Colours come from theme.css tokens; arm colours come from derive.ts. */
+
+.lf-lead {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lf-muted {
+  color: var(--text-muted);
+}
+
+.lf-small {
+  font-size: 0.85rem;
+}
+
+.lf-error {
+  border: 1px solid color-mix(in srgb, var(--c-bad) 40%, var(--surface));
+  background: color-mix(in srgb, var(--c-bad) 10%, var(--surface));
+  color: var(--c-bad);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.lf-error p {
+  margin: 6px 0 0;
+}
+
+.lf-skeleton {
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--surface-2) 0%, var(--border) 50%, var(--surface-2) 100%);
+  background-size: 200% 100%;
+  animation: lf-shimmer 1.4s ease-in-out infinite;
+  height: 120px;
+}
+
+.lf-skeleton--tall {
+  height: 260px;
+}
+
+@keyframes lf-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-skeleton {
+    animation: none;
+  }
+}
+
+.lf-btn {
+  font: inherit;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.lf-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.lf-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.lf-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  min-width: 74px;
+}
+
+/* Block figures and results */
+.lf-results {
+  display: grid;
+  gap: 28px;
+}
+
+.lf-block {
+  margin: 0;
+  padding: 0;
+}
+
+.lf-block h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+/* Question: two layouts */
+.lf-two {
+  display: grid;
+  gap: 16px;
+}
+
+.lf-panel {
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.lf-panel figcaption {
+  margin-bottom: 8px;
+}
+
+.lf-two__note {
+  margin: 4px 0 0;
+  color: var(--text);
+}
+
+/* Model diagram */
+.lf-model__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.lf-model__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.lf-model__facts > div {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.lf-model__facts span {
+  display: block;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  margin: 2px 0 4px;
+}
+
+.lf-model__facts p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+/* Shortcut dots */
+.lf-dots {
+  display: grid;
+  gap: 8px;
+}
+
+.lf-dots__row {
+  display: grid;
+  grid-template-columns: 170px 1fr 70px;
+  align-items: center;
+  gap: 12px;
+}
+
+.lf-dots__label {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.lf-dots__cells {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lf-dot {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  display: inline-block;
+}
+
+.lf-dot__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: block;
+}
+
+.lf-dot--channel {
+  border-style: dashed;
+}
+
+.lf-dots__count {
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  text-align: right;
+}
+
+/* Answer-source stacked bars */
+.lf-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.lf-stack__row {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.lf-stack__bar {
+  display: flex;
+  height: 22px;
+  background: var(--surface-2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.lf-stack__seg {
+  display: block;
+  height: 100%;
+}
+
+.lf-stack__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.lf-stack__legend i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: -2px;
+}
+
+/* Rerun table */
+.lf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lf-table th,
+.lf-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lf-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Numeric columns (seed and the two percentages) use the mono token. */
+.lf-table td:nth-child(n + 2) {
+  font-family: var(--font-mono);
+}
+
+/* State player */
+.lf-player {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: var(--surface);
+  min-width: 0;
+}
+
+.lf-player__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lf-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.lf-player__grid {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+  align-items: start;
+}
+
+.lf-player__gates {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.lf-player__sub {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.lf-playback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.lf-range {
+  flex: 1 1 180px;
+  min-width: 120px;
+  accent-color: var(--accent);
+}
+
+.lf-playback__pos {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.lf-spark-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.lf-spark-fig {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.lf-spark {
+  display: block;
+  overflow: visible;
+}
+
+/* Inside: two checkpoints side by side */
+.lf-inside__pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.lf-inside__answers {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.lf-inside__answers p {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 4px solid var(--border);
+}
+
+/* Try it */
+.lf-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lf-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.lf-field {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.lf-field__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lf-field__hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.lf-field select,
+.lf-field input[type='number'] {
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  min-width: 0;
+}
+
+.lf-field input[type='range'] {
+  accent-color: var(--accent);
+}
+
+.lf-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lf-inline input {
+  width: 110px;
+}
+
+.lf-segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.lf-segmented button {
+  font: inherit;
+  padding: 6px 12px;
+  border: 0;
+  background: var(--surface);
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lf-segmented button + button {
+  border-left: 1px solid var(--border);
+}
+
+.lf-segmented button.is-on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.lf-try__stage {
+  margin-top: 16px;
+  min-height: 120px;
+}
+
+.lf-try__body {
+  display: grid;
+  gap: 14px;
+  transition: opacity 0.3s ease;
+}
+
+.lf-queries {
+  display: grid;
+  gap: 12px;
+}
+
+.lf-query {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+}
+
+.lf-query header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.lf-query p {
+  margin: 4px 0 8px;
+}
+
+.lf-verdict {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.lf-verdict.is-ok {
+  background: color-mix(in srgb, var(--c-good) 16%, var(--surface));
+  color: var(--c-good);
+}
+
+.lf-verdict.is-bad {
+  background: color-mix(in srgb, var(--c-bad) 16%, var(--surface));
+  color: var(--c-bad);
+}
+
+/* ---------- Slide deck sizing: every visual fits one 1280x720 slide without page scroll ---------- */
+
+.lf-model {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+
+.lf-model__svg {
+  width: min(100%, 800px);
+  height: auto;
+  margin: 0 auto;
+}
+
+.lf-model__facts {
+  margin: 4px 0 8px;
+  gap: 10px;
+}
+
+.lf-model__facts > div {
+  padding: 8px 10px;
+}
+
+.lf-model__facts p {
+  font-size: 0.85rem;
+}
+
+.lf-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lf-panel {
+  padding: 10px 12px;
+}
+
+.lf-panel figcaption {
+  margin-bottom: 6px;
+}
+
+.lf-two__note {
+  font-size: 0.92rem;
+  margin-top: 8px;
+}
+
+/* Try it: settings in a narrow left column, the results (tabs) take the wide right column. */
+.lf-try {
+  display: grid;
+  grid-template-columns: 268px minmax(0, 1fr);
+  gap: 14px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.lf-controls {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 4px;
+  margin: 0;
+  padding: 6px 8px;
+  min-height: 0;
+  overflow: auto;
+}
+
+.lf-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+}
+
+.lf-controls .lf-segmented button {
+  padding: 2px 8px;
+}
+
+.lf-presets .lf-btn {
+  padding: 3px 8px;
+  font-size: 0.8rem;
+}
+
+.lf-field {
+  gap: 2px;
+}
+
+.lf-field__label {
+  font-size: 0.8rem;
+}
+
+.lf-field__hint {
+  display: none;
+}
+
+.lf-field select,
+.lf-field input[type='number'] {
+  padding: 3px 6px;
+  font-size: 0.88rem;
+}
+
+.lf-controls .lf-btn {
+  padding: 3px 8px;
+  font-size: 0.85rem;
+}
+
+.lf-inline input {
+  width: 80px;
+}
+
+.lf-segmented button {
+  padding: 3px 9px;
+  font-size: 0.88rem;
+}
+
+.lf-try__stage {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+}
+
+.lf-try__stage > .panels {
+  flex: 1 1 auto;
+}
+
+.lf-try__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lf-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lf-answers .lf-small {
+  margin: 0;
+}
+
+.lf-queries {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.lf-query {
+  padding: 6px 10px;
+}
+
+.lf-query header {
+  margin-bottom: 0;
+}
+
+.lf-query p {
+  margin: 2px 0 4px;
+  font-size: 0.9rem;
+}
+
+.lf-query .viz-bars {
+  gap: 3px;
+  font-size: 0.82rem;
+}
+
+.lf-query .viz-bars__track {
+  height: 10px;
+}
+
+.lf-player--compact {
+  padding: 8px 10px;
+}
+
+.lf-player--compact .lf-player__head {
+  margin-bottom: 4px;
+}
+
+.lf-player--compact .lf-player__grid {
+  margin-top: 4px;
+  gap: 10px;
+}
+
+.lf-player--compact .lf-player__sub {
+  margin-top: 0;
+  font-size: 0.82rem;
+}
+
+.lf-player--compact .lf-player__gates {
+  gap: 4px;
+}
+
+.lf-player--compact .lf-spark {
+  width: 110px;
+  height: 30px;
+}
+
+.lf-inside {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+
+.lf-inside .lf-playback {
+  margin-bottom: 0;
+}
+
+.lf-inside__pair {
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.lf-inside__answers {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 0;
+}
+
+.lf-inside__answers p {
+  font-size: 0.9rem;
+}
+
+.lf-spark-row {
+  margin-top: 0;
+}
+
+/* Code view: the code block scrolls inside the slide instead of stretching it. */
+.lf-code {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.lf-code > .viz-code {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+}
+
+.lf-code .viz-code__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.lf-code .viz-code__main,
+.lf-code .viz-code__block,
+.lf-code .viz-code__notes {
+  min-height: 0;
+  overflow: auto;
+}
+
+.lf-code .viz-code__notes {
+  min-height: 0;
+}
+
+/* Gates: scalar gate groups side by side. */
+.lf-player__gates--pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.lf-player__gatecol {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  align-content: start;
+}
+
+.lf-inside__tokens {
+  padding: 4px 0;
+}
+
+.lf-try__stage .lf-playback {
+  margin: 0;
+}
+
+.lf-skeleton {
+  height: 100px;
+}
+
+.lf-skeleton--tall {
+  height: 200px;
+}
+
+@media (max-width: 760px) {
+  .lf-dots__row,
+  .lf-stack__row {
+    grid-template-columns: 1fr;
+  }
+
+  .lf-player__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lf-dots__count {
+    text-align: left;
+  }
+}

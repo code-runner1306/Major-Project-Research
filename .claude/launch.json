@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "examiner-api",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": ["-m", "uvicorn", "--app-dir", "examiner_app/server", "app:app", "--port", "8765"],
+      "port": 8765
+    },
+    {
+      "name": "examiner-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "examiner_app/web", "run", "dev"],
+      "port": 5180
+    }
+  ]
+}

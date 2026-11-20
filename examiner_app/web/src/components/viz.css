@@ -1,0 +1,550 @@
+/* Styles for the shared visualisation components. All class names are prefixed viz-. */
+
+:root {
+  --viz-accent: var(--accent);
+}
+
+/* ---------- AnimatedBars ---------- */
+
+.viz-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.viz-bars__row {
+  display: grid;
+  grid-template-columns: minmax(96px, 26%) 1fr 4.5em;
+  align-items: center;
+  gap: 12px;
+}
+
+.viz-bars__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viz-bars__note {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viz-bars__track {
+  height: 14px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.viz-bars__fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--viz-accent);
+}
+
+.viz-bars__value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text);
+}
+
+/* ---------- AnimatedLines ---------- */
+
+.viz-lines {
+  position: relative;
+  width: 100%;
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
+.viz-lines__svg {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.viz-lines__grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.viz-lines__axis {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.viz-lines__tick {
+  fill: var(--text-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-lines__axis-label {
+  fill: var(--text);
+  font-size: 12px;
+}
+
+.viz-lines__cross {
+  stroke: var(--border-strong);
+  stroke-dasharray: 3 3;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.viz-lines__tooltip {
+  position: absolute;
+  top: 8px;
+  min-width: 150px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.viz-lines__tooltip-x {
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-lines__tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.viz-lines__tooltip-row span:nth-child(2) {
+  flex: 1;
+}
+
+.viz-lines__tooltip-val {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-lines__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.viz-lines__legend li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.viz-lines__swatch {
+  display: inline-block;
+  flex: none;
+  width: 22px;
+  margin-right: 6px;
+  border-top: 2.5px solid currentColor;
+  vertical-align: middle;
+}
+
+.viz-lines__swatch--dashed {
+  border-top-style: dashed;
+}
+
+/* ---------- Heatmap ---------- */
+
+.viz-heatmap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.viz-heatmap__title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.viz-heatmap__canvas {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+.viz-heatmap__readout {
+  min-height: 1.3em;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-heatmap__legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.viz-heatmap__bar {
+  flex: 0 0 160px;
+  height: 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* ---------- TokenStrip ---------- */
+
+.viz-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.viz-token {
+  --viz-token-bg: var(--surface-2);
+  --viz-token-fg: var(--text);
+  min-width: 1.9em;
+  padding: 2px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: var(--viz-token-bg);
+  color: var(--viz-token-fg);
+  font: inherit;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-token:focus-visible {
+  outline: 2px solid var(--viz-accent);
+  outline-offset: 2px;
+}
+
+.viz-token--selected {
+  border-color: var(--viz-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* Token roles: one hue per role (--tok-*), chips are tinted from it so text stays on a near-surface background. */
+.viz-token--filler {
+  --viz-token-bg: color-mix(in srgb, var(--tok-filler) 14%, var(--surface));
+  --viz-token-fg: var(--text-muted);
+}
+
+.viz-token--filler-run {
+  --viz-token-bg: var(--surface-2);
+  --viz-token-fg: var(--text-muted);
+  font-style: italic;
+}
+
+.viz-token--key {
+  --viz-token-bg: color-mix(in srgb, var(--tok-key) 18%, var(--surface));
+  --viz-token-fg: var(--text);
+}
+
+.viz-token--value {
+  --viz-token-bg: color-mix(in srgb, var(--tok-value) 18%, var(--surface));
+  --viz-token-fg: var(--text);
+}
+
+.viz-token--target_key {
+  --viz-token-bg: color-mix(in srgb, var(--tok-target-key) 24%, var(--surface));
+  --viz-token-fg: var(--text);
+}
+
+.viz-token--target_value {
+  --viz-token-bg: color-mix(in srgb, var(--tok-target-value) 20%, var(--surface));
+  --viz-token-fg: var(--text);
+}
+
+.viz-token--marker {
+  --viz-token-bg: var(--tok-marker);
+  --viz-token-fg: var(--surface);
+  font-weight: 700;
+}
+
+.viz-token--query_latest {
+  --viz-token-bg: color-mix(in srgb, var(--tok-query) 14%, var(--surface));
+  --viz-token-fg: var(--text);
+}
+
+.viz-token--query_unrelated {
+  --viz-token-bg: var(--surface);
+  --viz-token-fg: var(--text);
+  border-style: dashed;
+  border-color: var(--tok-query2);
+}
+
+.viz-tokens__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 8px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.viz-tokens__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.viz-tokens__swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--viz-token-bg);
+  border: 1px solid var(--border);
+}
+
+.viz-token--text {
+  --viz-token-bg: color-mix(in srgb, var(--tok-text) 22%, var(--surface));
+  --viz-token-fg: var(--text);
+  max-width: 11em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+}
+
+.viz-token--eos {
+  --viz-token-bg: color-mix(in srgb, var(--tok-eos) 30%, var(--surface));
+  --viz-token-fg: var(--text);
+  font-weight: 700;
+}
+
+/* ---------- CodeWalkthrough ---------- */
+
+.viz-code {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.viz-code__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.viz-code__tab {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.viz-code__tab:hover {
+  border-color: var(--border-strong);
+}
+
+.viz-code__tab[aria-selected='true'] {
+  border-color: var(--viz-accent);
+  background: var(--viz-accent);
+  color: var(--on-accent);
+}
+
+.viz-code__tab:focus-visible,
+.viz-code__line--note:focus-visible {
+  outline: 2px solid var(--viz-accent);
+  outline-offset: 2px;
+}
+
+.viz-code__plain {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--viz-accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  border-radius: 0 6px 6px 0;
+  line-height: 1.55;
+}
+
+.viz-code__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .viz-code__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.viz-code__main {
+  min-width: 0;
+}
+
+.viz-code__header {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.viz-code__status {
+  padding: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.viz-code__error {
+  padding: 12px;
+  color: var(--c-bad);
+  background: color-mix(in srgb, var(--c-bad) 10%, var(--surface));
+  border-radius: 6px;
+}
+
+.viz-code__block {
+  overflow-x: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.viz-code__line {
+  display: grid;
+  grid-template-columns: 3.6em 1fr;
+  min-width: max-content;
+}
+
+.viz-code__no {
+  padding: 0 10px 0 0;
+  text-align: right;
+  color: var(--text-muted);
+  user-select: none;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+
+.viz-code__text {
+  white-space: pre;
+  padding: 0 12px;
+}
+
+.viz-code__line--note {
+  cursor: pointer;
+}
+
+.viz-code__line--note .viz-code__text {
+  background: color-mix(in srgb, var(--c-channel) 22%, var(--surface));
+}
+
+.viz-code__line--note.viz-code__line--active .viz-code__text {
+  background: color-mix(in srgb, var(--c-channel) 40%, var(--surface));
+}
+
+.viz-code__line--note.viz-code__line--active .viz-code__no {
+  color: var(--viz-accent);
+  font-weight: 700;
+}
+
+.viz-code__kw {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.viz-code__str {
+  color: var(--c-good);
+}
+
+.viz-code__com {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.viz-code__num {
+  color: var(--tok-target-value);
+}
+
+.viz-code__fn {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.viz-code__deco {
+  color: var(--tok-query);
+}
+
+.viz-code__notes {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: var(--surface);
+  min-height: 80px;
+}
+
+.viz-code__notes h4 {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.viz-code__note {
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.viz-code__note code {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.viz-code__empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ---------- Reduced motion: keep everything static ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .viz-bars__fill,
+  .viz-lines__svg * {
+    transition: none !important;
+  }
+}

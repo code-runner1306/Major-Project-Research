@@ -1,0 +1,513 @@
+/* Styles for the stress-tests and gate-interventions page. Class names are prefixed stress-. Theme tokens only (no hex). */
+
+.stress-h3 {
+  margin: 0 0 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.stress-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.stress-panel__controls,
+.stress-inside__pick,
+.stress-try__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 16px;
+}
+
+.stress-remote {
+  transition: opacity 0.2s ease;
+}
+
+.stress-pending {
+  opacity: 0.55;
+}
+
+/* Segmented choice */
+.stress-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 2px solid var(--border);
+}
+
+.stress-seg button {
+  padding: 5px 10px;
+  border: 0;
+  border-right: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.stress-seg button:last-child {
+  border-right: 0;
+}
+
+.stress-seg button[aria-pressed='true'] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.stress-seg button:focus-visible,
+.stress-btn:focus-visible,
+.stress-field select:focus-visible,
+.stress-field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.stress-field {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.stress-field__label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.stress-field select,
+.stress-field input[type='number'] {
+  padding: 3px 6px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  min-width: 0;
+}
+
+.stress-field input[type='number'] {
+  width: 8.5em;
+}
+
+.stress-btn {
+  padding: 6px 12px;
+  border: 2px solid var(--text);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.stress-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Question */
+.stress-question {
+  display: grid;
+  gap: 10px;
+}
+
+.stress-question__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* Model */
+.stress-models {
+  display: grid;
+  gap: 14px;
+}
+
+.stress-models__flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.stress-node {
+  padding: 8px 10px;
+  border: 2px solid var(--text);
+  background: var(--surface);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  min-width: 7.5em;
+}
+
+.stress-node small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.stress-node.is-gate {
+  border-color: var(--accent);
+}
+
+.stress-arrow {
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  position: relative;
+}
+
+.stress-arrow::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: -4px;
+  border-left: 6px solid var(--text);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.stress-models__grid {
+  display: grid;
+  grid-template-columns: max-content repeat(2, minmax(0, 1fr));
+  gap: 2px;
+  border: 2px solid var(--border);
+  background: var(--border);
+}
+
+.stress-models__corner,
+.stress-models__head,
+.stress-models__start,
+.stress-models__cell {
+  padding: 8px 10px;
+  background: var(--surface);
+  font-size: 0.85rem;
+}
+
+.stress-models__head {
+  font-weight: 700;
+}
+
+.stress-models__start {
+  font-weight: 600;
+}
+
+.stress-models__cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stress-chip {
+  padding: 2px 8px;
+  border: 2px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.stress-chip.is-local {
+  border-color: var(--text);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Bars with before and after */
+.stress-pair {
+  display: grid;
+  gap: 4px;
+}
+
+.stress-pair__row {
+  display: grid;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) 110px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.stress-pair__bars {
+  display: grid;
+  gap: 2px;
+}
+
+.stress-pair__track {
+  height: 8px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.stress-pair__fill {
+  height: 100%;
+}
+
+.stress-pair__fill.is-before {
+  background: var(--text-muted);
+}
+
+.stress-pair__fill.is-after {
+  background: var(--accent);
+}
+
+.stress-pair__values {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+}
+
+.stress-pair__values .is-before {
+  color: var(--text-muted);
+}
+
+.stress-pair__values .is-after {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.stress-legend,
+.stress-try__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.8rem;
+}
+
+.stress-try__legend .is-before {
+  color: var(--text-muted);
+}
+
+.stress-try__legend .is-after {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.stress-try__count {
+  color: var(--text-muted);
+}
+
+/* Signed bars (write-gate patches) */
+.stress-signed {
+  display: grid;
+  gap: 8px;
+}
+
+.stress-signed__row {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr) 90px;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+
+.stress-signed__label {
+  display: grid;
+}
+
+.stress-signed__note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.stress-signed__track {
+  position: relative;
+  height: 16px;
+  background: var(--surface-2);
+}
+
+.stress-signed__bar {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.stress-signed__bar.is-up {
+  background: var(--c-good);
+}
+
+.stress-signed__bar.is-down {
+  background: var(--accent);
+}
+
+.stress-signed__zero {
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--text);
+}
+
+.stress-signed__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* Results and try layouts */
+.stress-results,
+.stress-inside,
+.stress-try {
+  display: grid;
+  gap: 4px;
+}
+
+.stress-inside {
+  gap: 0;
+}
+
+.stress-inside .what-this-shows {
+  margin: 0;
+}
+
+.stress-try__row {
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.stress-try__model {
+  width: 340px;
+  max-width: 100%;
+}
+
+.stress-try__model select {
+  width: 100%;
+}
+
+.stress-try__label {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.stress-try__slider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+}
+
+.stress-try__slider input {
+  width: 120px;
+}
+
+.stress-try__detail {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.stress-try__result {
+  display: grid;
+  gap: 4px;
+}
+
+.stress-try__note {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.stress-inside__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 4px 12px;
+}
+
+.stress-inside__model {
+  width: 260px;
+  max-width: 100%;
+}
+
+.stress-inside__model select,
+.stress-inside__controls select {
+  max-width: 100%;
+}
+
+.stress-inside__model {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Memory cards */
+.stress-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 6px;
+}
+
+.stress-card {
+  padding: 6px 8px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  display: grid;
+  gap: 2px;
+}
+
+.stress-card.is-target {
+  border-color: var(--text);
+  border-width: 2px;
+  box-shadow: inset 0 0 0 1px var(--text);
+}
+
+.stress-card__slot {
+  font-weight: 700;
+}
+
+.stress-card__key,
+.stress-card__value {
+  color: var(--text-muted);
+}
+
+.stress-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  min-height: 1.2em;
+}
+
+.stress-tag {
+  padding: 0 4px;
+  border: 1px solid var(--border-strong);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.stress-tag.is-newest {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.stress-tag.is-before {
+  color: var(--text-muted);
+}
+
+.stress-tag.is-after {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.stress-answer {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.stress-answer strong {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 899px) {
+  .stress-pair__row,
+  .stress-signed__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stress-remote {
+    transition: none;
+  }
+}

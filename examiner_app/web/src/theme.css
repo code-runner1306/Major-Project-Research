@@ -1,0 +1,82 @@
+/*
+ * Design tokens for the Swiss colour scheme (chosen 2026-11-19; the only scheme in main).
+ * Components use var(--token) only. The other schemes (lab, paper, blueprint, sage) are archived on
+ * branch prototype/examiner-themes.
+ * Text pairs are checked for WCAG AA (4.5:1) against their surfaces.
+ * Role colours (--tok-*, --c-*) are hues; tinted backgrounds are derived with color-mix().
+ * Fonts: Space Grotesk Variable (headings + body) and JetBrains Mono Variable (mono), self-hosted in src/fonts.ts.
+ */
+
+/* Stark editorial: white page, black sidebar, one red signal accent, square corners, no shadows. */
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f2f2f2;
+  --text: #000000;
+  --text-muted: #4a4a4a;
+  --border: #000000;
+  --border-strong: #000000;
+  --sidebar-bg: #000000;
+  --sidebar-text: #ffffff;
+  --sidebar-active: #1c1c1c;
+  --sidebar-strong: #ffffff;
+  --sidebar-muted: #b3b3b3;
+  --accent: #e10600;
+  --on-accent: #ffffff;
+  --c-scalar: #000000;
+  --c-channel: #e10600;
+  --c-arm-a0: #8a8a8a;
+  --c-arm-a1: #3d3d3d;
+  --c-arm-a2: #e10600;
+  --c-arm-a3: #c9a46a;
+  --c-arm-a4: #000000;
+  --c-good: #000000;
+  --c-bad: #e10600;
+  --heat-neg: #262626;
+  --heat-mid: #ffffff;
+  --heat-pos: #e10600;
+  --heat-seq-lo: #000000;
+  --heat-seq-hi: #ffffff;
+  --tok-filler: #d2d2d2;
+  --tok-key: #4d4d4d;
+  --tok-value: #5f7a8f;
+  --tok-target-key: #c9a46a;
+  --tok-target-value: #e10600;
+  --tok-marker: #1c2b36;
+  --tok-query: #000000;
+  --tok-query2: #9a9a9a;
+  /* Dataset roles (added 2026-11-19). Blue-grey, ochre, white, mid-grey and dark grey, so each role differs from the rest. */
+  --tok-query-key: #a7bccb;
+  --tok-answer-slot: #8a6d3b;
+  --tok-noise: #ffffff;
+  --tok-decoy: #a0a0a0;
+  --tok-mask: #707070;
+  /* TinyStories roles (2026-11-19): story text and the end-of-text marker. CIE76 dE >= 15 to every other --tok-* role. */
+  --tok-text: #6b9fd1;
+  --tok-eos: #b5651d;
+  --font-body: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-heading: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, Consolas, monospace;
+  --radius: 0px;
+  --shadow: none;
+  color-scheme: light;
+}
+
+/* Swiss uses strong 2px rules everywhere. Border width only shows where a border style is set. */
+.app,
+.app * {
+  border-width: 2px;
+}
+
+/* Smooth 300 ms colour-scheme change on themed surfaces. Elements with inline styles (motion-driven
+   colours) are excluded so the two animation systems do not fight. Reduced motion: no transition. */
+@media (prefers-reduced-motion: no-preference) {
+  .app,
+  .app :where(*):not([style]) {
+    transition:
+      background-color 300ms ease,
+      color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease;
+  }
+}

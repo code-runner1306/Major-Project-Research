@@ -1,0 +1,205 @@
+/* Styles for the attention control page. Class names are prefixed ac-. Theme tokens only (no hex). Square corners, 2px rules. */
+
+.ac-h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.ac-note,
+.ac-card__note,
+.ac-model__params {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0.4rem 0 0;
+}
+
+.ac-panel {
+  min-width: 0;
+}
+
+/* Real example strip (question) */
+.ac-example__strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: stretch;
+  border: 2px solid var(--border);
+  padding: 0.6rem;
+  min-height: 3.5rem;
+}
+
+.ac-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.4rem;
+  color: var(--on-accent);
+  line-height: 1.2;
+}
+
+.ac-gap {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.4rem;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  align-self: center;
+}
+
+.ac-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0.6rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.85rem;
+}
+
+.ac-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ac-swatch {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1px solid var(--border);
+}
+
+/* Model diagram */
+.ac-backbone {
+  border: 2px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.ac-model__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.ac-card {
+  margin: 0;
+  border: 2px solid var(--border);
+  padding: 0.7rem;
+  min-width: 0;
+}
+
+.ac-card figcaption {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.ac-card__art {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 7rem;
+  justify-content: center;
+}
+
+.ac-card__stat {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.ac-table {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.ac-table__cell {
+  border: 2px solid var(--border);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.35rem 0;
+  background: var(--surface-2);
+}
+
+.ac-tokens {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+
+.ac-tokens__cell {
+  height: 1.4rem;
+  border: 2px solid var(--border);
+  background: var(--surface);
+}
+
+/* Inside: attention grid and recurrent table */
+.ac-inside {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem 1.5rem;
+  align-items: start;
+}
+
+.ac-inside__col {
+  min-width: 0;
+}
+
+.ac-inside > .what-this-shows {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.ac-grid {
+  display: block;
+  border: 2px solid var(--border);
+  background: var(--surface);
+}
+
+.ac-stream {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  height: 2.2rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.ac-stream__tick {
+  flex: 1 1 0;
+  height: 60%;
+  background: var(--tok-filler);
+}
+
+.ac-arrow {
+  width: 2px;
+  height: 1.2rem;
+  margin: 0.3rem 0 0.3rem 0.4rem;
+  background: var(--border);
+}
+
+.ac-table--big {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 26rem;
+}
+
+.ac-table--big .ac-table__cell {
+  padding: 1.1rem 0;
+  font-size: 0.8rem;
+}
+
+/* Try it and curves */
+.ac-try {
+  display: grid;
+  gap: 0.8rem;
+}
+
+@media (max-width: 760px) {
+  .ac-model__cards,
+  .ac-inside {
+    grid-template-columns: 1fr;
+  }
+}

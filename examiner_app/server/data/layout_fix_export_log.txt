@@ -1,0 +1,7 @@
+seed 42: data ready, overlap {'fresh_examples': 256, 'overlapping_by_arm': {'A0_control': 0, 'A1_varied_distance': 0, 'A2_no_block_first': 0, 'A3_mixed_rewrites': 0, 'A4_distance_and_rewrites': 0}}  (602s)
+seed 42: models scored (620s)
+seed 43: data ready, overlap {'fresh_examples': 256, 'overlapping_by_arm': {'A0_control': 0, 'A1_varied_distance': 0, 'A2_no_block_first': 0, 'A3_mixed_rewrites': 0, 'A4_distance_and_rewrites': 0}}  (880s)
+seed 43: models scored (886s)
+seed 44: data ready, overlap {'fresh_examples': 256, 'overlapping_by_arm': {'A0_control': 0, 'A1_varied_distance': 0, 'A2_no_block_first': 0, 'A3_mixed_rewrites': 0, 'A4_distance_and_rewrites': 0}}  (1145s)
+seed 44: models scored (1152s)
+wrote C:\Users\Mayank Mehta\Projects\PythonProjects\Major-Project-Research\prototype_examiner_ui\web\public\data.json (0.37 MB) in 1153s

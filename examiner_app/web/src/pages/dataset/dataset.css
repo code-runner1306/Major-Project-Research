@@ -1,0 +1,532 @@
+/* The datasets page. Class names are prefixed ds- (and the new token roles are styled here, not in viz.css).
+   Colours come from theme.css tokens only. */
+
+/* ---------- Shared: badges, errors, skeletons, buttons, fields ---------- */
+
+.ds-muted {
+  color: var(--text-muted);
+}
+
+.ds-lead {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ds-h4 {
+  margin: 16px 0 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.ds-list {
+  margin: 6px 0;
+  padding-left: 18px;
+  line-height: 1.5;
+}
+
+.ds-list--inline {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+
+.ds-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.ds-badge--port {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.ds-badge--ours {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.ds-badge--upstream {
+  background: var(--surface-2);
+}
+
+.ds-badge--external {
+  border-style: dashed;
+}
+
+.ds-waiting {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.ds-error {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  color: var(--text);
+}
+
+.ds-error strong {
+  color: var(--accent);
+}
+
+.ds-error p {
+  margin: 6px 0 0;
+}
+
+/* Story text shown above a text generator's token strip (TinyStories). */
+.ds-story {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--tok-text);
+  background: var(--surface-2);
+}
+
+.ds-story figcaption {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.ds-story p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.ds-skeleton {
+  height: 120px;
+  background: linear-gradient(90deg, var(--surface-2) 0%, var(--border) 50%, var(--surface-2) 100%);
+  background-size: 200% 100%;
+  animation: ds-shimmer 1.4s ease-in-out infinite;
+}
+
+.ds-skeleton--tall {
+  height: 240px;
+}
+
+@keyframes ds-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.ds-pending {
+  opacity: 0.45;
+  transition: opacity 0.2s ease;
+}
+
+.ds-btn {
+  font: inherit;
+  padding: 6px 12px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.ds-btn:hover:not(:disabled),
+.ds-btn:focus-visible {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.ds-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.ds-btn[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.ds-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ds-field--inline {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.ds-label {
+  font-size: 0.85rem;
+}
+
+.ds-field__hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ds-field input:not([type='range']),
+.ds-field select,
+.ds-seed input,
+.ds-try__pick select {
+  font: inherit;
+  padding: 6px 8px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  min-width: 0;
+}
+
+.ds-field input[type='range'] {
+  accent-color: var(--accent);
+}
+
+.ds-seed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Family tree (section 1) ---------- */
+
+.ds-tree {
+  margin: 0;
+}
+
+.ds-tree__top {
+  font-weight: 700;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.ds-tree__list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 22px;
+  border-left: 2px solid var(--border);
+}
+
+.ds-tree > .ds-tree__list {
+  padding-left: 0;
+  border-left: none;
+}
+
+.ds-tree__item {
+  position: relative;
+  padding: 6px 0;
+}
+
+.ds-tree__item::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 17px;
+  width: 22px;
+  border-top: 2px solid var(--border);
+}
+
+.ds-tree > .ds-tree__list > .ds-tree__item::before {
+  display: none;
+}
+
+.ds-tree__node {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.ds-tree__name {
+  font-weight: 600;
+}
+
+/* ---------- Cards (sections 2 and 4) ---------- */
+
+.ds-cards-wrap {
+  margin: 0;
+}
+
+.ds-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.ds-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+}
+
+.ds-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ds-card__name {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.ds-card__source {
+  margin: 0;
+}
+
+.ds-card__source code {
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.ds-card__what {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ds-card__static {
+  margin: 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.ds-card__scored {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ds-card__notes summary {
+  cursor: pointer;
+}
+
+/* ---------- Token roles added for the datasets (theme tokens --tok-query-key, --tok-answer-slot, --tok-noise, --tok-decoy, --tok-mask) ---------- */
+
+.viz-token.viz-token--query_key {
+  --viz-token-bg: var(--tok-query-key);
+  --viz-token-fg: var(--text);
+}
+
+.viz-token.viz-token--answer_slot {
+  --viz-token-bg: var(--tok-answer-slot);
+  --viz-token-fg: var(--on-accent);
+  font-weight: 700;
+}
+
+/* Noise is the lightest tone, with a dotted border so it reads apart from filler. */
+.viz-token.viz-token--noise {
+  --viz-token-bg: var(--tok-noise);
+  --viz-token-fg: var(--text-muted);
+  border-style: dotted;
+  border-color: var(--tok-filler);
+}
+
+.viz-token.viz-token--decoy_key {
+  --viz-token-bg: var(--tok-decoy);
+  --viz-token-fg: var(--text);
+  border-style: dashed;
+  border-color: var(--text);
+}
+
+.viz-token.viz-token--decoy_value {
+  --viz-token-bg: color-mix(in srgb, var(--tok-decoy) 40%, var(--surface));
+  --viz-token-fg: var(--text);
+  border-style: dashed;
+  border-color: var(--text-muted);
+  font-style: italic;
+}
+
+/* The mask is a hatched block, so it is never mistaken for a flat colour. */
+.viz-token.viz-token--mask {
+  --viz-token-bg: var(--tok-mask);
+  --viz-token-fg: var(--surface);
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 3px,
+    color-mix(in srgb, var(--surface) 30%, transparent) 3px 5px
+  );
+}
+
+/* Scored answers: a red outline, drawn outside the chip so it shows on every role colour. */
+.viz-token.viz-token--scored {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---------- Section 5a: assembly line ---------- */
+
+.ds-asm-wrap,
+.ds-try {
+  display: grid;
+  gap: 12px;
+}
+
+.ds-asm__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ds-asm__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.ds-asm__step.is-done {
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.ds-asm__step.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.ds-asm__num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.ds-asm__sentence {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ds-asm__lane {
+  display: grid;
+  gap: 6px;
+}
+
+.ds-asm__lane-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ds-asm__tray,
+.ds-asm__strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  min-height: 44px;
+  border: 2px dashed var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.ds-asm__strip {
+  min-height: 120px;
+  border-style: solid;
+  background: var(--surface-2);
+}
+
+.ds-asm .viz-token {
+  display: inline-block;
+  cursor: default;
+}
+
+.ds-asm__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- Section 6 ---------- */
+
+.ds-try__pick {
+  display: grid;
+  gap: 6px;
+  max-width: 560px;
+}
+
+.ds-try__source {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.ds-try__source code {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.ds-try__controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.ds-try__reading {
+  display: grid;
+  gap: 8px;
+}
+
+.ds-json {
+  max-height: 420px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px;
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-skeleton {
+    animation: none;
+  }
+
+  .ds-pending {
+    transition: none;
+  }
+}
