@@ -158,7 +158,7 @@ export function DatasetPage({ def }: PageProps) {
       title: 'Example gallery',
       explain: (
         <>
-          <p><strong>Main takeaway:</strong> These examples show what each task asks a model to store, update, and retrieve; this page is a task gallery, not a model comparison.</p>
+          <p><strong>Main takeaway:</strong> These examples show what each task asks a model to store, update, and retrieve; performance comparisons appear in the experiment results.</p>
           <p>
             One live example per generator, produced by the same code the experiments use. Each strip uses one colour per role, and the legend under
             it names them.
