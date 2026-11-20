@@ -104,8 +104,8 @@ export function DatasetPage({ def }: PageProps) {
             of <Term term="key" />-and-<Term term="value" /> pairs, followed by questions asking for the value of a key.
           </p>
           <p>
-            Eleven generators come from four families: the Zoology benchmark, a paper called KATA, the Anatomy harness, and the public TinyStories
-            text. Some are our code, some we ported, some are the authors&apos; code, and TinyStories is outside public data, read from a local copy.
+            The gallery focuses on three primary datasets: MQAR, our Overwrite task, and TinyStories. The experiments also use related variants
+            and benchmark harnesses; a short note below the gallery maps those to their parent task.
           </p>
           <p className="ds-muted">
             Different generators use different reserved tokens. A 0 can be a query marker in one and filler in another.
@@ -160,8 +160,8 @@ export function DatasetPage({ def }: PageProps) {
         <>
           <p><strong>Main takeaway:</strong> These examples show what each task asks a model to store, update, and retrieve; performance comparisons appear in the experiment results.</p>
           <p>
-            One live example per generator, produced by the same code the experiments use. Each strip uses one colour per role, and the legend under
-            it names them.
+            One live example for each primary dataset, produced by the same code the experiments use. Each strip uses one colour per role, and the
+            legend under it names them. Open “Dataset metadata” on a card for split counts and size details.
           </p>
           <p>
             Outlined tokens are the <strong>scored answers</strong>: the only positions where the model is graded. The count differs by test: MQAR
