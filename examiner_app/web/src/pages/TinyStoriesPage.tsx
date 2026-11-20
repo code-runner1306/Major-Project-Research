@@ -121,7 +121,7 @@ export function TinyStoriesPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Channel-wise decay had the higher loss in every paired seed we ran.</Takeaway>
+          <Takeaway>In these short paired runs, channel-wise decay had slightly higher held-out loss in every seed.</Takeaway>
           <p>The gaps are small: about 0.001 to 0.02 in loss, in the same direction each time.</p>
           <MoreDetail>
             <p>
