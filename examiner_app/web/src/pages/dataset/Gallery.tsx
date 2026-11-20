@@ -33,7 +33,7 @@ const PRIMARY_DATASETS = new Set(['mqar', 'overwrite', 'tinystories']);
 const DATASET_METADATA: Record<string, Array<[string, string]>> = {
   mqar: [
     ['Training examples', '100,000 per configured retrieval run'],
-    ['Validation / held-out', '3,000 examples per configured run'],
+    ['Held-out examples', '3,000 per configured run; no separate validation count is specified'],
     ['Example size', '64 tokens in this gallery; research runs also use longer configured lengths'],
     ['Vocabulary', '8,192 token IDs'],
     ['Task', 'Four key–value pairs, then four key queries'],
@@ -49,7 +49,7 @@ const DATASET_METADATA: Record<string, Array<[string, string]>> = {
     ['Training examples', 'Not included in the dashboard’s local TinyStories source'],
     ['Validation examples', '21,990 stories in the local validation split'],
     ['Example size', 'Shown with a 64-token window; available windows are 64, 128, 256, or 512 tokens'],
-    ['Vocabulary', 'GPT-2 tokenizer'],
+    ['Vocabulary', '50,257-token GPT-2 tokenizer'],
     ['Task', 'Language-model text sample; this gallery does not score retrieval answers'],
   ],
 };
@@ -83,7 +83,7 @@ function GalleryCard({ info }: { info: GeneratorInfo }) {
             <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
           ))}
         </dl>
-        <p>Counts describe the configured research dataset; the token strip above is one generated example.</p>
+        <p>Synthetic counts are per configured run, not a single shared static file. The token strip above is one generated example.</p>
       </details>
 
       {!wantsLive && (
