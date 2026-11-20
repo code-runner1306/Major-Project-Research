@@ -458,6 +458,14 @@
   .di-models__row {
     grid-template-columns: 1fr;
   }
+
+  .di-recipes {
+    grid-template-columns: 1fr;
+  }
+
+  .di-recipes__note {
+    grid-column: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
