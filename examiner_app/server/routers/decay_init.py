@@ -1,8 +1,8 @@
 """Decay initialization page: saved results, saved gate values, and a live try-it on the 12 local overwrite models.
 
 Endpoints (all JSON, all read-only with respect to research code and result files):
-  GET  /api/decay-init/summary   accuracy and learning-speed numbers for the four conditions, per seed, from the
-                                 saved CSVs (three_seed_exploration_20261117, three_seed_confirmation_20261117)
+  GET  /api/decay-init/summary   learning-speed numbers for default, mean-decay, and joint starts; fresh-example
+                                 numbers for default and mean-decay, from the saved study CSVs
   GET  /api/decay-init/gates     per-layer decay values at start and after training (server/data/decay_init_gates.json,
                                  written by server/decay_init_build.py from the checkpoints)
   GET  /api/decay-init/models    the 12 local overwrite models (shortcut.models())
@@ -43,10 +43,11 @@ router = APIRouter(prefix='/api/decay-init')
 RESULTS = ROOT / 'research_results'
 EXPLORATION = RESULTS / 'three_seed_exploration_20261117' / 'models.csv'
 CONFIRMATION = RESULTS / 'three_seed_confirmation_20261117' / 'models.csv'
+JOINT_RESULTS = RESULTS / 'completed_joint_decay_review_20261117' / 'training_comparison.csv'
 GATES_FILE = SERVER / 'data' / 'decay_init_gates.json'
 WRITE_NAMES = ('initial', 'first_rewrite', 'second_rewrite', 'third_rewrite')
 SEEDS = (42, 43, 44)
-INITS = ('default', 'mean-decay')
+INITS = ('default', 'mean-decay', 'joint')
 VARIANTS = ('scalar', 'channel-wise')
 FAMILIES = ('overwrite', 'mqar')
 
@@ -68,7 +69,7 @@ def _sample_sd(values):
     return (sum((v - mean) ** 2 for v in values) / (n - 1)) ** 0.5
 
 
-def _measure(rows, family, column, value_of):
+def _measure(rows, family, column, value_of, inits=INITS):
     """Rows for one measure: one entry per (init, variant) with the three seed values and their mean and SD."""
     table = {}
     for row in rows:
@@ -77,7 +78,7 @@ def _measure(rows, family, column, value_of):
         key = (_init(row['initialization']), row['variant'], int(row['seed']))
         table[key] = value_of(row)
     out = []
-    for init in INITS:
+    for init in inits:
         for variant in VARIANTS:
             seeds = [table[(init, variant, s)] for s in SEEDS]
             out.append(dict(init=init, variant=variant, seeds=seeds,
@@ -85,30 +86,42 @@ def _measure(rows, family, column, value_of):
     return out
 
 
-def _contrast(rows):
-    """Channel-wise minus scalar, per initialisation, and the interaction (mean-decay gap minus default gap)."""
+def _contrast(rows, inits=INITS):
+    """Channel-wise minus scalar for each initialization; mean-decay interaction remains versus default."""
     by = {(r['init'], r['variant']): r['seeds'] for r in rows}
-    default_gap = [c - s for c, s in zip(by[('default', 'channel-wise')], by[('default', 'scalar')])]
-    mean_gap = [c - s for c, s in zip(by[('mean-decay', 'channel-wise')], by[('mean-decay', 'scalar')])]
-    interaction = [m - d for m, d in zip(mean_gap, default_gap)]
 
     def block(values):
         return dict(seeds=values, mean=sum(values) / len(values), sd=_sample_sd(values))
-    return dict(default=block(default_gap), mean_decay=block(mean_gap), interaction=block(interaction))
+
+    gaps = {}
+    for init in inits:
+        values = [c - scalar for c, scalar in zip(by[(init, 'channel-wise')], by[(init, 'scalar')])]
+        key = 'mean_decay' if init == 'mean-decay' else init
+        gaps[key] = block(values)
+    if 'default' in inits and 'mean-decay' in inits:
+        default_gap = gaps['default']['seeds']
+        mean_gap = gaps['mean_decay']['seeds']
+        gaps['interaction'] = block([mean - default for mean, default in zip(mean_gap, default_gap)])
+    return gaps
 
 
 @lru_cache(maxsize=1)
 def summary_data():
     exploration = _read_csv(EXPLORATION)
     confirmation = _read_csv(CONFIRMATION)
+    joint_learning = []
+    for row in _read_csv(JOINT_RESULTS):
+        value = row['retention_aulc'] if row['family'] == 'overwrite' else row['accuracy_aulc']
+        joint_learning.append(dict(row, primary_aulc=value))
+    learning_rows = exploration + joint_learning
     families = {}
     for family in FAMILIES:
-        learning = _measure(exploration, family, 'primary_aulc', lambda r: float(r['primary_aulc']))
-        fresh = _measure(confirmation, family, 'accuracy', lambda r: float(r['accuracy']))
+        learning = _measure(learning_rows, family, 'primary_aulc', lambda r: float(r['primary_aulc']))
+        fresh = _measure(confirmation, family, 'accuracy', lambda r: float(r['accuracy']), inits=INITS[:2])
         measures = dict(learning=learning, fresh=fresh)
         contrasts = dict(learning=_contrast(learning), fresh=_contrast(fresh))
         if family == 'overwrite':
-            measures['fresh_retention'] = _measure(confirmation, family, 'retention', lambda r: float(r['retention']))
+            measures['fresh_retention'] = _measure(confirmation, family, 'retention', lambda r: float(r['retention']), inits=INITS[:2])
             contrasts['fresh_retention'] = _contrast(measures['fresh_retention'])
         families[family] = dict(measures=measures, contrasts=contrasts)
     return dict(
@@ -116,12 +129,12 @@ def summary_data():
         families=families,
         definitions=dict(
             learning='AULC over epochs 1 to 16 (0 to 1 scale). Overwrite: unrelated-association retention. MQAR: answer-free query accuracy.',
-            fresh='Final accuracy on 512 fresh examples per seed. Overwrite: overall (latest and unrelated answers). MQAR: query accuracy.',
+            fresh='Final accuracy on 512 fresh examples per seed for default and mean-decay only. Overwrite: overall (latest and unrelated answers). MQAR: query accuracy.',
             fresh_retention='Final unrelated-association retention on the same fresh examples (overwrite only).',
             sd='Sample standard deviation across the three seeds.',
         ),
-        provenance=dict(files=[repo_relative(EXPLORATION), repo_relative(CONFIRMATION)],
-                        note='Read at request time. Checked against the REPORT.md tables in the same folders.'),
+        provenance=dict(files=[repo_relative(EXPLORATION), repo_relative(CONFIRMATION), repo_relative(JOINT_RESULTS)],
+                        note='Joint AULC values come from the separate completed joint study; fresh-example endpoints remain default/mean-decay only.'),
     )
 
 
