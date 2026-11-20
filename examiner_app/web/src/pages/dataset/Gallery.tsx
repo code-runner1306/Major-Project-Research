@@ -76,6 +76,15 @@ function GalleryCard({ info }: { info: GeneratorInfo }) {
         <OriginBadge origin={info.origin} />
       </header>
       <p className="ds-card__what">{BLURB[info.id] ?? info.source}</p>
+      <details className="ds-card__metadata">
+        <summary>Dataset metadata</summary>
+        <dl>
+          {(DATASET_METADATA[info.id] ?? []).map(([label, value]) => (
+            <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
+          ))}
+        </dl>
+        <p>Counts describe the configured research dataset; the token strip above is one generated example.</p>
+      </details>
 
       {!wantsLive && (
         <p className="ds-card__static">
@@ -100,15 +109,6 @@ function GalleryCard({ info }: { info: GeneratorInfo }) {
           <WhatThisShows>
             each square is one token, coloured by its role. Outlined squares are the scored answers: the only positions the model is graded on.
           </WhatThisShows>
-          <details className="ds-card__metadata">
-            <summary>Dataset metadata</summary>
-            <dl>
-              {(DATASET_METADATA[info.id] ?? []).map(([label, value]) => (
-                <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
-              ))}
-            </dl>
-            <p>Counts describe the configured research dataset; the token strip above is one generated example.</p>
-          </details>
           {ex.data.notes.length > 0 && (
             <details className="ds-card__notes">
               <summary>Read what this example says</summary>
