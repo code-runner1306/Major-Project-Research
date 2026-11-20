@@ -140,9 +140,15 @@ export function Gallery() {
   if (gens.error) return <ExampleError error={gens.error} what="The dataset list could not be loaded." />;
   return (
     <div className="ds-cards">
-      {(gens.data ?? []).map((info) => (
+      {(gens.data ?? []).filter((info) => PRIMARY_DATASETS.has(info.id)).map((info) => (
         <GalleryCard key={info.id} info={info} />
       ))}
+      <footer className="ds-gallery-foot">
+        <strong>Other experiment variants</strong>
+        <ul>
+          {RELATED_VARIANTS.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+      </footer>
     </div>
   );
 }
