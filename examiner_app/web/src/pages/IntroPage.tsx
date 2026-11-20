@@ -147,6 +147,7 @@ function buildSections(api: ApiResult<LayoutFixSummary>): Section[] {
       title: 'Results',
       explain: (
         <>
+          <p><strong>Main takeaway:</strong> Channel-wise decay adds parameters but shows no consistent recall advantage in these small models; training-data coverage has clearer effects.</p>
           <p>
             Both designs keep the same memory grid. What changes is the size of the decay gate and so the number of{' '}
             <Term term="parameter">parameters</Term> in the model. The numbers below come from the saved export of the real
