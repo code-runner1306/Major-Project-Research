@@ -1,6 +1,6 @@
 // Response shapes for /api/decay-init/* (see server/routers/decay_init.py). Accuracies and decay values are fractions.
 
-export type DecayInit = 'default' | 'mean-decay';
+export type DecayInit = 'default' | 'mean-decay' | 'joint';
 export type Granularity = 'scalar' | 'channel-wise';
 export type Family = 'overwrite' | 'mqar';
 
@@ -28,7 +28,7 @@ export interface SummaryFamily {
   measures: Record<'learning' | 'fresh' | 'fresh_retention', MeasureRow[] | undefined>;
   contrasts: Record<
     'learning' | 'fresh' | 'fresh_retention',
-    { default: Block; mean_decay: Block; interaction: Block } | undefined
+    { default: Block; mean_decay: Block; joint?: Block; interaction?: Block } | undefined
   >;
 }
 
