@@ -332,6 +332,63 @@
   cursor: pointer;
 }
 
+.ds-card__metadata {
+  border-top: 1px solid var(--border);
+  padding-top: 0.5rem;
+  font-size: 0.82rem;
+}
+
+.ds-card__metadata summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ds-card__metadata dl {
+  margin: 0.55rem 0 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.ds-card__metadata dl > div {
+  display: grid;
+  grid-template-columns: minmax(105px, 0.8fr) minmax(0, 1.2fr);
+  gap: 0.5rem;
+}
+
+.ds-card__metadata dt {
+  color: var(--text-muted);
+}
+
+.ds-card__metadata dd {
+  margin: 0;
+}
+
+.ds-card__metadata p {
+  margin: 0.55rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.ds-gallery-foot {
+  grid-column: 1 / -1;
+  padding: 0.65rem 0.8rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.ds-gallery-foot strong {
+  color: var(--text);
+}
+
+.ds-gallery-foot ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.4rem;
+  margin: 0.35rem 0 0;
+  padding-left: 1.2rem;
+}
+
 /* ---------- Token roles added for the datasets (theme tokens --tok-query-key, --tok-answer-slot, --tok-noise, --tok-decoy, --tok-mask) ---------- */
 
 .viz-token.viz-token--query_key {
