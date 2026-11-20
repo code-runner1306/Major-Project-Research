@@ -250,7 +250,7 @@ export function CostPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>On the A6000 the gap changes sign; on the Kaggle T4 channel-wise is slower.</Takeaway>
+          <Takeaway>Training speed depends on hardware: the A6000 and T4 comparisons point in different directions.</Takeaway>
           <p>
             {gaps
               ? `Channel-wise minus scalar: ${gapText(gaps.a6000)} on the A6000 and ${gapText(gaps.t4)} on the T4.`
