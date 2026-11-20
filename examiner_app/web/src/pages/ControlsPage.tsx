@@ -142,7 +142,7 @@ export function ControlsPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Standard layouts score near 100%; larger shifts lower several models.</Takeaway>
+          <Takeaway>Models handle the standard layout, but shifted queries expose failures in several runs.</Takeaway>
           <p>Each view is a saved result. One blank token drops one model sharply.</p>
           <MoreDetail>
             <p>Lines are averages over seeds. Every number is read from the saved result files, not typed in.</p>
