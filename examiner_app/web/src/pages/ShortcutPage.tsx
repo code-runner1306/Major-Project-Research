@@ -247,7 +247,7 @@ export function ShortcutPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Most tested models show the shortcut at three rewrites.</Takeaway>
+          <Takeaway>The shortcut appears in most tested models, despite near-perfect ordinary validation accuracy.</Takeaway>
           <p>Each hypothesis was set before the fresh data was scored. Every number here comes from saved result files.</p>
           <MoreDetail>
             <p>Three views, in order: the hypotheses, each model on both layouts, and the patches from the discovery stage.</p>
