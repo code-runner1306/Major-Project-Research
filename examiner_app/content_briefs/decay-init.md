@@ -17,6 +17,7 @@ Numbers on the page come from saved files read by the API (CSV, JSON, checkpoint
   - `settings.json`: 16 epochs (`epochs`), `scheduler_epochs` 64, learning rate 0.0021544, `length` 64, `width` 128,
     `vocabulary` 8192, `calibration_examples` 256.
 - `research_results/three_seed_exploration_20261117/models.csv`: 24 runs (2 tasks x 2 inits x 2 granularities x 3 seeds);
+- `research_results/completed_joint_decay_review_20261117/training_comparison.csv`: separate joint-initialization study (3 seeds); overwrite uses `retention_aulc`, MQAR uses `accuracy_aulc`. The Results tab shows these learning curves alongside default and mean-decay. Joint has no row in the fresh-example confirmation view.
   `primary_aulc` (overwrite: AULC of unrelated-association retention over epochs 1-16, 0-1 scale), `final_accuracy`
   (development). Reproduced exactly from `development_curve.json` (checked for all 12 overwrite runs).
 - `research_results/three_seed_confirmation_20261117/models.csv`: fresh-data endpoint for all 24 runs: `accuracy`
@@ -49,7 +50,7 @@ Numbers on the page come from saved files read by the API (CSV, JSON, checkpoint
 - `gate_initialization.py` (`calibrated-geometric`, per-head geometric half-lives, class `GatedDeltaNetLM` in `model.py`) is a DIFFERENT method. It is not in the source hashes of matched-decay-v1 and does not produce these checkpoints. Do not cite it for these models.
 
 ## Training (verified in settings.json)
-- Overwrite task, 16 epochs (3136 accepted steps), scheduler horizon 64 epochs (so the learning rate has not decayed to zero). Same data order and seeds for all four conditions within a seed (shared data hashes per seed).
+- Default/mean-decay overwrite task: 16 epochs (3136 accepted steps), scheduler horizon 64 epochs (so the learning rate has not decayed to zero). Same data order and seeds for all four conditions within a seed (shared data hashes per seed). Joint results come from a separate 16-epoch study.
 - Parameters (`model.parameters()`, tied 8192 x 128 embedding counted once): scalar 1,585,416; channel-wise 1,651,456 (+4.2 %). Matches CALIBRATED_RECIPE_STUDY.md. (The raw state_dict sums are 2,633,992 and 2,700,032 because the tied embedding appears twice; do not use those.)
 
 ## Results: overwrite (primary for this page)
@@ -91,4 +92,4 @@ AULC (answer-free query accuracy, 0-100): default scalar 93.71, default channel 
 3. `matched-decay-v1/20261116T111608181_a2524782/session_status.json` says `failed_or_incomplete` (WinError 32 during publication) although the seed-42 pair checkpoints and summaries exist. The page treats the checkpoints as complete models (summary.json reports 3136 steps). Mention in report.
 4. `decay_design_results.md` calls the scalar and channel-wise rows "the same model" and "parameter-matched"; the CALIBRATED doc and the checkpoints show a 4.2 % parameter difference. That document is not used.
 5. Trained gate means do not stay at the starting means (gate_diagnostics section 1): the mean-decay start is matched by construction, not during training.
-6. Joint initialisation: results only on this machine (not in the local checkpoints); not shown.
+6. Joint initialization results are reported from a separate saved study; its checkpoints are not among the local interactive models. Learning-curve AULCs are shown in Results; fresh-example confirmation and live try-it remain default/mean-decay only.
