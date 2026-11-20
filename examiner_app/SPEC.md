@@ -34,6 +34,7 @@ examiner_app/
 | Layout-fix checkpoints (30) | `output/layout_fix_study/layout-fix-v1/*/<arm>/seed_<seed>/<variant>/latest_checkpoint.pt` |
 | Per-run training curve | same folder, `development_curve.json` (list per epoch: `epoch`, `train_loss`, `answer_free.exact_query_accuracy`, `arm_answer_free.exact_query_accuracy`) |
 | Per-run summary | same folder, `summary.json` (`final_development.answer_free.exact_query_accuracy`) |
+| Decay-init joint learning results | `research_results/completed_joint_decay_review_20261117/training_comparison.csv` (`retention_aulc` for overwrite, `accuracy_aulc` for MQAR; three seeds) |
 | Saved A4 confirmation | `research_results/layout_fix_a4_confirmation_20261118/cell_results.csv` |
 | Cached fresh evaluation of all 30 runs | `examiner_app/server/data/layout_fix_export.json` (keys: `meta`, `fresh_results`, `overlap_audit`, `showcase`, `delta_rule`, `gates`, `curves`, `saved_a4_report`, `paper`) |
 
@@ -46,6 +47,8 @@ Load a checkpoint with `analyze_write_gate.load(path, variant, seed)` (returns e
 `GET /api/layout-fix/summary` -> the cached export, unchanged except `showcase`/`delta_rule`/`gates` may be omitted. Add `"provenance": {"file": "...", "generated": meta.generated}`.
 
 `GET /api/runs` -> `[{"arm","variant","seed","path","final_dev_accuracy"}]` for all 30 layout-fix runs.
+
+`GET /api/decay-init/summary` -> saved learning-speed rows for default, mean-decay, and joint across scalar/channel-wise decay; joint values are read from `completed_joint_decay_review_20261117/training_comparison.csv`. Fresh-example rows remain default/mean-decay only because joint was not part of that confirmation run. The joint recipe is a separate study; do not present its results as the same fitted-mean protocol.
 
 `POST /api/layout-fix/try` body `{"arm": str, "variant": "scalar"|"channel-wise", "seed": 42|43|44, "layout": "block_first"|"general_nonblock"|"block_after_one_unrelated"|"run_broken_before_latest"|"initial_then_run", "rewrites": 1..4, "distance": 8..24, "example_seed": int >= 0}`
 - Generate ONE fresh overwrite example: set `confirm_block_layout.SEED_OFFSET = 3_000_000` once at import, then
