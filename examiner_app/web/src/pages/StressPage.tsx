@@ -170,7 +170,7 @@ export function StressPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Harder tests lower recall, and one forced gate hurts some models far more.</Takeaway>
+          <Takeaway>Harder cases reduce recall; forcing gates on trained models causes large drops for some runs.</Takeaway>
           <p>Every bar comes from a saved result file. Averages are over three seeds.</p>
           <MoreDetail>
             <p>
