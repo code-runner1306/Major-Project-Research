@@ -92,7 +92,7 @@ export function LengthPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Most models keep their accuracy at 256 tokens; some fail at 1,024.</Takeaway>
+          <Takeaway>Most models stay accurate at 256 tokens, while several fail at 1,024; neither decay start prevents every failure.</Takeaway>
           <p>Every number here is read from the saved sweep, with checks against the saved files.</p>
           <MoreDetail>
             <p>
