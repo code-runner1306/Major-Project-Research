@@ -45,7 +45,7 @@ export function DecayInitPage({ def }: PageProps) {
               and <Term term="channel-wise-decay" /> (one value per key coordinate).
             </p>
             <p>
-              The <Term term="decay-initialization" /> is the start: default, or mean-decay, which fits each layer’s starting average to its own target
+              The <Term term="decay-initialization" /> is the start: default, mean-decay, or joint; the latter also targets decay sensitivity.
               half-life.
             </p>
             <p>
@@ -67,7 +67,7 @@ export function DecayInitPage({ def }: PageProps) {
       explain: (
         <>
           <Takeaway>One small model, two starts, two decay designs, three seeds.</Takeaway>
-          <p>The four conditions share everything except the decay gate: its starting values, and its width for channel-wise decay.</p>
+          <p>The six learning-curve conditions compare three starts—default, mean-decay, and joint—across scalar and channel-wise decay.</p>
           <MoreDetail>
             <p>
               Every model is the same small <Term term="gated-deltanet" />. The channel-wise model has slightly more <Term term="parameter" />s, because
@@ -88,8 +88,8 @@ export function DecayInitPage({ def }: PageProps) {
       title: 'Code',
       explain: (
         <>
-          <Takeaway>Two places set the start; one formula is shared.</Takeaway>
-          <p>The default start is drawn in the layer’s setup. The mean-decay start is fitted before training, then the same formula runs.</p>
+          <Takeaway>Three starts, one shared decay formula.</Takeaway>
+          <p>Default uses the model’s usual random start. Mean-decay fits the average alpha; joint fits mean log-decay and sensitivity before training.</p>
           <MoreDetail>
             <p>Highlighted lines have a note. The source is read live from the repository.</p>
           </MoreDetail>
@@ -107,8 +107,8 @@ export function DecayInitPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>A mean-decay start closes the average gap, but not on every seed.</Takeaway>
-          <p>Learning speed is the average retention over training. Fresh-example accuracy barely separates the four conditions.</p>
+          <Takeaway>Joint joins default and mean-decay in the saved learning results.</Takeaway>
+          <p>Learning speed averages retention over training. Joint uses a separate study; fresh-example results remain from the default/mean-decay comparison.</p>
           <MoreDetail>
             <p>
               Three seeds only. The per-seed gaps change sign, so the average is not a stable ranking. Results are saved numbers, not new runs.
