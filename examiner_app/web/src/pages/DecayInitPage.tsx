@@ -107,7 +107,7 @@ export function DecayInitPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Joint joins default and mean-decay in the saved learning results.</Takeaway>
+          <Takeaway>Across seeds, neither mean-decay nor joint gave a consistent learning advantage over default.</Takeaway>
           <p>Learning speed averages retention over training. Joint uses a separate study; fresh-example results remain from the default/mean-decay comparison.</p>
           <MoreDetail>
             <p>
