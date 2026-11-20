@@ -163,7 +163,7 @@ export function SelectiveResetPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Clearing works every time; keeping the other workspace fails every time.</Takeaway>
+          <Takeaway>Models reliably clear the target workspace, but fail to preserve facts in the untouched workspace.</Takeaway>
           <p>No run gets both answers right at any memory load. Kept keys score below a random guess.</p>
           <MoreDetail>
             {data && (
