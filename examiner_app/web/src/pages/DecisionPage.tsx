@@ -144,7 +144,7 @@ export function DecisionPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>The extra round trains, but no saved result shows the answers changed.</Takeaway>
+          <Takeaway>The extra round lowered training loss, but saved results do not show that model choices changed.</Takeaway>
           <p>Training loss fell in both saved runs. The saved files never recorded which answer was picked before and after.</p>
           <MoreDetail>
             <p>
