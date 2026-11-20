@@ -207,7 +207,7 @@ export function AttentionControlPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>Attention learns the overwrite test; scalar decay stays near zero.</Takeaway>
+          <Takeaway>Attention solves the overwrite test; the scalar-decay control remains near zero.</Takeaway>
           <p>Bars show held-out answers correct. They are saved results, not new runs.</p>
           <MoreDetail>
             <p>
