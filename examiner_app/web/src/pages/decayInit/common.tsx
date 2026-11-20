@@ -16,6 +16,8 @@ export const CONDITION_LABEL: Record<string, string> = {
   'default/channel-wise': 'Channel-wise, default start',
   'mean-decay/scalar': 'Scalar, mean-decay start',
   'mean-decay/channel-wise': 'Channel-wise, mean-decay start',
+  'joint/scalar': 'Scalar, joint start',
+  'joint/channel-wise': 'Channel-wise, joint start',
 };
 
 export function conditionLabel(init: DecayInit, variant: Granularity): string {
