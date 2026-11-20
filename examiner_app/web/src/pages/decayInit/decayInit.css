@@ -192,6 +192,79 @@
   background: var(--surface-2);
 }
 
+.di-model-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.di-recipes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.di-recipes__card {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 2px solid var(--border);
+  background: var(--surface);
+}
+
+.di-recipes__card h3 {
+  margin: 0.15rem 0 0.55rem;
+  font-size: 1rem;
+}
+
+.di-recipes__step {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.di-recipes__knobs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+.di-recipes__knobs span {
+  flex: 1;
+  padding: 0.35rem 0.25rem;
+  border: 2px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.di-recipes__knobs .is-neutral {
+  background: var(--surface-2);
+}
+
+.di-recipes__knobs .is-tuned {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+}
+
+.di-recipes__knobs .is-fixed {
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+.di-recipes__card p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.di-recipes__note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
 /* Models: condition grid with seed badges */
 
 .di-models {
