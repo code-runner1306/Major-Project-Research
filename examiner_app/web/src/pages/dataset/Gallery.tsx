@@ -27,6 +27,39 @@ const BLURB: Record<string, string> = {
     'A short children’s story from the public TinyStories collection. Each word piece is shown as the GPT-2 tokenizer split it, cut to a window of 64 tokens. The end-of-text marker appears only if the story fits inside the window.',
 };
 
+/** Gallery cards focus on the three primary datasets; experiment variants are summarized below. */
+const PRIMARY_DATASETS = new Set(['mqar', 'overwrite', 'tinystories']);
+
+const DATASET_METADATA: Record<string, Array<[string, string]>> = {
+  mqar: [
+    ['Training examples', '100,000 per configured retrieval run'],
+    ['Validation / held-out', '3,000 examples per configured run'],
+    ['Example size', '64 tokens in this gallery; research runs also use longer configured lengths'],
+    ['Vocabulary', '8,192 token IDs'],
+    ['Task', 'Four key–value pairs, then four key queries'],
+  ],
+  overwrite: [
+    ['Training examples', '100,000 per configured retrieval run'],
+    ['Validation / held-out', '3,000 examples per configured run'],
+    ['Example size', '64 tokens in this gallery; research runs also use longer configured lengths'],
+    ['Vocabulary', '8,192 token IDs'],
+    ['Task', 'Repeated writes to one key; score latest value and unrelated-key retention'],
+  ],
+  tinystories: [
+    ['Training examples', 'Not included in the dashboard’s local TinyStories source'],
+    ['Validation examples', '21,990 stories in the local validation split'],
+    ['Example size', 'Shown with a 64-token window; available windows are 64, 128, 256, or 512 tokens'],
+    ['Vocabulary', 'GPT-2 tokenizer'],
+    ['Task', 'Language-model text sample; this gallery does not score retrieval answers'],
+  ],
+};
+
+const RELATED_VARIANTS = [
+  'MQAR variants: length extension and Zoology layout test cells.',
+  'Overwrite variants: A0–A4 training arms and named test layouts.',
+  'Separate related generators: KATA two-pass overwrite reconstruction and Anatomy E1, E4, and E5 harness tasks.',
+];
+
 /** TinyStories is always requested live, with the 64-token window; a server-side failure shows as an error. */
 const STORY_WINDOW = 64;
 
@@ -67,6 +100,15 @@ function GalleryCard({ info }: { info: GeneratorInfo }) {
           <WhatThisShows>
             each square is one token, coloured by its role. Outlined squares are the scored answers: the only positions the model is graded on.
           </WhatThisShows>
+          <details className="ds-card__metadata">
+            <summary>Dataset metadata</summary>
+            <dl>
+              {(DATASET_METADATA[info.id] ?? []).map(([label, value]) => (
+                <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
+              ))}
+            </dl>
+            <p>Counts describe the configured research dataset; the token strip above is one generated example.</p>
+          </details>
           {ex.data.notes.length > 0 && (
             <details className="ds-card__notes">
               <summary>Read what this example says</summary>
@@ -83,7 +125,7 @@ function GalleryCard({ info }: { info: GeneratorInfo }) {
   );
 }
 
-/** One live example per generator, side by side. Each card loads on its own. */
+/** One live example for each primary dataset; experiment variants are listed in a compact footer. */
 export function Gallery() {
   const gens = useGenerators();
   if (gens.pending) {
