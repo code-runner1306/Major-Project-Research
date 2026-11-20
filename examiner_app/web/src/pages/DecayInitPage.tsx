@@ -45,8 +45,7 @@ export function DecayInitPage({ def }: PageProps) {
               and <Term term="channel-wise-decay" /> (one value per key coordinate).
             </p>
             <p>
-              The <Term term="decay-initialization" /> is the start: default, mean-decay, or joint; the latter also targets decay sensitivity.
-              half-life.
+              The <Term term="decay-initialization" /> is the start: default keeps random settings, mean-decay fits the offset to a target average alpha, and joint fits both offset and rate to target mean log-decay and input sensitivity.
             </p>
             <p>
               Half-life here is a diagnostic of the average decay, not a measured memory lifetime.
@@ -66,8 +65,8 @@ export function DecayInitPage({ def }: PageProps) {
       title: 'Model',
       explain: (
         <>
-          <Takeaway>One small model, two starts, two decay designs, three seeds.</Takeaway>
-          <p>The six learning-curve conditions compare three starts—default, mean-decay, and joint—across scalar and channel-wise decay.</p>
+          <Takeaway>Three initialization recipes, two decay designs, three seeds.</Takeaway>
+          <p>The six learning-curve conditions cross default, mean-decay, and joint starts with scalar and channel-wise decay.</p>
           <MoreDetail>
             <p>
               Every model is the same small <Term term="gated-deltanet" />. The channel-wise model has slightly more <Term term="parameter" />s, because
@@ -79,7 +78,7 @@ export function DecayInitPage({ def }: PageProps) {
       visual: (
         <>
           <ModelsVisual />
-          <WhatThisShows>Badges show which of the twelve checkpoints run on this machine.</WhatThisShows>
+          <WhatThisShows>The cards show which starting knobs each recipe adjusts. The grid below marks the 12 locally available default and mean-decay checkpoints.</WhatThisShows>
         </>
       ),
     },
