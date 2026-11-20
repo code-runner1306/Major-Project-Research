@@ -216,7 +216,7 @@ export function AnatomyPage({ def }: PageProps) {
       title: 'Results',
       explain: (
         <>
-          <Takeaway>No channel-wise advantage; at 32 pairs, scalar decay was slightly but reliably better.</Takeaway>
+          <Takeaway>Across these tests, scalar and channel-wise mostly tied; scalar was better at 32 pairs.</Takeaway>
           <p>Lock-in counts tie in two experiments. The collision test favours scalar, not significantly.</p>
           <MoreDetail>
             <p>
